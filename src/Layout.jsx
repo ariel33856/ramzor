@@ -188,6 +188,11 @@ export default function Layout({ children, currentPageName }) {
             </div>
 
             <div className="flex items-center gap-2">
+              <Link to={createPageUrl('Dashboard')}>
+                <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
+                  <Home className="w-5 h-5 text-gray-500" />
+                </Button>
+              </Link>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-5 h-5 text-gray-500" />
                 <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
