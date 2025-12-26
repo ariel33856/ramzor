@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
-  ArrowRight, User, Phone, Mail, Building2, Banknote, 
+  ArrowLeft, User, Phone, Mail, Building2, Banknote, 
   Users, Brain, Loader2, RefreshCw, MessageCircle, Flag
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -207,7 +207,7 @@ export default function CaseDetails() {
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Link to={createPageUrl('Dashboard')} className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowRight className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex-1">
             <div className="flex items-center gap-3">

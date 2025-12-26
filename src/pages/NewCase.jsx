@@ -5,7 +5,7 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { 
   User, Phone, Mail, Home, Banknote, Users, 
-  Building2, ChevronLeft, ChevronRight, Check, Loader2 
+  Building2, ChevronRight, ChevronLeft, Check, Loader2 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -345,7 +345,7 @@ export default function NewCase() {
                 onClick={() => setCurrentStep(prev => prev - 1)}
                 disabled={currentStep === 1}
               >
-                <ChevronRight className="w-5 h-5 ml-1" />
+                <ChevronLeft className="w-5 h-5 ml-1" />
                 הקודם
               </Button>
 
@@ -355,7 +355,7 @@ export default function NewCase() {
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   הבא
-                  <ChevronLeft className="w-5 h-5 mr-1" />
+                  <ChevronRight className="w-5 h-5 mr-1" />
                 </Button>
               ) : (
                 <Button
