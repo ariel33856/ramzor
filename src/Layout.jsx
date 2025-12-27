@@ -221,7 +221,9 @@ export default function Layout({ children, currentPageName }) {
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
                   {caseData.account_number && (
-                    <span className="text-lg text-gray-500">#{caseData.account_number}</span>
+                    <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                      <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                    </div>
                   )}
                 </div>
               )}
