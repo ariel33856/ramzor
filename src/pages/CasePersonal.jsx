@@ -21,6 +21,7 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dialogStep, setDialogStep] = useState('choose'); // 'choose' or 'list'
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -47,7 +48,8 @@ export default function CasePersonal() {
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
     borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    borrower.client_id?.includes(searchTerm)
+    borrower.client_id?.includes(searchTerm) ||
+    borrower.client_phone?.includes(searchTerm)
   );
 
   const linkBorrowerMutation = useMutation({
@@ -136,7 +138,13 @@ export default function CasePersonal() {
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
         <div className="flex justify-end mb-4">
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog open={dialogOpen} onOpenChange={(open) => {
+            setDialogOpen(open);
+            if (!open) {
+              setDialogStep('choose');
+              setSearchTerm('');
+            }
+          }}>
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                 <LinkIcon className="w-4 h-4 ml-2" />
@@ -145,30 +153,65 @@ export default function CasePersonal() {
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[80vh]">
               <DialogHeader>
-                <DialogTitle>בחר לווה לשיוך</DialogTitle>
+                <DialogTitle>
+                  {dialogStep === 'choose' ? 'הוסף לווה' : 'בחר לווה מהרשימה'}
+                </DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                <Input
-                  placeholder="חיפוש לפי שם או ת.ז..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {filteredBorrowers.map(borrower => (
-                    <div
-                      key={borrower.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                      onClick={() => linkBorrowerMutation.mutate(borrower.id)}
+              
+              {dialogStep === 'choose' ? (
+                <div className="space-y-4 py-4">
+                  <Link to={createPageUrl('NewCase') + '?archive=true'}>
+                    <Button 
+                      className="w-full h-20 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                      onClick={() => setDialogOpen(false)}
                     >
-                      <p className="font-semibold text-gray-900">{borrower.client_name}</p>
-                      <p className="text-sm text-gray-500">{borrower.client_id}</p>
-                    </div>
-                  ))}
-                  {filteredBorrowers.length === 0 && (
-                    <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
-                  )}
+                      <User className="w-6 h-6 ml-3" />
+                      הוסף לווה חדש
+                    </Button>
+                  </Link>
+                  
+                  <Button 
+                    className="w-full h-20 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    onClick={() => setDialogStep('list')}
+                  >
+                    <LinkIcon className="w-6 h-6 ml-3" />
+                    בחר מרשימה קיימת
+                  </Button>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  <Input
+                    placeholder="חיפוש לפי שם, ת.ז או טלפון..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredBorrowers.map(borrower => (
+                      <div
+                        key={borrower.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => linkBorrowerMutation.mutate(borrower.id)}
+                      >
+                        <p className="font-semibold text-gray-900">{borrower.client_name}</p>
+                        <p className="text-sm text-gray-500">{borrower.client_id} • {borrower.client_phone}</p>
+                      </div>
+                    ))}
+                    {filteredBorrowers.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
+                    )}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setDialogStep('choose');
+                      setSearchTerm('');
+                    }}
+                  >
+                    חזרה
+                  </Button>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         </div>
