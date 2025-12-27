@@ -187,7 +187,7 @@ export default function Management() {
             <p className="text-gray-400">התחל בהוספת אדם חדש</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex flex-col gap-4">
             {filteredPeople.map((person) => (
               <motion.div
                 key={person.id}
