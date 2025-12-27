@@ -121,7 +121,7 @@ export default function ModuleCaseDetails() {
               <h2 className="text-xl font-bold text-gray-900 mb-4">פרטים אישיים</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label>שם לקוח</Label>
+                  <Label>עיר</Label>
                   <Input
                     value={formData.client_name || ''}
                     onChange={(e) => setFormData({...formData, client_name: e.target.value})}
