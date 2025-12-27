@@ -30,7 +30,7 @@ export default function Management() {
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="accounts" className="text-lg">
               <UserCheck className="w-5 h-5 ml-2" />
-              חשבונות פעילים
+              חשבונות
             </TabsTrigger>
             <TabsTrigger value="debtors" className="text-lg">
               <Users className="w-5 h-5 ml-2" />
@@ -53,7 +53,7 @@ export default function Management() {
             >
               <Link to={createPageUrl('Dashboard')}>
                 <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all cursor-pointer">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">חשבונות פעילים</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">חשבונות</h2>
                   <p className="text-gray-500">לחץ לצפייה בדשבורד</p>
                 </div>
               </Link>

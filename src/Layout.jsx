@@ -92,7 +92,7 @@ export default function Layout({ children, currentPageName }) {
               {(currentPageName === 'Dashboard' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {currentPageName === 'Dashboard' && 'חשבונות פעילים'}
+                    {currentPageName === 'Dashboard' && 'חשבונות'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
                     {currentPageName === 'Sales' && 'עסקאות'}
@@ -110,7 +110,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Dashboard')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-medium">חשבונות פעילים</span>
+                            <span className="text-sm font-medium">חשבונות</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
                               <UserCheck className="w-4 h-4 text-white" />
                             </div>
@@ -177,7 +177,7 @@ export default function Layout({ children, currentPageName }) {
                   <Link to={createPageUrl('Dashboard')}>
                     <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg shadow-green-500/25">
                       <UserCheck className="w-5 h-5 ml-2" />
-                      חשבונות פעילים
+                      חשבונות
                     </Button>
                   </Link>
                 </>
@@ -240,7 +240,7 @@ export default function Layout({ children, currentPageName }) {
                   <Link to={createPageUrl('Dashboard')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
-                        <span className="text-sm font-medium">חשבונות פעילים</span>
+                        <span className="text-sm font-medium">חשבונות</span>
                         <div className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
                           <UserCheck className="w-4 h-4 text-white" />
                         </div>
