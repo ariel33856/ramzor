@@ -181,10 +181,10 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="overflow-x-auto max-h-[calc(100vh-240px)]">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-auto max-h-[calc(100vh-240px)]">
               <table className="w-full">
-                <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-purple-50">
+                <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-purple-50 shadow-sm">
                   <tr className="border-b-2 border-gray-200">
                     <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>
                     <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>
