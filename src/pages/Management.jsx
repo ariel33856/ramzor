@@ -180,11 +180,11 @@ export default function Management() {
         {/* Column Headers */}
         <div className="sticky top-[152px] z-15 w-full bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-sm border border-gray-200 mb-4">
           <div className="grid grid-cols-6 gap-4 px-6 py-4">
-            <div className="text-right text-sm font-semibold text-gray-700">שם מלא</div>
-            <div className="text-right text-sm font-semibold text-gray-700">תעודת זהות</div>
-            <div className="text-right text-sm font-semibold text-gray-700">טלפון</div>
-            <div className="text-right text-sm font-semibold text-gray-700">אימייל</div>
-            <div className="text-right text-sm font-semibold text-gray-700">הערות</div>
+            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">שם מלא</div>
+            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">תעודת זהות</div>
+            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">טלפון</div>
+            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">אימייל</div>
+            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">הערות</div>
             <div className="text-center text-sm font-semibold text-gray-700">פעולות</div>
           </div>
         </div>
@@ -221,7 +221,7 @@ export default function Management() {
                     animate={{ opacity: 1 }}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 border-l border-gray-200">
                       <Link 
                         to={createPageUrl('PersonDetails') + `?id=${person.id}`}
                         className="font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
@@ -229,10 +229,10 @@ export default function Management() {
                         {person.first_name} {person.last_name}
                       </Link>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{person.id_number || '-'}</td>
-                    <td className="px-6 py-4 text-gray-600">{person.phone || '-'}</td>
-                    <td className="px-6 py-4 text-gray-600">{person.email || '-'}</td>
-                    <td className="px-6 py-4 text-gray-600 max-w-xs truncate">{person.notes || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.id_number || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.phone || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.email || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 max-w-xs truncate border-l border-gray-200">{person.notes || '-'}</td>
                     <td className="px-6 py-4 text-center">
                       <Button
                         variant="ghost"
