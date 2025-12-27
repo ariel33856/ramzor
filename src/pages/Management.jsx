@@ -27,7 +27,7 @@ export default function Management() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
         <Tabs defaultValue="accounts" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="accounts" className="text-lg">
               <UserCheck className="w-5 h-5 ml-2" />
               חשבונות
@@ -43,6 +43,10 @@ export default function Management() {
             <TabsTrigger value="payments" className="text-lg">
               <DollarSign className="w-5 h-5 ml-2" />
               תשלומים
+            </TabsTrigger>
+            <TabsTrigger value="people" className="text-lg">
+              <Users className="w-5 h-5 ml-2" />
+              אנשים
             </TabsTrigger>
           </TabsList>
 
@@ -90,6 +94,17 @@ export default function Management() {
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-4">תשלומים</h2>
               <p className="text-gray-500">ניהול תשלומים ועסקאות</p>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="people">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">אנשים</h2>
+              <p className="text-gray-500">ניהול אנשי קשר</p>
             </motion.div>
           </TabsContent>
         </Tabs>
