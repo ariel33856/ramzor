@@ -92,10 +92,60 @@ export default function Layout({ children, currentPageName }) {
               {currentPageName === 'Dashboard' && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">חשבונות פעילים</h1>
-                  <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-lg shadow-indigo-500/25">
-                    <Layers className="w-5 h-5 ml-2" />
-                    מודולים
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-lg shadow-indigo-500/25">
+                        <Layers className="w-5 h-5 ml-2" />
+                        מודולים
+                        <ChevronDown className="w-4 h-4 mr-2" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-auto min-w-[160px] p-2 space-y-4 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
+                      <Link to={createPageUrl('Management')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-purple-300 hover:border-purple-500 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-bold text-white">ניהול</span>
+                            <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
+                              <LayoutDashboard className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+                      
+                      <Link to={createPageUrl('Marketing')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-blue-50 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">שיווק</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                              <TrendingUp className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+                      
+                      <Link to={createPageUrl('Sales')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-purple-50 border-2 border-purple-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">מכירות</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                              <ShoppingCart className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+                      
+                      <Link to={createPageUrl('Products')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-pink-50 border-2 border-pink-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">מוצרי מעטפת</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
+                              <Package className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <Link to={createPageUrl('AllDashboards')}>
                     <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
                       <Layers className="w-5 h-5 ml-2" />
