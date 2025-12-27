@@ -37,22 +37,11 @@ export default function CaseInsurance() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border-2 border-orange-200 p-8 shadow-lg bg-orange-50 bg-opacity-30">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg">
-              <Shield className="w-7 h-7 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">ביטוחים</h2>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <p className="text-gray-500 text-center py-8">
-              תוכן הכרטיסייה "ביטוחים" יתווסף בהמשך
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-50/50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <p className="text-gray-500 text-center py-8">
+          תוכן הכרטיסייה "ביטוחים" יתווסף בהמשך
+        </p>
       </div>
     </div>
   );

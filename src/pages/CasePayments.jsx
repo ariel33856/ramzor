@@ -37,22 +37,11 @@ export default function CasePayments() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border-2 border-emerald-200 p-8 shadow-lg bg-emerald-50 bg-opacity-30">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg">
-              <CreditCard className="w-7 h-7 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">תשלומים</h2>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <p className="text-gray-500 text-center py-8">
-              תוכן הכרטיסייה "תשלומים" יתווסף בהמשך
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-50/50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <p className="text-gray-500 text-center py-8">
+          תוכן הכרטיסייה "תשלומים" יתווסף בהמשך
+        </p>
       </div>
     </div>
   );

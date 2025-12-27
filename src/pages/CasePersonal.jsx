@@ -37,35 +37,24 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border-2 border-blue-200 p-8 shadow-lg bg-blue-50 bg-opacity-30">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
-              <User className="w-7 h-7 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">פרטים אישיים ופרטי התקשרות</h2>
+    <div className="min-h-screen bg-gray-50/50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-gray-700">שם מלא</label>
+            <p className="text-lg text-gray-900 mt-1">{caseData.client_name || 'לא צוין'}</p>
           </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-200">
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-700">שם מלא</label>
-                <p className="text-lg text-gray-900 mt-1">{caseData.client_name || 'לא צוין'}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">תעודת זהות</label>
-                <p className="text-lg text-gray-900 mt-1">{caseData.client_id || 'לא צוין'}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">טלפון</label>
-                <p className="text-lg text-gray-900 mt-1">{caseData.client_phone || 'לא צוין'}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">אימייל</label>
-                <p className="text-lg text-gray-900 mt-1">{caseData.client_email || 'לא צוין'}</p>
-              </div>
-            </div>
+          <div>
+            <label className="text-sm font-medium text-gray-700">תעודת זהות</label>
+            <p className="text-lg text-gray-900 mt-1">{caseData.client_id || 'לא צוין'}</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-700">טלפון</label>
+            <p className="text-lg text-gray-900 mt-1">{caseData.client_phone || 'לא צוין'}</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-700">אימייל</label>
+            <p className="text-lg text-gray-900 mt-1">{caseData.client_email || 'לא צוין'}</p>
           </div>
         </div>
       </div>
