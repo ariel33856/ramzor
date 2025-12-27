@@ -91,7 +91,7 @@ export default function Management() {
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                   <Plus className="w-5 h-5 ml-2" />
-                  אדם חדש
+                  לווה חדש
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
