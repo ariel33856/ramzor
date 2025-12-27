@@ -4,11 +4,13 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, LayoutGrid, Table, Layers
+  Plus, Search, Filter, LayoutGrid, Table, Layers, Columns
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
@@ -19,6 +21,14 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
+  const [visibleColumns, setVisibleColumns] = useState({
+    client_name: true,
+    loan_amount: true,
+    status: true,
+    urgency: true,
+    progress: true,
+    consultant: true
+  });
 
   const statusLabels = {
     new: 'חדש',
@@ -115,9 +125,72 @@ export default function Dashboard() {
                 <SelectItem value="high">גבוהה</SelectItem>
                 <SelectItem value="critical">קריטית</SelectItem>
               </SelectContent>
-            </Select>
+              </Select>
 
-            <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
+              <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Columns className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-64">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">עמודות להצגה</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-name"
+                        checked={visibleColumns.client_name}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_name: checked})}
+                      />
+                      <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-loan"
+                        checked={visibleColumns.loan_amount}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, loan_amount: checked})}
+                      />
+                      <label htmlFor="col-loan" className="text-sm cursor-pointer">סכום הלוואה</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-status"
+                        checked={visibleColumns.status}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, status: checked})}
+                      />
+                      <label htmlFor="col-status" className="text-sm cursor-pointer">סטטוס</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-urgency"
+                        checked={visibleColumns.urgency}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, urgency: checked})}
+                      />
+                      <label htmlFor="col-urgency" className="text-sm cursor-pointer">דחיפות</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-progress"
+                        checked={visibleColumns.progress}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, progress: checked})}
+                      />
+                      <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-consultant"
+                        checked={visibleColumns.consultant}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, consultant: checked})}
+                      />
+                      <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ</label>
+                    </div>
+                  </div>
+                </div>
+              </PopoverContent>
+              </Popover>
+
+              <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="icon"
@@ -186,12 +259,12 @@ export default function Dashboard() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">התקדמות</th>
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ</th>
+          {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
+          {visibleColumns.loan_amount && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>}
+          {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
+          {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
+          {visibleColumns.progress && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">התקדמות</th>}
+          {visibleColumns.consultant && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ</th>}
         </tr>
       </thead>
 
@@ -204,50 +277,62 @@ export default function Dashboard() {
             transition={{ delay: index * 0.02 }}
             className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
-          >
-            <td className="px-6 py-4">
-              <div className="font-semibold text-gray-900">{caseData.client_name}</div>
-            </td>
+            >
+            {visibleColumns.client_name && (
+              <td className="px-6 py-4">
+                <div className="font-semibold text-gray-900">{caseData.client_name}</div>
+              </td>
+            )}
 
-            <td className="px-6 py-4 text-gray-600">
-              {formatCurrency(caseData.loan_amount)}
-            </td>
+            {visibleColumns.loan_amount && (
+              <td className="px-6 py-4 text-gray-600">
+                {formatCurrency(caseData.loan_amount)}
+              </td>
+            )}
 
-            <td className="px-6 py-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                {statusLabels[caseData.status] || caseData.status}
-              </span>
-            </td>
-
-            <td className="px-6 py-4">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
-                caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
-                caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                'bg-green-100 text-green-800'
-              }`}>
-                {urgencyLabels[caseData.urgency] || caseData.urgency}
-              </span>
-            </td>
-
-            <td className="px-6 py-4">
-              <div className="flex items-center gap-2">
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all"
-                    style={{ width: `${caseData.progress_percentage || 0}%` }}
-                  />
-                </div>
-                <span className="text-sm text-gray-600 w-10">
-                  {caseData.progress_percentage || 0}%
+            {visibleColumns.status && (
+              <td className="px-6 py-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  {statusLabels[caseData.status] || caseData.status}
                 </span>
-              </div>
-            </td>
+              </td>
+            )}
 
-            <td className="px-6 py-4 text-gray-600">
-              {caseData.assigned_consultant || 'לא הוקצה'}
-            </td>
-          </motion.tr>
+            {visibleColumns.urgency && (
+              <td className="px-6 py-4">
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                  caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
+                  caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
+                  caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-green-100 text-green-800'
+                }`}>
+                  {urgencyLabels[caseData.urgency] || caseData.urgency}
+                </span>
+              </td>
+            )}
+
+            {visibleColumns.progress && (
+              <td className="px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all"
+                      style={{ width: `${caseData.progress_percentage || 0}%` }}
+                    />
+                  </div>
+                  <span className="text-sm text-gray-600 w-10">
+                    {caseData.progress_percentage || 0}%
+                  </span>
+                </div>
+              </td>
+            )}
+
+            {visibleColumns.consultant && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.assigned_consultant || 'לא הוקצה'}
+              </td>
+            )}
+            </motion.tr>
         ))}
       </tbody>
     </table>
