@@ -48,7 +48,6 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">מרכז פיקוד</h1>
-            <p className="text-gray-500 mt-1">ניהול וניטור תיקי משכנתאות</p>
           </div>
           <Link to={createPageUrl('NewCase')}>
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
