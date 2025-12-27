@@ -72,68 +72,12 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sidebar */}
-      <aside className={`fixed top-0 right-0 z-50 h-full w-64 bg-white border-l border-gray-100 transform transition-transform duration-300 lg:translate-x-0 ${
-        sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
-      }`}>
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="font-bold text-gray-900">Mortgage AI</h1>
-                <p className="text-xs text-gray-400">מערכת חכמה</p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-        </div>
-      </aside>
-
       {/* Main Content */}
-      <div className="lg:pr-64">
+      <div>
         {/* Top Bar */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-              <div className="hidden md:block">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  {navigation.find(n => n.page === currentPageName)?.name || currentPageName}
-                </h2>
-              </div>
-            </div>
+            <div>
 
             <div className="flex items-center gap-2">
               <Link to={createPageUrl('Dashboard')}>
