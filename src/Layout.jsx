@@ -8,10 +8,9 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers, User, Phone,
-  Activity, FolderOpen, MessageCircle, Contact, Calculator,
-  CreditCard, Shield, DollarSign, Workflow
+  Database, Bot, Calendar, MessageSquare, Layers
 } from 'lucide-react';
+import { tabs, pageMapping } from '@/components/CaseTabs';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -214,12 +213,37 @@ export default function Layout({ children, currentPageName }) {
               )}
               {casePageTitles[currentPageName] && caseData && (
                 <>
-                  <h1 className="text-2xl font-bold text-gray-900">{casePageTitles[currentPageName]}</h1>
                   <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
                     <Button variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-200">
                       {caseData.client_name}
                     </Button>
                   </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-gray-900">{casePageTitles[currentPageName]}</span>
+                        <ChevronDown className="w-5 h-5 text-gray-500" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
+                      {tabs.map((tab) => {
+                        const Icon = tab.icon;
+                        const pageName = pageMapping[tab.id];
+                        return (
+                          <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
+                            <DropdownMenuItem className={`px-3 py-2 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all mb-2`}>
+                              <div className="flex items-center gap-3 justify-end w-full">
+                                <span className="text-sm font-medium">{tab.label}</span>
+                                <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
+                                  <Icon className="w-4 h-4 text-white" />
+                                </div>
+                              </div>
+                            </DropdownMenuItem>
+                          </Link>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </>
               )}
               {currentPageName === 'CalendarPage' && (

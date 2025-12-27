@@ -2,35 +2,10 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { 
-  Loader2, User, Phone, FileText, MessageSquare, Database,
-  Workflow, Activity, Users, TrendingUp, LayoutDashboard,
-  FolderOpen, MessageCircle, Contact, Calculator, CreditCard,
-  Shield, Package, DollarSign
-} from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-
-const tabs = [
-  { id: 'personal', label: 'פרטים אישיים ופרטי התקשרות', icon: User, gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
-  { id: 'contact', label: 'צור קשר', icon: Phone, gradient: 'from-green-500 to-emerald-600', bg: 'bg-green-50', border: 'border-green-200' },
-  { id: 'summary', label: 'תקציר התיק', icon: FileText, gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
-  { id: 'notes', label: 'הערות מיוחדות', icon: MessageSquare, gradient: 'from-amber-500 to-orange-600', bg: 'bg-amber-50', border: 'border-amber-200' },
-  { id: 'data', label: 'נתונים', icon: Database, gradient: 'from-cyan-500 to-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-200' },
-  { id: 'workflow', label: 'תהליך עבודה', icon: Workflow, gradient: 'from-indigo-500 to-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200' },
-  { id: 'status', label: 'סטטוס', icon: Activity, gradient: 'from-pink-500 to-pink-600', bg: 'bg-pink-50', border: 'border-pink-200' },
-  { id: 'profiles', label: 'פרופילים', icon: Users, gradient: 'from-teal-500 to-teal-600', bg: 'bg-teal-50', border: 'border-teal-200' },
-  { id: 'metrics', label: 'מדדים', icon: TrendingUp, gradient: 'from-rose-500 to-rose-600', bg: 'bg-rose-50', border: 'border-rose-200' },
-  { id: 'dashboards', label: 'דשבורדים', icon: LayoutDashboard, gradient: 'from-violet-500 to-violet-600', bg: 'bg-violet-50', border: 'border-violet-200' },
-  { id: 'documents', label: 'מסמכים', icon: FolderOpen, gradient: 'from-sky-500 to-sky-600', bg: 'bg-sky-50', border: 'border-sky-200' },
-  { id: 'tracking', label: 'תיעוד התקשרות', icon: MessageCircle, gradient: 'from-lime-500 to-lime-600', bg: 'bg-lime-50', border: 'border-lime-200' },
-  { id: 'contacts', label: 'אנשי קשר', icon: Contact, gradient: 'from-fuchsia-500 to-fuchsia-600', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
-  { id: 'calculator', label: 'מחשבון', icon: Calculator, gradient: 'from-slate-500 to-slate-600', bg: 'bg-slate-50', border: 'border-slate-200' },
-  { id: 'payments', label: 'תשלומים', icon: CreditCard, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
-  { id: 'insurance', label: 'ביטוחים', icon: Shield, gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
-  { id: 'products', label: 'מוצרי מעטפת', icon: Package, gradient: 'from-red-500 to-red-600', bg: 'bg-red-50', border: 'border-red-200' },
-  { id: 'account', label: 'חשבון', icon: DollarSign, gradient: 'from-yellow-500 to-amber-600', bg: 'bg-yellow-50', border: 'border-yellow-200' },
-];
+import { tabs, pageMapping } from '@/components/CaseTabs';
 
 export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
@@ -63,27 +38,6 @@ export default function CaseDetails() {
       </div>
     );
   }
-
-  const pageMapping = {
-    'personal': 'CasePersonal',
-    'contact': 'CaseContact',
-    'summary': 'CaseSummary',
-    'notes': 'CaseNotes',
-    'data': 'CaseData',
-    'workflow': 'CaseWorkflow',
-    'status': 'CaseStatus',
-    'profiles': 'CaseProfiles',
-    'metrics': 'CaseMetrics',
-    'dashboards': 'CaseDashboards',
-    'documents': 'CaseDocuments',
-    'tracking': 'CaseTracking',
-    'contacts': 'CaseContacts',
-    'calculator': 'CaseCalculator',
-    'payments': 'CasePayments',
-    'insurance': 'CaseInsurance',
-    'products': 'CaseProducts',
-    'account': 'CaseAccount',
-  };
 
   const activeTabData = tabs.find(t => t.id === activeTab);
 
