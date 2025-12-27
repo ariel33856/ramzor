@@ -150,7 +150,6 @@ export default function ArchiveCaseDetails() {
           <div className="mb-8 flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
-              <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
             </div>
             <div className="flex gap-2">
               {linkedAccount && (
