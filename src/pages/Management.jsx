@@ -189,52 +189,52 @@ export default function Management() {
             <p className="text-gray-400">התחל בהוספת אדם חדש</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {filteredPeople.map((person) => (
-              <motion.div
-                key={person.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all"
-              >
-                <div className="flex items-center justify-between">
-                  <Link 
-                    to={createPageUrl('PersonDetails') + `?id=${person.id}`}
-                    className="font-semibold text-blue-600 hover:text-blue-700 text-lg"
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table className="w-full">
+              <thead className="sticky top-[128px] z-30 bg-gradient-to-r from-blue-50 to-purple-50">
+                <tr className="border-b-2 border-gray-200">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">שם מלא</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">תעודת זהות</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">טלפון</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">אימייל</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">הערות</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">פעולות</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPeople.map((person) => (
+                  <motion.tr
+                    key={person.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                   >
-                    {person.first_name} {person.last_name}
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => deletePersonMutation.mutate(person.id)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
-                  <div>
-                    <span className="text-gray-500">תעודת זהות:</span>
-                    <span className="mr-2 text-gray-900">{person.id_number || '-'}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">טלפון:</span>
-                    <span className="mr-2 text-gray-900">{person.phone || '-'}</span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="text-gray-500">אימייל:</span>
-                    <span className="mr-2 text-gray-900">{person.email || '-'}</span>
-                  </div>
-                  {person.notes && (
-                    <div className="col-span-2">
-                      <span className="text-gray-500">הערות:</span>
-                      <span className="mr-2 text-gray-900">{person.notes}</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                    <td className="px-6 py-4 border-l border-gray-200">
+                      <Link 
+                        to={createPageUrl('PersonDetails') + `?id=${person.id}`}
+                        className="font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                      >
+                        {person.first_name} {person.last_name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.id_number || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.phone || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 border-l border-gray-200">{person.email || '-'}</td>
+                    <td className="px-6 py-4 text-gray-600 max-w-xs truncate border-l border-gray-200">{person.notes || '-'}</td>
+                    <td className="px-6 py-4 text-center">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deletePersonMutation.mutate(person.id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
