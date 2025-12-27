@@ -38,6 +38,8 @@ export default function CasePersonal() {
     client_email: ''
   });
 
+  const [borrowerName, setBorrowerName] = useState('');
+
   React.useEffect(() => {
     if (caseData) {
       setFormData({
@@ -49,9 +51,23 @@ export default function CasePersonal() {
     }
   }, [caseData]);
 
+  React.useEffect(() => {
+    if (linkedBorrowers.length > 0 && linkedBorrowers[0]) {
+      setBorrowerName(linkedBorrowers[0].client_name || '');
+    }
+  }, [linkedBorrowers]);
+
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.MortgageCase.update(caseId, data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+    }
+  });
+
+  const updateBorrowerMutation = useMutation({
+    mutationFn: (data) => base44.entities.MortgageCase.update(linkedBorrowers[0].id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
     }
   });
@@ -87,8 +103,22 @@ export default function CasePersonal() {
       <div className="mx-auto">
         {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
           <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4">
-            <label className="text-sm font-medium text-gray-600 block mb-2">לווה א'</label>
-            <p className="text-xl font-semibold text-gray-900">{linkedBorrowers[0].client_name}</p>
+            <Label>לווה א'</Label>
+            <div className="flex gap-2">
+              <Input
+                value={borrowerName}
+                onChange={(e) => setBorrowerName(e.target.value)}
+                placeholder="שם הלווה"
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                onClick={() => updateBorrowerMutation.mutate({ client_name: borrowerName })}
+                disabled={updateBorrowerMutation.isPending}
+              >
+                {updateBorrowerMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              </Button>
+            </div>
           </div>
         )}
         
