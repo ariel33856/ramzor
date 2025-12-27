@@ -211,41 +211,49 @@ export default function Layout({ children, currentPageName }) {
               {currentPageName === 'CaseDetails' && caseData && (
                 <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
               )}
-              {casePageTitles[currentPageName] && caseData && (
-                <>
-                  <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
-                    <Button variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-200">
-                      {caseData.client_name}
-                    </Button>
-                  </Link>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-gray-900">{casePageTitles[currentPageName]}</span>
-                        <ChevronDown className="w-5 h-5 text-gray-500" />
+              {casePageTitles[currentPageName] && caseData && (() => {
+                const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
+                if (!currentTab) return null;
+                const Icon = currentTab.icon;
+                return (
+                  <>
+                    <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
+                      <Button variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-200">
+                        {caseData.client_name}
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
-                      {tabs.map((tab) => {
-                        const Icon = tab.icon;
-                        const pageName = pageMapping[tab.id];
-                        return (
-                          <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
-                            <DropdownMenuItem className={`px-3 py-2 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all mb-2`}>
-                              <div className="flex items-center gap-3 justify-end w-full">
-                                <span className="text-sm font-medium">{tab.label}</span>
-                                <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
-                                  <Icon className="w-4 h-4 text-white" />
+                    </Link>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
+                          <div className={`w-8 h-8 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
+                            <Icon className="w-4 h-4 text-white" />
+                          </div>
+                          <span className="text-lg font-bold text-gray-900">{casePageTitles[currentPageName]}</span>
+                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
+                        {tabs.map((tab) => {
+                          const TabIcon = tab.icon;
+                          const pageName = pageMapping[tab.id];
+                          return (
+                            <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
+                              <DropdownMenuItem className={`px-3 py-2 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all mb-2`}>
+                                <div className="flex items-center gap-3 justify-end w-full">
+                                  <span className="text-sm font-medium">{tab.label}</span>
+                                  <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
+                                    <TabIcon className="w-4 h-4 text-white" />
+                                  </div>
                                 </div>
-                              </div>
-                            </DropdownMenuItem>
-                          </Link>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
-              )}
+                              </DropdownMenuItem>
+                            </Link>
+                          );
+                        })}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                );
+              })()}
               {currentPageName === 'CalendarPage' && (
                 <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
               )}
