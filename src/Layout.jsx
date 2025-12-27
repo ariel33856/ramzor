@@ -5,7 +5,9 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
-  Menu, X, Bell, Search, ChevronDown, Home, Building2
+  Menu, X, Bell, Search, ChevronDown, Home, Building2,
+  TrendingUp, ShoppingCart, UserCheck, Trello, Package,
+  Database, Bot, Calendar, MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -200,23 +202,104 @@ export default function Layout({ children, currentPageName }) {
                     <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
-                    <Users className="w-4 h-4 ml-2" />
-                    ניהול משתמשים
+                <DropdownMenuContent align="end" className="w-80 p-2">
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-blue-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">שיווק</span>
+                    </div>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <FileText className="w-4 h-4 ml-2" />
-                    תבניות מסמכים
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-purple-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <ShoppingCart className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">מכירות</span>
+                    </div>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="w-4 h-4 ml-2" />
-                    הגדרות מערכת
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-green-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                        <UserCheck className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">לקוחות פעילים</span>
+                    </div>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Building2 className="w-4 h-4 ml-2" />
-                    ניהול בנקים
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-orange-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <Trello className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">גישה לבורדים</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-pink-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
+                        <Package className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">מוצרי מעטפת</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-indigo-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <Database className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">מערכת ERP</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-cyan-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                        <Search className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">חיפוש</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-violet-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">בוט AI</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-red-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                        <Bell className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">התראות ומשימות</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-teal-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">יומן</span>
+                    </div>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem className="p-3 cursor-pointer hover:bg-amber-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-base font-medium">תקשורת</span>
+                    </div>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
