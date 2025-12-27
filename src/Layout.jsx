@@ -115,7 +115,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Marketing')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-blue-50 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-medium">שיווק</span>
+                            <span className="text-sm font-medium">משכנתאות</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                               <TrendingUp className="w-4 h-4 text-white" />
                             </div>
