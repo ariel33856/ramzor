@@ -156,7 +156,7 @@ export default function ArchiveCaseDetails() {
               {linkedAccount && (
                 <Link to={createPageUrl('CaseDetails') + `?id=${linkedAccount.id}`}>
                   <Button variant="outline" className="border-blue-200 bg-blue-50">
-                    חשבון משויך: {linkedAccount.client_name}
+                    חשבון משויך: {linkedAccount.account_number}
                   </Button>
                 </Link>
               )}
