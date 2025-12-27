@@ -46,7 +46,7 @@ export default function Dashboard() {
       <div className="mx-auto p-2 md:p-3">
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
+        <div className="sticky top-[64px] z-20 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
 
             <Link to={createPageUrl('NewCase')}>
