@@ -45,15 +45,20 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50/50">
       <div className="max-w-7xl mx-auto p-6">
 
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">חשבונות פעילים</h1>
+          <Link to={createPageUrl('AllDashboards')}>
+            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
+              <Layers className="w-5 h-5 ml-2" />
+              דשבורדים
+            </Button>
+          </Link>
+        </div>
+
         {/* Filters */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
-            <Link to={createPageUrl('AllDashboards')}>
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
-                <Layers className="w-5 h-5 ml-2" />
-                דשבורדים
-              </Button>
-            </Link>
 
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
