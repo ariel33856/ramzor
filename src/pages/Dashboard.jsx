@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, LayoutGrid, Table, Layers, Columns
+  Plus, Search, Filter, Columns
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,13 +14,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
-import CaseCard from '../components/dashboard/CaseCard';
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [viewMode, setViewMode] = useState('grid');
   const [visibleColumns, setVisibleColumns] = useState({
     // personal - פרטים אישיים ופרטי התקשרות
     client_name: true,
@@ -147,201 +145,182 @@ export default function Dashboard() {
               </Select>
 
               <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Columns className="w-4 h-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-sm">שדות להצגה</h4>
-                  <div className="space-y-2">
-                    <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים ופרטי התקשרות</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-name"
-                        checked={visibleColumns.client_name}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_name: checked})}
-                      />
-                      <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-id"
-                        checked={visibleColumns.client_id}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_id: checked})}
-                      />
-                      <label htmlFor="col-id" className="text-sm cursor-pointer">תעודת זהות</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-phone"
-                        checked={visibleColumns.client_phone}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_phone: checked})}
-                      />
-                      <label htmlFor="col-phone" className="text-sm cursor-pointer">טלפון</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-email"
-                        checked={visibleColumns.client_email}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_email: checked})}
-                      />
-                      <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
-                    </div>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Columns className="w-4 h-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-sm">שדות להצגה</h4>
+                    <div className="space-y-2">
+                      <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים ופרטי התקשרות</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-name"
+                          checked={visibleColumns.client_name}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_name: checked})}
+                        />
+                        <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-id"
+                          checked={visibleColumns.client_id}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_id: checked})}
+                        />
+                        <label htmlFor="col-id" className="text-sm cursor-pointer">תעודת זהות</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-phone"
+                          checked={visibleColumns.client_phone}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_phone: checked})}
+                        />
+                        <label htmlFor="col-phone" className="text-sm cursor-pointer">טלפון</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-email"
+                          checked={visibleColumns.client_email}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_email: checked})}
+                        />
+                        <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
+                      </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">נתונים</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-loan"
-                        checked={visibleColumns.loan_amount}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, loan_amount: checked})}
-                      />
-                      <label htmlFor="col-loan" className="text-sm cursor-pointer">סכום הלוואה</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-property"
-                        checked={visibleColumns.property_value}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, property_value: checked})}
-                      />
-                      <label htmlFor="col-property" className="text-sm cursor-pointer">שווי נכס</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-income"
-                        checked={visibleColumns.monthly_income}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_income: checked})}
-                      />
-                      <label htmlFor="col-income" className="text-sm cursor-pointer">הכנסה חודשית</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-expenses"
-                        checked={visibleColumns.monthly_expenses}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_expenses: checked})}
-                      />
-                      <label htmlFor="col-expenses" className="text-sm cursor-pointer">הוצאות חודשיות</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-family"
-                        checked={visibleColumns.family_size}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, family_size: checked})}
-                      />
-                      <label htmlFor="col-family" className="text-sm cursor-pointer">גודל משפחה</label>
-                    </div>
+                      <div className="font-semibold text-xs text-gray-500 pt-2">נתונים</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-loan"
+                          checked={visibleColumns.loan_amount}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, loan_amount: checked})}
+                        />
+                        <label htmlFor="col-loan" className="text-sm cursor-pointer">סכום הלוואה</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-property"
+                          checked={visibleColumns.property_value}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, property_value: checked})}
+                        />
+                        <label htmlFor="col-property" className="text-sm cursor-pointer">שווי נכס</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-income"
+                          checked={visibleColumns.monthly_income}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_income: checked})}
+                        />
+                        <label htmlFor="col-income" className="text-sm cursor-pointer">הכנסה חודשית</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-expenses"
+                          checked={visibleColumns.monthly_expenses}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_expenses: checked})}
+                        />
+                        <label htmlFor="col-expenses" className="text-sm cursor-pointer">הוצאות חודשיות</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-family"
+                          checked={visibleColumns.family_size}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, family_size: checked})}
+                        />
+                        <label htmlFor="col-family" className="text-sm cursor-pointer">גודל משפחה</label>
+                      </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-status"
-                        checked={visibleColumns.status}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, status: checked})}
-                      />
-                      <label htmlFor="col-status" className="text-sm cursor-pointer">סטטוס</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-urgency"
-                        checked={visibleColumns.urgency}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, urgency: checked})}
-                      />
-                      <label htmlFor="col-urgency" className="text-sm cursor-pointer">דחיפות</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-progress"
-                        checked={visibleColumns.progress}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, progress: checked})}
-                      />
-                      <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
-                    </div>
+                      <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-status"
+                          checked={visibleColumns.status}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, status: checked})}
+                        />
+                        <label htmlFor="col-status" className="text-sm cursor-pointer">סטטוס</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-urgency"
+                          checked={visibleColumns.urgency}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, urgency: checked})}
+                        />
+                        <label htmlFor="col-urgency" className="text-sm cursor-pointer">דחיפות</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-progress"
+                          checked={visibleColumns.progress}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, progress: checked})}
+                        />
+                        <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
+                      </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-account"
-                        checked={visibleColumns.account_number}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
-                      />
-                      <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-consultant"
-                        checked={visibleColumns.consultant}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, consultant: checked})}
-                      />
-                      <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ אחראי</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-bank"
-                        checked={visibleColumns.target_bank}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, target_bank: checked})}
-                      />
-                      <label htmlFor="col-bank" className="text-sm cursor-pointer">בנק יעד</label>
-                    </div>
+                      <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-account"
+                          checked={visibleColumns.account_number}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
+                        />
+                        <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-consultant"
+                          checked={visibleColumns.consultant}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, consultant: checked})}
+                        />
+                        <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ אחראי</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-bank"
+                          checked={visibleColumns.target_bank}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, target_bank: checked})}
+                        />
+                        <label htmlFor="col-bank" className="text-sm cursor-pointer">בנק יעד</label>
+                      </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">מדדים</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-ltv"
-                        checked={visibleColumns.ltv_ratio}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, ltv_ratio: checked})}
-                      />
-                      <label htmlFor="col-ltv" className="text-sm cursor-pointer">יחס LTV</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-dti"
-                        checked={visibleColumns.dti_ratio}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, dti_ratio: checked})}
-                      />
-                      <label htmlFor="col-dti" className="text-sm cursor-pointer">יחס DTI</label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-income-capita"
-                        checked={visibleColumns.income_per_capita}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, income_per_capita: checked})}
-                      />
-                      <label htmlFor="col-income-capita" className="text-sm cursor-pointer">הכנסה לנפש</label>
-                    </div>
+                      <div className="font-semibold text-xs text-gray-500 pt-2">מדדים</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-ltv"
+                          checked={visibleColumns.ltv_ratio}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, ltv_ratio: checked})}
+                        />
+                        <label htmlFor="col-ltv" className="text-sm cursor-pointer">יחס LTV</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-dti"
+                          checked={visibleColumns.dti_ratio}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, dti_ratio: checked})}
+                        />
+                        <label htmlFor="col-dti" className="text-sm cursor-pointer">יחס DTI</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-income-capita"
+                          checked={visibleColumns.income_per_capita}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, income_per_capita: checked})}
+                        />
+                        <label htmlFor="col-income-capita" className="text-sm cursor-pointer">הכנסה לנפש</label>
+                      </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">הערות מיוחדות</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-notes"
-                        checked={visibleColumns.notes}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, notes: checked})}
-                      />
-                      <label htmlFor="col-notes" className="text-sm cursor-pointer">הערות</label>
+                      <div className="font-semibold text-xs text-gray-500 pt-2">הערות מיוחדות</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-notes"
+                          checked={visibleColumns.notes}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, notes: checked})}
+                        />
+                        <label htmlFor="col-notes" className="text-sm cursor-pointer">הערות</label>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </PopoverContent>
+                </PopoverContent>
               </Popover>
-
-              <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => setViewMode('grid')}
-                className="h-8 w-8"
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => setViewMode('table')}
-                className="h-8 w-8"
-              >
-                <Table className="w-4 h-4" />
-              </Button>
-            </div>
             </div>
             </div>
             </div>
@@ -349,20 +328,27 @@ export default function Dashboard() {
       <div className="mx-auto p-1">
         {/* Cases Content */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white rounded-2xl p-5 animate-pulse">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-xl" />
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
-                    <div className="h-3 bg-gray-200 rounded w-16" />
-                  </div>
-                </div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-4" />
-                <div className="h-8 bg-gray-200 rounded w-full" />
-              </div>
-            ))}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[75vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <tr key={i} className="border-b border-gray-100">
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : filteredCases.length === 0 ? (
           <motion.div
@@ -374,19 +360,6 @@ export default function Dashboard() {
             <h3 className="text-xl font-semibold text-gray-600 mb-2">אין תיקים להצגה</h3>
             <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
           </motion.div>
-        ) : viewMode === 'grid' ? (
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-2">
-            {filteredCases.map((caseData, index) => (
-              <motion.div
-                key={caseData.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <CaseCard caseData={caseData} />
-              </motion.div>
-            ))}
-          </div>
         ) : (
 <div className="bg-white rounded-xl shadow-sm border border-gray-100">
   <div className="overflow-x-auto max-h-[75vh]">
@@ -558,14 +531,13 @@ export default function Dashboard() {
               </td>
             )}
             </motion.tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-        )}
-      </div>
-    </div>
-  );
-}
+            ))}
+            </tbody>
+            </table>
+            </div>
+            </div>
+            )}
+            </div>
+            </div>
+            );
+            }
