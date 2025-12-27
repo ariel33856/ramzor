@@ -7,7 +7,47 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
 import { Button } from '@/components/ui/button';
-import CaseTabContent from '@/components/case/CaseTabContent';
+
+// Import all case page components
+import CasePersonal from './CasePersonal';
+import CaseContact from './CaseContact';
+import CaseSummary from './CaseSummary';
+import CaseNotes from './CaseNotes';
+import CaseData from './CaseData';
+import CaseWorkflow from './CaseWorkflow';
+import CaseStatus from './CaseStatus';
+import CaseProfiles from './CaseProfiles';
+import CaseMetrics from './CaseMetrics';
+import CaseDashboards from './CaseDashboards';
+import CaseDocuments from './CaseDocuments';
+import CaseTracking from './CaseTracking';
+import CaseContacts from './CaseContacts';
+import CaseCalculator from './CaseCalculator';
+import CasePayments from './CasePayments';
+import CaseInsurance from './CaseInsurance';
+import CaseProducts from './CaseProducts';
+import CaseAccount from './CaseAccount';
+
+const pageComponents = {
+  personal: CasePersonal,
+  contact: CaseContact,
+  summary: CaseSummary,
+  notes: CaseNotes,
+  data: CaseData,
+  workflow: CaseWorkflow,
+  status: CaseStatus,
+  profiles: CaseProfiles,
+  metrics: CaseMetrics,
+  dashboards: CaseDashboards,
+  documents: CaseDocuments,
+  tracking: CaseTracking,
+  contacts: CaseContacts,
+  calculator: CaseCalculator,
+  payments: CasePayments,
+  insurance: CaseInsurance,
+  products: CaseProducts,
+  account: CaseAccount
+};
 
 export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
@@ -118,8 +158,8 @@ export default function CaseDetails() {
                 </h2>
               </Link>
 
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <CaseTabContent tabId={activeTab} caseId={caseId} caseData={caseData} />
+              <div className="bg-white rounded-xl overflow-hidden border border-gray-200 transform scale-90 origin-top">
+                {React.createElement(pageComponents[activeTab])}
               </div>
             </motion.div>
           )}
