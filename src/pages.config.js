@@ -34,6 +34,7 @@ import CaseProducts from './pages/CaseProducts';
 import CaseAccount from './pages/CaseAccount';
 import ManagementHub from './pages/ManagementHub';
 import PersonDetails from './pages/PersonDetails';
+import ArchiveAccounts from './pages/ArchiveAccounts';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +75,7 @@ export const PAGES = {
     "CaseAccount": CaseAccount,
     "ManagementHub": ManagementHub,
     "PersonDetails": PersonDetails,
+    "ArchiveAccounts": ArchiveAccounts,
 }
 
 export const pagesConfig = {

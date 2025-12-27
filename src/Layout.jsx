@@ -115,10 +115,11 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
+                    {currentPageName === 'ArchiveAccounts' && 'ארכיון חשבונות'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
                     {currentPageName === 'Sales' && 'עסקאות'}
@@ -139,6 +140,17 @@ export default function Layout({ children, currentPageName }) {
                             <span className="text-sm font-medium">חשבונות</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
                               <UserCheck className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+
+                      <Link to={createPageUrl('ArchiveAccounts')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-slate-50 border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">ארכיון</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
+                              <Database className="w-4 h-4 text-white" />
                             </div>
                           </div>
                         </DropdownMenuItem>
