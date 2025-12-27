@@ -20,6 +20,8 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [visibleColumns, setVisibleColumns] = useState({
+    // account - חשבון
+    account_number: true,
     // personal - פרטים אישיים ופרטי התקשרות
     client_name: true,
     client_id: false,
@@ -35,8 +37,6 @@ export default function Dashboard() {
     status: true,
     urgency: true,
     progress: true,
-    // account - חשבון
-    account_number: false,
     consultant: false,
     target_bank: false,
     // metrics - מדדים
@@ -157,6 +157,16 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <h4 className="font-semibold text-sm">שדות להצגה</h4>
                     <div className="space-y-2">
+                      <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-account-num"
+                          checked={visibleColumns.account_number}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
+                        />
+                        <label htmlFor="col-account-num" className="text-sm cursor-pointer">מספר חשבון</label>
+                      </div>
+
                       <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים ופרטי התקשרות</div>
                       <div className="flex items-center gap-2">
                         <Checkbox
@@ -259,15 +269,6 @@ export default function Dashboard() {
                         <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
                       </div>
 
-                      <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-account"
-                          checked={visibleColumns.account_number}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
-                        />
-                        <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
-                      </div>
                       <div className="flex items-center gap-2">
                         <Checkbox
                           id="col-consultant"
@@ -369,6 +370,7 @@ export default function Dashboard() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
+          {visibleColumns.account_number && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">מספר חשבון</th>}
           {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
           {visibleColumns.client_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>}
           {visibleColumns.client_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>}
@@ -386,7 +388,6 @@ export default function Dashboard() {
           {visibleColumns.ltv_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס LTV</th>}
           {visibleColumns.dti_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס DTI</th>}
           {visibleColumns.income_per_capita && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה לנפש</th>}
-          {visibleColumns.account_number && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">מספר חשבון</th>}
           {visibleColumns.notes && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הערות</th>}
         </tr>
       </thead>
@@ -401,6 +402,12 @@ export default function Dashboard() {
             className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
             onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
             >
+            {visibleColumns.account_number && (
+              <td className="px-6 py-4">
+                <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>
+              </td>
+            )}
+
             {visibleColumns.client_name && (
               <td className="px-6 py-4">
                 <div className="font-semibold text-gray-900">{caseData.client_name}</div>
@@ -519,12 +526,6 @@ export default function Dashboard() {
             {visibleColumns.income_per_capita && (
               <td className="px-6 py-4 text-gray-600">
                 {formatCurrency(caseData.income_per_capita)}
-              </td>
-            )}
-
-            {visibleColumns.account_number && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.account_number || '—'}
               </td>
             )}
 
