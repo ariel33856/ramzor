@@ -202,7 +202,7 @@ export default function Layout({ children, currentPageName }) {
                     <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-80 p-2">
+                <DropdownMenuContent align="start" className="w-56 p-2">
                   <DropdownMenuItem className="p-3 cursor-pointer hover:bg-blue-50 rounded-lg">
                     <div className="flex items-center gap-3 justify-end w-full">
                       <span className="text-base font-medium">שיווק</span>
