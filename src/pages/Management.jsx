@@ -177,6 +177,13 @@ export default function Management() {
           </div>
         </div>
 
+        {/* Additional Sticky Row */}
+        <div className="sticky top-[152px] z-15 w-full bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-3 shadow-sm border border-gray-200 mb-4">
+          <div className="text-sm text-gray-600 text-center">
+            סה"כ: {filteredPeople.length} לווים וערבים
+          </div>
+        </div>
+
         {/* People List */}
         {isLoading ? (
           <div className="text-center py-12">
