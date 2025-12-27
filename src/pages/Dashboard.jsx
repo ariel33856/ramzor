@@ -75,8 +75,22 @@ export default function Dashboard() {
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
 
+  const { data: allBorrowers = [] } = useQuery({
+    queryKey: ['all-borrowers'],
+    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+  });
+
   // Filter only non-archived cases without module_id (main accounts module)
   const cases = allCases.filter(c => !c.is_archived && !c.module_id);
+
+  // Helper function to get linked borrower name
+  const getLinkedBorrowerName = (caseData) => {
+    if (!caseData.linked_borrowers || caseData.linked_borrowers.length === 0) {
+      return caseData.client_name;
+    }
+    const linkedBorrower = allBorrowers.find(b => b.id === caseData.linked_borrowers[0]);
+    return linkedBorrower ? linkedBorrower.client_name : caseData.client_name;
+  };
 
   const filteredCases = cases.filter(c => {
     const matchesSearch = !searchTerm || 
@@ -410,7 +424,7 @@ export default function Dashboard() {
 
             {visibleColumns.client_name && (
               <td className="px-6 py-4">
-                <div className="font-semibold text-gray-900">{caseData.client_name}</div>
+                <div className="font-semibold text-gray-900">{getLinkedBorrowerName(caseData)}</div>
               </td>
             )}
 
