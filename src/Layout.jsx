@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare
+  Database, Bot, Calendar, MessageSquare, Layers
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
