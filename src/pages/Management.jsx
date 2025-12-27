@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
 import {
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Search, Bot, Bell, Calendar, MessageSquare
+  Database, Search, Bot, Bell, Calendar, MessageSquare, Users, FileText, DollarSign
 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const managementItems = [
   { name: 'שיווק', icon: TrendingUp, page: 'Marketing', gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', hover: 'hover:border-blue-400 hover:bg-blue-100' },
@@ -25,39 +26,55 @@ export default function Management() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">מרכז ניהול</h1>
-          <p className="text-gray-500">גישה מהירה לכל המערכות והכלים</p>
-        </motion.div>
+        <Tabs defaultValue="debtors" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="debtors" className="text-lg">
+              <Users className="w-5 h-5 ml-2" />
+              לווים
+            </TabsTrigger>
+            <TabsTrigger value="guarantors" className="text-lg">
+              <FileText className="w-5 h-5 ml-2" />
+              ערבים
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="text-lg">
+              <DollarSign className="w-5 h-5 ml-2" />
+              תשלומים
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {managementItems.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.page}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Link to={createPageUrl(item.page)}>
-                  <div className={`${item.bg} ${item.border} ${item.hover} border-2 rounded-2xl p-8 transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer group`}>
-                    <div className="flex flex-col items-center text-center gap-4">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${item.gradient} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="w-10 h-10 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </div>
+          <TabsContent value="debtors">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">לווים</h2>
+              <p className="text-gray-500">ניהול וטיפול בלווים</p>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="guarantors">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">ערבים</h2>
+              <p className="text-gray-500">ניהול וטיפול בערבים</p>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="payments">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">תשלומים</h2>
+              <p className="text-gray-500">ניהול תשלומים ועסקאות</p>
+            </motion.div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
