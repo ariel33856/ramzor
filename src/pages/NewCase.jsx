@@ -27,24 +27,25 @@ export default function NewCase() {
     
     setSaving(true);
 
-    // Get all existing cases to calculate next account number
-    const allCases = await base44.entities.MortgageCase.list('-created_date', 1);
-    const lastAccountNumber = allCases.length > 0 && allCases[0].account_number 
-      ? allCases[0].account_number 
-      : 72515;
-    const nextAccountNumber = lastAccountNumber + 1;
-
     const caseData = {
       client_name: clientName,
       client_id: '',
       loan_amount: 0,
-      account_number: nextAccountNumber,
       status: 'new',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
       module_id: moduleId || null
     };
+
+    // Only add account number for main accounts module (no moduleId)
+    if (!moduleId) {
+      const allCases = await base44.entities.MortgageCase.list('-created_date', 1);
+      const lastAccountNumber = allCases.length > 0 && allCases[0].account_number 
+        ? allCases[0].account_number 
+        : 72515;
+      caseData.account_number = lastAccountNumber + 1;
+    }
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
 

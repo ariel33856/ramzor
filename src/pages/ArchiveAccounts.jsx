@@ -75,8 +75,8 @@ export default function ArchiveAccounts() {
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
 
-  // Filter only archived cases
-  const cases = allCases.filter(c => c.is_archived === true);
+  // Filter only archived cases without module_id (main borrowers module)
+  const cases = allCases.filter(c => c.is_archived === true && !c.module_id);
 
   const filteredCases = cases.filter(c => {
     const matchesSearch = !searchTerm || 
