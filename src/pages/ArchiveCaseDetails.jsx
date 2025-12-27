@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Loader2, Save, ArrowRight } from 'lucide-react';
+import { Loader2, Save, ArrowRight, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -10,16 +10,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 export default function ArchiveCaseDetails() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['archive-case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
+  });
+
+  const { data: accounts = [] } = useQuery({
+    queryKey: ['accounts'],
+    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: false, module_id: null })
   });
 
   const [formData, setFormData] = useState({});
@@ -38,10 +52,32 @@ export default function ArchiveCaseDetails() {
     }
   });
 
+  const linkToAccountMutation = useMutation({
+    mutationFn: (accountId) => {
+      return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
+        const account = result[0];
+        const currentBorrowers = account.linked_borrowers || [];
+        return base44.entities.MortgageCase.update(accountId, { 
+          linked_borrowers: [...currentBorrowers, caseId] 
+        });
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      setDialogOpen(false);
+      setSearchTerm('');
+    }
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     updateMutation.mutate(formData);
   };
+
+  const filteredAccounts = accounts.filter(acc => 
+    acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    acc.account_number?.toString().includes(searchTerm)
+  );
 
   const statusLabels = {
     new: 'חדש',
@@ -104,9 +140,46 @@ export default function ArchiveCaseDetails() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
-            <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
+          <div className="mb-8 flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
+              <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
+            </div>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <LinkIcon className="w-4 h-4 ml-2" />
+                  שייך לחשבון
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="חיפוש לפי שם או מספר חשבון..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredAccounts.map(account => (
+                      <div
+                        key={account.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => linkToAccountMutation.mutate(account.id)}
+                      >
+                        <p className="font-semibold text-gray-900">{account.client_name}</p>
+                        <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                      </div>
+                    ))}
+                    {filteredAccounts.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                    )}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
