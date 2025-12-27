@@ -84,7 +84,7 @@ export default function ArchiveCaseDetails() {
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900">חשבון לא נמצא</h2>
           <Link to={createPageUrl('ArchiveAccounts')} className="text-blue-600 hover:underline mt-2 inline-block">
-            חזרה לארכיון
+            חזרה ללווים
           </Link>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function ArchiveCaseDetails() {
           <Link to={createPageUrl('ArchiveAccounts')}>
             <Button variant="outline" className="mb-4">
               <ArrowRight className="w-4 h-4 ml-2" />
-              חזרה לארכיון
+              חזרה ללווים
             </Button>
           </Link>
         </div>
@@ -110,7 +110,7 @@ export default function ArchiveCaseDetails() {
               <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
             </div>
             <div className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-semibold">
-              ארכיון
+              לווה
             </div>
           </div>
 
