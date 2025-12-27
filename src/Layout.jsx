@@ -204,121 +204,121 @@ export default function Layout({ children, currentPageName }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2">
                   <Link to={createPageUrl('Marketing')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">שיווק</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                          <TrendingUp className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">שיווק</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                          <TrendingUp className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Sales')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">מכירות</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                          <ShoppingCart className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">מכירות</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <ShoppingCart className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Dashboard')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">לקוחות פעילים</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                          <UserCheck className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">לקוחות פעילים</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                          <UserCheck className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Boards')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">גישה לבורדים</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                          <Trello className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">גישה לבורדים</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                          <Trello className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Products')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">מוצרי מעטפת</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
-                          <Package className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">מוצרי מעטפת</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
+                          <Package className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('ERP')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">מערכת ERP</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                          <Database className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">מערכת ERP</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                          <Database className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('SearchPage')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-cyan-400 hover:bg-cyan-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">חיפוש</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
-                          <Search className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-cyan-400 hover:bg-cyan-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">חיפוש</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                          <Search className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('AIBot')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-violet-400 hover:bg-violet-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">בוט AI</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
-                          <Bot className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-violet-400 hover:bg-violet-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">בוט AI</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
+                          <Bot className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Notifications')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-red-400 hover:bg-red-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">התראות ומשימות</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                          <Bell className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-red-400 hover:bg-red-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">התראות ומשימות</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                          <Bell className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('CalendarPage')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">יומן</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
-                          <Calendar className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">יומן</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
                   </Link>
                   
                   <Link to={createPageUrl('Communication')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-3 justify-end w-full">
-                        <span className="text-base font-medium">תקשורת</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
-                          <MessageSquare className="w-5 h-5 text-white" />
+                    <DropdownMenuItem className="p-1.5 cursor-pointer border-2 border-gray-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">תקשורת</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
+                          <MessageSquare className="w-4 h-4 text-white" />
                         </div>
                       </div>
                     </DropdownMenuItem>
