@@ -135,12 +135,12 @@ export default function Dashboard() {
                 <Table className="w-4 h-4" />
               </Button>
             </div>
-          </div>
-        </div>
-      </div>
+            </div>
+            </div>
+            </div>
 
-      <div className="mx-auto p-1">
-        {/* Cases Content */}
+            <div className="mx-auto p-1">
+            {/* Cases Content */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -181,10 +181,11 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-            <table className="w-full">
-              <thead className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50">
-                <tr className="border-b-2 border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto">
+              <table className="w-full sticky top-[152px]">
+                <thead className="z-30 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
@@ -241,8 +242,9 @@ export default function Dashboard() {
                   </motion.tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+              </div>
+              </div>
         )}
       </div>
     </div>
