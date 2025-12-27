@@ -111,38 +111,30 @@ export default function Layout({ children, currentPageName }) {
             </Button>
           </div>
 
+          {/* Navigation */}
+          <nav className="flex-1 p-4 space-y-1">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentPageName === item.page;
+              
+              return (
+                <Link
+                  key={item.page}
+                  to={createPageUrl(item.page)}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
 
-
-          {/* User Section */}
-          {user && (
-            <div className="p-4 border-t border-gray-100">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-full">
-                  <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      {user.full_name?.charAt(0) || user.email?.charAt(0)}
-                    </div>
-                    <div className="flex-1 text-right">
-                      <p className="font-medium text-gray-900 truncate">{user.full_name || 'משתמש'}</p>
-                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
-                    </div>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem>
-                    <Settings className="w-4 h-4 ml-2" />
-                    הגדרות
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                    <LogOut className="w-4 h-4 ml-2" />
-                    התנתק
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
         </div>
       </aside>
 
