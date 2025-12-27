@@ -85,9 +85,9 @@ export default function CaseDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <div className="mx-auto p-2 md:p-3">
+      <div className="mx-auto">
         {/* Tabs Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6 px-2 md:px-3">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -142,11 +142,11 @@ export default function CaseDetails() {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
               className={`
-                bg-white rounded-2xl border-2 ${activeTabData.border} p-8 shadow-lg mb-6
+                bg-white border-2 ${activeTabData.border} shadow-lg mb-6
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`} className={`flex items-center gap-3 mb-6 p-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}>
+              <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`} className={`flex items-center gap-3 mb-0 p-4 border-b-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}>
                 <div className={`
                   w-14 h-14 rounded-xl flex items-center justify-center
                   bg-gradient-to-br ${activeTabData.gradient} shadow-lg
@@ -158,7 +158,7 @@ export default function CaseDetails() {
                 </h2>
               </Link>
 
-              <div className="bg-white rounded-xl overflow-hidden border border-gray-200 transform scale-90 origin-top">
+              <div className="bg-white overflow-hidden transform scale-90 origin-top">
                 {React.createElement(pageComponents[activeTab])}
               </div>
             </motion.div>
