@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Save, Trash2 } from 'lucide-react';
@@ -18,11 +18,23 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     client_email: borrower.client_email || ''
   });
 
+  useEffect(() => {
+    setEditData({
+      client_name: borrower.client_name || '',
+      last_name: borrower.last_name || '',
+      client_id: borrower.client_id || '',
+      client_phone: borrower.client_phone || '',
+      client_email: borrower.client_email || ''
+    });
+  }, [borrower]);
+
   const updateBorrowerMutation = useMutation({
     mutationFn: (data) => base44.entities.MortgageCase.update(borrower.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
+      queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
+      queryClient.invalidateQueries({ queryKey: ['archive-case'] });
     }
   });
 
