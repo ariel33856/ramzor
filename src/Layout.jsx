@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers
+  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight
 } from 'lucide-react';
 import { tabs, pageMapping } from '@/components/CaseTabs';
 import { Button } from '@/components/ui/button';
@@ -210,6 +210,14 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  {currentPageName === 'ArchiveCaseDetails' && (
+                    <Link to={createPageUrl('ArchiveAccounts')}>
+                      <Button variant="outline">
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                        חזרה ללווים
+                      </Button>
+                    </Link>
+                  )}
                   <Link to={createPageUrl('AllDashboards')}>
                     <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
                       <Layers className="w-5 h-5 ml-2" />
