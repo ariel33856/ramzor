@@ -103,7 +103,14 @@ export default function CasePersonal() {
       <div className="mx-auto">
         {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
           <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4">
-            <Label>לווה א'</Label>
+            <div className="flex items-center justify-between mb-2">
+              <Label>לווה א'</Label>
+              <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${linkedBorrowers[0].id}`}>
+                <Button variant="outline" size="sm">
+                  למעבר ללווה במודול לווים
+                </Button>
+              </Link>
+            </div>
             <div className="flex gap-2">
               <Input
                 value={borrowerName}
