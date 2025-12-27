@@ -89,7 +89,7 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-4">
-              {currentPageName === 'Dashboard' && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">חשבונות פעילים</h1>
                   <DropdownMenu>

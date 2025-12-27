@@ -26,8 +26,12 @@ export default function Management() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        <Tabs defaultValue="debtors" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+        <Tabs defaultValue="accounts" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="accounts" className="text-lg">
+              <UserCheck className="w-5 h-5 ml-2" />
+              חשבונות פעילים
+            </TabsTrigger>
             <TabsTrigger value="debtors" className="text-lg">
               <Users className="w-5 h-5 ml-2" />
               לווים
@@ -41,6 +45,20 @@ export default function Management() {
               תשלומים
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="accounts">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Link to={createPageUrl('Dashboard')}>
+                <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all cursor-pointer">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">חשבונות פעילים</h2>
+                  <p className="text-gray-500">לחץ לצפייה בדשבורד</p>
+                </div>
+              </Link>
+            </motion.div>
+          </TabsContent>
 
           <TabsContent value="debtors">
             <motion.div
