@@ -77,7 +77,7 @@ export default function Management() {
     <div className="min-h-screen bg-gray-50/50 p-1">
       <div className="w-full">
         {/* Search and Add */}
-        <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
+        <div className="sticky top-0 z-10 w-full bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
           <div className="flex gap-3">
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
