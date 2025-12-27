@@ -181,10 +181,11 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-            <table className="w-full">
-              <thead className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50">
-                <tr className="border-b-2 border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
