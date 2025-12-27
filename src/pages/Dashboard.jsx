@@ -45,7 +45,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50/50">
       <div className="max-w-7xl mx-auto p-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatsCard
             title="סה״כ תיקים"
             value={stats.total}
@@ -72,19 +72,18 @@ export default function Dashboard() {
             trend="+12%"
             trendUp
           />
-          <Link to={createPageUrl('AllDashboards')} className="block">
-            <StatsCard
-              title="כל הדשבורדים"
-              value="→"
-              icon={Layers}
-              color="purple"
-            />
-          </Link>
         </div>
 
         {/* Filters */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
+            <Link to={createPageUrl('AllDashboards')}>
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
+                <Layers className="w-5 h-5 ml-2" />
+                כל הדשבורדים
+              </Button>
+            </Link>
+
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
                 <Plus className="w-5 h-5 ml-2" />
