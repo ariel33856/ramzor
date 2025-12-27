@@ -37,8 +37,8 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
+      <div className="mx-auto">
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium text-gray-700">שם מלא</label>

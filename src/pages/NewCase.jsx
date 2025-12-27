@@ -58,8 +58,8 @@ export default function NewCase() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
+      <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

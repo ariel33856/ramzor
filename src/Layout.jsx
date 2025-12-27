@@ -113,7 +113,7 @@ export default function Layout({ children, currentPageName }) {
       <div>
         {/* Top Bar */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-          <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
               {(currentPageName === 'Dashboard' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>

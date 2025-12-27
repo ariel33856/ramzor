@@ -24,8 +24,8 @@ const managementItems = [
 
 export default function Management() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-2 md:p-3">
+      <div className="mx-auto">
         <Tabs defaultValue="accounts" className="w-full">
           <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="accounts" className="text-lg">
