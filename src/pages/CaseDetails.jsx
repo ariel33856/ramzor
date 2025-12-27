@@ -206,9 +206,6 @@ export default function CaseDetails() {
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Link to={createPageUrl('Dashboard')} className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
           <div className="flex-1">
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
