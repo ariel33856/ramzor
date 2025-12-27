@@ -29,12 +29,18 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   }, [borrower]);
 
   const updateBorrowerMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(borrower.id, data),
+    mutationFn: async (data) => {
+      console.log('Updating borrower:', borrower.id, 'with data:', data);
+      const result = await base44.entities.MortgageCase.update(borrower.id, data);
+      console.log('Update result:', result);
+      return result;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
-      queryClient.invalidateQueries({ queryKey: ['archive-case'] });
+      queryClient.invalidateQueries({ queryKey: ['archive-case', borrower.id] });
+      queryClient.invalidateQueries({ queryKey: ['case'] });
     }
   });
 
