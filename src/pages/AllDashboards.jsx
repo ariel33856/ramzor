@@ -27,7 +27,7 @@ export default function AllDashboards() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">כל הדשבורדים</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">לקוחות פעילים</h1>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
