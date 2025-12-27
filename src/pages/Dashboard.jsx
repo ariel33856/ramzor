@@ -46,9 +46,6 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">מרכז פיקוד</h1>
-          </div>
           <Link to={createPageUrl('NewCase')}>
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
               <Plus className="w-5 h-5 ml-2" />
