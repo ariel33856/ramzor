@@ -6,7 +6,7 @@ import {
   Loader2, User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
   FolderOpen, MessageCircle, Contact, Calculator, CreditCard,
-  Shield, Package
+  Shield, Package, DollarSign
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -29,6 +29,7 @@ const tabs = [
   { id: 'payments', label: 'תשלומים', icon: CreditCard, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
   { id: 'insurance', label: 'ביטוחים', icon: Shield, gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
   { id: 'products', label: 'מוצרי מעטפת', icon: Package, gradient: 'from-red-500 to-red-600', bg: 'bg-red-50', border: 'border-red-200' },
+  { id: 'account', label: 'חשבון', icon: DollarSign, gradient: 'from-yellow-500 to-amber-600', bg: 'bg-yellow-50', border: 'border-yellow-200' },
 ];
 
 export default function CaseDetails() {
