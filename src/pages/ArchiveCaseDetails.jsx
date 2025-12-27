@@ -38,6 +38,11 @@ export default function ArchiveCaseDetails() {
 
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
 
+  // Find the account that this borrower is linked to
+  const linkedAccount = accounts.find(acc => 
+    acc.linked_borrowers && acc.linked_borrowers.includes(caseId)
+  );
+
   const [formData, setFormData] = useState({});
 
   React.useEffect(() => {
@@ -147,13 +152,21 @@ export default function ArchiveCaseDetails() {
               <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
               <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
             </div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                  <LinkIcon className="w-4 h-4 ml-2" />
-                  שייך לחשבון
-                </Button>
-              </DialogTrigger>
+            <div className="flex gap-2">
+              {linkedAccount && (
+                <Link to={createPageUrl('CaseDetails') + `?id=${linkedAccount.id}`}>
+                  <Button variant="outline" className="border-blue-200 bg-blue-50">
+                    חשבון משויך: {linkedAccount.client_name}
+                  </Button>
+                </Link>
+              )}
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                    <LinkIcon className="w-4 h-4 ml-2" />
+                    שייך לחשבון
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[80vh]">
                 <DialogHeader>
                   <DialogTitle>בחר חשבון לשיוך</DialogTitle>
