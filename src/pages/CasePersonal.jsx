@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User, Save, Link as LinkIcon } from 'lucide-react';
+import { Loader2, User, Save, Link as LinkIcon, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
@@ -111,6 +111,20 @@ export default function CasePersonal() {
         client_phone: '',
         client_email: ''
       });
+    }
+  });
+
+  const unlinkBorrowerMutation = useMutation({
+    mutationFn: (borrowerId) => {
+      const currentBorrowers = caseData.linked_borrowers || [];
+      const updatedBorrowers = currentBorrowers.filter(id => id !== borrowerId);
+      return base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: updatedBorrowers 
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
     }
   });
 
@@ -352,14 +366,34 @@ export default function CasePersonal() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
             {linkedBorrowers.map((borrower, index) => (
-              <Link key={`${borrower.id}-${index}`} to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`} className="block">
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-md font-bold text-gray-900">{borrower.client_name}</h4>
-                    <Button variant="outline" size="sm" onClick={(e) => e.preventDefault()}>
+              <div key={`${borrower.id}-${index}`} className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
+                    <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">{borrower.client_name}</h4>
+                  </Link>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => window.location.href = createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}
+                    >
                       צפייה במודול לווים
                     </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (confirm('האם אתה בטוח שברצונך להסיר את השיוך? הלווה לא יימחק מהמודול.')) {
+                          unlinkBorrowerMutation.mutate(borrower.id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
+                </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-gray-600">שם משפחה</Label>
@@ -379,7 +413,7 @@ export default function CasePersonal() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
