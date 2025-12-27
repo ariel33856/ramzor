@@ -142,50 +142,13 @@ export default function ArchiveCaseDetails() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
             </div>
-            <div className="flex gap-2">
-              {linkedAccount && (
-                <Link to={createPageUrl('CaseDetails') + `?id=${linkedAccount.id}`}>
-                  <Button variant="outline" className="border-blue-200 bg-blue-50">
-                    חשבון משויך: {linkedAccount.account_number}
-                  </Button>
-                </Link>
-              )}
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                    <LinkIcon className="w-4 h-4 ml-2" />
-                    שייך לחשבון
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh]">
-                  <DialogHeader>
-                    <DialogTitle>בחר חשבון לשיוך</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input
-                      placeholder="חיפוש לפי שם או מספר חשבון..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                      {filteredAccounts.map(account => (
-                        <div
-                          key={account.id}
-                          className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                          onClick={() => linkToAccountMutation.mutate(account.id)}
-                        >
-                          <p className="font-semibold text-gray-900">{account.client_name}</p>
-                          <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
-                        </div>
-                      ))}
-                      {filteredAccounts.length === 0 && (
-                        <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
-                      )}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+            {linkedAccount && (
+              <Link to={createPageUrl('CaseDetails') + `?id=${linkedAccount.id}`}>
+                <Button variant="outline" className="border-blue-200 bg-blue-50">
+                  חשבון משויך: {linkedAccount.account_number}
+                </Button>
+              </Link>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">

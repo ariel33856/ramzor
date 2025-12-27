@@ -3,13 +3,21 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight
+  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { tabs, pageMapping } from '@/components/CaseTabs';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +36,9 @@ const navigation = [
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const queryClient = useQueryClient();
 
   // Get case ID from URL if on case-related pages
   const urlParams = new URLSearchParams(window.location.search);
@@ -59,6 +70,43 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['modules'],
     queryFn: () => base44.entities.Module.list('order')
   });
+
+  const { data: allCases = [] } = useQuery({
+    queryKey: ['all-cases'],
+    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    enabled: currentPageName === 'ArchiveCaseDetails'
+  });
+
+  const { data: currentBorrower } = useQuery({
+    queryKey: ['archive-case', caseId],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    enabled: currentPageName === 'ArchiveCaseDetails' && !!caseId
+  });
+
+  const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
+
+  const linkToAccountMutation = useMutation({
+    mutationFn: (accountId) => {
+      return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
+        const account = result[0];
+        const currentBorrowers = account.linked_borrowers || [];
+        return base44.entities.MortgageCase.update(accountId, { 
+          linked_borrowers: [...currentBorrowers, caseId] 
+        });
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['all-cases'] });
+      setDialogOpen(false);
+      setSearchTerm('');
+    }
+  });
+
+  const filteredAccounts = accounts.filter(acc => 
+    acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    acc.account_number?.toString().includes(searchTerm)
+  );
 
   const casePageTitles = {
     'CasePersonal': 'פרטים אישיים',
@@ -217,12 +265,49 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </Link>
                   {currentPageName === 'ArchiveCaseDetails' && (
-                    <Link to={createPageUrl('ArchiveAccounts')}>
-                      <Button variant="outline">
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                        חזרה ללווים
-                      </Button>
-                    </Link>
+                    <>
+                      <Link to={createPageUrl('ArchiveAccounts')}>
+                        <Button variant="outline">
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                          חזרה ללווים
+                        </Button>
+                      </Link>
+                      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                            <LinkIcon className="w-4 h-4 ml-2" />
+                            שייך לחשבון
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[80vh]">
+                          <DialogHeader>
+                            <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <Input
+                              placeholder="חיפוש לפי שם או מספר חשבון..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <div className="space-y-2 max-h-96 overflow-y-auto">
+                              {filteredAccounts.map(account => (
+                                <div
+                                  key={account.id}
+                                  className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                  onClick={() => linkToAccountMutation.mutate(account.id)}
+                                >
+                                  <p className="font-semibold text-gray-900">{account.client_name}</p>
+                                  <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                                </div>
+                              ))}
+                              {filteredAccounts.length === 0 && (
+                                <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                              )}
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </>
                   )}
                 </>
               )}
