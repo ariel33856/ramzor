@@ -413,7 +413,6 @@ export default function CasePersonal() {
                     </div>
                   </div>
                 </div>
-              </div>
             ))}
           </div>
         )}
