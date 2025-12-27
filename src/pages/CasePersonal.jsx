@@ -140,7 +140,7 @@ export default function CasePersonal() {
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                 <LinkIcon className="w-4 h-4 ml-2" />
-                שייך לווה
+                הוסף לווה
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[80vh]">
