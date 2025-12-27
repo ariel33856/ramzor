@@ -242,8 +242,9 @@ export default function Dashboard() {
                   </motion.tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+              </div>
+              </div>
         )}
       </div>
     </div>
