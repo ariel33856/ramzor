@@ -114,6 +114,9 @@ export default function Layout({ children, currentPageName }) {
               {currentPageName === 'CaseDetails' && caseData && (
                 <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
               )}
+              {currentPageName === 'CalendarPage' && (
+                <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
