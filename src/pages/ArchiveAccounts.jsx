@@ -399,7 +399,7 @@ export default function ArchiveAccounts() {
             animate={{ opacity: 1 }}
             transition={{ delay: index * 0.02 }}
             className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+            onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}
             >
             {visibleColumns.client_name && (
               <td className="px-6 py-4">

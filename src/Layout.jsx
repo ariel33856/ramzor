@@ -34,7 +34,7 @@ export default function Layout({ children, currentPageName }) {
   const casePages = ['CaseDetails', 'CasePersonal', 'CaseContact', 'CaseSummary', 'CaseNotes', 'CaseData', 
                      'CaseWorkflow', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
                      'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
-                     'CaseInsurance', 'CaseProducts', 'CaseAccount'];
+                     'CaseInsurance', 'CaseProducts', 'CaseAccount', 'ArchiveCaseDetails'];
   const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
 
   const { data: caseData } = useQuery({
@@ -115,11 +115,12 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
                     {currentPageName === 'ArchiveAccounts' && 'ארכיון חשבונות'}
+                    {currentPageName === 'ArchiveCaseDetails' && 'פרטי חשבון ארכיון'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
                     {currentPageName === 'Sales' && 'עסקאות'}
