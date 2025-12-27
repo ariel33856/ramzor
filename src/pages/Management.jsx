@@ -1,113 +1,251 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
+import { Users, Plus, Search, User, Phone, Mail, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
-  TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Search, Bot, Bell, Calendar, MessageSquare, Users, FileText, DollarSign
-} from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-const managementItems = [
-  { name: 'שיווק', icon: TrendingUp, page: 'Marketing', gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', hover: 'hover:border-blue-400 hover:bg-blue-100' },
-  { name: 'מכירות', icon: ShoppingCart, page: 'Sales', gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'border-purple-200', hover: 'hover:border-purple-400 hover:bg-purple-100' },
-  { name: 'לקוחות פעילים', icon: UserCheck, page: 'Dashboard', gradient: 'from-green-500 to-green-600', bg: 'bg-green-50', border: 'border-green-200', hover: 'hover:border-green-400 hover:bg-green-100' },
-  { name: 'גישה לבורדים', icon: Trello, page: 'Boards', gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200', hover: 'hover:border-orange-400 hover:bg-orange-100' },
-  { name: 'מוצרי מעטפת', icon: Package, page: 'Products', gradient: 'from-pink-500 to-pink-600', bg: 'bg-pink-50', border: 'border-pink-200', hover: 'hover:border-pink-400 hover:bg-pink-100' },
-  { name: 'מערכת ERP', icon: Database, page: 'ERP', gradient: 'from-indigo-500 to-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200', hover: 'hover:border-indigo-400 hover:bg-indigo-100' },
-  { name: 'חיפוש', icon: Search, page: 'SearchPage', gradient: 'from-cyan-500 to-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-200', hover: 'hover:border-cyan-400 hover:bg-cyan-100' },
-  { name: 'בוט AI', icon: Bot, page: 'AIBot', gradient: 'from-violet-500 to-violet-600', bg: 'bg-violet-50', border: 'border-violet-200', hover: 'hover:border-violet-400 hover:bg-violet-100' },
-  { name: 'התראות ומשימות', icon: Bell, page: 'Notifications', gradient: 'from-red-500 to-red-600', bg: 'bg-red-50', border: 'border-red-200', hover: 'hover:border-red-400 hover:bg-red-100' },
-  { name: 'יומן', icon: Calendar, page: 'CalendarPage', gradient: 'from-teal-500 to-teal-600', bg: 'bg-teal-50', border: 'border-teal-200', hover: 'hover:border-teal-400 hover:bg-teal-100' },
-  { name: 'תקשורת', icon: MessageSquare, page: 'Communication', gradient: 'from-amber-500 to-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', hover: 'hover:border-amber-400 hover:bg-amber-100' },
-];
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function Management() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    id_number: '',
+    phone: '',
+    email: '',
+    type: 'איש קשר',
+    notes: ''
+  });
+
+  const queryClient = useQueryClient();
+
+  const { data: people = [], isLoading } = useQuery({
+    queryKey: ['people'],
+    queryFn: () => base44.entities.Person.list('-created_date')
+  });
+
+  const createPersonMutation = useMutation({
+    mutationFn: (data) => base44.entities.Person.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['people'] });
+      setDialogOpen(false);
+      setFormData({
+        first_name: '',
+        last_name: '',
+        id_number: '',
+        phone: '',
+        email: '',
+        type: 'איש קשר',
+        notes: ''
+      });
+    }
+  });
+
+  const deletePersonMutation = useMutation({
+    mutationFn: (id) => base44.entities.Person.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['people'] });
+    }
+  });
+
+  const filteredPeople = people.filter(person =>
+    person.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.id_number?.includes(searchTerm) ||
+    person.phone?.includes(searchTerm)
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createPersonMutation.mutate(formData);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        <Tabs defaultValue="accounts" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
-            <TabsTrigger value="accounts" className="text-lg">
-              <UserCheck className="w-5 h-5 ml-2" />
-              חשבונות
-            </TabsTrigger>
-            <TabsTrigger value="debtors" className="text-lg">
-              <Users className="w-5 h-5 ml-2" />
-              לווים
-            </TabsTrigger>
-            <TabsTrigger value="guarantors" className="text-lg">
-              <FileText className="w-5 h-5 ml-2" />
-              ערבים
-            </TabsTrigger>
-            <TabsTrigger value="payments" className="text-lg">
-              <DollarSign className="w-5 h-5 ml-2" />
-              תשלומים
-            </TabsTrigger>
-            <TabsTrigger value="people" className="text-lg">
-              <Users className="w-5 h-5 ml-2" />
-              אנשים
-            </TabsTrigger>
-          </TabsList>
+    <div className="min-h-screen bg-gray-50/50 p-3">
+      <div className="mx-auto max-w-7xl">
+        {/* Search and Add */}
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
+          <div className="flex gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                placeholder="חיפוש לפי שם, ת.ז או טלפון..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pr-10"
+              />
+            </div>
+            
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  <Plus className="w-5 h-5 ml-2" />
+                  אדם חדש
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>הוסף אדם חדש</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>שם פרטי *</Label>
+                      <Input
+                        value={formData.first_name}
+                        onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label>שם משפחה *</Label>
+                      <Input
+                        value={formData.last_name}
+                        onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label>תעודת זהות</Label>
+                    <Input
+                      value={formData.id_number}
+                      onChange={(e) => setFormData({...formData, id_number: e.target.value})}
+                    />
+                  </div>
 
-          <TabsContent value="accounts">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Link to={createPageUrl('Dashboard')}>
-                <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all cursor-pointer">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">חשבונות</h2>
-                  <p className="text-gray-500">לחץ לצפייה בדשבורד</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>טלפון</Label>
+                      <Input
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <Label>אימייל</Label>
+                      <Input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>סוג</Label>
+                    <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="לווה">לווה</SelectItem>
+                        <SelectItem value="ערב">ערב</SelectItem>
+                        <SelectItem value="איש קשר">איש קשר</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label>הערות</Label>
+                    <Input
+                      value={formData.notes}
+                      onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full">
+                    שמור
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* People List */}
+        {isLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
+          </div>
+        ) : filteredPeople.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-xl">
+            <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין אנשים להצגה</h3>
+            <p className="text-gray-400">התחל בהוספת אדם חדש</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredPeople.map((person) => (
+              <motion.div
+                key={person.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        {person.first_name} {person.last_name}
+                      </h3>
+                      <span className="text-sm text-gray-500">{person.type}</span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deletePersonMutation.mutate(person.id)}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
-              </Link>
-            </motion.div>
-          </TabsContent>
 
-          <TabsContent value="debtors">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">לווים</h2>
-              <p className="text-gray-500">ניהול וטיפול בלווים</p>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="guarantors">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">ערבים</h2>
-              <p className="text-gray-500">ניהול וטיפול בערבים</p>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="payments">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">תשלומים</h2>
-              <p className="text-gray-500">ניהול תשלומים ועסקאות</p>
-            </motion.div>
-          </TabsContent>
-
-          <TabsContent value="people">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">אנשים</h2>
-              <p className="text-gray-500">ניהול אנשי קשר</p>
-            </motion.div>
-          </TabsContent>
-        </Tabs>
+                <div className="space-y-2">
+                  {person.id_number && (
+                    <div className="text-sm text-gray-600">
+                      <span className="font-medium">ת.ז: </span>
+                      {person.id_number}
+                    </div>
+                  )}
+                  {person.phone && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Phone className="w-4 h-4" />
+                      {person.phone}
+                    </div>
+                  )}
+                  {person.email && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Mail className="w-4 h-4" />
+                      {person.email}
+                    </div>
+                  )}
+                  {person.notes && (
+                    <div className="text-sm text-gray-500 mt-3 pt-3 border-t">
+                      {person.notes}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
