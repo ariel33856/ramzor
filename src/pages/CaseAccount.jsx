@@ -1,19 +1,62 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, DollarSign } from 'lucide-react';
+import { Loader2, DollarSign, Link as LinkIcon, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 
 export default function CaseAccount() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
+
+  const { data: borrowers = [] } = useQuery({
+    queryKey: ['borrowers'],
+    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+  });
+
+  const { data: linkedBorrower } = useQuery({
+    queryKey: ['linked-borrower', caseData?.linked_borrower_id],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseData.linked_borrower_id }).then(res => res[0]),
+    enabled: !!caseData?.linked_borrower_id
+  });
+
+  const linkMutation = useMutation({
+    mutationFn: (borrowerId) => base44.entities.MortgageCase.update(caseId, { linked_borrower_id: borrowerId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      setDialogOpen(false);
+    }
+  });
+
+  const unlinkMutation = useMutation({
+    mutationFn: () => base44.entities.MortgageCase.update(caseId, { linked_borrower_id: null }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+    }
+  });
+
+  const filteredBorrowers = borrowers.filter(b => 
+    b.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    b.client_id?.includes(searchTerm)
+  );
 
   if (isLoading) {
     return (
@@ -89,6 +132,66 @@ export default function CaseAccount() {
                   {caseData.status === 'completed' && 'הושלם'}
                 </p>
               </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200">
+              <label className="text-sm font-medium text-gray-600 block mb-2">שיוך ללווה</label>
+              {linkedBorrower ? (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xl font-semibold text-gray-900">{linkedBorrower.client_name}</p>
+                    {linkedBorrower.client_id && (
+                      <p className="text-sm text-gray-500">ת.ז: {linkedBorrower.client_id}</p>
+                    )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => unlinkMutation.mutate()}
+                    disabled={unlinkMutation.isPending}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                      <LinkIcon className="w-4 h-4 ml-2" />
+                      שייך ללווה
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh]">
+                    <DialogHeader>
+                      <DialogTitle>בחר לווה לשיוך</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Input
+                        placeholder="חיפוש לפי שם או ת.ז..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {filteredBorrowers.map(borrower => (
+                          <div
+                            key={borrower.id}
+                            className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                            onClick={() => linkMutation.mutate(borrower.id)}
+                          >
+                            <p className="font-semibold text-gray-900">{borrower.client_name}</p>
+                            {borrower.client_id && (
+                              <p className="text-sm text-gray-500">ת.ז: {borrower.client_id}</p>
+                            )}
+                          </div>
+                        ))}
+                        {filteredBorrowers.length === 0 && (
+                          <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
+                        )}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
         </div>
