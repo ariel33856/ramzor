@@ -22,24 +22,30 @@ export default function Dashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
   const [visibleColumns, setVisibleColumns] = useState({
+    // personal - פרטים אישיים ופרטי התקשרות
     client_name: true,
     client_id: false,
     client_phone: false,
     client_email: false,
+    // data - נתונים
     loan_amount: true,
     property_value: false,
     monthly_income: false,
     monthly_expenses: false,
     family_size: false,
+    // status - סטטוס
     status: true,
     urgency: true,
     progress: true,
+    // account - חשבון
+    account_number: false,
     consultant: false,
     target_bank: false,
+    // metrics - מדדים
     ltv_ratio: false,
     dti_ratio: false,
     income_per_capita: false,
-    account_number: false,
+    // notes - הערות מיוחדות
     notes: false
   });
 
@@ -150,7 +156,7 @@ export default function Dashboard() {
                 <div className="space-y-3">
                   <h4 className="font-semibold text-sm">שדות להצגה</h4>
                   <div className="space-y-2">
-                    <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים</div>
+                    <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים ופרטי התקשרות</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-name"
@@ -184,7 +190,7 @@ export default function Dashboard() {
                       <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
                     </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">נתונים פיננסיים</div>
+                    <div className="font-semibold text-xs text-gray-500 pt-2">נתונים</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-loan"
@@ -226,7 +232,7 @@ export default function Dashboard() {
                       <label htmlFor="col-family" className="text-sm cursor-pointer">גודל משפחה</label>
                     </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס וניהול</div>
+                    <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-status"
@@ -250,6 +256,16 @@ export default function Dashboard() {
                         onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, progress: checked})}
                       />
                       <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
+                    </div>
+
+                    <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-account"
+                        checked={visibleColumns.account_number}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
+                      />
+                      <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Checkbox
@@ -294,15 +310,7 @@ export default function Dashboard() {
                       <label htmlFor="col-income-capita" className="text-sm cursor-pointer">הכנסה לנפש</label>
                     </div>
 
-                    <div className="font-semibold text-xs text-gray-500 pt-2">אחר</div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="col-account"
-                        checked={visibleColumns.account_number}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
-                      />
-                      <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
-                    </div>
+                    <div className="font-semibold text-xs text-gray-500 pt-2">הערות מיוחדות</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-notes"
