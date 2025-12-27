@@ -38,12 +38,13 @@ export default function CaseCard({ caseData }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.01 }}
-      className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
-    >
+    <Link to={createPageUrl(`CaseDetails?id=${caseData.id}`)}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ scale: 1.01 }}
+        className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer"
+      >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
@@ -86,14 +87,8 @@ export default function CaseCard({ caseData }) {
           <User className="w-4 h-4" />
           <span>{caseData.assigned_consultant || 'לא הוקצה'}</span>
         </div>
-        <Link
-          to={createPageUrl(`CaseDetails?id=${caseData.id}`)}
-          className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-        >
-          צפה בתיק
-          <ChevronLeft className="w-4 h-4" />
-        </Link>
       </div>
     </motion.div>
+    </Link>
   );
 }
