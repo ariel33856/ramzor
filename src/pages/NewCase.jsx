@@ -17,6 +17,9 @@ export default function NewCase() {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [clientName, setClientName] = useState('');
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const isArchive = urlParams.get('archive') === 'true';
 
   const handleSubmit = async () => {
     if (!clientName.trim()) return;
@@ -37,7 +40,8 @@ export default function NewCase() {
       account_number: nextAccountNumber,
       status: 'new',
       urgency: 'medium',
-      progress_percentage: 0
+      progress_percentage: 0,
+      is_archived: isArchive
     };
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
@@ -52,7 +56,11 @@ export default function NewCase() {
     });
 
     setSaving(false);
-    navigate(createPageUrl(`CaseDetails?id=${newCase.id}`));
+    if (isArchive) {
+      navigate(createPageUrl(`ArchiveAccounts`));
+    } else {
+      navigate(createPageUrl(`Dashboard`));
+    }
   };
 
 

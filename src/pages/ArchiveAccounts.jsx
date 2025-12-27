@@ -101,7 +101,7 @@ export default function ArchiveAccounts() {
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
 
-            <Link to={createPageUrl('NewCase')}>
+            <Link to={createPageUrl('NewCase') + '?archive=true'}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
                 <Plus className="w-5 h-5 ml-2" />
                 חשבון חדש
