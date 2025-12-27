@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User, Save } from 'lucide-react';
+import { Loader2, User, Save, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -29,6 +38,31 @@ export default function CasePersonal() {
       return Promise.all(promises);
     },
     enabled: !!caseData?.linked_borrowers
+  });
+
+  const { data: allBorrowers = [] } = useQuery({
+    queryKey: ['all-borrowers'],
+    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+  });
+
+  const filteredBorrowers = allBorrowers.filter(borrower => 
+    borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    borrower.client_id?.includes(searchTerm)
+  );
+
+  const linkBorrowerMutation = useMutation({
+    mutationFn: (borrowerId) => {
+      const currentBorrowers = caseData.linked_borrowers || [];
+      return base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: [...currentBorrowers, borrowerId] 
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
+      setDialogOpen(false);
+      setSearchTerm('');
+    }
   });
 
   const [formData, setFormData] = useState({
@@ -101,6 +135,44 @@ export default function CasePersonal() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
+        <div className="flex justify-end mb-4">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                <LinkIcon className="w-4 h-4 ml-2" />
+                שייך לווה
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר לווה לשיוך</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש לפי שם או ת.ז..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filteredBorrowers.map(borrower => (
+                    <div
+                      key={borrower.id}
+                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => linkBorrowerMutation.mutate(borrower.id)}
+                    >
+                      <p className="font-semibold text-gray-900">{borrower.client_name}</p>
+                      <p className="text-sm text-gray-500">{borrower.client_id}</p>
+                    </div>
+                  ))}
+                  {filteredBorrowers.length === 0 && (
+                    <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
         {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
           <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${linkedBorrowers[0].id}`} className="block">
             <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
