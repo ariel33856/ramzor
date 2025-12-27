@@ -102,31 +102,38 @@ export default function CasePersonal() {
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
         {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <Label>לווה א'</Label>
-              <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${linkedBorrowers[0].id}`}>
-                <Button variant="outline" size="sm">
-                  למעבר ללווה במודול לווים
+          <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${linkedBorrowers[0].id}`} className="block">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-gray-900">לווה משויך</h3>
+                <Button variant="outline" size="sm" onClick={(e) => e.preventDefault()}>
+                  צפייה במודול לווים
                 </Button>
-              </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-gray-600">שם לקוח</Label>
+                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_name || '—'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">שם משפחה</Label>
+                  <p className="font-medium text-gray-900">{linkedBorrowers[0].last_name || '—'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">תעודת זהות</Label>
+                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_id || '—'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">טלפון</Label>
+                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_phone || '—'}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-600">אימייל</Label>
+                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_email || '—'}</p>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Input
-                value={borrowerName}
-                onChange={(e) => setBorrowerName(e.target.value)}
-                placeholder="שם הלווה"
-                className="flex-1"
-              />
-              <Button
-                type="button"
-                onClick={() => updateBorrowerMutation.mutate({ client_name: borrowerName })}
-                disabled={updateBorrowerMutation.isPending}
-              >
-                {updateBorrowerMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              </Button>
-            </div>
-          </div>
+          </Link>
         )}
         
 
