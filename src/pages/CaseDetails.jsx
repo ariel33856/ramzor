@@ -103,12 +103,7 @@ export default function CaseDetails() {
                     {tab.label}
                   </span>
                 </div>
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className={`absolute inset-0 rounded-xl bg-gradient-to-br ${tab.gradient} opacity-10`}
-                  />
-                )}
+
               </motion.button>
             );
           })}
