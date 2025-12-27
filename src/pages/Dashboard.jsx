@@ -44,16 +44,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50/50">
       <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <Link to={createPageUrl('NewCase')}>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
-              <Plus className="w-5 h-5 ml-2" />
-              תיק חדש
-            </Button>
-          </Link>
-        </div>
-
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatsCard
@@ -96,6 +86,13 @@ export default function Dashboard() {
                 className="pr-10"
               />
             </div>
+
+            <Link to={createPageUrl('NewCase')}>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
+                <Plus className="w-5 h-5 ml-2" />
+                תיק חדש
+              </Button>
+            </Link>
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full md:w-48">
