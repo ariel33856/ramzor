@@ -44,35 +44,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50/50">
       <div className="max-w-7xl mx-auto p-6">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatsCard
-            title="סה״כ תיקים"
-            value={stats.total}
-            icon={Briefcase}
-            color="blue"
-          />
-          <StatsCard
-            title="ממתינים למסמכים"
-            value={stats.pending}
-            icon={FileCheck}
-            color="orange"
-          />
-          <StatsCard
-            title="דורשים תשומת לב"
-            value={stats.critical}
-            icon={AlertTriangle}
-            color="red"
-          />
-          <StatsCard
-            title="אושרו החודש"
-            value={stats.approved}
-            icon={TrendingUp}
-            color="green"
-            trend="+12%"
-            trendUp
-          />
-        </div>
 
         {/* Filters */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6">
