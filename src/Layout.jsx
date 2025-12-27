@@ -8,21 +8,21 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare } from
-'lucide-react';
+  Database, Bot, Calendar, MessageSquare, Layers
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger } from
-'@/components/ui/dropdown-menu';
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const navigation = [
-{ name: 'מרכז פיקוד', icon: LayoutDashboard, page: 'Dashboard' },
-{ name: 'תיק חדש', icon: FileText, page: 'NewCase' }];
-
+  { name: 'מרכז פיקוד', icon: LayoutDashboard, page: 'Dashboard' },
+  { name: 'תיק חדש', icon: FileText, page: 'NewCase' },
+];
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -34,7 +34,7 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then((res) => res[0]),
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
@@ -89,8 +89,8 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-4">
-              {currentPageName === 'Dashboard' &&
-              <>
+              {currentPageName === 'Dashboard' && (
+                <>
                   <h1 className="text-2xl font-bold text-gray-900">חשבונות פעילים</h1>
                   <Link to={createPageUrl('AllDashboards')}>
                     <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
@@ -99,13 +99,21 @@ export default function Layout({ children, currentPageName }) {
                     </Button>
                   </Link>
                 </>
-              }
-              {currentPageName === 'AllDashboards' &&
-              <h1 className="text-2xl font-bold text-gray-900">דשבורדים</h1>
-              }
-              {currentPageName === 'CaseDetails' && caseData &&
-              <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
-              }
+              )}
+              {currentPageName === 'AllDashboards' && (
+                <>
+                  <h1 className="text-2xl font-bold text-gray-900">דשבורדים</h1>
+                  <Link to={createPageUrl('Dashboard')}>
+                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg shadow-green-500/25">
+                      <UserCheck className="w-5 h-5 ml-2" />
+                      חשבונות פעילים
+                    </Button>
+                  </Link>
+                </>
+              )}
+              {currentPageName === 'CaseDetails' && caseData && (
+                <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -268,6 +276,6 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
       </div>
-    </div>);
-
+    </div>
+  );
 }
