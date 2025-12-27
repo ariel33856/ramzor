@@ -77,7 +77,11 @@ export default function Layout({ children, currentPageName }) {
         {/* Top Bar */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-6 py-4">
-            <div></div>
+            <div>
+              {currentPageName === 'AllDashboards' && (
+                <h1 className="text-2xl font-bold text-gray-900">דשבורדים לקוחות פעילים</h1>
+              )}
+            </div>
 
             <div className="flex items-center gap-2">
               <Link to={createPageUrl('Dashboard')}>
