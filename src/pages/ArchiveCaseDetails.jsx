@@ -212,6 +212,14 @@ export default function ArchiveCaseDetails() {
                   />
                 </div>
                 <div>
+                  <Label>שם משפחה</Label>
+                  <Input
+                    value={formData.last_name || ''}
+                    onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
                   <Label>תעודת זהות</Label>
                   <Input
                     value={formData.client_id || ''}
