@@ -31,10 +31,12 @@ export default function ArchiveCaseDetails() {
     enabled: !!caseId
   });
 
-  const { data: accounts = [] } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: false, module_id: null })
+  const { data: allCases = [] } = useQuery({
+    queryKey: ['all-cases'],
+    queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
+
+  const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
 
   const [formData, setFormData] = useState({});
 
