@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User, Save, Link as LinkIcon, Trash2 } from 'lucide-react';
+import { Loader2, User, Save, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import LinkedBorrowerCard from '@/components/case/LinkedBorrowerCard';
 
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -365,113 +366,14 @@ export default function CasePersonal() {
         {linkedBorrowers.length > 0 && (
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
-            {linkedBorrowers.map((borrower, index) => {
-              const [editData, setEditData] = React.useState({
-                client_name: borrower.client_name || '',
-                last_name: borrower.last_name || '',
-                client_id: borrower.client_id || '',
-                client_phone: borrower.client_phone || '',
-                client_email: borrower.client_email || ''
-              });
-
-              const updateBorrowerMutation = useMutation({
-                mutationFn: (data) => base44.entities.MortgageCase.update(borrower.id, data),
-                onSuccess: () => {
-                  queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-                  queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
-                }
-              });
-
-              return (
-                <div key={`${borrower.id}-${index}`} className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
-                  <div className="flex items-center justify-between mb-4">
-                    <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
-                      <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">{borrower.client_name}</h4>
-                    </Link>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => updateBorrowerMutation.mutate(editData)}
-                        disabled={updateBorrowerMutation.isPending}
-                      >
-                        {updateBorrowerMutation.isPending ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            <Save className="w-4 h-4 ml-2" />
-                            שמור שינויים
-                          </>
-                        )}
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => window.location.href = createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}
-                      >
-                        צפייה במודול לווים
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (confirm('האם אתה בטוח שברצונך להסיר את השיוך? הלווה לא יימחק מהמודול.')) {
-                            unlinkBorrowerMutation.mutate(borrower.id);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-gray-600">שם פרטי</Label>
-                      <Input
-                        value={editData.client_name}
-                        onChange={(e) => setEditData({...editData, client_name: e.target.value})}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">שם משפחה</Label>
-                      <Input
-                        value={editData.last_name}
-                        onChange={(e) => setEditData({...editData, last_name: e.target.value})}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">תעודת זהות</Label>
-                      <Input
-                        value={editData.client_id}
-                        onChange={(e) => setEditData({...editData, client_id: e.target.value})}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">טלפון</Label>
-                      <Input
-                        value={editData.client_phone}
-                        onChange={(e) => setEditData({...editData, client_phone: e.target.value})}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">אימייל</Label>
-                      <Input
-                        type="email"
-                        value={editData.client_email}
-                        onChange={(e) => setEditData({...editData, client_email: e.target.value})}
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {linkedBorrowers.map((borrower, index) => (
+              <LinkedBorrowerCard
+                key={`${borrower.id}-${index}`}
+                borrower={borrower}
+                caseId={caseId}
+                onUnlink={(borrowerId) => unlinkBorrowerMutation.mutate(borrowerId)}
+              />
+            ))}
           </div>
         )}
         
