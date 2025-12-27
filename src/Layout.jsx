@@ -204,7 +204,7 @@ export default function Layout({ children, currentPageName }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2">
                   <Link to={createPageUrl('Marketing')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-blue-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">שיווק</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
@@ -215,7 +215,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Sales')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-purple-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">מכירות</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -226,7 +226,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Dashboard')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-green-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">לקוחות פעילים</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
@@ -237,7 +237,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Boards')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-orange-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">גישה לבורדים</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
@@ -248,7 +248,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Products')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-pink-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">מוצרי מעטפת</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
@@ -259,7 +259,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('ERP')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-indigo-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">מערכת ERP</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -270,7 +270,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('SearchPage')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-cyan-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-cyan-400 hover:bg-cyan-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">חיפוש</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
@@ -281,7 +281,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('AIBot')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-violet-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-violet-400 hover:bg-violet-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">בוט AI</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-violet-600 rounded-lg flex items-center justify-center">
@@ -292,7 +292,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Notifications')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-red-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-red-400 hover:bg-red-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">התראות ומשימות</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
@@ -303,7 +303,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('CalendarPage')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-teal-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">יומן</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
@@ -314,7 +314,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                   
                   <Link to={createPageUrl('Communication')}>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-amber-50 rounded-lg">
+                    <DropdownMenuItem className="p-3 cursor-pointer border-2 border-gray-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
                       <div className="flex items-center gap-3 justify-end w-full">
                         <span className="text-base font-medium">תקשורת</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
