@@ -81,9 +81,10 @@ export default function CaseDetails() {
                 whileTap={{ scale: 0.95 }}
                 className={`
                   relative p-4 rounded-xl border-2 transition-all duration-300
+                  ${tab.bg}
                   ${isActive 
-                    ? `${tab.bg} ${tab.border} shadow-lg` 
-                    : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md'
+                    ? `${tab.border} shadow-lg` 
+                    : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                   }
                 `}
               >
