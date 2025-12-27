@@ -213,10 +213,6 @@ export default function CaseDetails() {
             </div>
             <p className="text-gray-500">ת.ז: {maskId(caseData.client_id)} • {statusLabels[caseData.status]}</p>
           </div>
-          <Button variant="outline" onClick={() => queryClient.invalidateQueries()}>
-            <RefreshCw className="w-4 h-4 ml-2" />
-            רענן
-          </Button>
         </div>
 
         {/* Red Flags Banner */}
