@@ -177,18 +177,6 @@ export default function Management() {
           </div>
         </div>
 
-        {/* Column Headers */}
-        <div className="sticky top-[152px] z-15 w-full bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-sm border border-gray-200 mb-4">
-          <div className="grid grid-cols-6 gap-4 px-6 py-4">
-            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">שם מלא</div>
-            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">תעודת זהות</div>
-            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">טלפון</div>
-            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">אימייל</div>
-            <div className="text-right text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">הערות</div>
-            <div className="text-center text-sm font-semibold text-gray-700">פעולות</div>
-          </div>
-        </div>
-
         {/* People List */}
         {isLoading ? (
           <div className="text-center py-12">
@@ -203,14 +191,14 @@ export default function Management() {
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <table className="w-full">
-              <thead className="hidden">
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+              <thead className="sticky top-[152px] z-15 bg-gradient-to-r from-blue-50 to-purple-50">
+                <tr className="border-b-2 border-gray-200">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">שם מלא</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">תעודת זהות</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">טלפון</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">אימייל</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700 border-l border-gray-300">הערות</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">פעולות</th>
                 </tr>
               </thead>
               <tbody>
