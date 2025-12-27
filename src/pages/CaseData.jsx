@@ -37,8 +37,8 @@ export default function CaseData() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
+      <div className="mx-auto">
         <p className="text-gray-500 text-center py-8">
           תוכן הכרטיסייה "נתונים" יתווסף בהמשך
         </p>
