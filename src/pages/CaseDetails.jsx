@@ -106,23 +106,17 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className={`
-                    w-14 h-14 rounded-xl flex items-center justify-center
-                    bg-gradient-to-br ${activeTabData.gradient} shadow-lg
-                  `}>
-                    {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {activeTabData.label}
-                  </h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`
+                  w-14 h-14 rounded-xl flex items-center justify-center
+                  bg-gradient-to-br ${activeTabData.gradient} shadow-lg
+                `}>
+                  {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
                 </div>
                 <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <ExternalLink className="w-4 h-4" />
-                    פתח בעמוד מלא
-                  </Button>
+                  <h2 className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer">
+                    {activeTabData.label}
+                  </h2>
                 </Link>
               </div>
 
