@@ -129,45 +129,7 @@ export default function CasePersonal() {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label>שם מלא</Label>
-            <Input
-              value={formData.client_name}
-              onChange={(e) => setFormData({...formData, client_name: e.target.value})}
-              placeholder="הכנס שם מלא"
-            />
-          </div>
-          <div>
-            <Label>תעודת זהות</Label>
-            <Input
-              value={formData.client_id}
-              onChange={(e) => setFormData({...formData, client_id: e.target.value})}
-              placeholder="הכנס תעודת זהות"
-            />
-          </div>
-          <div>
-            <Label>טלפון</Label>
-            <Input
-              value={formData.client_phone}
-              onChange={(e) => setFormData({...formData, client_phone: e.target.value})}
-              placeholder="הכנס טלפון"
-            />
-          </div>
-          <div>
-            <Label>אימייל</Label>
-            <Input
-              type="email"
-              value={formData.client_email}
-              onChange={(e) => setFormData({...formData, client_email: e.target.value})}
-              placeholder="הכנס אימייל"
-            />
-          </div>
-          <Button type="submit" disabled={updateMutation.isPending} className="w-full">
-            {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Save className="w-4 h-4 ml-2" />}
-            שמור שינויים
-          </Button>
-        </form>
+
       </div>
     </div>
   );
