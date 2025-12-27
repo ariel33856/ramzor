@@ -99,7 +99,7 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
         {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
           <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4">
