@@ -80,7 +80,7 @@ export default function Dashboard() {
             <Link to={createPageUrl('AllDashboards')}>
               <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
                 <Layers className="w-5 h-5 ml-2" />
-                כל הדשבורדים
+                הדשבורדים
               </Button>
             </Link>
 
