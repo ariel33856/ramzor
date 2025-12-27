@@ -196,7 +196,6 @@ export default function Layout({ children, currentPageName }) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost">
-                    <Settings className="w-5 h-5 text-gray-500 ml-2" />
                     ניהול
                     <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
                   </Button>
