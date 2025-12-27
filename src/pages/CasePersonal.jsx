@@ -40,10 +40,14 @@ export default function CasePersonal() {
     queryKey: ['linked-borrowers', caseData?.linked_borrowers],
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
-      const promises = caseData.linked_borrowers.map(id => 
+      // הסרת כפילויות מהמערך
+      const uniqueIds = [...new Set(caseData.linked_borrowers)];
+      const promises = uniqueIds.map(id => 
         base44.entities.MortgageCase.filter({ id }).then(res => res[0])
       );
-      return Promise.all(promises);
+      const results = await Promise.all(promises);
+      // סינון של תוצאות null או undefined
+      return results.filter(borrower => borrower != null);
     },
     enabled: !!caseData?.linked_borrowers
   });
@@ -347,8 +351,8 @@ export default function CasePersonal() {
         {linkedBorrowers.length > 0 && (
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
-            {linkedBorrowers.map(borrower => (
-              <Link key={borrower.id} to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`} className="block">
+            {linkedBorrowers.map((borrower, index) => (
+              <Link key={`${borrower.id}-${index}`} to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`} className="block">
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-md font-bold text-gray-900">{borrower.client_name}</h4>
