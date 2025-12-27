@@ -225,11 +225,11 @@ export default function Layout({ children, currentPageName }) {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
-                          <div className={`w-8 h-8 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
-                            <Icon className="w-4 h-4 text-white" />
+                          <div className={`w-6 h-6 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
+                            <Icon className="w-3 h-3 text-white" />
                           </div>
-                          <span className="text-lg font-bold text-gray-900">{casePageTitles[currentPageName]}</span>
-                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                          <span className="text-sm font-semibold text-gray-900">{casePageTitles[currentPageName]}</span>
+                          <ChevronDown className="w-4 h-4 text-gray-500" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
