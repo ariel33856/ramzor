@@ -39,9 +39,59 @@ export default function CaseAccount() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-6">
       <div className="max-w-7xl mx-auto">
-        <p className="text-gray-500 text-center py-8">
-          תוכן הכרטיסייה "חשבון" יתווסף בהמשך
-        </p>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-gradient-to-br from-yellow-500 to-amber-600 shadow-lg">
+              <DollarSign className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">פרטי חשבון</h2>
+              <p className="text-gray-500">מידע כללי על החשבון</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+              <label className="text-sm font-medium text-gray-600 block mb-2">מספר חשבון</label>
+              <p className="text-4xl font-bold text-blue-600">
+                {caseData.account_number || 'לא הוקצה'}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <label className="text-sm font-medium text-gray-600 block mb-2">שם לקוח</label>
+                <p className="text-xl font-semibold text-gray-900">{caseData.client_name}</p>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6">
+                <label className="text-sm font-medium text-gray-600 block mb-2">תעודת זהות</label>
+                <p className="text-xl font-semibold text-gray-900">{caseData.client_id}</p>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6">
+                <label className="text-sm font-medium text-gray-600 block mb-2">סכום הלוואה</label>
+                <p className="text-xl font-semibold text-gray-900">
+                  ₪{caseData.loan_amount?.toLocaleString() || '0'}
+                </p>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6">
+                <label className="text-sm font-medium text-gray-600 block mb-2">סטטוס</label>
+                <p className="text-xl font-semibold text-gray-900">
+                  {caseData.status === 'new' && 'חדש'}
+                  {caseData.status === 'documents_pending' && 'ממתין למסמכים'}
+                  {caseData.status === 'documents_review' && 'בבדיקה'}
+                  {caseData.status === 'financial_analysis' && 'ניתוח פיננסי'}
+                  {caseData.status === 'bank_submission' && 'הוגש לבנק'}
+                  {caseData.status === 'approved' && 'אושר'}
+                  {caseData.status === 'rejected' && 'נדחה'}
+                  {caseData.status === 'completed' && 'הושלם'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

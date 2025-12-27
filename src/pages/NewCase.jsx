@@ -47,6 +47,13 @@ export default function NewCase() {
   const handleSubmit = async () => {
     setSaving(true);
 
+    // Get all existing cases to calculate next account number
+    const allCases = await base44.entities.MortgageCase.list('-created_date', 1);
+    const lastAccountNumber = allCases.length > 0 && allCases[0].account_number 
+      ? allCases[0].account_number 
+      : 72515;
+    const nextAccountNumber = lastAccountNumber + 1;
+
     // Calculate financial metrics
     const propertyValue = parseFloat(formData.property_value) || 0;
     const loanAmount = parseFloat(formData.loan_amount) || 0;
@@ -62,6 +69,7 @@ export default function NewCase() {
 
     const caseData = {
       ...formData,
+      account_number: nextAccountNumber,
       property_value: propertyValue,
       loan_amount: loanAmount,
       monthly_income: monthlyIncome,
