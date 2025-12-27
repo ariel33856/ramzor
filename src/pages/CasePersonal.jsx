@@ -19,6 +19,18 @@ export default function CasePersonal() {
     enabled: !!caseId
   });
 
+  const { data: linkedBorrowers = [] } = useQuery({
+    queryKey: ['linked-borrowers', caseData?.linked_borrowers],
+    queryFn: async () => {
+      if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
+      const promises = caseData.linked_borrowers.map(id => 
+        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
+      );
+      return Promise.all(promises);
+    },
+    enabled: !!caseData?.linked_borrowers
+  });
+
   const [formData, setFormData] = useState({
     client_name: '',
     client_id: '',
@@ -73,6 +85,13 @@ export default function CasePersonal() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
+        {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
+          <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4">
+            <label className="text-sm font-medium text-gray-600 block mb-2">לווה א'</label>
+            <p className="text-xl font-semibold text-gray-900">{linkedBorrowers[0].client_name}</p>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label>שם מלא</Label>
