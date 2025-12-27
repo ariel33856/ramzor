@@ -58,7 +58,7 @@ export default function Dashboard() {
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
                 <Plus className="w-5 h-5 ml-2" />
-                תיק חדש
+                חשבון חדש
               </Button>
             </Link>
 
