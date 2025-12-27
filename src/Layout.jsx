@@ -273,18 +273,16 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-auto min-w-[160px] p-2 space-y-4 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
-                  {caseId && (
-                    <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
-                      <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-purple-300 hover:border-purple-500 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all">
-                        <div className="flex items-center gap-2 justify-end w-full">
-                          <span className="text-sm font-bold text-white">כרטיסיות</span>
-                          <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
-                            <LayoutDashboard className="w-4 h-4 text-white" />
-                          </div>
+                  <Link to={createPageUrl('Management')}>
+                    <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-purple-300 hover:border-purple-500 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all">
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-bold text-white">ניהול</span>
+                        <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
+                          <LayoutDashboard className="w-4 h-4 text-white" />
                         </div>
-                      </DropdownMenuItem>
-                    </Link>
-                  )}
+                      </div>
+                    </DropdownMenuItem>
+                  </Link>
                   
                   <Link to={createPageUrl('Marketing')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-blue-50 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
