@@ -32,22 +32,39 @@ export default function CaseAccount() {
     queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
   });
 
-  const { data: linkedBorrower } = useQuery({
-    queryKey: ['linked-borrower', caseData?.linked_borrower_id],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseData.linked_borrower_id }).then(res => res[0]),
-    enabled: !!caseData?.linked_borrower_id
+  const { data: linkedBorrowers = [] } = useQuery({
+    queryKey: ['linked-borrowers', caseData?.linked_borrowers],
+    queryFn: async () => {
+      if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
+      const promises = caseData.linked_borrowers.map(id => 
+        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
+      );
+      return Promise.all(promises);
+    },
+    enabled: !!caseData?.linked_borrowers
   });
 
   const linkMutation = useMutation({
-    mutationFn: (borrowerId) => base44.entities.MortgageCase.update(caseId, { linked_borrower_id: borrowerId }),
+    mutationFn: (borrowerId) => {
+      const currentBorrowers = caseData.linked_borrowers || [];
+      return base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: [...currentBorrowers, borrowerId] 
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       setDialogOpen(false);
+      setSearchTerm('');
     }
   });
 
   const unlinkMutation = useMutation({
-    mutationFn: () => base44.entities.MortgageCase.update(caseId, { linked_borrower_id: null }),
+    mutationFn: (borrowerId) => {
+      const currentBorrowers = caseData.linked_borrowers || [];
+      return base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: currentBorrowers.filter(id => id !== borrowerId) 
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
     }
@@ -135,25 +152,8 @@ export default function CaseAccount() {
             </div>
 
             <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200">
-              <label className="text-sm font-medium text-gray-600 block mb-2">שיוך ללווה</label>
-              {linkedBorrower ? (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xl font-semibold text-gray-900">{linkedBorrower.client_name}</p>
-                    {linkedBorrower.client_id && (
-                      <p className="text-sm text-gray-500">ת.ז: {linkedBorrower.client_id}</p>
-                    )}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => unlinkMutation.mutate()}
-                    disabled={unlinkMutation.isPending}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ) : (
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-sm font-medium text-gray-600">שיוך ללווים</label>
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
                     <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
@@ -172,7 +172,7 @@ export default function CaseAccount() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                       />
                       <div className="space-y-2 max-h-96 overflow-y-auto">
-                        {filteredBorrowers.map(borrower => (
+                        {filteredBorrowers.filter(b => !(caseData.linked_borrowers || []).includes(b.id)).map(borrower => (
                           <div
                             key={borrower.id}
                             className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
@@ -184,13 +184,38 @@ export default function CaseAccount() {
                             )}
                           </div>
                         ))}
-                        {filteredBorrowers.length === 0 && (
+                        {filteredBorrowers.filter(b => !(caseData.linked_borrowers || []).includes(b.id)).length === 0 && (
                           <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
                         )}
                       </div>
                     </div>
                   </DialogContent>
                 </Dialog>
+              </div>
+
+              {linkedBorrowers.length > 0 ? (
+                <div className="space-y-3">
+                  {linkedBorrowers.map(borrower => borrower && (
+                    <div key={borrower.id} className="flex items-center justify-between bg-white rounded-lg p-3 border">
+                      <div>
+                        <p className="font-semibold text-gray-900">{borrower.client_name}</p>
+                        {borrower.client_id && (
+                          <p className="text-sm text-gray-500">ת.ז: {borrower.client_id}</p>
+                        )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => unlinkMutation.mutate(borrower.id)}
+                        disabled={unlinkMutation.isPending}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">אין לווים משויכים</p>
               )}
             </div>
           </div>
