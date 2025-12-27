@@ -245,6 +245,11 @@ export default function Layout({ children, currentPageName }) {
                 const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name;
                 return (
                   <>
+                    <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
+                      <Button variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-200">
+                        {caseData.client_name}
+                      </Button>
+                    </Link>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
