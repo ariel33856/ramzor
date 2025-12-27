@@ -218,13 +218,10 @@ export default function Layout({ children, currentPageName }) {
                 </>
               )}
               {currentPageName === 'CaseDetails' && caseData && (
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
-                  {caseData.account_number && (
-                    <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                      <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
-                    </div>
-                  )}
+                <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
+                  <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                  <div className="w-px h-6 bg-blue-300"></div>
+                  <h1 className="text-xl font-bold text-gray-900">{caseData.client_name}</h1>
                 </div>
               )}
               {casePageTitles[currentPageName] && caseData && (() => {
