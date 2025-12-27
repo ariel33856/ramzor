@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, LayoutGrid, List, Layers
+  Plus, Search, Filter, LayoutGrid, Table, Layers
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,29 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
+
+  const statusLabels = {
+    new: 'חדש',
+    documents_pending: 'ממתין למסמכים',
+    documents_review: 'בבדיקה',
+    financial_analysis: 'ניתוח פיננסי',
+    bank_submission: 'הוגש לבנק',
+    approved: 'אושר',
+    rejected: 'נדחה',
+    completed: 'הושלם'
+  };
+
+  const urgencyLabels = {
+    low: 'נמוכה',
+    medium: 'בינונית',
+    high: 'גבוהה',
+    critical: 'קריטית'
+  };
+
+  const formatCurrency = (amount) => {
+    if (!amount) return '—';
+    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
+  };
 
   const { data: cases = [], isLoading } = useQuery({
     queryKey: ['cases'],
@@ -104,35 +127,20 @@ export default function Dashboard() {
                 <LayoutGrid className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
                 size="icon"
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode('table')}
                 className="h-8 w-8"
               >
-                <List className="w-4 h-4" />
+                <Table className="w-4 h-4" />
               </Button>
             </div>
             </div>
             </div>
             </div>
 
-            {/* Column Headers - List View Only */}
-            {viewMode === 'list' && filteredCases.length > 0 && (
-              <div className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50 border-b-2 border-gray-200">
-                <div className="mx-auto px-4 md:px-5">
-                  <div className="grid grid-cols-5 gap-4 py-3">
-                    <div className="text-sm font-semibold text-gray-700">שם לקוח</div>
-                    <div className="text-sm font-semibold text-gray-700">סכום הלוואה</div>
-                    <div className="text-sm font-semibold text-gray-700">סטטוס</div>
-                    <div className="text-sm font-semibold text-gray-700">דחיפות</div>
-                    <div className="text-sm font-semibold text-gray-700">התקדמות</div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="mx-auto p-2 md:p-3">
-            {/* Cases Grid */}
+            <div className="mx-auto p-1">
+            {/* Cases Content */}}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -159,8 +167,8 @@ export default function Dashboard() {
             <h3 className="text-xl font-semibold text-gray-600 mb-2">אין תיקים להצגה</h3>
             <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
           </motion.div>
-        ) : (
-          <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+        ) : viewMode === 'grid' ? (
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-2">
             {filteredCases.map((caseData, index) => (
               <motion.div
                 key={caseData.id}
@@ -171,6 +179,69 @@ export default function Dashboard() {
                 <CaseCard caseData={caseData} />
               </motion.div>
             ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table className="w-full">
+              <thead className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50">
+                <tr className="border-b-2 border-gray-200">
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">התקדמות</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCases.map((caseData, index) => (
+                  <motion.tr
+                    key={caseData.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.02 }}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                  >
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-gray-900">{caseData.client_name}</div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {formatCurrency(caseData.loan_amount)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {statusLabels[caseData.status] || caseData.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                        caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
+                        caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
+                        caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {urgencyLabels[caseData.urgency] || caseData.urgency}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all"
+                            style={{ width: `${caseData.progress_percentage || 0}%` }}
+                          />
+                        </div>
+                        <span className="text-sm text-gray-600 w-10">{caseData.progress_percentage || 0}%</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {caseData.assigned_consultant || 'לא הוקצה'}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
