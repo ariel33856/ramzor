@@ -1,19 +1,53 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User } from 'lucide-react';
+import { Loader2, User, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  const queryClient = useQueryClient();
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
+
+  const [formData, setFormData] = useState({
+    client_name: '',
+    client_id: '',
+    client_phone: '',
+    client_email: ''
+  });
+
+  React.useEffect(() => {
+    if (caseData) {
+      setFormData({
+        client_name: caseData.client_name || '',
+        client_id: caseData.client_id || '',
+        client_phone: caseData.client_phone || '',
+        client_email: caseData.client_email || ''
+      });
+    }
+  }, [caseData]);
+
+  const updateMutation = useMutation({
+    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+    }
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateMutation.mutate(formData);
+  };
 
   if (isLoading) {
     return (
@@ -39,24 +73,45 @@ export default function CasePersonal() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto">
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-gray-700">שם מלא</label>
-            <p className="text-lg text-gray-900 mt-1">{caseData.client_name || 'לא צוין'}</p>
+            <Label>שם מלא</Label>
+            <Input
+              value={formData.client_name}
+              onChange={(e) => setFormData({...formData, client_name: e.target.value})}
+              placeholder="הכנס שם מלא"
+            />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">תעודת זהות</label>
-            <p className="text-lg text-gray-900 mt-1">{caseData.client_id || 'לא צוין'}</p>
+            <Label>תעודת זהות</Label>
+            <Input
+              value={formData.client_id}
+              onChange={(e) => setFormData({...formData, client_id: e.target.value})}
+              placeholder="הכנס תעודת זהות"
+            />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">טלפון</label>
-            <p className="text-lg text-gray-900 mt-1">{caseData.client_phone || 'לא צוין'}</p>
+            <Label>טלפון</Label>
+            <Input
+              value={formData.client_phone}
+              onChange={(e) => setFormData({...formData, client_phone: e.target.value})}
+              placeholder="הכנס טלפון"
+            />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">אימייל</label>
-            <p className="text-lg text-gray-900 mt-1">{caseData.client_email || 'לא צוין'}</p>
+            <Label>אימייל</Label>
+            <Input
+              type="email"
+              value={formData.client_email}
+              onChange={(e) => setFormData({...formData, client_email: e.target.value})}
+              placeholder="הכנס אימייל"
+            />
           </div>
-        </div>
+          <Button type="submit" disabled={updateMutation.isPending} className="w-full">
+            {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Save className="w-4 h-4 ml-2" />}
+            שמור שינויים
+          </Button>
+        </form>
       </div>
     </div>
   );
