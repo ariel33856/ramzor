@@ -191,7 +191,7 @@ export default function Management() {
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <table className="w-full">
-              <thead className="sticky top-[152px] z-10">
+              <thead className="sticky top-[152px] z-10 bg-white">
                 <tr className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם מלא</th>
                   <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>
