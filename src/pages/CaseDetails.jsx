@@ -208,7 +208,6 @@ export default function CaseDetails() {
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
               <UrgencyBadge urgency={caseData.urgency} />
             </div>
             <p className="text-gray-500">ת.ז: {maskId(caseData.client_id)} • {statusLabels[caseData.status]}</p>

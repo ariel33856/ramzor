@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
@@ -26,6 +27,16 @@ const navigation = [
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Get case ID from URL if on CaseDetails page
+  const urlParams = new URLSearchParams(window.location.search);
+  const caseId = currentPageName === 'CaseDetails' ? urlParams.get('id') : null;
+
+  const { data: caseData } = useQuery({
+    queryKey: ['case', caseId],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    enabled: !!caseId
+  });
 
   // Don't show layout for client portal
   if (currentPageName === 'ClientPortal') {
@@ -80,6 +91,9 @@ export default function Layout({ children, currentPageName }) {
             <div>
               {currentPageName === 'AllDashboards' && (
                 <h1 className="text-2xl font-bold text-gray-900">דשבורדים לקוחות פעילים</h1>
+              )}
+              {currentPageName === 'CaseDetails' && caseData && (
+                <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
               )}
             </div>
 
