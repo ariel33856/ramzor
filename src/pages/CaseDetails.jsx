@@ -106,19 +106,17 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <div className="flex items-center gap-3 mb-6">
+              <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`} className="flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity cursor-pointer">
                 <div className={`
                   w-14 h-14 rounded-xl flex items-center justify-center
                   bg-gradient-to-br ${activeTabData.gradient} shadow-lg
                 `}>
                   {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
                 </div>
-                <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}>
-                  <h2 className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer">
-                    {activeTabData.label}
-                  </h2>
-                </Link>
-              </div>
+                <h2 className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
+                  {activeTabData.label}
+                </h2>
+              </Link>
 
               <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <CaseTabContent tabId={activeTab} caseId={caseId} caseData={caseData} />
