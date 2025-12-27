@@ -42,9 +42,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 pt-0">
+    <div className="min-h-screen bg-gray-50/50">
       {/* Filters */}
-      <div className="sticky top-16 z-20 bg-white p-4 shadow-sm border-b border-gray-100 mb-0">
+      <div className="sticky top-[64px] z-20 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
 
