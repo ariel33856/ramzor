@@ -43,6 +43,18 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!caseId
   });
 
+  const { data: linkedBorrowers = [] } = useQuery({
+    queryKey: ['linked-borrowers', caseData?.linked_borrowers],
+    queryFn: async () => {
+      if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
+      const promises = caseData.linked_borrowers.map(id => 
+        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
+      );
+      return Promise.all(promises);
+    },
+    enabled: !!caseData?.linked_borrowers
+  });
+
   const { data: modules = [] } = useQuery({
     queryKey: ['modules'],
     queryFn: () => base44.entities.Module.list('order')
@@ -221,7 +233,9 @@ export default function Layout({ children, currentPageName }) {
                 <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
                   <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                   <div className="w-px h-6 bg-blue-300"></div>
-                  <h1 className="text-xl font-bold text-gray-900">{caseData.client_name}</h1>
+                  <h1 className="text-xl font-bold text-gray-900">
+                    {linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name}
+                  </h1>
                 </div>
               )}
               {casePageTitles[currentPageName] && caseData && (() => {
