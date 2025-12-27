@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, LayoutGrid, List 
+  Plus, Search, Filter, LayoutGrid, List, Layers
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,7 +45,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50/50">
       <div className="max-w-7xl mx-auto p-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <StatsCard
             title="סה״כ תיקים"
             value={stats.total}
@@ -72,6 +72,14 @@ export default function Dashboard() {
             trend="+12%"
             trendUp
           />
+          <Link to={createPageUrl('AllDashboards')} className="block">
+            <StatsCard
+              title="כל הדשבורדים"
+              value="→"
+              icon={Layers}
+              color="purple"
+            />
+          </Link>
         </div>
 
         {/* Filters */}
