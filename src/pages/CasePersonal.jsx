@@ -21,7 +21,14 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [dialogStep, setDialogStep] = useState('choose'); // 'choose' or 'list'
+  const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'list' or 'new'
+  const [newBorrowerData, setNewBorrowerData] = useState({
+    client_name: '',
+    last_name: '',
+    client_id: '',
+    client_phone: '',
+    client_email: ''
+  });
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -62,8 +69,44 @@ export default function CasePersonal() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
+      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
       setDialogOpen(false);
       setSearchTerm('');
+    }
+  });
+
+  const createAndLinkBorrowerMutation = useMutation({
+    mutationFn: async (borrowerData) => {
+      // יצירת לווה חדש במודול הלווים (is_archived=true, module_id=null)
+      const newBorrower = await base44.entities.MortgageCase.create({
+        ...borrowerData,
+        is_archived: true,
+        module_id: null,
+        status: 'new',
+        urgency: 'medium'
+      });
+      
+      // שיוך הלווה החדש לחשבון הנוכחי
+      const currentBorrowers = caseData.linked_borrowers || [];
+      await base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: [...currentBorrowers, newBorrower.id] 
+      });
+      
+      return newBorrower;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
+      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
+      setDialogOpen(false);
+      setDialogStep('choose');
+      setNewBorrowerData({
+        client_name: '',
+        last_name: '',
+        client_id: '',
+        client_phone: '',
+        client_email: ''
+      });
     }
   });
 
@@ -154,21 +197,21 @@ export default function CasePersonal() {
             <DialogContent className="max-w-2xl max-h-[80vh]">
               <DialogHeader>
                 <DialogTitle>
-                  {dialogStep === 'choose' ? 'הוסף לווה' : 'בחר לווה מהרשימה'}
+                  {dialogStep === 'choose' ? 'הוסף לווה' : 
+                   dialogStep === 'new' ? 'הוסף לווה חדש' : 
+                   'בחר לווה מהרשימה'}
                 </DialogTitle>
               </DialogHeader>
               
               {dialogStep === 'choose' ? (
                 <div className="space-y-4 py-4">
-                  <Link to={createPageUrl('NewCase') + '?archive=true'}>
-                    <Button 
-                      className="w-full h-20 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                      onClick={() => setDialogOpen(false)}
-                    >
-                      <User className="w-6 h-6 ml-3" />
-                      הוסף לווה חדש
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full h-20 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => setDialogStep('new')}
+                  >
+                    <User className="w-6 h-6 ml-3" />
+                    הוסף לווה חדש
+                  </Button>
                   
                   <Button 
                     className="w-full h-20 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
@@ -177,6 +220,91 @@ export default function CasePersonal() {
                     <LinkIcon className="w-6 h-6 ml-3" />
                     בחר מרשימה קיימת
                   </Button>
+                </div>
+              ) : dialogStep === 'new' ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label>שם פרטי *</Label>
+                      <Input
+                        value={newBorrowerData.client_name}
+                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_name: e.target.value})}
+                        placeholder="שם פרטי"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>שם משפחה</Label>
+                      <Input
+                        value={newBorrowerData.last_name}
+                        onChange={(e) => setNewBorrowerData({...newBorrowerData, last_name: e.target.value})}
+                        placeholder="שם משפחה"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>תעודת זהות</Label>
+                      <Input
+                        value={newBorrowerData.client_id}
+                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_id: e.target.value})}
+                        placeholder="תעודת זהות"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>טלפון</Label>
+                      <Input
+                        value={newBorrowerData.client_phone}
+                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_phone: e.target.value})}
+                        placeholder="טלפון"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label>אימייל</Label>
+                      <Input
+                        type="email"
+                        value={newBorrowerData.client_email}
+                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_email: e.target.value})}
+                        placeholder="אימייל"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                      onClick={() => createAndLinkBorrowerMutation.mutate(newBorrowerData)}
+                      disabled={!newBorrowerData.client_name || createAndLinkBorrowerMutation.isPending}
+                    >
+                      {createAndLinkBorrowerMutation.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                          יוצר...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 ml-2" />
+                          שמור וקשר לחשבון
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        setDialogStep('choose');
+                        setNewBorrowerData({
+                          client_name: '',
+                          last_name: '',
+                          client_id: '',
+                          client_phone: '',
+                          client_email: ''
+                        });
+                      }}
+                    >
+                      ביטול
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
