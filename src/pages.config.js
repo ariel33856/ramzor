@@ -33,6 +33,7 @@ import CaseInsurance from './pages/CaseInsurance';
 import CaseProducts from './pages/CaseProducts';
 import CaseAccount from './pages/CaseAccount';
 import ManagementHub from './pages/ManagementHub';
+import PersonDetails from './pages/PersonDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +73,7 @@ export const PAGES = {
     "CaseProducts": CaseProducts,
     "CaseAccount": CaseAccount,
     "ManagementHub": ManagementHub,
+    "PersonDetails": PersonDetails,
 }
 
 export const pagesConfig = {

@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Users, Plus, Search, User, Phone, Mail, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import {
   Dialog,
   DialogContent,
@@ -196,7 +198,7 @@ export default function Management() {
                 className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                  <Link to={createPageUrl('PersonDetails') + `?id=${person.id}`} className="flex items-center gap-3 flex-1 cursor-pointer hover:opacity-80 transition-opacity">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                       <User className="w-6 h-6 text-white" />
                     </div>
@@ -205,7 +207,7 @@ export default function Management() {
                         {person.first_name} {person.last_name}
                       </h3>
                     </div>
-                  </div>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="icon"
