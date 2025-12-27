@@ -204,7 +204,6 @@ export default function Management() {
                       <h3 className="font-semibold text-gray-900">
                         {person.first_name} {person.last_name}
                       </h3>
-                      <span className="text-sm text-gray-500">{person.type}</span>
                     </div>
                   </div>
                   <Button
