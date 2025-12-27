@@ -245,13 +245,15 @@ export default function Layout({ children, currentPageName }) {
                 const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name;
                 return (
                   <>
-                    <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
-                      <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
-                      <div className="w-px h-6 bg-blue-300"></div>
-                      <h1 className="text-xl font-bold text-gray-900">
-                        {displayName}
-                      </h1>
-                    </div>
+                    <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
+                      <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3 cursor-pointer hover:bg-blue-100 hover:border-blue-300 transition-all">
+                        <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                        <div className="w-px h-6 bg-blue-300"></div>
+                        <h1 className="text-xl font-bold text-gray-900">
+                          {displayName}
+                        </h1>
+                      </div>
+                    </Link>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
