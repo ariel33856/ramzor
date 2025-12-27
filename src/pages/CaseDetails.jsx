@@ -237,8 +237,260 @@ export default function CaseDetails() {
           </motion.div>
         )}
 
-        {/* Milestones */}
-        <MilestoneTracker milestones={milestones} />
+        {/* Tabs */}
+        <Tabs defaultValue="personal" className="w-full">
+          <TabsList className="w-full justify-start bg-white rounded-xl p-1 border border-gray-100 flex-wrap h-auto">
+            <TabsTrigger value="personal" className="rounded-lg">פרטים אישיים ופרטי התקשרות</TabsTrigger>
+            <TabsTrigger value="contact" className="rounded-lg">צור קשר</TabsTrigger>
+            <TabsTrigger value="summary" className="rounded-lg">תקציר התיק</TabsTrigger>
+            <TabsTrigger value="notes" className="rounded-lg">הערות מיוחדות</TabsTrigger>
+            <TabsTrigger value="beneficiaries" className="rounded-lg">נהנים</TabsTrigger>
+            <TabsTrigger value="workflow" className="rounded-lg">תהליך עבודה</TabsTrigger>
+            <TabsTrigger value="status" className="rounded-lg">סטטוס</TabsTrigger>
+            <TabsTrigger value="profiles" className="rounded-lg">פרופילים</TabsTrigger>
+            <TabsTrigger value="metrics" className="rounded-lg">מדדים</TabsTrigger>
+            <TabsTrigger value="dashboards" className="rounded-lg">דשבורדים</TabsTrigger>
+            <TabsTrigger value="documents" className="rounded-lg">מסמכים</TabsTrigger>
+            <TabsTrigger value="tracking" className="rounded-lg">תיעוד והקשרות</TabsTrigger>
+            <TabsTrigger value="contacts" className="rounded-lg">אנשי קשר</TabsTrigger>
+            <TabsTrigger value="calendar" className="rounded-lg">משבצון</TabsTrigger>
+            <TabsTrigger value="payments" className="rounded-lg">תשלומים</TabsTrigger>
+            <TabsTrigger value="insurance" className="rounded-lg">ביטוחים</TabsTrigger>
+            <TabsTrigger value="products" className="rounded-lg">מוצרי משכנתא</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="personal" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">פרטים אישיים</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-500">שם מלא</label>
+                  <p className="font-medium">{caseData.client_name}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">תעודת זהות</label>
+                  <p className="font-medium">{maskId(caseData.client_id)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">טלפון</label>
+                  <p className="font-medium">{caseData.client_phone || '—'}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">אימייל</label>
+                  <p className="font-medium">{caseData.client_email || '—'}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">גודל משפחה</label>
+                  <p className="font-medium">{caseData.family_size || '—'} נפשות</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">יועץ אחראי</label>
+                  <p className="font-medium">{caseData.assigned_consultant || '—'}</p>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contact" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">צור קשר</h3>
+              <div className="space-y-4">
+                {caseData.client_phone && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-gray-400" />
+                    <a href={`tel:${caseData.client_phone}`} className="text-blue-600 hover:underline">
+                      {caseData.client_phone}
+                    </a>
+                  </div>
+                )}
+                {caseData.client_email && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-gray-400" />
+                    <a href={`mailto:${caseData.client_email}`} className="text-blue-600 hover:underline">
+                      {caseData.client_email}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="summary" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">תקציר התיק</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-gray-500">סכום הלוואה</label>
+                  <p className="text-xl font-bold">{formatCurrency(caseData.loan_amount)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">שווי נכס</label>
+                  <p className="text-xl font-bold">{formatCurrency(caseData.property_value)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">הכנסה חודשית</label>
+                  <p className="text-xl font-bold">{formatCurrency(caseData.monthly_income)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">הוצאות חודשיות</label>
+                  <p className="text-xl font-bold">{formatCurrency(caseData.monthly_expenses)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">בנק יעד</label>
+                  <p className="font-medium">{bankLabels[caseData.target_bank] || '—'}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">סטטוס</label>
+                  <p className="font-medium">{statusLabels[caseData.status]}</p>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="notes" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">הערות מיוחדות</h3>
+              <p className="text-gray-700 whitespace-pre-wrap">{caseData.notes || 'אין הערות'}</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="beneficiaries" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">נהנים</h3>
+              <p className="text-gray-500">אין מידע על נהנים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="workflow" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">תהליך עבודה</h3>
+              <MilestoneTracker milestones={milestones} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="status" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">סטטוס התיק</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-gray-500">סטטוס נוכחי</label>
+                  <p className="text-xl font-bold">{statusLabels[caseData.status]}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">התקדמות</label>
+                  <ProgressBattery
+                    progress={caseData.progress_percentage || 0}
+                    label={`${caseData.progress_percentage || 0}%`}
+                    status={caseData.status === 'rejected' ? 'blocked' : caseData.status === 'completed' ? 'completed' : 'in_progress'}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-500">רמת דחיפות</label>
+                  <div className="mt-2">
+                    <UrgencyBadge urgency={caseData.urgency} showLabel />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="profiles" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">פרופילים</h3>
+              <p className="text-gray-500">אין פרופילים זמינים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="metrics" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">מדדים פיננסיים</h3>
+              <FinancialMetrics caseData={caseData} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="dashboards" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">דשבורדים</h3>
+              <p className="text-gray-500">אין דשבורדים זמינים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-4 space-y-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">העלאת מסמכים</h3>
+              <DocumentUploader 
+                caseId={caseId} 
+                onUploadComplete={() => queryClient.invalidateQueries(['documents', caseId])}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {documents.map(doc => (
+                <DocumentCard
+                  key={doc.id}
+                  document={doc}
+                  onVerify={() => verifyDocument(doc)}
+                  onViewReasoning={() => setReasoningDialog(doc)}
+                  isVerifying={verifyingDoc === doc.id}
+                />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tracking" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">תיעוד והקשרות</h3>
+              <AuditTrail logs={auditLogs} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contacts" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">אנשי קשר</h3>
+              <p className="text-gray-500">אין אנשי קשר נוספים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">משבצון</h3>
+              <p className="text-gray-500">אין פגישות מתוכננות</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="payments" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">תשלומים</h3>
+              <p className="text-gray-500">אין מידע על תשלומים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="insurance" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">ביטוחים</h3>
+              <p className="text-gray-500">אין מידע על ביטוחים</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="products" className="mt-4">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">מוצרי משכנתא</h3>
+              <TransactionScanner 
+                bankStatement={bankStatement}
+                caseId={caseId}
+                onScanComplete={(results, flags) => {
+                  if (flags.length > 0) {
+                    const existingFlags = caseData.red_flags || [];
+                    base44.entities.MortgageCase.update(caseId, {
+                      red_flags: [...new Set([...existingFlags, ...flags])]
+                    });
+                    queryClient.invalidateQueries(['case', caseId]);
+                  }
+                }}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Reasoning Dialog */}
