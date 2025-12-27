@@ -193,10 +193,34 @@ export default function Layout({ children, currentPageName }) {
                   <Home className="w-5 h-5 text-gray-500" />
                 </Button>
               </Link>
-              <Button variant="ghost">
-                <Settings className="w-5 h-5 text-gray-500 ml-2" />
-                ניהול
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    <Settings className="w-5 h-5 text-gray-500 ml-2" />
+                    ניהול
+                    <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem>
+                    <Users className="w-4 h-4 ml-2" />
+                    ניהול משתמשים
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <FileText className="w-4 h-4 ml-2" />
+                    תבניות מסמכים
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Settings className="w-4 h-4 ml-2" />
+                    הגדרות מערכת
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Building2 className="w-4 h-4 ml-2" />
+                    ניהול בנקים
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="w-5 h-5 text-gray-500" />
                 <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
