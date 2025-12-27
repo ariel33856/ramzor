@@ -344,39 +344,40 @@ export default function CasePersonal() {
           </Dialog>
         </div>
 
-        {linkedBorrowers.length > 0 && linkedBorrowers[0] && (
-          <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${linkedBorrowers[0].id}`} className="block">
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 mb-4 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">לווה משויך</h3>
-                <Button variant="outline" size="sm" onClick={(e) => e.preventDefault()}>
-                  צפייה במודול לווים
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-gray-600">שם לקוח</Label>
-                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_name || '—'}</p>
+        {linkedBorrowers.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
+            {linkedBorrowers.map(borrower => (
+              <Link key={borrower.id} to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`} className="block">
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-md font-bold text-gray-900">{borrower.client_name}</h4>
+                    <Button variant="outline" size="sm" onClick={(e) => e.preventDefault()}>
+                      צפייה במודול לווים
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-gray-600">שם משפחה</Label>
+                      <p className="font-medium text-gray-900">{borrower.last_name || '—'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">תעודת זהות</Label>
+                      <p className="font-medium text-gray-900">{borrower.client_id || '—'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">טלפון</Label>
+                      <p className="font-medium text-gray-900">{borrower.client_phone || '—'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">אימייל</Label>
+                      <p className="font-medium text-gray-900">{borrower.client_email || '—'}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-gray-600">שם משפחה</Label>
-                  <p className="font-medium text-gray-900">{linkedBorrowers[0].last_name || '—'}</p>
-                </div>
-                <div>
-                  <Label className="text-gray-600">תעודת זהות</Label>
-                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_id || '—'}</p>
-                </div>
-                <div>
-                  <Label className="text-gray-600">טלפון</Label>
-                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_phone || '—'}</p>
-                </div>
-                <div>
-                  <Label className="text-gray-600">אימייל</Label>
-                  <p className="font-medium text-gray-900">{linkedBorrowers[0].client_email || '—'}</p>
-                </div>
-              </div>
-            </div>
-          </Link>
+              </Link>
+            ))}
+          </div>
         )}
         
 
