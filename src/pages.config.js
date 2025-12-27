@@ -36,6 +36,9 @@ import ManagementHub from './pages/ManagementHub';
 import PersonDetails from './pages/PersonDetails';
 import ArchiveAccounts from './pages/ArchiveAccounts';
 import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
+import ModulesManager from './pages/ModulesManager';
+import ModuleView from './pages/ModuleView';
+import ModuleCaseDetails from './pages/ModuleCaseDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +81,9 @@ export const PAGES = {
     "PersonDetails": PersonDetails,
     "ArchiveAccounts": ArchiveAccounts,
     "ArchiveCaseDetails": ArchiveCaseDetails,
+    "ModulesManager": ModulesManager,
+    "ModuleView": ModuleView,
+    "ModuleCaseDetails": ModuleCaseDetails,
 }
 
 export const pagesConfig = {

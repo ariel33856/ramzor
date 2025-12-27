@@ -43,6 +43,11 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!caseId
   });
 
+  const { data: modules = [] } = useQuery({
+    queryKey: ['modules'],
+    queryFn: () => base44.entities.Module.list('order')
+  });
+
   const casePageTitles = {
     'CasePersonal': 'פרטים אישיים',
     'CaseContact': 'צור קשר',
@@ -115,12 +120,13 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
                     {currentPageName === 'ArchiveAccounts' && 'לווים'}
                     {currentPageName === 'ArchiveCaseDetails' && 'פרטי לווה'}
+                    {currentPageName === 'ModulesManager' && 'ניהול מודולים'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
                     {currentPageName === 'Sales' && 'עסקאות'}
@@ -153,6 +159,40 @@ export default function Layout({ children, currentPageName }) {
                             <div className="w-7 h-7 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
                               <Database className="w-4 h-4 text-white" />
                             </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+
+                      {modules.map(module => {
+                        const colorGradient = {
+                          blue: 'from-blue-500 to-blue-600',
+                          green: 'from-green-500 to-green-600',
+                          purple: 'from-purple-500 to-purple-600',
+                          red: 'from-red-500 to-red-600',
+                          orange: 'from-orange-500 to-orange-600',
+                          pink: 'from-pink-500 to-pink-600',
+                          slate: 'from-slate-500 to-slate-600',
+                          indigo: 'from-indigo-500 to-indigo-600'
+                        }[module.color] || 'from-blue-500 to-blue-600';
+
+                        return (
+                          <Link key={module.id} to={createPageUrl('ModuleView') + `?moduleId=${module.id}`}>
+                            <DropdownMenuItem className={`px-1.5 py-1 cursor-pointer bg-${module.color}-50 border-2 border-${module.color}-200 hover:border-${module.color}-400 hover:bg-${module.color}-100 rounded-lg transition-all`}>
+                              <div className="flex items-center gap-2 justify-end w-full">
+                                <span className="text-sm font-medium">{module.name}</span>
+                                <div className={`w-7 h-7 bg-gradient-to-br ${colorGradient} rounded-lg flex items-center justify-center`}>
+                                  <span className="text-white text-xs font-bold">{module.name.charAt(0)}</span>
+                                </div>
+                              </div>
+                            </DropdownMenuItem>
+                          </Link>
+                        );
+                      })}
+
+                      <Link to={createPageUrl('ModulesManager')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-2 border-purple-300 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-bold text-white">+ הוסף מודול</span>
                           </div>
                         </DropdownMenuItem>
                       </Link>
