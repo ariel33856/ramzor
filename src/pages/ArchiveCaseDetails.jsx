@@ -104,14 +104,9 @@ export default function ArchiveCaseDetails() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
-              <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
-            </div>
-            <div className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-semibold">
-              לווה
-            </div>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">{caseData.client_name}</h1>
+            <p className="text-gray-500 mt-1">חשבון מס׳ {caseData.account_number}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
