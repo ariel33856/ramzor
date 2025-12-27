@@ -218,7 +218,12 @@ export default function Layout({ children, currentPageName }) {
                 </>
               )}
               {currentPageName === 'CaseDetails' && caseData && (
-                <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
+                  {caseData.account_number && (
+                    <span className="text-lg text-gray-500">#{caseData.account_number}</span>
+                  )}
+                </div>
               )}
               {casePageTitles[currentPageName] && caseData && (() => {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
