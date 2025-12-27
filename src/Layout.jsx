@@ -210,6 +210,12 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  <Link to={createPageUrl('AllDashboards')}>
+                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
+                      <Layers className="w-5 h-5 ml-2" />
+                      דשבורדים
+                    </Button>
+                  </Link>
                   {currentPageName === 'ArchiveCaseDetails' && (
                     <Link to={createPageUrl('ArchiveAccounts')}>
                       <Button variant="outline">
@@ -218,12 +224,6 @@ export default function Layout({ children, currentPageName }) {
                       </Button>
                     </Link>
                   )}
-                  <Link to={createPageUrl('AllDashboards')}>
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
-                      <Layers className="w-5 h-5 ml-2" />
-                      דשבורדים
-                    </Button>
-                  </Link>
                 </>
               )}
               {currentPageName === 'AllDashboards' && (
