@@ -91,7 +91,13 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-4">
               {(currentPageName === 'Dashboard' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
-                  <h1 className="text-2xl font-bold text-gray-900">חשבונות פעילים</h1>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {currentPageName === 'Dashboard' && 'חשבונות פעילים'}
+                    {currentPageName === 'Management' && 'לווים וערבים'}
+                    {currentPageName === 'Marketing' && 'משכנתאות'}
+                    {currentPageName === 'Sales' && 'עסקאות'}
+                    {currentPageName === 'Products' && 'נכסים'}
+                  </h1>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-lg shadow-indigo-500/25">
