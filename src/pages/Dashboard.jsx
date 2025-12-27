@@ -70,10 +70,13 @@ export default function Dashboard() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const { data: cases = [], isLoading } = useQuery({
+  const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
+
+  // Filter only non-archived cases
+  const cases = allCases.filter(c => !c.is_archived);
 
   const filteredCases = cases.filter(c => {
     const matchesSearch = !searchTerm || 
