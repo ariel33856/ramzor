@@ -23,11 +23,24 @@ export default function Dashboard() {
   const [viewMode, setViewMode] = useState('grid');
   const [visibleColumns, setVisibleColumns] = useState({
     client_name: true,
+    client_id: false,
+    client_phone: false,
+    client_email: false,
     loan_amount: true,
+    property_value: false,
+    monthly_income: false,
+    monthly_expenses: false,
+    family_size: false,
     status: true,
     urgency: true,
     progress: true,
-    consultant: true
+    consultant: false,
+    target_bank: false,
+    ltv_ratio: false,
+    dti_ratio: false,
+    income_per_capita: false,
+    account_number: false,
+    notes: false
   });
 
   const statusLabels = {
@@ -133,10 +146,11 @@ export default function Dashboard() {
                   <Columns className="w-4 h-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-64">
+              <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-sm">עמודות להצגה</h4>
+                  <h4 className="font-semibold text-sm">שדות להצגה</h4>
                   <div className="space-y-2">
+                    <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-name"
@@ -147,12 +161,72 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Checkbox
+                        id="col-id"
+                        checked={visibleColumns.client_id}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_id: checked})}
+                      />
+                      <label htmlFor="col-id" className="text-sm cursor-pointer">תעודת זהות</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-phone"
+                        checked={visibleColumns.client_phone}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_phone: checked})}
+                      />
+                      <label htmlFor="col-phone" className="text-sm cursor-pointer">טלפון</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-email"
+                        checked={visibleColumns.client_email}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_email: checked})}
+                      />
+                      <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
+                    </div>
+
+                    <div className="font-semibold text-xs text-gray-500 pt-2">נתונים פיננסיים</div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
                         id="col-loan"
                         checked={visibleColumns.loan_amount}
                         onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, loan_amount: checked})}
                       />
                       <label htmlFor="col-loan" className="text-sm cursor-pointer">סכום הלוואה</label>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-property"
+                        checked={visibleColumns.property_value}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, property_value: checked})}
+                      />
+                      <label htmlFor="col-property" className="text-sm cursor-pointer">שווי נכס</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-income"
+                        checked={visibleColumns.monthly_income}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_income: checked})}
+                      />
+                      <label htmlFor="col-income" className="text-sm cursor-pointer">הכנסה חודשית</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-expenses"
+                        checked={visibleColumns.monthly_expenses}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_expenses: checked})}
+                      />
+                      <label htmlFor="col-expenses" className="text-sm cursor-pointer">הוצאות חודשיות</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-family"
+                        checked={visibleColumns.family_size}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, family_size: checked})}
+                      />
+                      <label htmlFor="col-family" className="text-sm cursor-pointer">גודל משפחה</label>
+                    </div>
+
+                    <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס וניהול</div>
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="col-status"
@@ -183,7 +257,59 @@ export default function Dashboard() {
                         checked={visibleColumns.consultant}
                         onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, consultant: checked})}
                       />
-                      <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ</label>
+                      <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ אחראי</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-bank"
+                        checked={visibleColumns.target_bank}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, target_bank: checked})}
+                      />
+                      <label htmlFor="col-bank" className="text-sm cursor-pointer">בנק יעד</label>
+                    </div>
+
+                    <div className="font-semibold text-xs text-gray-500 pt-2">מדדים</div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-ltv"
+                        checked={visibleColumns.ltv_ratio}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, ltv_ratio: checked})}
+                      />
+                      <label htmlFor="col-ltv" className="text-sm cursor-pointer">יחס LTV</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-dti"
+                        checked={visibleColumns.dti_ratio}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, dti_ratio: checked})}
+                      />
+                      <label htmlFor="col-dti" className="text-sm cursor-pointer">יחס DTI</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-income-capita"
+                        checked={visibleColumns.income_per_capita}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, income_per_capita: checked})}
+                      />
+                      <label htmlFor="col-income-capita" className="text-sm cursor-pointer">הכנסה לנפש</label>
+                    </div>
+
+                    <div className="font-semibold text-xs text-gray-500 pt-2">אחר</div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-account"
+                        checked={visibleColumns.account_number}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
+                      />
+                      <label htmlFor="col-account" className="text-sm cursor-pointer">מספר חשבון</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="col-notes"
+                        checked={visibleColumns.notes}
+                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, notes: checked})}
+                      />
+                      <label htmlFor="col-notes" className="text-sm cursor-pointer">הערות</label>
                     </div>
                   </div>
                 </div>
@@ -260,11 +386,24 @@ export default function Dashboard() {
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
           {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
+          {visibleColumns.client_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>}
+          {visibleColumns.client_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>}
+          {visibleColumns.client_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל</th>}
           {visibleColumns.loan_amount && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>}
+          {visibleColumns.property_value && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שווי נכס</th>}
+          {visibleColumns.monthly_income && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה חודשית</th>}
+          {visibleColumns.monthly_expenses && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הוצאות חודשיות</th>}
+          {visibleColumns.family_size && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">גודל משפחה</th>}
           {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
           {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
           {visibleColumns.progress && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">התקדמות</th>}
-          {visibleColumns.consultant && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ</th>}
+          {visibleColumns.consultant && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ אחראי</th>}
+          {visibleColumns.target_bank && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">בנק יעד</th>}
+          {visibleColumns.ltv_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס LTV</th>}
+          {visibleColumns.dti_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס DTI</th>}
+          {visibleColumns.income_per_capita && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה לנפש</th>}
+          {visibleColumns.account_number && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">מספר חשבון</th>}
+          {visibleColumns.notes && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הערות</th>}
         </tr>
       </thead>
 
@@ -284,9 +423,51 @@ export default function Dashboard() {
               </td>
             )}
 
+            {visibleColumns.client_id && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.client_id || '—'}
+              </td>
+            )}
+
+            {visibleColumns.client_phone && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.client_phone || '—'}
+              </td>
+            )}
+
+            {visibleColumns.client_email && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.client_email || '—'}
+              </td>
+            )}
+
             {visibleColumns.loan_amount && (
               <td className="px-6 py-4 text-gray-600">
                 {formatCurrency(caseData.loan_amount)}
+              </td>
+            )}
+
+            {visibleColumns.property_value && (
+              <td className="px-6 py-4 text-gray-600">
+                {formatCurrency(caseData.property_value)}
+              </td>
+            )}
+
+            {visibleColumns.monthly_income && (
+              <td className="px-6 py-4 text-gray-600">
+                {formatCurrency(caseData.monthly_income)}
+              </td>
+            )}
+
+            {visibleColumns.monthly_expenses && (
+              <td className="px-6 py-4 text-gray-600">
+                {formatCurrency(caseData.monthly_expenses)}
+              </td>
+            )}
+
+            {visibleColumns.family_size && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.family_size || '—'}
               </td>
             )}
 
@@ -330,6 +511,42 @@ export default function Dashboard() {
             {visibleColumns.consultant && (
               <td className="px-6 py-4 text-gray-600">
                 {caseData.assigned_consultant || 'לא הוקצה'}
+              </td>
+            )}
+
+            {visibleColumns.target_bank && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.target_bank ? bankLabels[caseData.target_bank] : '—'}
+              </td>
+            )}
+
+            {visibleColumns.ltv_ratio && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.ltv_ratio ? `${caseData.ltv_ratio}%` : '—'}
+              </td>
+            )}
+
+            {visibleColumns.dti_ratio && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.dti_ratio ? `${caseData.dti_ratio}%` : '—'}
+              </td>
+            )}
+
+            {visibleColumns.income_per_capita && (
+              <td className="px-6 py-4 text-gray-600">
+                {formatCurrency(caseData.income_per_capita)}
+              </td>
+            )}
+
+            {visibleColumns.account_number && (
+              <td className="px-6 py-4 text-gray-600">
+                {caseData.account_number || '—'}
+              </td>
+            )}
+
+            {visibleColumns.notes && (
+              <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
+                {caseData.notes || '—'}
               </td>
             )}
             </motion.tr>
