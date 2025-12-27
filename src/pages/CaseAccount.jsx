@@ -121,7 +121,9 @@ export default function CaseAccount() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-gray-50 rounded-xl p-6">
                 <label className="text-sm font-medium text-gray-600 block mb-2">שם לקוח</label>
-                <p className="text-xl font-semibold text-gray-900">{caseData.client_name}</p>
+                <p className="text-xl font-semibold text-gray-900">
+                  {linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name}
+                </p>
               </div>
 
               <div className="bg-gray-50 rounded-xl p-6">
