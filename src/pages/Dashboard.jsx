@@ -116,6 +116,21 @@ export default function Dashboard() {
             </div>
             </div>
 
+            {/* Column Headers - List View Only */}
+            {viewMode === 'list' && filteredCases.length > 0 && (
+              <div className="sticky top-[128px] z-10 bg-gradient-to-r from-blue-50 to-purple-50 border-b-2 border-gray-200">
+                <div className="mx-auto px-4 md:px-5">
+                  <div className="grid grid-cols-5 gap-4 py-3">
+                    <div className="text-sm font-semibold text-gray-700">שם לקוח</div>
+                    <div className="text-sm font-semibold text-gray-700">סכום הלוואה</div>
+                    <div className="text-sm font-semibold text-gray-700">סטטוס</div>
+                    <div className="text-sm font-semibold text-gray-700">דחיפות</div>
+                    <div className="text-sm font-semibold text-gray-700">התקדמות</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="mx-auto p-2 md:p-3">
             {/* Cases Grid */}
         {isLoading ? (
