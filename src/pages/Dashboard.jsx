@@ -118,7 +118,7 @@ export default function Dashboard() {
 
             {/* Column Headers - List View Only */}
             {viewMode === 'list' && filteredCases.length > 0 && (
-              <div className="sticky top-[128px] z-10 bg-gradient-to-r from-blue-50 to-purple-50 border-b-2 border-gray-200">
+              <div className="sticky top-[152px] z-30 bg-gradient-to-r from-blue-50 to-purple-50 border-b-2 border-gray-200">
                 <div className="mx-auto px-4 md:px-5">
                   <div className="grid grid-cols-5 gap-4 py-3">
                     <div className="text-sm font-semibold text-gray-700">שם לקוח</div>
