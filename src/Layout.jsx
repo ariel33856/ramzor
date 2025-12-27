@@ -8,7 +8,9 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers
+  Database, Bot, Calendar, MessageSquare, Layers, User, Phone,
+  Activity, FolderOpen, MessageCircle, Contact, Calculator,
+  CreditCard, Shield, DollarSign, Workflow
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,15 +30,40 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Get case ID from URL if on CaseDetails page
+  // Get case ID from URL if on case-related pages
   const urlParams = new URLSearchParams(window.location.search);
-  const caseId = currentPageName === 'CaseDetails' ? urlParams.get('id') : null;
+  const casePages = ['CaseDetails', 'CasePersonal', 'CaseContact', 'CaseSummary', 'CaseNotes', 'CaseData', 
+                     'CaseWorkflow', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
+                     'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
+                     'CaseInsurance', 'CaseProducts', 'CaseAccount'];
+  const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
+
+  const casePageTitles = {
+    'CasePersonal': 'פרטים אישיים',
+    'CaseContact': 'צור קשר',
+    'CaseSummary': 'תקציר התיק',
+    'CaseNotes': 'הערות מיוחדות',
+    'CaseData': 'נתונים',
+    'CaseWorkflow': 'תהליך עבודה',
+    'CaseStatus': 'סטטוס',
+    'CaseProfiles': 'פרופילים',
+    'CaseMetrics': 'מדדים',
+    'CaseDashboards': 'דשבורדים',
+    'CaseDocuments': 'מסמכים',
+    'CaseTracking': 'תיעוד התקשרות',
+    'CaseContacts': 'אנשי קשר',
+    'CaseCalculator': 'מחשבון',
+    'CasePayments': 'תשלומים',
+    'CaseInsurance': 'ביטוחים',
+    'CaseProducts': 'מוצרי מעטפת',
+    'CaseAccount': 'חשבון'
+  };
 
   // Don't show layout for client portal
   if (currentPageName === 'ClientPortal') {
@@ -184,6 +211,16 @@ export default function Layout({ children, currentPageName }) {
               )}
               {currentPageName === 'CaseDetails' && caseData && (
                 <h1 className="text-2xl font-bold text-gray-900">{caseData.client_name}</h1>
+              )}
+              {casePageTitles[currentPageName] && caseData && (
+                <>
+                  <h1 className="text-2xl font-bold text-gray-900">{casePageTitles[currentPageName]}</h1>
+                  <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
+                    <Button variant="outline" className="text-blue-600 hover:text-blue-700 border-blue-200">
+                      {caseData.client_name}
+                    </Button>
+                  </Link>
+                </>
               )}
               {currentPageName === 'CalendarPage' && (
                 <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
