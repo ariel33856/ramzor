@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Management')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-purple-300 hover:border-purple-500 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-bold text-white">ניהול</span>
+                            <span className="text-sm font-bold text-white">לווים וערבים</span>
                             <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
                               <LayoutDashboard className="w-4 h-4 text-white" />
                             </div>
