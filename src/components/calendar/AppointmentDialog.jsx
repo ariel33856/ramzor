@@ -13,10 +13,10 @@ import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
-export default function AppointmentDialog({ open, onOpenChange, cases, selectedTimeSlot }) {
+export default function AppointmentDialog({ open, onOpenChange, cases = [], caseId, selectedTimeSlot }) {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    case_id: '',
+    case_id: caseId || '',
     title: '',
     description: '',
     date: new Date(),
@@ -90,25 +90,27 @@ export default function AppointmentDialog({ open, onOpenChange, cases, selectedT
             />
           </div>
 
-          <div>
-            <Label>לקוח</Label>
-            <Select
-              value={formData.case_id}
-              onValueChange={(value) => setFormData({ ...formData, case_id: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="בחר לקוח (אופציונלי)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={null}>ללא שיוך ללקוח</SelectItem>
-                {cases.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.client_name} - {c.client_id}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {!caseId && (
+            <div>
+              <Label>לקוח</Label>
+              <Select
+                value={formData.case_id}
+                onValueChange={(value) => setFormData({ ...formData, case_id: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר לקוח (אופציונלי)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>ללא שיוך ללקוח</SelectItem>
+                  {cases.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.client_name} - {c.client_id}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
