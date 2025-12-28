@@ -2,31 +2,29 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Search, Archive, UserPlus } from 'lucide-react';
+import { Search, ArchiveX, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 
-export default function ArchiveAccounts() {
+export default function ContactsArchive() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const archiveMutation = useMutation({
-    mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: true }),
+  const unarchiveMutation = useMutation({
+    mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: false }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['contacts-archive'] });
     }
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts'],
+    queryKey: ['contacts-archive'],
     queryFn: () => base44.entities.Person.list('-created_date')
   });
 
-  const contacts = allPeople.filter(p => p.type === 'איש קשר' && !p.is_archived);
+  const archivedContacts = allPeople.filter(p => p.type === 'איש קשר' && p.is_archived);
 
-  const filteredContacts = contacts.filter(c => {
+  const filteredContacts = archivedContacts.filter(c => {
     const matchesSearch = !searchTerm || 
       c.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -40,11 +38,6 @@ export default function ArchiveAccounts() {
       <div className="sticky top-[64px] z-50 bg-white p-3 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2">
           <div className="flex flex-col md:flex-row gap-3">
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              <UserPlus className="w-4 h-4 ml-2" />
-              איש קשר חדש
-            </Button>
-
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
@@ -75,8 +68,8 @@ export default function ArchiveAccounts() {
             className="text-center py-16"
           >
             <UserPlus className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין אנשי קשר</h3>
-            <p className="text-gray-400">התחל ביצירת איש קשר חדש</p>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין אנשי קשר בארכיון</h3>
+            <p className="text-gray-400">אנשי קשר שתעביר לארכיון יופיעו כאן</p>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -86,7 +79,7 @@ export default function ArchiveAccounts() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.03 }}
-                className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-all hover:border-blue-300"
+                className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-all"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -100,10 +93,10 @@ export default function ArchiveAccounts() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => archiveMutation.mutate(contact.id)}
-                    className="text-gray-400 hover:text-orange-600 hover:bg-orange-50"
+                    onClick={() => unarchiveMutation.mutate(contact.id)}
+                    className="text-gray-400 hover:text-green-600 hover:bg-green-50"
                   >
-                    <Archive className="w-4 h-4" />
+                    <ArchiveX className="w-4 h-4" />
                   </Button>
                 </div>
 

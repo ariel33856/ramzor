@@ -42,6 +42,7 @@ import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
 import AccountsArchive from './pages/AccountsArchive';
+import ContactsArchive from './pages/ContactsArchive';
 import __Layout from './Layout.jsx';
 
 
@@ -90,6 +91,7 @@ export const PAGES = {
     "Sales": Sales,
     "SearchPage": SearchPage,
     "AccountsArchive": AccountsArchive,
+    "ContactsArchive": ContactsArchive,
 }
 
 export const pagesConfig = {
