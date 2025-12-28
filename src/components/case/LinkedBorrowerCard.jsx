@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Trash2 } from 'lucide-react';
+import { Trash2, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
@@ -125,43 +125,45 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
       <div className="flex items-center justify-between mb-4">
-        {borrower.person_id ? (
-          <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
-            <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
-              {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
-            </h4>
-          </Link>
-        ) : (
-          <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
-            <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
-              {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
-            </h4>
-          </Link>
-        )}
-        <div className="flex gap-2">
-          {borrower.person_id && (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}
-            >
-              צפייה באיש קשר
-            </Button>
+        <div className="flex items-center gap-2">
+          {borrower.person_id ? (
+            <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
+              <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+                {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
+              </h4>
+            </Link>
+          ) : (
+            <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
+              <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+                {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
+              </h4>
+            </Link>
           )}
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            onClick={(e) => {
-              e.preventDefault();
-              if (confirm('האם אתה בטוח שברצונך להסיר את השיוך?')) {
-                onUnlink(borrower.id);
-              }
-            }}
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          {borrower.person_id && (
+            <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
+              <Button 
+                size="sm"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                <User className="w-4 h-4 ml-1" />
+                הצג איש קשר
+              </Button>
+            </Link>
+          )}
         </div>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          onClick={(e) => {
+            e.preventDefault();
+            if (confirm('האם אתה בטוח שברצונך להסיר את השיוך?')) {
+              onUnlink(borrower.id);
+            }
+          }}
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
