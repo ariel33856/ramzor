@@ -135,8 +135,16 @@ export default function NewCase() {
             <div className="space-y-6">
               {!showNewBorrowerForm ? (
                 <>
+                  <Button
+                    onClick={() => setShowNewBorrowerForm(true)}
+                    className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    <Plus className="w-5 h-5 ml-2" />
+                    צור לווה חדש
+                  </Button>
+
                   <div>
-                    <Label className="text-lg">בחר לווה מהרשימה או צור חדש</Label>
+                    <Label className="text-lg">או בחר לווה מהרשימה</Label>
                     <div className="relative mt-2">
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <Input
@@ -144,7 +152,6 @@ export default function NewCase() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="חפש לווה לפי שם, ת.ז או טלפון..."
                         className="pr-10 text-lg h-12"
-                        autoFocus
                       />
                     </div>
                   </div>
@@ -169,14 +176,6 @@ export default function NewCase() {
                       <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
                     )}
                   </div>
-
-                  <Button
-                    onClick={() => setShowNewBorrowerForm(true)}
-                    className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                  >
-                    <Plus className="w-5 h-5 ml-2" />
-                    צור לווה חדש
-                  </Button>
                 </>
               ) : (
                 <>
