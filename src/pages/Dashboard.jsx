@@ -25,51 +25,43 @@ export default function Dashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [columnOrder, setColumnOrder] = useState(() => {
     const saved = localStorage.getItem('dashboardColumns');
-    const borrowerCustom = localStorage.getItem('borrowerCustomFields');
-    const customFields = borrowerCustom ? JSON.parse(borrowerCustom) : [];
-    
-    const baseColumns = saved ? JSON.parse(saved) : borrowerFields;
-    
-    // Add custom borrower fields if not already in the list
-    customFields.forEach(customField => {
-      if (!baseColumns.find(col => col.id === customField.id)) {
-        baseColumns.push({ ...customField, label: customField.name, visible: false });
-      }
-    });
-    
-    return baseColumns;
+    return saved ? JSON.parse(saved) : borrowerFields;
   });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
 
-  // Listen to changes in borrowerCustomFields
+  // Fetch custom fields from database
+  const { data: customFieldsData = [] } = useQuery({
+    queryKey: ['custom-fields-borrower'],
+    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+  });
+
+  // Update columnOrder when custom fields are loaded
   React.useEffect(() => {
-    const checkForNewFields = () => {
-      const borrowerCustom = localStorage.getItem('borrowerCustomFields');
-      const customFields = borrowerCustom ? JSON.parse(borrowerCustom) : [];
-      
+    if (customFieldsData.length > 0) {
       setColumnOrder(currentColumns => {
-        let hasNewFields = false;
         const updatedColumns = [...currentColumns];
+        let hasChanges = false;
         
-        customFields.forEach(customField => {
-          if (!updatedColumns.find(col => col.id === customField.id)) {
-            updatedColumns.push({ ...customField, label: customField.name, visible: false });
-            hasNewFields = true;
+        customFieldsData.forEach(field => {
+          if (!updatedColumns.find(col => col.id === field.field_id)) {
+            updatedColumns.push({ 
+              id: field.field_id, 
+              label: field.field_name, 
+              visible: false 
+            });
+            hasChanges = true;
           }
         });
         
-        if (hasNewFields) {
+        if (hasChanges) {
           localStorage.setItem('dashboardColumns', JSON.stringify(updatedColumns));
           return updatedColumns;
         }
         return currentColumns;
       });
-    };
-    
-    const interval = setInterval(checkForNewFields, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    }
+  }, [customFieldsData]);
 
   const statusLabels = {
     new: 'חדש',
