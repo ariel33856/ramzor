@@ -40,6 +40,7 @@ import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
 import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
+import ModuleArchive from './pages/ModuleArchive';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +87,7 @@ export const PAGES = {
     "Sales": Sales,
     "SearchPage": SearchPage,
     "ArchiveCaseDetails": ArchiveCaseDetails,
+    "ModuleArchive": ModuleArchive,
 }
 
 export const pagesConfig = {

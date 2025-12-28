@@ -181,7 +181,7 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
@@ -192,6 +192,18 @@ export default function Layout({ children, currentPageName }) {
                     {currentPageName === 'Marketing' && 'משכנתאות'}
                     {currentPageName === 'Sales' && 'עסקאות'}
                     {currentPageName === 'Products' && 'נכסים'}
+                    {currentPageName === 'ModuleView' && (() => {
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const moduleId = urlParams.get('moduleId');
+                      const module = modules.find(m => m.id === moduleId);
+                      return module?.name || '';
+                    })()}
+                    {currentPageName === 'ModuleArchive' && (() => {
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const moduleId = urlParams.get('moduleId');
+                      const module = modules.find(m => m.id === moduleId);
+                      return `${module?.name || ''} - ארכיון`;
+                    })()}
                   </h1>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -259,6 +271,26 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  {currentPageName === 'Dashboard' && (
+                    <Link to={createPageUrl('ArchiveAccounts')}>
+                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                        <Database className="w-4 h-4 ml-2" />
+                        ארכיון
+                      </Button>
+                    </Link>
+                  )}
+                  {currentPageName === 'ModuleView' && (() => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const moduleId = urlParams.get('moduleId');
+                    return (
+                      <Link to={createPageUrl('ModuleArchive') + `?moduleId=${moduleId}`}>
+                        <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                          <Database className="w-4 h-4 ml-2" />
+                          ארכיון
+                        </Button>
+                      </Link>
+                    );
+                  })()}
                   <Link to={createPageUrl('AllDashboards')}>
                     <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
                       <Layers className="w-5 h-5 ml-2" />
