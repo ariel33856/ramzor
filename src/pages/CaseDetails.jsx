@@ -15,6 +15,7 @@ import CaseSummary from './CaseSummary';
 import CaseNotes from './CaseNotes';
 import CaseData from './CaseData';
 import CaseWorkflow from './CaseWorkflow';
+import CaseCalendar from './CaseCalendar';
 import CaseStatus from './CaseStatus';
 import CaseProfiles from './CaseProfiles';
 import CaseMetrics from './CaseMetrics';
@@ -35,6 +36,7 @@ const pageComponents = {
   notes: CaseNotes,
   data: CaseData,
   workflow: CaseWorkflow,
+  calendar: CaseCalendar,
   status: CaseStatus,
   profiles: CaseProfiles,
   metrics: CaseMetrics,

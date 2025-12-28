@@ -43,7 +43,7 @@ export default function Layout({ children, currentPageName }) {
   // Get case ID from URL if on case-related pages
   const urlParams = new URLSearchParams(window.location.search);
   const casePages = ['CaseDetails', 'CasePersonal', 'CaseContact', 'CaseSummary', 'CaseNotes', 'CaseData', 
-                     'CaseWorkflow', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
+                     'CaseWorkflow', 'CaseCalendar', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
                      'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
                      'CaseInsurance', 'CaseProducts', 'CaseAccount', 'ArchiveCaseDetails'];
   const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
@@ -115,6 +115,7 @@ export default function Layout({ children, currentPageName }) {
     'CaseNotes': 'הערות מיוחדות',
     'CaseData': 'נתונים',
     'CaseWorkflow': 'תהליך עבודה',
+    'CaseCalendar': 'יומן',
     'CaseStatus': 'סטטוס',
     'CaseProfiles': 'פרופילים',
     'CaseMetrics': 'מדדים',

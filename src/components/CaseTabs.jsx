@@ -2,7 +2,7 @@ import {
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
   FolderOpen, MessageCircle, Contact, Calculator, CreditCard,
-  Shield, Package, DollarSign
+  Shield, Package, DollarSign, Calendar
 } from 'lucide-react';
 
 export const tabs = [
@@ -12,6 +12,7 @@ export const tabs = [
   { id: 'notes', label: 'הערות מיוחדות', icon: MessageSquare, gradient: 'from-amber-500 to-orange-600', bg: 'bg-amber-50', border: 'border-amber-200' },
   { id: 'data', label: 'נתונים', icon: Database, gradient: 'from-cyan-500 to-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-200' },
   { id: 'workflow', label: 'תהליך עבודה', icon: Workflow, gradient: 'from-indigo-500 to-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200' },
+  { id: 'calendar', label: 'יומן', icon: Calendar, gradient: 'from-teal-500 to-cyan-600', bg: 'bg-teal-50', border: 'border-teal-200' },
   { id: 'status', label: 'סטטוס', icon: Activity, gradient: 'from-pink-500 to-pink-600', bg: 'bg-pink-50', border: 'border-pink-200' },
   { id: 'profiles', label: 'פרופילים', icon: Users, gradient: 'from-teal-500 to-teal-600', bg: 'bg-teal-50', border: 'border-teal-200' },
   { id: 'metrics', label: 'מדדים', icon: TrendingUp, gradient: 'from-rose-500 to-rose-600', bg: 'bg-rose-50', border: 'border-rose-200' },
@@ -33,6 +34,7 @@ export const pageMapping = {
   'notes': 'CaseNotes',
   'data': 'CaseData',
   'workflow': 'CaseWorkflow',
+  'calendar': 'CaseCalendar',
   'status': 'CaseStatus',
   'profiles': 'CaseProfiles',
   'metrics': 'CaseMetrics',

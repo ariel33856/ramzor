@@ -39,6 +39,7 @@ import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
 import ModulesManager from './pages/ModulesManager';
 import ModuleView from './pages/ModuleView';
 import ModuleCaseDetails from './pages/ModuleCaseDetails';
+import CaseCalendar from './pages/CaseCalendar';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "ModulesManager": ModulesManager,
     "ModuleView": ModuleView,
     "ModuleCaseDetails": ModuleCaseDetails,
+    "CaseCalendar": CaseCalendar,
 }
 
 export const pagesConfig = {
