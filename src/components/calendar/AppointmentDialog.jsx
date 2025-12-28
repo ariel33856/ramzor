@@ -37,6 +37,15 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     }
   }, [selectedTimeSlot]);
 
+  useEffect(() => {
+    if (caseId) {
+      setFormData(prev => ({
+        ...prev,
+        case_id: caseId
+      }));
+    }
+  }, [caseId]);
+
   const createAppointmentMutation = useMutation({
     mutationFn: (data) => {
       const submitData = {
