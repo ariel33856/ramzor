@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus
+  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus, User
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -435,6 +435,14 @@ export default function Layout({ children, currentPageName }) {
                         : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
                     </h1>
                   </div>
+                  {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
+                    <Link to={createPageUrl('PersonDetails') + `?id=${linkedBorrowers[0].person_id}`}>
+                      <Button className="h-9 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
+                        <User className="w-4 h-4 ml-2" />
+                        הצג איש קשר משויך
+                      </Button>
+                    </Link>
+                  )}
                   <Link to={createPageUrl('Dashboard')}>
                     <Button className="h-9 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
                       <ArrowRight className="w-4 h-4 ml-2" />
