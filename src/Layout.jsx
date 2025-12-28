@@ -460,14 +460,7 @@ export default function Layout({ children, currentPageName }) {
                       {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
                     </h1>
                   </div>
-                  {(linkedPersonViaAccounts || (linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id)) && (
-                    <Link to={createPageUrl('PersonDetails') + `?id=${linkedPersonViaAccounts?.id || linkedBorrowers[0].person_id}`}>
-                      <Button className="h-9 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
-                        <User className="w-4 h-4 ml-2" />
-                        הצג איש קשר משויך
-                      </Button>
-                    </Link>
-                  )}
+
                   <Button className="h-9 bg-gradient-to-r from-gray-600 to-gray-600 hover:from-gray-700 hover:to-gray-700 text-white">
                     {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || 'שם משפחה'}
                   </Button>
