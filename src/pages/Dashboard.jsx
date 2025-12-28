@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   const { data: allBorrowers = [] } = useQuery({
     queryKey: ['all-borrowers'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+    queryFn: () => base44.entities.Person.filter({ type: 'לווה' })
   });
 
   // Filter only non-archived cases without module_id (main accounts module)
