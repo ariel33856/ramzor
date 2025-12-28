@@ -297,6 +297,14 @@ export default function Layout({ children, currentPageName }) {
                       </Button>
                     </Link>
                   )}
+                  {currentPageName === 'ContactsArchive' && (
+                    <Link to={createPageUrl('ArchiveAccounts')}>
+                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                        אנשי קשר פעילים
+                      </Button>
+                    </Link>
+                  )}
                   {currentPageName === 'ModuleView' && (() => {
                     const urlParams = new URLSearchParams(window.location.search);
                     const moduleId = urlParams.get('moduleId');
