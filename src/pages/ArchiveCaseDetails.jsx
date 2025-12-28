@@ -23,7 +23,10 @@ export default function ArchiveCaseDetails() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [customFields, setCustomFields] = useState([]);
+  const [customFields, setCustomFields] = useState(() => {
+    const saved = localStorage.getItem('borrowerCustomFields');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isAddingField, setIsAddingField] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
 
@@ -64,7 +67,9 @@ export default function ArchiveCaseDetails() {
   const handleAddField = () => {
     if (newFieldName.trim()) {
       const fieldId = `custom_${Date.now()}`;
-      setCustomFields([...customFields, { id: fieldId, name: newFieldName }]);
+      const updated = [...customFields, { id: fieldId, name: newFieldName }];
+      setCustomFields(updated);
+      localStorage.setItem('borrowerCustomFields', JSON.stringify(updated));
       setNewFieldName('');
       setIsAddingField(false);
     }
