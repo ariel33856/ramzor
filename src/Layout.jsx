@@ -335,7 +335,7 @@ export default function Layout({ children, currentPageName }) {
                     </h1>
                   </div>
                   <Link to={createPageUrl('Dashboard')}>
-                    <Button variant="outline" className="h-9">
+                    <Button className="h-9 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
                       <ArrowRight className="w-4 h-4 ml-2" />
                       חזרה לרשימת החשבונות
                     </Button>
