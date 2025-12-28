@@ -1,6 +1,7 @@
 import AIBot from './pages/AIBot';
 import AllDashboards from './pages/AllDashboards';
 import ArchiveAccounts from './pages/ArchiveAccounts';
+import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
 import Boards from './pages/Boards';
 import CalendarPage from './pages/CalendarPage';
 import CaseAccount from './pages/CaseAccount';
@@ -30,6 +31,7 @@ import ERP from './pages/ERP';
 import Management from './pages/Management';
 import ManagementHub from './pages/ManagementHub';
 import Marketing from './pages/Marketing';
+import ModuleArchive from './pages/ModuleArchive';
 import ModuleCaseDetails from './pages/ModuleCaseDetails';
 import ModuleView from './pages/ModuleView';
 import ModulesManager from './pages/ModulesManager';
@@ -39,8 +41,6 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
-import ModuleArchive from './pages/ModuleArchive';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +48,7 @@ export const PAGES = {
     "AIBot": AIBot,
     "AllDashboards": AllDashboards,
     "ArchiveAccounts": ArchiveAccounts,
+    "ArchiveCaseDetails": ArchiveCaseDetails,
     "Boards": Boards,
     "CalendarPage": CalendarPage,
     "CaseAccount": CaseAccount,
@@ -77,6 +78,7 @@ export const PAGES = {
     "Management": Management,
     "ManagementHub": ManagementHub,
     "Marketing": Marketing,
+    "ModuleArchive": ModuleArchive,
     "ModuleCaseDetails": ModuleCaseDetails,
     "ModuleView": ModuleView,
     "ModulesManager": ModulesManager,
@@ -86,8 +88,6 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "ArchiveCaseDetails": ArchiveCaseDetails,
-    "ModuleArchive": ModuleArchive,
 }
 
 export const pagesConfig = {

@@ -74,7 +74,7 @@ export default function Layout({ children, currentPageName }) {
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
-    enabled: currentPageName === 'ArchiveCaseDetails'
+    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive'
   });
 
   const { data: currentBorrower } = useQuery({
@@ -181,12 +181,13 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
-                    {currentPageName === 'ArchiveAccounts' && 'לווים'}
-                    {currentPageName === 'ArchiveCaseDetails' && 'אנשי קשר'}
+                    {currentPageName === 'ArchiveAccounts' && 'אנשי קשר'}
+                    {currentPageName === 'ContactsArchive' && 'ארכיון אנשי קשר'}
+                    {currentPageName === 'ArchiveCaseDetails' && (currentBorrower?.last_name ? `${currentBorrower.last_name} ${currentBorrower.client_name}` : currentBorrower?.client_name || '')}
                     {currentPageName === 'ModulesManager' && 'ניהול מודולים'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
@@ -228,7 +229,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ArchiveAccounts')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-slate-50 border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-medium">לווים</span>
+                            <span className="text-sm font-medium">אנשי קשר</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
                               <Database className="w-4 h-4 text-white" />
                             </div>
@@ -275,6 +276,14 @@ export default function Layout({ children, currentPageName }) {
                     <Link to={createPageUrl('ArchiveAccounts')}>
                       <Button variant="outline" className="border-slate-200 hover:border-slate-400">
                         <Database className="w-4 h-4 ml-2" />
+                        לווים
+                      </Button>
+                    </Link>
+                  )}
+                  {currentPageName === 'ArchiveAccounts' && (
+                    <Link to={createPageUrl('ContactsArchive')}>
+                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                        <Database className="w-4 h-4 ml-2" />
                         ארכיון
                       </Button>
                     </Link>
@@ -302,7 +311,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ArchiveAccounts')}>
                         <Button variant="outline">
                           <ArrowRight className="w-4 h-4 ml-2" />
-                          חזרה למודול לווים
+                          חזרה לאנשי קשר
                         </Button>
                       </Link>
                       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
