@@ -71,7 +71,7 @@ export default function CaseDetails() {
     );
   }
 
-  if (!caseData) {
+  if (!caseId || !caseData) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
         <div className="text-center">
