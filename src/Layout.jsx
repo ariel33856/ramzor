@@ -74,6 +74,12 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!caseData?.linked_borrowers
   });
 
+  const { data: caseLinkedPerson } = useQuery({
+    queryKey: ['case-linked-person', caseData?.person_id],
+    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    enabled: !!caseData?.person_id
+  });
+
   const { data: modules = [] } = useQuery({
     queryKey: ['modules'],
     queryFn: () => base44.entities.Module.list('order')
@@ -437,9 +443,7 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-xs font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                     <div className="w-px h-4 bg-blue-300"></div>
                     <h1 className="text-base font-bold text-gray-900">
-                      {linkedBorrowers.length > 0 && linkedBorrowers[0]?._person
-                        ? linkedBorrowers[0]._person.last_name || ''
-                        : ''}
+                      {caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
                     </h1>
                   </div>
                   {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
@@ -462,9 +466,7 @@ export default function Layout({ children, currentPageName }) {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
                 if (!currentTab) return null;
                 const Icon = currentTab.icon;
-                const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0]?._person
-                  ? linkedBorrowers[0]._person.last_name || ''
-                  : '';
+                const displayName = caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
                 return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
