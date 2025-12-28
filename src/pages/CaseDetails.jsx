@@ -149,7 +149,21 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              {React.createElement(pageComponents[activeTab])}
+              <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`} className={`flex items-center gap-3 mb-6 p-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}>
+                <div className={`
+                  w-14 h-14 rounded-xl flex items-center justify-center
+                  bg-gradient-to-br ${activeTabData.gradient} shadow-lg
+                `}>
+                  {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {activeTabData.label}
+                </h2>
+              </Link>
+
+              <div className="bg-white rounded-xl overflow-hidden border border-gray-200 transform scale-90 origin-top">
+                {React.createElement(pageComponents[activeTab])}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
