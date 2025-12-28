@@ -335,7 +335,7 @@ export default function Layout({ children, currentPageName }) {
                     </h1>
                   </div>
                   <Link to={createPageUrl('Dashboard')}>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" className="h-9">
                       <ArrowRight className="w-4 h-4 ml-2" />
                       חזרה לרשימת החשבונות
                     </Button>
