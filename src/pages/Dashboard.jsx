@@ -146,7 +146,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="w-full bg-gray-50/50 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50/50">
       {/* Filters */}
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
@@ -289,7 +289,7 @@ export default function Dashboard() {
             </div>
             </div>
 
-      <div className="w-full p-1 overflow-x-hidden">
+      <div className="mx-auto p-1">
         {/* Cases Content */}
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">

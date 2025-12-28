@@ -647,7 +647,7 @@ export default function Layout({ children, currentPageName }) {
         </header>
 
         {/* Page Content */}
-        <main className="overflow-x-hidden">
+        <main>
           {children}
         </main>
       </div>
