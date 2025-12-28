@@ -58,11 +58,10 @@ export default function NewContact() {
               </div>
 
               <div>
-                <Label>שם משפחה *</Label>
+                <Label>שם משפחה</Label>
                 <Input
                   value={formData.last_name}
                   onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                  required
                   className="mt-1"
                 />
               </div>
