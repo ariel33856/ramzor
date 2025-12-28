@@ -497,9 +497,17 @@ export default function Layout({ children, currentPageName }) {
                 <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
               )}
               {currentPageName === 'PersonDetails' && currentPerson && (
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {currentPerson.first_name} {currentPerson.last_name}
-                </h1>
+                <>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {currentPerson.first_name} {currentPerson.last_name}
+                  </h1>
+                  <Link to={createPageUrl('ArchiveAccounts')}>
+                    <Button variant="outline">
+                      <Database className="w-4 h-4 ml-2" />
+                      אנשי קשר
+                    </Button>
+                  </Link>
+                </>
               )}
             </div>
 
