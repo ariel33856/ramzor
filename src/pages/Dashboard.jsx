@@ -20,32 +20,11 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [visibleColumns, setVisibleColumns] = useState({
-    // account - חשבון
     account_number: true,
-    // personal - פרטים אישיים ופרטי התקשרות
     client_name: true,
-    // borrower - פרטי הלווה המשויך
-    borrower_id: false,
-    borrower_phone: false,
-    borrower_email: false,
-    // data - נתונים
-    loan_amount: true,
-    property_value: false,
-    monthly_income: false,
-    monthly_expenses: false,
-    family_size: false,
-    // status - סטטוס
-    status: true,
-    urgency: true,
-    progress: true,
-    consultant: false,
-    target_bank: false,
-    // metrics - מדדים
-    ltv_ratio: false,
-    dti_ratio: false,
-    income_per_capita: false,
-    // notes - הערות מיוחדות
-    notes: false
+    borrower_id: true,
+    borrower_phone: true,
+    borrower_email: true
   });
 
   const statusLabels = {
@@ -175,7 +154,6 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <h4 className="font-semibold text-sm">שדות להצגה</h4>
                     <div className="space-y-2">
-                      <div className="font-semibold text-xs text-gray-500 pt-2">חשבון</div>
                       <div className="flex items-center gap-2">
                         <Checkbox
                           id="col-account-num"
@@ -184,8 +162,6 @@ export default function Dashboard() {
                         />
                         <label htmlFor="col-account-num" className="text-sm cursor-pointer">מספר חשבון</label>
                       </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">פרטים אישיים ופרטי התקשרות</div>
                       <div className="flex items-center gap-2">
                         <Checkbox
                           id="col-name"
@@ -194,8 +170,6 @@ export default function Dashboard() {
                         />
                         <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
                       </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">פרטי הלווה המשויך</div>
                       <div className="flex items-center gap-2">
                         <Checkbox
                           id="col-borrower-id"
@@ -219,127 +193,6 @@ export default function Dashboard() {
                           onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_email: checked})}
                         />
                         <label htmlFor="col-borrower-email" className="text-sm cursor-pointer">אימייל לווה</label>
-                      </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">נתונים</div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-loan"
-                          checked={visibleColumns.loan_amount}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, loan_amount: checked})}
-                        />
-                        <label htmlFor="col-loan" className="text-sm cursor-pointer">סכום הלוואה</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-property"
-                          checked={visibleColumns.property_value}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, property_value: checked})}
-                        />
-                        <label htmlFor="col-property" className="text-sm cursor-pointer">שווי נכס</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-income"
-                          checked={visibleColumns.monthly_income}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_income: checked})}
-                        />
-                        <label htmlFor="col-income" className="text-sm cursor-pointer">הכנסה חודשית</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-expenses"
-                          checked={visibleColumns.monthly_expenses}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, monthly_expenses: checked})}
-                        />
-                        <label htmlFor="col-expenses" className="text-sm cursor-pointer">הוצאות חודשיות</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-family"
-                          checked={visibleColumns.family_size}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, family_size: checked})}
-                        />
-                        <label htmlFor="col-family" className="text-sm cursor-pointer">גודל משפחה</label>
-                      </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">סטטוס</div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-status"
-                          checked={visibleColumns.status}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, status: checked})}
-                        />
-                        <label htmlFor="col-status" className="text-sm cursor-pointer">סטטוס</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-urgency"
-                          checked={visibleColumns.urgency}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, urgency: checked})}
-                        />
-                        <label htmlFor="col-urgency" className="text-sm cursor-pointer">דחיפות</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-progress"
-                          checked={visibleColumns.progress}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, progress: checked})}
-                        />
-                        <label htmlFor="col-progress" className="text-sm cursor-pointer">התקדמות</label>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-consultant"
-                          checked={visibleColumns.consultant}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, consultant: checked})}
-                        />
-                        <label htmlFor="col-consultant" className="text-sm cursor-pointer">יועץ אחראי</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-bank"
-                          checked={visibleColumns.target_bank}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, target_bank: checked})}
-                        />
-                        <label htmlFor="col-bank" className="text-sm cursor-pointer">בנק יעד</label>
-                      </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">מדדים</div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-ltv"
-                          checked={visibleColumns.ltv_ratio}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, ltv_ratio: checked})}
-                        />
-                        <label htmlFor="col-ltv" className="text-sm cursor-pointer">יחס LTV</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-dti"
-                          checked={visibleColumns.dti_ratio}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, dti_ratio: checked})}
-                        />
-                        <label htmlFor="col-dti" className="text-sm cursor-pointer">יחס DTI</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-income-capita"
-                          checked={visibleColumns.income_per_capita}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, income_per_capita: checked})}
-                        />
-                        <label htmlFor="col-income-capita" className="text-sm cursor-pointer">הכנסה לנפש</label>
-                      </div>
-
-                      <div className="font-semibold text-xs text-gray-500 pt-2">הערות מיוחדות</div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-notes"
-                          checked={visibleColumns.notes}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, notes: checked})}
-                        />
-                        <label htmlFor="col-notes" className="text-sm cursor-pointer">הערות</label>
                       </div>
                     </div>
                   </div>
@@ -395,20 +248,6 @@ export default function Dashboard() {
           {visibleColumns.borrower_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">ת.ז. לווה</th>}
           {visibleColumns.borrower_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון לווה</th>}
           {visibleColumns.borrower_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל לווה</th>}
-          {visibleColumns.loan_amount && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>}
-          {visibleColumns.property_value && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שווי נכס</th>}
-          {visibleColumns.monthly_income && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה חודשית</th>}
-          {visibleColumns.monthly_expenses && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הוצאות חודשיות</th>}
-          {visibleColumns.family_size && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">גודל משפחה</th>}
-          {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
-          {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
-          {visibleColumns.progress && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">התקדמות</th>}
-          {visibleColumns.consultant && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יועץ אחראי</th>}
-          {visibleColumns.target_bank && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">בנק יעד</th>}
-          {visibleColumns.ltv_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס LTV</th>}
-          {visibleColumns.dti_ratio && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">יחס DTI</th>}
-          {visibleColumns.income_per_capita && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה לנפש</th>}
-          {visibleColumns.notes && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הערות</th>}
         </tr>
       </thead>
 
@@ -454,109 +293,6 @@ export default function Dashboard() {
             {visibleColumns.borrower_email && (
               <td className="px-6 py-4 text-gray-600">
                 {linkedBorrower?.client_email || '—'}
-              </td>
-            )}
-
-            {visibleColumns.loan_amount && (
-              <td className="px-6 py-4 text-gray-600">
-                {formatCurrency(caseData.loan_amount)}
-              </td>
-            )}
-
-            {visibleColumns.property_value && (
-              <td className="px-6 py-4 text-gray-600">
-                {formatCurrency(caseData.property_value)}
-              </td>
-            )}
-
-            {visibleColumns.monthly_income && (
-              <td className="px-6 py-4 text-gray-600">
-                {formatCurrency(caseData.monthly_income)}
-              </td>
-            )}
-
-            {visibleColumns.monthly_expenses && (
-              <td className="px-6 py-4 text-gray-600">
-                {formatCurrency(caseData.monthly_expenses)}
-              </td>
-            )}
-
-            {visibleColumns.family_size && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.family_size || '—'}
-              </td>
-            )}
-
-            {visibleColumns.status && (
-              <td className="px-6 py-4">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {statusLabels[caseData.status] || caseData.status}
-                </span>
-              </td>
-            )}
-
-            {visibleColumns.urgency && (
-              <td className="px-6 py-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                  caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
-                  caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
-                  caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
-                  {urgencyLabels[caseData.urgency] || caseData.urgency}
-                </span>
-              </td>
-            )}
-
-            {visibleColumns.progress && (
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all"
-                      style={{ width: `${caseData.progress_percentage || 0}%` }}
-                    />
-                  </div>
-                  <span className="text-sm text-gray-600 w-10">
-                    {caseData.progress_percentage || 0}%
-                  </span>
-                </div>
-              </td>
-            )}
-
-            {visibleColumns.consultant && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.assigned_consultant || 'לא הוקצה'}
-              </td>
-            )}
-
-            {visibleColumns.target_bank && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.target_bank ? bankLabels[caseData.target_bank] : '—'}
-              </td>
-            )}
-
-            {visibleColumns.ltv_ratio && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.ltv_ratio ? `${caseData.ltv_ratio}%` : '—'}
-              </td>
-            )}
-
-            {visibleColumns.dti_ratio && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.dti_ratio ? `${caseData.dti_ratio}%` : '—'}
-              </td>
-            )}
-
-            {visibleColumns.income_per_capita && (
-              <td className="px-6 py-4 text-gray-600">
-                {formatCurrency(caseData.income_per_capita)}
-              </td>
-            )}
-
-            {visibleColumns.notes && (
-              <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
-                {caseData.notes || '—'}
               </td>
             )}
             </motion.tr>
