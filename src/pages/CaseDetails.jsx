@@ -161,9 +161,7 @@ export default function CaseDetails() {
                 </h2>
               </Link>
 
-              <div className="bg-white rounded-xl overflow-hidden border border-gray-200 transform scale-90 origin-top">
-                {React.createElement(pageComponents[activeTab])}
-              </div>
+              {React.createElement(pageComponents[activeTab])}
             </motion.div>
           )}
         </AnimatePresence>
