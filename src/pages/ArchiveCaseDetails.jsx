@@ -214,17 +214,12 @@ export default function ArchiveCaseDetails() {
                   />
                 </div>
                 {customFields.map((field) => (
-                  <div key={field.id} className="space-y-2">
-                    <Input
-                      value={field.name}
-                      onChange={(e) => handleFieldNameChange(field.id, e.target.value)}
-                      placeholder="שם השדה"
-                      className="font-semibold"
-                    />
+                  <div key={field.id}>
+                    <Label>{field.name}</Label>
                     <Input
                       value={formData[field.id] || ''}
                       onChange={(e) => setFormData({...formData, [field.id]: e.target.value})}
-                      placeholder="ערך"
+                      className="mt-1"
                     />
                   </div>
                 ))}
