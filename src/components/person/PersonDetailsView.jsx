@@ -151,18 +151,24 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <div className="grid grid-cols-2 gap-2 flex-1">
-              <Input
-                value={basicData.first_name}
-                onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-                placeholder="שם פרטי"
-                className="text-xl font-bold"
-              />
-              <Input
-                value={basicData.last_name}
-                onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-                placeholder="שם משפחה"
-                className="text-xl font-bold"
-              />
+              <div>
+                <Label className="text-sm font-medium mb-1">שם פרטי</Label>
+                <Input
+                  value={basicData.first_name}
+                  onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                  placeholder="שם פרטי"
+                  className="text-xl font-bold"
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-medium mb-1">שם משפחה</Label>
+                <Input
+                  value={basicData.last_name}
+                  onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                  placeholder="שם משפחה"
+                  className="text-xl font-bold"
+                />
+              </div>
             </div>
             <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
               <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
