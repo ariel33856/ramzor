@@ -439,12 +439,11 @@ export default function Layout({ children, currentPageName }) {
               )}
               {currentPageName === 'CaseDetails' && caseData && (
                 <div className="flex items-center gap-4">
-                  <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
+                  </h1>
+                  <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg">
                     <span className="text-xs font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
-                    <div className="w-px h-4 bg-blue-300"></div>
-                    <h1 className="text-base font-bold text-gray-900">
-                      {caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
-                    </h1>
                   </div>
                   {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
                     <Link to={createPageUrl('PersonDetails') + `?id=${linkedBorrowers[0].person_id}`}>
