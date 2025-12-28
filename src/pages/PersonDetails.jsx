@@ -17,7 +17,7 @@ export default function PersonDetails() {
   const [newFieldName, setNewFieldName] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [linkedAccountId, setLinkedAccountId] = useState(null);
+  const [linkedAccounts, setLinkedAccounts] = useState([]);
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -40,11 +40,9 @@ export default function PersonDetails() {
 
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
 
-  const { data: linkedAccount } = useQuery({
-    queryKey: ['linked-account', linkedAccountId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: linkedAccountId }).then(res => res[0]),
-    enabled: !!linkedAccountId
-  });
+  const linkedAccountsData = allAccounts.filter(acc => 
+    linkedAccounts.includes(acc.id)
+  );
 
   const updatePersonMutation = useMutation({
     mutationFn: (data) => base44.entities.Person.update(personId, data),
@@ -86,16 +84,25 @@ export default function PersonDetails() {
   };
 
   const handleLinkToAccount = (accountId) => {
-    const updatedData = { ...basicData, linked_account_id: accountId };
-    setLinkedAccountId(accountId);
-    updatePersonMutation.mutate(updatedData);
-    setDialogOpen(false);
-    setSearchTerm('');
+    if (!linkedAccounts.includes(accountId)) {
+      const updatedAccounts = [...linkedAccounts, accountId];
+      setLinkedAccounts(updatedAccounts);
+      updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
+      setDialogOpen(false);
+      setSearchTerm('');
+    }
+  };
+
+  const handleUnlinkAccount = (accountId) => {
+    const updatedAccounts = linkedAccounts.filter(id => id !== accountId);
+    setLinkedAccounts(updatedAccounts);
+    updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
   };
 
   const filteredAccounts = accounts.filter(acc => 
-    acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    acc.account_number?.toString().includes(searchTerm)
+    !linkedAccounts.includes(acc.id) &&
+    (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    acc.account_number?.toString().includes(searchTerm))
   );
 
   React.useEffect(() => {
@@ -106,12 +113,11 @@ export default function PersonDetails() {
         id_number: person.id_number || '',
         phone: person.phone || '',
         email: person.email || '',
-        notes: person.notes || '',
-        linked_account_id: person.linked_account_id || null
+        notes: person.notes || ''
       });
       
-      if (person.linked_account_id) {
-        setLinkedAccountId(person.linked_account_id);
+      if (person.linked_accounts) {
+        setLinkedAccounts(person.linked_accounts);
       }
       
       if (person.custom_data) {
@@ -204,11 +210,23 @@ export default function PersonDetails() {
                   </DialogContent>
                 </Dialog>
               </div>
-              {linkedAccount && (
-                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">
-                    <span className="font-semibold">משויך לחשבון:</span> {linkedAccount.client_name} (מס׳ {linkedAccount.account_number})
-                  </p>
+              {linkedAccountsData.length > 0 && (
+                <div className="mt-2 space-y-2">
+                  {linkedAccountsData.map(account => (
+                    <div key={account.id} className="p-2 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
+                      <p className="text-sm text-green-800">
+                        <span className="font-semibold">משויך לחשבון:</span> {account.client_name} (מס׳ {account.account_number})
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleUnlinkAccount(account.id)}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
