@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { User, Phone, Mail, IdCard, FileText, Loader2, ArrowRight, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { Plus, Trash2, Loader2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function PersonDetails() {
+  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const personId = urlParams.get('id');
-  const queryClient = useQueryClient();
+  const [customFields, setCustomFields] = useState([]);
+  const [newFieldName, setNewFieldName] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -22,38 +21,53 @@ export default function PersonDetails() {
     enabled: !!personId
   });
 
-  const [formData, setFormData] = useState({});
-
-  React.useEffect(() => {
-    if (person) {
-      setFormData({
-        first_name: person.first_name || '',
-        last_name: person.last_name || '',
-        id_number: person.id_number || '',
-        phone: person.phone || '',
-        email: person.email || '',
-        type: person.type || 'איש קשר',
-        notes: person.notes || ''
-      });
-    }
-  }, [person]);
-
   const updatePersonMutation = useMutation({
     mutationFn: (data) => base44.entities.Person.update(personId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
-      queryClient.invalidateQueries({ queryKey: ['people'] });
     }
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updatePersonMutation.mutate(formData);
+  const handleAddField = () => {
+    if (newFieldName.trim()) {
+      const fieldId = `custom_${Date.now()}`;
+      setCustomFields([...customFields, { id: fieldId, name: newFieldName, value: '' }]);
+      setNewFieldName('');
+    }
   };
+
+  const handleRemoveField = (fieldId) => {
+    setCustomFields(customFields.filter(f => f.id !== fieldId));
+  };
+
+  const handleFieldValueChange = (fieldId, value) => {
+    setCustomFields(customFields.map(f => 
+      f.id === fieldId ? { ...f, value } : f
+    ));
+  };
+
+  const handleSave = () => {
+    const customData = {};
+    customFields.forEach(field => {
+      customData[field.name] = field.value;
+    });
+    updatePersonMutation.mutate({ custom_data: customData });
+  };
+
+  React.useEffect(() => {
+    if (person?.custom_data) {
+      const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
+        id: `custom_${index}`,
+        name,
+        value
+      }));
+      setCustomFields(fields);
+    }
+  }, [person]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="h-full bg-gray-50/50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
@@ -61,11 +75,11 @@ export default function PersonDetails() {
 
   if (!person) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className="h-full bg-gray-50/50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">אדם לא נמצא</h2>
-          <Link to={createPageUrl('Management')} className="text-blue-600 hover:underline mt-2 inline-block">
-            חזרה לרשימה
+          <h2 className="text-xl font-semibold text-gray-900">איש קשר לא נמצא</h2>
+          <Link to={createPageUrl('ArchiveAccounts')} className="text-blue-600 hover:underline mt-2 inline-block">
+            חזרה לאנשי קשר
           </Link>
         </div>
       </div>
@@ -73,131 +87,112 @@ export default function PersonDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-1">
-      <div className="w-full">
+    <div className="h-full bg-gray-50/50 overflow-auto p-2">
+      <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {person.first_name} {person.last_name}
-                </h1>
-                <p className="text-gray-500">{person.type}</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {person.first_name} {person.last_name}
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">{person.type}</p>
             </div>
-            <Link to={createPageUrl('Management')}>
+            <Link to={createPageUrl('ArchiveAccounts')}>
               <Button variant="outline">
                 <ArrowRight className="w-4 h-4 ml-2" />
-                חזרה לרשימה
+                חזרה
               </Button>
             </Link>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label>שם פרטי *</Label>
-                <Input
-                  value={formData.first_name}
-                  onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                  required
-                />
-              </div>
-              <div>
-                <Label>שם משפחה *</Label>
-                <Input
-                  value={formData.last_name}
-                  onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                  required
-                />
-              </div>
-            </div>
-
+          {/* Basic Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b">
             <div>
-              <Label>תעודת זהות</Label>
-              <div className="relative">
-                <IdCard className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  value={formData.id_number}
-                  onChange={(e) => setFormData({...formData, id_number: e.target.value})}
-                  className="pr-10"
-                />
-              </div>
+              <Label className="text-gray-600 text-sm">תעודת זהות</Label>
+              <p className="font-medium">{person.id_number || '—'}</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label>טלפון</Label>
-                <div className="relative">
-                  <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                    className="pr-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <Label>אימייל</Label>
-                <div className="relative">
-                  <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="pr-10"
-                  />
-                </div>
-              </div>
-            </div>
-
             <div>
-              <Label>סוג</Label>
-              <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="לווה">לווה</SelectItem>
-                  <SelectItem value="ערב">ערב</SelectItem>
-                  <SelectItem value="איש קשר">איש קשר</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-gray-600 text-sm">טלפון</Label>
+              <p className="font-medium">{person.phone || '—'}</p>
+            </div>
+            <div className="md:col-span-2">
+              <Label className="text-gray-600 text-sm">אימייל</Label>
+              <p className="font-medium">{person.email || '—'}</p>
+            </div>
+            {person.notes && (
+              <div className="md:col-span-2">
+                <Label className="text-gray-600 text-sm">הערות</Label>
+                <p className="font-medium">{person.notes}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Custom Fields */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">שדות מותאמים אישית</h2>
             </div>
 
-            <div>
-              <Label>הערות</Label>
-              <Textarea
-                value={formData.notes}
-                onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                rows={4}
-                className="resize-none"
+            {/* Add New Field */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="שם השדה החדש..."
+                value={newFieldName}
+                onChange={(e) => setNewFieldName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddField()}
               />
+              <Button 
+                onClick={handleAddField}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                <Plus className="w-4 h-4 ml-2" />
+                הוסף שדה
+              </Button>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              disabled={updatePersonMutation.isPending}
-            >
-              {updatePersonMutation.isPending ? (
-                <>
-                  <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                  שומר...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5 ml-2" />
-                  שמור שינויים
-                </>
-              )}
-            </Button>
-          </form>
+            {/* Custom Fields List */}
+            {customFields.length > 0 && (
+              <div className="space-y-3 mt-4">
+                {customFields.map((field) => (
+                  <div key={field.id} className="flex gap-2 items-start">
+                    <div className="flex-1">
+                      <Label className="text-sm font-medium mb-1">{field.name}</Label>
+                      <Input
+                        value={field.value}
+                        onChange={(e) => handleFieldValueChange(field.id, e.target.value)}
+                        placeholder={`הכנס ערך ל-${field.name}...`}
+                      />
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveField(field.id)}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 mt-6"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {customFields.length > 0 && (
+              <Button
+                onClick={handleSave}
+                disabled={updatePersonMutation.isPending}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+              >
+                {updatePersonMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    שומר...
+                  </>
+                ) : (
+                  'שמור שדות'
+                )}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>

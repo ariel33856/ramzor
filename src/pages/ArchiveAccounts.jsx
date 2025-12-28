@@ -99,7 +99,8 @@ export default function ArchiveAccounts() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => window.location.href = createPageUrl(`PersonDetails?id=${contact.id}`)}
                     >
                       <td className="px-6 py-4">
                         <span className="font-semibold text-gray-900">{contact.first_name || '—'}</span>
@@ -119,7 +120,7 @@ export default function ArchiveAccounts() {
                       <td className="px-6 py-4">
                         <span className="text-gray-500 text-sm line-clamp-1">{contact.notes || '—'}</span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant="ghost"
                           size="sm"
