@@ -58,10 +58,22 @@ export default function CasePersonal() {
     queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
   });
 
+  const { data: allContacts = [] } = useQuery({
+    queryKey: ['all-contacts'],
+    queryFn: () => base44.entities.Person.filter({ is_archived: false })
+  });
+
   const filteredBorrowers = allBorrowers.filter(borrower => 
     borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     borrower.client_id?.includes(searchTerm) ||
     borrower.client_phone?.includes(searchTerm)
+  );
+
+  const filteredContacts = allContacts.filter(contact => 
+    contact.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.id_number?.includes(searchTerm) ||
+    contact.phone?.includes(searchTerm)
   );
 
   const linkBorrowerMutation = useMutation({
@@ -70,6 +82,38 @@ export default function CasePersonal() {
       return base44.entities.MortgageCase.update(caseId, { 
         linked_borrowers: [...currentBorrowers, borrowerId] 
       });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
+      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
+      setDialogOpen(false);
+      setSearchTerm('');
+    }
+  });
+
+  const linkContactAsBorrowerMutation = useMutation({
+    mutationFn: async (contact) => {
+      // יצירת לווה חדש ממידע איש הקשר
+      const newBorrower = await base44.entities.MortgageCase.create({
+        client_name: contact.first_name,
+        last_name: contact.last_name,
+        client_id: contact.id_number,
+        client_phone: contact.phone,
+        client_email: contact.email,
+        is_archived: true,
+        module_id: null,
+        status: 'new',
+        urgency: 'medium'
+      });
+      
+      // שיוך הלווה החדש לחשבון הנוכחי
+      const currentBorrowers = caseData.linked_borrowers || [];
+      await base44.entities.MortgageCase.update(caseId, { 
+        linked_borrowers: [...currentBorrowers, newBorrower.id] 
+      });
+      
+      return newBorrower;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
@@ -218,6 +262,7 @@ export default function CasePersonal() {
                 <DialogTitle>
                   {dialogStep === 'choose' ? 'הוסף לווה' : 
                    dialogStep === 'new' ? 'הוסף לווה חדש' : 
+                   dialogStep === 'contacts' ? 'בחר מאנשי קשר' :
                    'בחר לווה מהרשימה'}
                 </DialogTitle>
               </DialogHeader>
@@ -234,10 +279,18 @@ export default function CasePersonal() {
                   
                   <Button 
                     className="w-full h-20 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    onClick={() => setDialogStep('contacts')}
+                  >
+                    <LinkIcon className="w-6 h-6 ml-3" />
+                    בחר מאנשי קשר
+                  </Button>
+                  
+                  <Button 
+                    className="w-full h-20 text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     onClick={() => setDialogStep('list')}
                   >
                     <LinkIcon className="w-6 h-6 ml-3" />
-                    בחר מרשימה קיימת
+                    בחר מלווים קיימים
                   </Button>
                 </div>
               ) : dialogStep === 'new' ? (
@@ -324,6 +377,39 @@ export default function CasePersonal() {
                       ביטול
                     </Button>
                   </div>
+                </div>
+              ) : dialogStep === 'contacts' ? (
+                <div className="space-y-4">
+                  <Input
+                    placeholder="חיפוש לפי שם, ת.ז או טלפון..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredContacts.map(contact => (
+                      <div
+                        key={contact.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => linkContactAsBorrowerMutation.mutate(contact)}
+                      >
+                        <p className="font-semibold text-gray-900">{contact.first_name} {contact.last_name}</p>
+                        <p className="text-sm text-gray-500">{contact.id_number} • {contact.phone}</p>
+                      </div>
+                    ))}
+                    {filteredContacts.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
+                    )}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setDialogStep('choose');
+                      setSearchTerm('');
+                    }}
+                  >
+                    חזרה
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
