@@ -36,8 +36,8 @@ export default function ArchiveAccounts() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="sticky top-[64px] z-50 bg-white p-3 shadow-sm border-b border-gray-100 mb-0 -mt-px">
+    <div className="h-screen bg-gray-50/50 flex flex-col overflow-hidden">
+      <div className="flex-shrink-0 bg-white p-3 shadow-sm border-b border-gray-100">
         <div className="mx-auto px-2">
           <div className="flex flex-col md:flex-row gap-3">
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
@@ -58,7 +58,7 @@ export default function ArchiveAccounts() {
         </div>
       </div>
 
-      <div className="mx-auto p-2">
+      <div className="flex-1 overflow-y-auto p-2">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {[1, 2, 3, 4, 5, 6].map(i => (
