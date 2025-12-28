@@ -324,15 +324,23 @@ export default function Layout({ children, currentPageName }) {
                 </>
               )}
               {currentPageName === 'CaseDetails' && caseData && (
-                <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
-                  <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
-                  <div className="w-px h-6 bg-blue-300"></div>
-                  <h1 className="text-xl font-bold text-gray-900">
-                    {linkedBorrowers.length > 0 && linkedBorrowers[0] 
-                      ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
-                      : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
-                  </h1>
-                </div>
+                <>
+                  <Link to={createPageUrl('Dashboard')}>
+                    <Button variant="outline" size="sm">
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                      חזרה לרשימת החשבונות
+                    </Button>
+                  </Link>
+                  <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
+                    <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                    <div className="w-px h-6 bg-blue-300"></div>
+                    <h1 className="text-xl font-bold text-gray-900">
+                      {linkedBorrowers.length > 0 && linkedBorrowers[0] 
+                        ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
+                        : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
+                    </h1>
+                  </div>
+                </>
               )}
               {casePageTitles[currentPageName] && caseData && (() => {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
