@@ -133,12 +133,7 @@ export default function PersonDetails() {
                 />
               </div>
             </div>
-            <Link to={createPageUrl('ArchiveAccounts')}>
-              <Button variant="outline">
-                <ArrowRight className="w-4 h-4 ml-2" />
-                חזרה
-              </Button>
-            </Link>
+
           </div>
 
           {/* Basic Info */}
