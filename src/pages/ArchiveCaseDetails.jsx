@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Loader2, Save, ArrowRight, Link as LinkIcon } from 'lucide-react';
+import { Loader2, Save, ArrowRight, Link as LinkIcon, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -201,6 +201,12 @@ export default function ArchiveCaseDetails() {
                     className="mt-1"
                   />
                 </div>
+              </div>
+              <div className="mt-4">
+                <Button variant="outline" className="gap-2">
+                  <Plus className="w-4 h-4" />
+                  הוסף שדה
+                </Button>
               </div>
             </div>
           </div>
