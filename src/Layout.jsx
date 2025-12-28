@@ -181,10 +181,11 @@ export default function Layout({ children, currentPageName }) {
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'AccountsArchive' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
+                    {currentPageName === 'AccountsArchive' && 'ארכיון חשבונות'}
                     {currentPageName === 'ArchiveAccounts' && 'אנשי קשר'}
                     {currentPageName === 'ContactsArchive' && 'ארכיון אנשי קשר'}
                     {currentPageName === 'ArchiveCaseDetails' && (currentBorrower?.last_name ? `${currentBorrower.last_name} ${currentBorrower.client_name}` : currentBorrower?.client_name || '')}
@@ -273,12 +274,20 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   {currentPageName === 'Dashboard' && (
-                    <Link to={createPageUrl('ArchiveAccounts')}>
-                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
-                        <Database className="w-4 h-4 ml-2" />
-                        לווים
-                      </Button>
-                    </Link>
+                    <>
+                      <Link to={createPageUrl('ArchiveAccounts')}>
+                        <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                          <Database className="w-4 h-4 ml-2" />
+                          אנשי קשר
+                        </Button>
+                      </Link>
+                      <Link to={createPageUrl('AccountsArchive')}>
+                        <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                          <Database className="w-4 h-4 ml-2" />
+                          ארכיון
+                        </Button>
+                      </Link>
+                    </>
                   )}
                   {currentPageName === 'ArchiveAccounts' && (
                     <Link to={createPageUrl('ContactsArchive')}>
