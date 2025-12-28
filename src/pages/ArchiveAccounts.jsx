@@ -42,8 +42,8 @@ export default function ArchiveAccounts() {
   }, [searchTerm]);
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="mx-auto p-1">
+    <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-hidden p-1">
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="overflow-x-auto max-h-[75vh]">

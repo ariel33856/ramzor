@@ -146,9 +146,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Filters */}
-      <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
+  <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+    {/* Filters */}
+    <div className="flex-shrink-0 z-50 bg-white p-4 shadow-sm border-b border-gray-100">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
 
@@ -289,7 +289,7 @@ export default function Dashboard() {
             </div>
             </div>
 
-      <div className="mx-auto p-1">
+            <div className="flex-1 overflow-hidden p-1">
         {/* Cases Content */}
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
