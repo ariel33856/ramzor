@@ -43,9 +43,28 @@ export default function CasePersonal() {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       // הסרת כפילויות מהמערך
       const uniqueIds = [...new Set(caseData.linked_borrowers)];
-      const promises = uniqueIds.map(id => 
-        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
-      );
+      const promises = uniqueIds.map(async id => {
+        const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+        if (!borrower) return null;
+        
+        // אם ללווה יש person_id, נשלוף את הנתונים מה-Person
+        if (borrower.person_id) {
+          const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+          if (person) {
+            return {
+              ...borrower,
+              _person: person,
+              client_name: person.first_name,
+              last_name: person.last_name,
+              client_id: person.id_number,
+              client_phone: person.phone,
+              client_email: person.email
+            };
+          }
+        }
+        
+        return borrower;
+      });
       const results = await Promise.all(promises);
       // סינון של תוצאות null או undefined
       return results.filter(borrower => borrower != null);
@@ -94,13 +113,9 @@ export default function CasePersonal() {
 
   const linkContactAsBorrowerMutation = useMutation({
     mutationFn: async (contact) => {
-      // יצירת לווה חדש ממידע איש הקשר
+      // יצירת לווה חדש עם קישור לאיש הקשר המקורי
       const newBorrower = await base44.entities.MortgageCase.create({
-        client_name: contact.first_name,
-        last_name: contact.last_name,
-        client_id: contact.id_number,
-        client_phone: contact.phone,
-        client_email: contact.email,
+        person_id: contact.id,
         is_archived: true,
         module_id: null,
         status: 'new',
@@ -133,13 +148,9 @@ export default function CasePersonal() {
         is_archived: false
       });
       
-      // יצירת לווה חדש ממידע איש הקשר
+      // יצירת לווה חדש עם קישור לאיש הקשר
       const newBorrower = await base44.entities.MortgageCase.create({
-        client_name: contactData.first_name,
-        last_name: contactData.last_name,
-        client_id: contactData.id_number,
-        client_phone: contactData.phone,
-        client_email: contactData.email,
+        person_id: newContact.id,
         is_archived: true,
         module_id: null,
         status: 'new',
