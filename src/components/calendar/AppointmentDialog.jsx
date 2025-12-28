@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
-export default function AppointmentDialog({ open, onOpenChange, cases = [], caseId, selectedTimeSlot }) {
+export default function AppointmentDialog({ open, onOpenChange, cases = [], caseId, selectedTimeSlot, appointment }) {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     case_id: caseId || '',
@@ -46,12 +46,43 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     }
   }, [caseId]);
 
+  useEffect(() => {
+    if (appointment) {
+      setFormData({
+        case_id: appointment.case_id || '',
+        title: appointment.title || '',
+        description: appointment.description || '',
+        date: appointment.date ? new Date(appointment.date) : new Date(),
+        start_time: appointment.start_time || '09:00',
+        end_time: appointment.end_time || '10:00',
+        location: appointment.location || '',
+        notes: appointment.notes || '',
+        status: appointment.status || 'scheduled'
+      });
+    } else if (!caseId) {
+      setFormData({
+        case_id: '',
+        title: '',
+        description: '',
+        date: new Date(),
+        start_time: '09:00',
+        end_time: '10:00',
+        location: '',
+        notes: '',
+        status: 'scheduled'
+      });
+    }
+  }, [appointment, caseId]);
+
   const createAppointmentMutation = useMutation({
     mutationFn: (data) => {
       const submitData = {
         ...data,
         date: format(data.date, 'yyyy-MM-dd')
       };
+      if (appointment?.id) {
+        return base44.entities.Appointment.update(appointment.id, submitData);
+      }
       return base44.entities.Appointment.create(submitData);
     },
     onSuccess: () => {
@@ -86,7 +117,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>פגישה חדשה</DialogTitle>
+          <DialogTitle>{appointment ? 'עריכת פגישה' : 'פגישה חדשה'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
@@ -238,7 +269,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
               className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
               disabled={createAppointmentMutation.isPending}
             >
-              {createAppointmentMutation.isPending ? 'שומר...' : 'שמור פגישה'}
+              {createAppointmentMutation.isPending ? 'שומר...' : appointment ? 'עדכן פגישה' : 'שמור פגישה'}
             </Button>
           </div>
         </form>

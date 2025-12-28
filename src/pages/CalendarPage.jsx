@@ -13,6 +13,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: appointments = [] } = useQuery({
@@ -32,8 +33,9 @@ export default function CalendarPage() {
     }
   });
 
-  const handleNewAppointment = (timeSlot = null) => {
+  const handleNewAppointment = (timeSlot = null, appointment = null) => {
     setSelectedTimeSlot(timeSlot);
+    setSelectedAppointment(appointment);
     setDialogOpen(true);
   };
 
@@ -99,7 +101,11 @@ export default function CalendarPage() {
                     getAppointmentsForDate(selectedDate).map(apt => {
                       const caseData = cases.find(c => c.id === apt.case_id);
                       return (
-                        <div key={apt.id} className="text-sm p-2 bg-teal-50 rounded-lg">
+                        <div 
+                          key={apt.id} 
+                          className="text-sm p-2 bg-teal-50 rounded-lg cursor-pointer hover:bg-teal-100"
+                          onClick={() => handleNewAppointment(null, apt)}
+                        >
                           <div className="font-medium text-teal-900">{apt.title}</div>
                           <div className="text-teal-600 text-xs flex items-center gap-1 mt-1">
                             <Clock className="w-3 h-3" />
@@ -194,12 +200,17 @@ export default function CalendarPage() {
                                 {dayAppointments.map((apt) => {
                                   const caseData = apt.case_id ? cases.find(c => c.id === apt.case_id) : null;
                                   return (
-                                    <AppointmentCard
-                                      key={apt.id}
-                                      appointment={apt}
-                                      caseData={caseData}
-                                      onDelete={() => deleteAppointmentMutation.mutate(apt.id)}
-                                    />
+                                   <div onClick={(e) => {
+                                     e.stopPropagation();
+                                     handleNewAppointment(null, apt);
+                                   }}>
+                                     <AppointmentCard
+                                       key={apt.id}
+                                       appointment={apt}
+                                       caseData={caseData}
+                                       onDelete={() => deleteAppointmentMutation.mutate(apt.id)}
+                                     />
+                                   </div>
                                   );
                                 })}
                               </div>
@@ -221,6 +232,7 @@ export default function CalendarPage() {
         onOpenChange={setDialogOpen}
         cases={cases}
         selectedTimeSlot={selectedTimeSlot}
+        appointment={selectedAppointment}
       />
     </div>
   );
