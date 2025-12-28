@@ -19,7 +19,7 @@ export default function ContactsArchive() {
 
   const { data: allPeople = [], isLoading } = useQuery({
     queryKey: ['contacts-archive'],
-    queryFn: () => base44.entities.Person.list('-created_date')
+    queryFn: () => base44.entities.Person.list('-updated_date')
   });
 
   const archivedContacts = allPeople.filter(p => p.type === 'איש קשר' && p.is_archived);
