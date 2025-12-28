@@ -186,7 +186,7 @@ export default function Layout({ children, currentPageName }) {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
                     {currentPageName === 'ArchiveAccounts' && 'לווים'}
-                    {currentPageName === 'ArchiveCaseDetails' && 'פרטי לווה'}
+                    {currentPageName === 'ArchiveCaseDetails' && (currentBorrower?.last_name || '')}
                     {currentPageName === 'ModulesManager' && 'ניהול מודולים'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
                     {currentPageName === 'Marketing' && 'משכנתאות'}
