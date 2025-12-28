@@ -20,13 +20,27 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [columnOrder, setColumnOrder] = useState([
-    { id: 'account_number', label: 'מספר חשבון', visible: true },
-    { id: 'client_name', label: 'שם לקוח', visible: true },
-    { id: 'borrower_id', label: 'תעודת זהות לווה', visible: true },
-    { id: 'borrower_phone', label: 'טלפון לווה', visible: true },
-    { id: 'borrower_email', label: 'אימייל לווה', visible: true }
-  ]);
+
+  // Fetch entity schema to get all available fields
+  const { data: caseSchema } = useQuery({
+    queryKey: ['case-schema'],
+    queryFn: () => base44.entities.MortgageCase.schema()
+  });
+
+  // Generate column order from schema
+  const [columnOrder, setColumnOrder] = useState([]);
+
+  React.useEffect(() => {
+    if (caseSchema && columnOrder.length === 0) {
+      const schemaFields = Object.keys(caseSchema.properties || {});
+      const columns = schemaFields.map(fieldId => ({
+        id: fieldId,
+        label: caseSchema.properties[fieldId].description || fieldId,
+        visible: ['account_number', 'client_name', 'client_id', 'client_phone', 'client_email'].includes(fieldId)
+      }));
+      setColumnOrder(columns);
+    }
+  }, [caseSchema]);
 
   const statusLabels = {
     new: 'חדש',
@@ -252,20 +266,32 @@ export default function Dashboard() {
             : null;
 
                   const renderCell = (columnId) => {
-                    switch(columnId) {
-                      case 'account_number':
-                        return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
-                      case 'client_name':
-                        return <div className="font-semibold text-gray-900">{linkedBorrowerCase?.client_name || caseData.client_name || '—'}</div>;
-                      case 'borrower_id':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_id || '—'}</span>;
-                      case 'borrower_phone':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_phone || '—'}</span>;
-                      case 'borrower_email':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_email || '—'}</span>;
-                      default:
-                        return '—';
+                    // Special rendering for account number
+                    if (columnId === 'account_number') {
+                      return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
                     }
+                    
+                    // Get value from linked borrower or main case
+                    const value = linkedBorrowerCase?.[columnId] || caseData[columnId];
+                    
+                    // Handle special field types
+                    if (columnId === 'client_name') {
+                      return <div className="font-semibold text-gray-900">{value || '—'}</div>;
+                    }
+                    
+                    if (typeof value === 'number') {
+                      return <span className="text-gray-600">{formatCurrency(value)}</span>;
+                    }
+                    
+                    if (typeof value === 'boolean') {
+                      return <span className="text-gray-600">{value ? 'כן' : 'לא'}</span>;
+                    }
+                    
+                    if (Array.isArray(value)) {
+                      return <span className="text-gray-600">{value.length > 0 ? value.join(', ') : '—'}</span>;
+                    }
+                    
+                    return <span className="text-gray-600">{value || '—'}</span>;
                   };
 
                   return (
