@@ -149,9 +149,9 @@ export default function PersonDetailsView({ personId }) {
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <div className="grid grid-cols-2 gap-2 w-auto">
-              <div className="w-48">
+              <div className="w-96">
                 <Label className="text-sm font-medium mb-1">שם פרטי</Label>
                 <Input
                   value={basicData.first_name}
@@ -160,7 +160,7 @@ export default function PersonDetailsView({ personId }) {
                   className="text-xl font-bold"
                 />
               </div>
-              <div className="w-48">
+              <div className="w-96">
                 <Label className="text-sm font-medium mb-1">שם משפחה</Label>
                 <Input
                   value={basicData.last_name}
@@ -170,6 +170,28 @@ export default function PersonDetailsView({ personId }) {
                 />
               </div>
             </div>
+            {linkedAccountsData.length > 0 && (
+              <div className="flex items-end gap-2 pb-1">
+                {linkedAccountsData.map(account => (
+                  <div key={account.id} className="inline-flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg">
+                    <a 
+                      href={createPageUrl('CaseDetails') + `?id=${account.id}`}
+                      className="text-sm text-green-800 hover:underline"
+                    >
+                      <span className="font-semibold">חשבון משויך:</span> {account.client_name} ({account.account_number})
+                    </a>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleUnlinkAccount(account.id)}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 h-6 w-6 p-0"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
             <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
               <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
                 להצגה במודול אנשי קשר
@@ -211,28 +233,7 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           </div>
-          {linkedAccountsData.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {linkedAccountsData.map(account => (
-                <div key={account.id} className="inline-flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg mr-2">
-                  <a 
-                    href={createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="text-sm text-green-800 hover:underline"
-                  >
-                    <span className="font-semibold">חשבון משויך:</span> {account.client_name} ({account.account_number})
-                  </a>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleUnlinkAccount(account.id)}
-                    className="text-red-500 hover:text-red-600 hover:bg-red-50 h-6 w-6 p-0"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
+
         </div>
       </div>
 
