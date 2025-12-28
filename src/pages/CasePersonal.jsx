@@ -263,9 +263,8 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="h-full overflow-auto p-1">
-      <div className="mx-auto">
-        <div className="flex justify-end gap-2 mb-4">
+    <div className="mx-auto">
+      <div className="flex justify-end gap-2 mb-4">
           {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
             <Link to={createPageUrl('PersonDetails') + `?id=${linkedBorrowers[0].person_id}`}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
