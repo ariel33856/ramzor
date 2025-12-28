@@ -15,7 +15,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 
 export default function ArchiveCaseDetails() {
@@ -25,7 +24,7 @@ export default function ArchiveCaseDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [customFields, setCustomFields] = useState([]);
-  const [newFieldDialog, setNewFieldDialog] = useState(false);
+  const [isAddingField, setIsAddingField] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
@@ -67,7 +66,7 @@ export default function ArchiveCaseDetails() {
       const fieldId = `custom_${Date.now()}`;
       setCustomFields([...customFields, { id: fieldId, name: newFieldName }]);
       setNewFieldName('');
-      setNewFieldDialog(false);
+      setIsAddingField(false);
     }
   };
 
@@ -225,38 +224,35 @@ export default function ArchiveCaseDetails() {
                 ))}
               </div>
               <div className="mt-4">
-                <Dialog open={newFieldDialog} onOpenChange={setNewFieldDialog}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      הוסף שדה
+                {isAddingField ? (
+                  <div className="flex gap-2">
+                    <Input
+                      value={newFieldName}
+                      onChange={(e) => setNewFieldName(e.target.value)}
+                      placeholder="שם השדה (לדוגמה: מספר פקס)"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleAddField();
+                        }
+                      }}
+                      autoFocus
+                    />
+                    <Button onClick={handleAddField}>
+                      הוסף
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>הוסף שדה חדש</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>שם השדה</Label>
-                        <Input
-                          value={newFieldName}
-                          onChange={(e) => setNewFieldName(e.target.value)}
-                          placeholder="לדוגמה: מספר פקס"
-                          className="mt-1"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleAddField();
-                            }
-                          }}
-                        />
-                      </div>
-                      <Button onClick={handleAddField} className="w-full">
-                        הוסף
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                    <Button variant="outline" onClick={() => {
+                      setIsAddingField(false);
+                      setNewFieldName('');
+                    }}>
+                      ביטול
+                    </Button>
+                  </div>
+                ) : (
+                  <Button variant="outline" className="gap-2" onClick={() => setIsAddingField(true)}>
+                    <Plus className="w-4 h-4" />
+                    הוסף שדה
+                  </Button>
+                )}
               </div>
             </div>
           </div>
