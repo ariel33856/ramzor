@@ -183,7 +183,7 @@ export default function ArchiveCaseDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <div className="mx-auto p-6">
+      <div className="mx-auto p-6 max-w-full">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
           <div className="mb-8 flex items-start justify-between">
             <div>
