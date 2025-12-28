@@ -219,7 +219,7 @@ export default function PersonDetailsView({ personId }) {
                     href={createPageUrl('CaseDetails') + `?id=${account.id}`}
                     className="text-sm text-green-800 hover:underline"
                   >
-                    <span className="font-semibold">משויך:</span> {account.client_name} ({account.account_number})
+                    <span className="font-semibold">חשבון משויך:</span> {account.client_name} ({account.account_number})
                   </a>
                   <Button
                     variant="ghost"
