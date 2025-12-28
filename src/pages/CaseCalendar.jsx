@@ -24,7 +24,7 @@ export default function CaseCalendar() {
   });
 
   // Filter appointments for this case only
-  const appointments = allAppointments.filter(apt => apt.case_id === caseId);
+  const appointments = (allAppointments || []).filter(apt => apt.case_id === caseId);
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
