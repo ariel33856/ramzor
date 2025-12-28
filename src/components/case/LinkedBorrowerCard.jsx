@@ -15,49 +15,55 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
   });
   
+  // שימוש בנתונים מ-Person אם קיים, אחרת מ-MortgageCase
+  const personData = borrower._person || {};
+  
   const [editData, setEditData] = useState({
-    client_name: borrower.client_name || '',
-    last_name: borrower.last_name || '',
-    client_id: borrower.client_id || '',
-    client_phone: borrower.client_phone || '',
-    client_email: borrower.client_email || '',
-    ...(borrower.custom_data || {})
+    first_name: personData.first_name || borrower.client_name || '',
+    last_name: personData.last_name || borrower.last_name || '',
+    id_number: personData.id_number || borrower.client_id || '',
+    phone: personData.phone || borrower.client_phone || '',
+    email: personData.email || borrower.client_email || '',
+    ...(personData.custom_data || borrower.custom_data || {})
   });
   const timeoutRef = useRef(null);
 
   useEffect(() => {
+    const personData = borrower._person || {};
     setEditData({
-      client_name: borrower.client_name || '',
-      last_name: borrower.last_name || '',
-      client_id: borrower.client_id || '',
-      client_phone: borrower.client_phone || '',
-      client_email: borrower.client_email || '',
-      ...(borrower.custom_data || {})
+      first_name: personData.first_name || borrower.client_name || '',
+      last_name: personData.last_name || borrower.last_name || '',
+      id_number: personData.id_number || borrower.client_id || '',
+      phone: personData.phone || borrower.client_phone || '',
+      email: personData.email || borrower.client_email || '',
+      ...(personData.custom_data || borrower.custom_data || {})
     });
   }, [borrower]);
 
   const updateBorrowerMutation = useMutation({
     mutationFn: async (data) => {
-      // אם ללווה יש person_id, נעדכן את ה-Person במקום את ה-MortgageCase
+      // אם ללווה יש person_id, נעדכן את ה-Person
       if (borrower.person_id) {
         const personData = {
-          first_name: data.client_name,
+          first_name: data.first_name,
           last_name: data.last_name,
-          id_number: data.client_id,
-          phone: data.client_phone,
-          email: data.client_email,
+          id_number: data.id_number,
+          phone: data.phone,
+          email: data.email,
           custom_data: data.custom_data
         };
         await base44.entities.Person.update(borrower.person_id, personData);
-      }
-      
-      // נעדכן גם את ה-MortgageCase אם יש נתונים שאינם קשורים לאיש הקשר
-      const borrowerSpecificData = {};
-      if (data.status) borrowerSpecificData.status = data.status;
-      if (data.urgency) borrowerSpecificData.urgency = data.urgency;
-      
-      if (Object.keys(borrowerSpecificData).length > 0) {
-        await base44.entities.MortgageCase.update(borrower.id, borrowerSpecificData);
+      } else {
+        // אם אין person_id, נעדכן את ה-MortgageCase ישירות
+        const caseData = {
+          client_name: data.first_name,
+          last_name: data.last_name,
+          client_id: data.id_number,
+          client_phone: data.phone,
+          client_email: data.email,
+          custom_data: data.custom_data
+        };
+        await base44.entities.MortgageCase.update(borrower.id, caseData);
       }
       
       return true;
@@ -69,7 +75,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
       queryClient.invalidateQueries({ queryKey: ['archive-case', borrower.id] });
       queryClient.invalidateQueries({ queryKey: ['case'] });
       queryClient.invalidateQueries({ queryKey: ['person'] });
-      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
     }
   });
 
@@ -78,20 +84,17 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
       clearTimeout(timeoutRef.current);
     }
 
-    const hasChanges = 
-      editData.client_name !== (borrower.client_name || '') ||
-      editData.last_name !== (borrower.last_name || '') ||
-      editData.client_id !== (borrower.client_id || '') ||
-      editData.client_phone !== (borrower.client_phone || '') ||
-      editData.client_email !== (borrower.client_email || '') ||
-      JSON.stringify(editData) !== JSON.stringify({ 
-        client_name: borrower.client_name || '',
-        last_name: borrower.last_name || '',
-        client_id: borrower.client_id || '',
-        client_phone: borrower.client_phone || '',
-        client_email: borrower.client_email || '',
-        ...(borrower.custom_data || {})
-      });
+    const personData = borrower._person || {};
+    const originalData = {
+      first_name: personData.first_name || borrower.client_name || '',
+      last_name: personData.last_name || borrower.last_name || '',
+      id_number: personData.id_number || borrower.client_id || '',
+      phone: personData.phone || borrower.client_phone || '',
+      email: personData.email || borrower.client_email || '',
+      ...(personData.custom_data || borrower.custom_data || {})
+    };
+    
+    const hasChanges = JSON.stringify(editData) !== JSON.stringify(originalData);
 
     if (hasChanges) {
       timeoutRef.current = setTimeout(() => {
@@ -122,26 +125,36 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
-          <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
-            {borrower.last_name ? `${borrower.last_name} ${borrower.client_name}` : borrower.client_name}
-          </h4>
-        </Link>
+        {borrower.person_id ? (
+          <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
+            <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+              {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
+            </h4>
+          </Link>
+        ) : (
+          <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
+            <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+              {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
+            </h4>
+          </Link>
+        )}
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => window.location.href = createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}
-          >
-            צפייה במודול לווים
-          </Button>
+          {borrower.person_id && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}
+            >
+              צפייה באיש קשר
+            </Button>
+          )}
           <Button 
             variant="outline" 
             size="sm"
             className="text-red-600 hover:text-red-700 hover:bg-red-50"
             onClick={(e) => {
               e.preventDefault();
-              if (confirm('האם אתה בטוח שברצונך להסיר את השיוך? הלווה לא יימחק מהמודול.')) {
+              if (confirm('האם אתה בטוח שברצונך להסיר את השיוך?')) {
                 onUnlink(borrower.id);
               }
             }}
@@ -154,8 +167,8 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
         <div>
           <Label className="text-gray-600">שם פרטי</Label>
           <Input
-            value={editData.client_name}
-            onChange={(e) => setEditData({...editData, client_name: e.target.value})}
+            value={editData.first_name}
+            onChange={(e) => setEditData({...editData, first_name: e.target.value})}
             className="mt-1"
           />
         </div>
@@ -170,16 +183,16 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
         <div>
           <Label className="text-gray-600">תעודת זהות</Label>
           <Input
-            value={editData.client_id}
-            onChange={(e) => setEditData({...editData, client_id: e.target.value})}
+            value={editData.id_number}
+            onChange={(e) => setEditData({...editData, id_number: e.target.value})}
             className="mt-1"
           />
         </div>
         <div>
           <Label className="text-gray-600">טלפון</Label>
           <Input
-            value={editData.client_phone}
-            onChange={(e) => setEditData({...editData, client_phone: e.target.value})}
+            value={editData.phone}
+            onChange={(e) => setEditData({...editData, phone: e.target.value})}
             className="mt-1"
           />
         </div>
@@ -187,8 +200,8 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
           <Label className="text-gray-600">אימייל</Label>
           <Input
             type="email"
-            value={editData.client_email}
-            onChange={(e) => setEditData({...editData, client_email: e.target.value})}
+            value={editData.email}
+            onChange={(e) => setEditData({...editData, email: e.target.value})}
             className="mt-1"
           />
         </div>
