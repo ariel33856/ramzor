@@ -1,91 +1,91 @@
-import Dashboard from './pages/Dashboard';
-import NewCase from './pages/NewCase';
-import CaseDetails from './pages/CaseDetails';
-import ClientPortal from './pages/ClientPortal';
-import Management from './pages/Management';
-import AllDashboards from './pages/AllDashboards';
-import Marketing from './pages/Marketing';
-import Sales from './pages/Sales';
-import Boards from './pages/Boards';
-import Products from './pages/Products';
-import ERP from './pages/ERP';
-import SearchPage from './pages/SearchPage';
 import AIBot from './pages/AIBot';
-import Notifications from './pages/Notifications';
-import CalendarPage from './pages/CalendarPage';
-import Communication from './pages/Communication';
-import CasePersonal from './pages/CasePersonal';
-import CaseContact from './pages/CaseContact';
-import CaseSummary from './pages/CaseSummary';
-import CaseNotes from './pages/CaseNotes';
-import CaseData from './pages/CaseData';
-import CaseWorkflow from './pages/CaseWorkflow';
-import CaseStatus from './pages/CaseStatus';
-import CaseProfiles from './pages/CaseProfiles';
-import CaseMetrics from './pages/CaseMetrics';
-import CaseDashboards from './pages/CaseDashboards';
-import CaseDocuments from './pages/CaseDocuments';
-import CaseTracking from './pages/CaseTracking';
-import CaseContacts from './pages/CaseContacts';
-import CaseCalculator from './pages/CaseCalculator';
-import CasePayments from './pages/CasePayments';
-import CaseInsurance from './pages/CaseInsurance';
-import CaseProducts from './pages/CaseProducts';
-import CaseAccount from './pages/CaseAccount';
-import ManagementHub from './pages/ManagementHub';
-import PersonDetails from './pages/PersonDetails';
+import AllDashboards from './pages/AllDashboards';
 import ArchiveAccounts from './pages/ArchiveAccounts';
 import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
-import ModulesManager from './pages/ModulesManager';
-import ModuleView from './pages/ModuleView';
-import ModuleCaseDetails from './pages/ModuleCaseDetails';
+import Boards from './pages/Boards';
+import CalendarPage from './pages/CalendarPage';
+import CaseAccount from './pages/CaseAccount';
+import CaseCalculator from './pages/CaseCalculator';
 import CaseCalendar from './pages/CaseCalendar';
+import CaseContact from './pages/CaseContact';
+import CaseContacts from './pages/CaseContacts';
+import CaseDashboards from './pages/CaseDashboards';
+import CaseData from './pages/CaseData';
+import CaseDetails from './pages/CaseDetails';
+import CaseDocuments from './pages/CaseDocuments';
+import CaseInsurance from './pages/CaseInsurance';
+import CaseMetrics from './pages/CaseMetrics';
+import CaseNotes from './pages/CaseNotes';
+import CasePayments from './pages/CasePayments';
+import CasePersonal from './pages/CasePersonal';
+import CaseProducts from './pages/CaseProducts';
+import CaseProfiles from './pages/CaseProfiles';
+import CaseStatus from './pages/CaseStatus';
+import CaseSummary from './pages/CaseSummary';
+import CaseTracking from './pages/CaseTracking';
+import CaseWorkflow from './pages/CaseWorkflow';
+import ClientPortal from './pages/ClientPortal';
+import Communication from './pages/Communication';
+import Dashboard from './pages/Dashboard';
+import ERP from './pages/ERP';
+import Management from './pages/Management';
+import ManagementHub from './pages/ManagementHub';
+import Marketing from './pages/Marketing';
+import ModuleCaseDetails from './pages/ModuleCaseDetails';
+import ModuleView from './pages/ModuleView';
+import ModulesManager from './pages/ModulesManager';
+import NewCase from './pages/NewCase';
+import Notifications from './pages/Notifications';
+import PersonDetails from './pages/PersonDetails';
+import Products from './pages/Products';
+import Sales from './pages/Sales';
+import SearchPage from './pages/SearchPage';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Dashboard": Dashboard,
-    "NewCase": NewCase,
-    "CaseDetails": CaseDetails,
-    "ClientPortal": ClientPortal,
-    "Management": Management,
-    "AllDashboards": AllDashboards,
-    "Marketing": Marketing,
-    "Sales": Sales,
-    "Boards": Boards,
-    "Products": Products,
-    "ERP": ERP,
-    "SearchPage": SearchPage,
     "AIBot": AIBot,
-    "Notifications": Notifications,
-    "CalendarPage": CalendarPage,
-    "Communication": Communication,
-    "CasePersonal": CasePersonal,
-    "CaseContact": CaseContact,
-    "CaseSummary": CaseSummary,
-    "CaseNotes": CaseNotes,
-    "CaseData": CaseData,
-    "CaseWorkflow": CaseWorkflow,
-    "CaseStatus": CaseStatus,
-    "CaseProfiles": CaseProfiles,
-    "CaseMetrics": CaseMetrics,
-    "CaseDashboards": CaseDashboards,
-    "CaseDocuments": CaseDocuments,
-    "CaseTracking": CaseTracking,
-    "CaseContacts": CaseContacts,
-    "CaseCalculator": CaseCalculator,
-    "CasePayments": CasePayments,
-    "CaseInsurance": CaseInsurance,
-    "CaseProducts": CaseProducts,
-    "CaseAccount": CaseAccount,
-    "ManagementHub": ManagementHub,
-    "PersonDetails": PersonDetails,
+    "AllDashboards": AllDashboards,
     "ArchiveAccounts": ArchiveAccounts,
     "ArchiveCaseDetails": ArchiveCaseDetails,
-    "ModulesManager": ModulesManager,
-    "ModuleView": ModuleView,
-    "ModuleCaseDetails": ModuleCaseDetails,
+    "Boards": Boards,
+    "CalendarPage": CalendarPage,
+    "CaseAccount": CaseAccount,
+    "CaseCalculator": CaseCalculator,
     "CaseCalendar": CaseCalendar,
+    "CaseContact": CaseContact,
+    "CaseContacts": CaseContacts,
+    "CaseDashboards": CaseDashboards,
+    "CaseData": CaseData,
+    "CaseDetails": CaseDetails,
+    "CaseDocuments": CaseDocuments,
+    "CaseInsurance": CaseInsurance,
+    "CaseMetrics": CaseMetrics,
+    "CaseNotes": CaseNotes,
+    "CasePayments": CasePayments,
+    "CasePersonal": CasePersonal,
+    "CaseProducts": CaseProducts,
+    "CaseProfiles": CaseProfiles,
+    "CaseStatus": CaseStatus,
+    "CaseSummary": CaseSummary,
+    "CaseTracking": CaseTracking,
+    "CaseWorkflow": CaseWorkflow,
+    "ClientPortal": ClientPortal,
+    "Communication": Communication,
+    "Dashboard": Dashboard,
+    "ERP": ERP,
+    "Management": Management,
+    "ManagementHub": ManagementHub,
+    "Marketing": Marketing,
+    "ModuleCaseDetails": ModuleCaseDetails,
+    "ModuleView": ModuleView,
+    "ModulesManager": ModulesManager,
+    "NewCase": NewCase,
+    "Notifications": Notifications,
+    "PersonDetails": PersonDetails,
+    "Products": Products,
+    "Sales": Sales,
+    "SearchPage": SearchPage,
 }
 
 export const pagesConfig = {

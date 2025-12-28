@@ -27,6 +27,10 @@ export default function Dashboard() {
     client_id: false,
     client_phone: false,
     client_email: false,
+    // borrower - פרטי הלווה המשויך
+    borrower_id: false,
+    borrower_phone: false,
+    borrower_email: false,
     // data - נתונים
     loan_amount: true,
     property_value: false,
@@ -218,6 +222,32 @@ export default function Dashboard() {
                         <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
                       </div>
 
+                      <div className="font-semibold text-xs text-gray-500 pt-2">פרטי הלווה המשויך</div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-borrower-id"
+                          checked={visibleColumns.borrower_id}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_id: checked})}
+                        />
+                        <label htmlFor="col-borrower-id" className="text-sm cursor-pointer">תעודת זהות לווה</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-borrower-phone"
+                          checked={visibleColumns.borrower_phone}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_phone: checked})}
+                        />
+                        <label htmlFor="col-borrower-phone" className="text-sm cursor-pointer">טלפון לווה</label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="col-borrower-email"
+                          checked={visibleColumns.borrower_email}
+                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_email: checked})}
+                        />
+                        <label htmlFor="col-borrower-email" className="text-sm cursor-pointer">אימייל לווה</label>
+                      </div>
+
                       <div className="font-semibold text-xs text-gray-500 pt-2">נתונים</div>
                       <div className="flex items-center gap-2">
                         <Checkbox
@@ -392,6 +422,9 @@ export default function Dashboard() {
           {visibleColumns.client_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>}
           {visibleColumns.client_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>}
           {visibleColumns.client_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל</th>}
+          {visibleColumns.borrower_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">ת.ז. לווה</th>}
+          {visibleColumns.borrower_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון לווה</th>}
+          {visibleColumns.borrower_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל לווה</th>}
           {visibleColumns.loan_amount && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום הלוואה</th>}
           {visibleColumns.property_value && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שווי נכס</th>}
           {visibleColumns.monthly_income && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הכנסה חודשית</th>}
@@ -410,7 +443,12 @@ export default function Dashboard() {
       </thead>
 
       <tbody>
-        {filteredCases.map((caseData, index) => (
+        {filteredCases.map((caseData, index) => {
+          const linkedBorrower = caseData.linked_borrowers && caseData.linked_borrowers.length > 0 
+            ? allBorrowers.find(b => b.id === caseData.linked_borrowers[0])
+            : null;
+
+          return (
           <motion.tr
             key={caseData.id}
             initial={{ opacity: 0 }}
@@ -446,6 +484,24 @@ export default function Dashboard() {
             {visibleColumns.client_email && (
               <td className="px-6 py-4 text-gray-600">
                 {caseData.client_email || '—'}
+              </td>
+            )}
+
+            {visibleColumns.borrower_id && (
+              <td className="px-6 py-4 text-gray-600">
+                {linkedBorrower?.client_id || '—'}
+              </td>
+            )}
+
+            {visibleColumns.borrower_phone && (
+              <td className="px-6 py-4 text-gray-600">
+                {linkedBorrower?.client_phone || '—'}
+              </td>
+            )}
+
+            {visibleColumns.borrower_email && (
+              <td className="px-6 py-4 text-gray-600">
+                {linkedBorrower?.client_email || '—'}
               </td>
             )}
 
@@ -552,7 +608,8 @@ export default function Dashboard() {
               </td>
             )}
             </motion.tr>
-            ))}
+            );
+            })}
             </tbody>
             </table>
             </div>
