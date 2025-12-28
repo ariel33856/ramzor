@@ -66,11 +66,14 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const allCases = await base44.entities.MortgageCase.list('-created_date', 1);
-      const lastAccountNumber = allCases.length > 0 && allCases[0].account_number 
-        ? allCases[0].account_number 
+      const allCases = await base44.entities.MortgageCase.list();
+      const accountNumbers = allCases
+        .filter(c => c.account_number)
+        .map(c => c.account_number);
+      const maxAccountNumber = accountNumbers.length > 0 
+        ? Math.max(...accountNumbers)
         : 72515;
-      caseData.account_number = lastAccountNumber + 1;
+      caseData.account_number = maxAccountNumber + 1;
     }
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
