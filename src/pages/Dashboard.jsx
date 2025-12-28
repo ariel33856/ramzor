@@ -24,37 +24,8 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [columnOrder, setColumnOrder] = useState(() => {
-    const saved = localStorage.getItem('dashboardColumns');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // Filter out old borrower fields that are no longer relevant
-        const validPersonFieldIds = personFields.map(f => f.id);
-        const filtered = parsed.filter(col => {
-          // Keep if it's a standard person field
-          if (validPersonFieldIds.includes(col.id)) return true;
-          // Keep if it's a custom field (not one of the old borrower fields)
-          const oldBorrowerFields = ['borrower_id', 'borrower_phone', 'borrower_email', 'client_name', 'client_id'];
-          return !oldBorrowerFields.includes(col.id);
-        });
-        // If we filtered out fields, merge with personFields to ensure all base fields exist
-        if (filtered.length !== parsed.length) {
-          const mergedFields = [...personFields];
-          filtered.forEach(col => {
-            if (!mergedFields.find(f => f.id === col.id)) {
-              mergedFields.push(col);
-            }
-          });
-          return mergedFields;
-        }
-        return filtered;
-      } catch (e) {
-        return personFields;
-      }
-    }
-    return personFields;
-  });
+  // Initialize with Person fields only, ignore old localStorage with borrower fields
+  const [columnOrder, setColumnOrder] = useState(personFields);
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
 
@@ -82,31 +53,23 @@ export default function Dashboard() {
     return Array.from(fieldNamesSet);
   }, [allPersons]);
 
-  // Update columnOrder when custom fields are detected
+  // Rebuild columnOrder with Person fields + custom fields from Person entities
   React.useEffect(() => {
-    if (customFieldNames.length > 0) {
-      setColumnOrder(currentColumns => {
-        const updatedColumns = [...currentColumns];
-        let hasChanges = false;
-        
-        customFieldNames.forEach(fieldName => {
-          if (!updatedColumns.find(col => col.id === fieldName)) {
-            updatedColumns.push({ 
-              id: fieldName, 
-              label: fieldName, 
-              visible: false 
-            });
-            hasChanges = true;
-          }
+    // Start with base Person fields
+    const baseFields = [...personFields];
+    
+    // Add custom fields from Person entities
+    customFieldNames.forEach(fieldName => {
+      if (!baseFields.find(col => col.id === fieldName)) {
+        baseFields.push({ 
+          id: fieldName, 
+          label: fieldName, 
+          visible: false 
         });
-        
-        if (hasChanges) {
-          localStorage.setItem('dashboardColumns', JSON.stringify(updatedColumns));
-          return updatedColumns;
-        }
-        return currentColumns;
-      });
-    }
+      }
+    });
+    
+    setColumnOrder(baseFields);
   }, [customFieldNames]);
 
   const statusLabels = {
