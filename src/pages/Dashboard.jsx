@@ -274,7 +274,18 @@ export default function Dashboard() {
 
             {visibleColumns.client_name && (
               <td className="px-6 py-4">
-                <div className="font-semibold text-gray-900">{getLinkedBorrowerName(caseData)}</div>
+                <div className="font-semibold text-gray-900">
+                  {(() => {
+                    if (!caseData.linked_borrowers || caseData.linked_borrowers.length === 0) {
+                      return caseData.client_name || '—';
+                    }
+                    const linkedBorrower = allBorrowers.find(b => b.id === caseData.linked_borrowers[0]);
+                    if (linkedBorrower) {
+                      return `${linkedBorrower.first_name} ${linkedBorrower.last_name}`;
+                    }
+                    return caseData.client_name || '—';
+                  })()}
+                </div>
               </td>
             )}
 
