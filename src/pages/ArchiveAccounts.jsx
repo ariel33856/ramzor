@@ -70,24 +70,13 @@ export default function ArchiveAccounts() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const { data: modules = [] } = useQuery({
-    queryKey: ['modules'],
-    queryFn: () => base44.entities.Module.list()
-  });
-
-  // Find the "לווים" module
-  const borrowersModule = modules.find(m => m.name === 'לווים');
-
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['borrowers-active'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
-    enabled: !!borrowersModule
+    queryKey: ['archive-cases'],
+    queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
 
-  // Filter only active cases with borrowers module_id
-  const cases = borrowersModule 
-    ? allCases.filter(c => !c.is_archived && c.module_id === borrowersModule.id)
-    : [];
+  // Filter only archived cases without module_id (main borrowers module)
+  const cases = allCases.filter(c => c.is_archived === true && !c.module_id);
 
   const filteredCases = cases.filter(c => {
     const matchesSearch = !searchTerm || 

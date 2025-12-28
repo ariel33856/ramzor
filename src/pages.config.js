@@ -41,7 +41,6 @@ import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
 import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
 import ModuleArchive from './pages/ModuleArchive';
-import ContactsArchive from './pages/ContactsArchive';
 import __Layout from './Layout.jsx';
 
 
@@ -89,7 +88,6 @@ export const PAGES = {
     "SearchPage": SearchPage,
     "ArchiveCaseDetails": ArchiveCaseDetails,
     "ModuleArchive": ModuleArchive,
-    "ContactsArchive": ContactsArchive,
 }
 
 export const pagesConfig = {
