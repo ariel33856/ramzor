@@ -126,6 +126,17 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
+          {borrower.person_id && (
+            <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
+              <Button 
+                size="sm"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                <User className="w-4 h-4 ml-1" />
+                הצג איש קשר
+              </Button>
+            </Link>
+          )}
           {borrower.person_id ? (
             <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
               <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
@@ -137,17 +148,6 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
               <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
                 {editData.last_name ? `${editData.last_name} ${editData.first_name}` : editData.first_name}
               </h4>
-            </Link>
-          )}
-          {borrower.person_id && (
-            <Link to={createPageUrl('PersonDetails') + `?id=${borrower.person_id}`}>
-              <Button 
-                size="sm"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                <User className="w-4 h-4 ml-1" />
-                הצג איש קשר
-              </Button>
             </Link>
           )}
         </div>
