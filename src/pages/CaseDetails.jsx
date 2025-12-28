@@ -58,7 +58,10 @@ export default function CaseDetails() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: async () => {
+      const allCases = await base44.entities.MortgageCase.list();
+      return allCases.find(c => c.id === caseId);
+    },
     enabled: !!caseId
   });
 
