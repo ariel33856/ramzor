@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
@@ -20,6 +20,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { borrowerFields } from '../components/case/borrowerFields';
 
 export default function Dashboard() {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
@@ -29,6 +30,13 @@ export default function Dashboard() {
   });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
+
+  const archiveMutation = useMutation({
+    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cases'] });
+    }
+  });
 
   // Fetch custom fields from database
   const { data: customFieldsData = [] } = useQuery({
