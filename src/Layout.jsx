@@ -327,7 +327,9 @@ export default function Layout({ children, currentPageName }) {
                   <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                   <div className="w-px h-6 bg-blue-300"></div>
                   <h1 className="text-xl font-bold text-gray-900">
-                    {linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name}
+                    {linkedBorrowers.length > 0 && linkedBorrowers[0] 
+                      ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
+                      : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
                   </h1>
                 </div>
               )}
@@ -335,7 +337,9 @@ export default function Layout({ children, currentPageName }) {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
                 if (!currentTab) return null;
                 const Icon = currentTab.icon;
-                const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name;
+                const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0] 
+                  ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
+                  : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name);
                 return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
