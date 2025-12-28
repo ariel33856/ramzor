@@ -26,6 +26,7 @@ import CaseTracking from './pages/CaseTracking';
 import CaseWorkflow from './pages/CaseWorkflow';
 import ClientPortal from './pages/ClientPortal';
 import Communication from './pages/Communication';
+import Dashboard from './pages/Dashboard';
 import ERP from './pages/ERP';
 import Management from './pages/Management';
 import ManagementHub from './pages/ManagementHub';
@@ -39,7 +40,6 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +72,7 @@ export const PAGES = {
     "CaseWorkflow": CaseWorkflow,
     "ClientPortal": ClientPortal,
     "Communication": Communication,
+    "Dashboard": Dashboard,
     "ERP": ERP,
     "Management": Management,
     "ManagementHub": ManagementHub,
@@ -85,7 +86,6 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {

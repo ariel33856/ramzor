@@ -25,7 +25,19 @@ export default function Dashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [columnOrder, setColumnOrder] = useState(() => {
     const saved = localStorage.getItem('dashboardColumns');
-    return saved ? JSON.parse(saved) : borrowerFields;
+    const borrowerCustom = localStorage.getItem('borrowerCustomFields');
+    const customFields = borrowerCustom ? JSON.parse(borrowerCustom) : [];
+    
+    const baseColumns = saved ? JSON.parse(saved) : borrowerFields;
+    
+    // Add custom borrower fields if not already in the list
+    customFields.forEach(customField => {
+      if (!baseColumns.find(col => col.id === customField.id)) {
+        baseColumns.push({ ...customField, label: customField.name, visible: false });
+      }
+    });
+    
+    return baseColumns;
   });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
