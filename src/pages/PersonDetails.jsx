@@ -4,9 +4,10 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Loader2, ArrowRight } from 'lucide-react';
+import { Plus, Trash2, Loader2, ArrowRight, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export default function PersonDetails() {
   const queryClient = useQueryClient();
@@ -14,6 +15,9 @@ export default function PersonDetails() {
   const personId = urlParams.get('id');
   const [customFields, setCustomFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [linkedAccountId, setLinkedAccountId] = useState(null);
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -27,6 +31,19 @@ export default function PersonDetails() {
     queryKey: ['person', personId],
     queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
     enabled: !!personId
+  });
+
+  const { data: allAccounts = [] } = useQuery({
+    queryKey: ['all-accounts'],
+    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+  });
+
+  const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
+
+  const { data: linkedAccount } = useQuery({
+    queryKey: ['linked-account', linkedAccountId],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: linkedAccountId }).then(res => res[0]),
+    enabled: !!linkedAccountId
   });
 
   const updatePersonMutation = useMutation({
@@ -68,6 +85,19 @@ export default function PersonDetails() {
     updatePersonMutation.mutate(updatedData);
   };
 
+  const handleLinkToAccount = (accountId) => {
+    const updatedData = { ...basicData, linked_account_id: accountId };
+    setLinkedAccountId(accountId);
+    updatePersonMutation.mutate(updatedData);
+    setDialogOpen(false);
+    setSearchTerm('');
+  };
+
+  const filteredAccounts = accounts.filter(acc => 
+    acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    acc.account_number?.toString().includes(searchTerm)
+  );
+
   React.useEffect(() => {
     if (person) {
       setBasicData({
@@ -76,8 +106,13 @@ export default function PersonDetails() {
         id_number: person.id_number || '',
         phone: person.phone || '',
         email: person.email || '',
-        notes: person.notes || ''
+        notes: person.notes || '',
+        linked_account_id: person.linked_account_id || null
       });
+      
+      if (person.linked_account_id) {
+        setLinkedAccountId(person.linked_account_id);
+      }
       
       if (person.custom_data) {
         const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
@@ -118,20 +153,64 @@ export default function PersonDetails() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex-1">
               <p className="text-sm text-gray-500 mb-2">{person.type}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  value={basicData.first_name}
-                  onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-                  placeholder="שם פרטי"
-                  className="text-xl font-bold"
-                />
-                <Input
-                  value={basicData.last_name}
-                  onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-                  placeholder="שם משפחה"
-                  className="text-xl font-bold"
-                />
+              <div className="flex items-center gap-2">
+                <div className="grid grid-cols-2 gap-2 flex-1">
+                  <Input
+                    value={basicData.first_name}
+                    onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                    placeholder="שם פרטי"
+                    className="text-xl font-bold"
+                  />
+                  <Input
+                    value={basicData.last_name}
+                    onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                    placeholder="שם משפחה"
+                    className="text-xl font-bold"
+                  />
+                </div>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                      <LinkIcon className="w-4 h-4 ml-2" />
+                      שייך לחשבון
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh]">
+                    <DialogHeader>
+                      <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Input
+                        placeholder="חיפוש לפי שם או מספר חשבון..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {filteredAccounts.map(account => (
+                          <div
+                            key={account.id}
+                            className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                            onClick={() => handleLinkToAccount(account.id)}
+                          >
+                            <p className="font-semibold text-gray-900">{account.client_name}</p>
+                            <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                          </div>
+                        ))}
+                        {filteredAccounts.length === 0 && (
+                          <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                        )}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
+              {linkedAccount && (
+                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-800">
+                    <span className="font-semibold">משויך לחשבון:</span> {linkedAccount.client_name} (מס׳ {linkedAccount.account_number})
+                  </p>
+                </div>
+              )}
             </div>
 
           </div>
