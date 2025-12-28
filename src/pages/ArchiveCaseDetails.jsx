@@ -59,6 +59,16 @@ export default function ArchiveCaseDetails() {
     }
   });
 
+  // Auto-save on data change
+  React.useEffect(() => {
+    if (formData && Object.keys(formData).length > 0 && caseData) {
+      const timeoutId = setTimeout(() => {
+        updateMutation.mutate(formData);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [formData]);
+
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
       return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
@@ -75,11 +85,6 @@ export default function ArchiveCaseDetails() {
       setSearchTerm('');
     }
   });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updateMutation.mutate(formData);
-  };
 
   const filteredAccounts = accounts.filter(acc => 
     acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -151,7 +156,7 @@ export default function ArchiveCaseDetails() {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-8">
             {/* פרטים אישיים */}
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,27 +203,7 @@ export default function ArchiveCaseDetails() {
                 </div>
               </div>
             </div>
-
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                disabled={updateMutation.isPending}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                {updateMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                    שומר...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 ml-2" />
-                    שמור שינויים
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
