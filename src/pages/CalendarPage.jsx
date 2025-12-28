@@ -192,7 +192,7 @@ export default function CalendarPage() {
                             >
                               <div className="space-y-1">
                                 {dayAppointments.map((apt) => {
-                                  const caseData = cases.find(c => c.id === apt.case_id);
+                                  const caseData = apt.case_id ? cases.find(c => c.id === apt.case_id) : null;
                                   return (
                                     <AppointmentCard
                                       key={apt.id}
