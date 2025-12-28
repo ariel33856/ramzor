@@ -66,13 +66,13 @@ export default function Dashboard() {
   // Helper function to get linked borrower name
     const getLinkedBorrowerName = (caseData) => {
       if (!caseData.linked_borrowers || caseData.linked_borrowers.length === 0) {
-        return caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name;
+        return caseData.client_name || '—';
       }
       const linkedBorrower = allBorrowers.find(b => b.id === caseData.linked_borrowers[0]);
       if (linkedBorrower) {
-        return linkedBorrower.last_name ? `${linkedBorrower.last_name} ${linkedBorrower.client_name}` : linkedBorrower.client_name;
+        return `${linkedBorrower.first_name} ${linkedBorrower.last_name}`;
       }
-      return caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name;
+      return caseData.client_name || '—';
     };
 
   const filteredCases = cases.filter(c => {
