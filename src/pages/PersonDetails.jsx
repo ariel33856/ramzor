@@ -14,6 +14,14 @@ export default function PersonDetails() {
   const personId = urlParams.get('id');
   const [customFields, setCustomFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
+  const [basicData, setBasicData] = useState({
+    first_name: '',
+    last_name: '',
+    id_number: '',
+    phone: '',
+    email: '',
+    notes: ''
+  });
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -46,6 +54,10 @@ export default function PersonDetails() {
     ));
   };
 
+  const handleSaveBasicData = () => {
+    updatePersonMutation.mutate(basicData);
+  };
+
   const handleSave = () => {
     const customData = {};
     customFields.forEach(field => {
@@ -55,13 +67,24 @@ export default function PersonDetails() {
   };
 
   React.useEffect(() => {
-    if (person?.custom_data) {
-      const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
-        id: `custom_${index}`,
-        name,
-        value
-      }));
-      setCustomFields(fields);
+    if (person) {
+      setBasicData({
+        first_name: person.first_name || '',
+        last_name: person.last_name || '',
+        id_number: person.id_number || '',
+        phone: person.phone || '',
+        email: person.email || '',
+        notes: person.notes || ''
+      });
+      
+      if (person.custom_data) {
+        const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
+          id: `custom_${index}`,
+          name,
+          value
+        }));
+        setCustomFields(fields);
+      }
     }
   }, [person]);
 
@@ -91,11 +114,22 @@ export default function PersonDetails() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {person.first_name} {person.last_name}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">{person.type}</p>
+            <div className="flex-1">
+              <p className="text-sm text-gray-500 mb-2">{person.type}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  value={basicData.first_name}
+                  onChange={(e) => setBasicData({...basicData, first_name: e.target.value})}
+                  placeholder="שם פרטי"
+                  className="text-xl font-bold"
+                />
+                <Input
+                  value={basicData.last_name}
+                  onChange={(e) => setBasicData({...basicData, last_name: e.target.value})}
+                  placeholder="שם משפחה"
+                  className="text-xl font-bold"
+                />
+              </div>
             </div>
             <Link to={createPageUrl('ArchiveAccounts')}>
               <Button variant="outline">
@@ -108,23 +142,54 @@ export default function PersonDetails() {
           {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b">
             <div>
-              <Label className="text-gray-600 text-sm">תעודת זהות</Label>
-              <p className="font-medium">{person.id_number || '—'}</p>
+              <Label className="text-sm">תעודת זהות</Label>
+              <Input
+                value={basicData.id_number}
+                onChange={(e) => setBasicData({...basicData, id_number: e.target.value})}
+                className="mt-1"
+              />
             </div>
             <div>
-              <Label className="text-gray-600 text-sm">טלפון</Label>
-              <p className="font-medium">{person.phone || '—'}</p>
+              <Label className="text-sm">טלפון</Label>
+              <Input
+                value={basicData.phone}
+                onChange={(e) => setBasicData({...basicData, phone: e.target.value})}
+                className="mt-1"
+              />
             </div>
             <div className="md:col-span-2">
-              <Label className="text-gray-600 text-sm">אימייל</Label>
-              <p className="font-medium">{person.email || '—'}</p>
+              <Label className="text-sm">אימייל</Label>
+              <Input
+                type="email"
+                value={basicData.email}
+                onChange={(e) => setBasicData({...basicData, email: e.target.value})}
+                className="mt-1"
+              />
             </div>
-            {person.notes && (
-              <div className="md:col-span-2">
-                <Label className="text-gray-600 text-sm">הערות</Label>
-                <p className="font-medium">{person.notes}</p>
-              </div>
-            )}
+            <div className="md:col-span-2">
+              <Label className="text-sm">הערות</Label>
+              <Input
+                value={basicData.notes}
+                onChange={(e) => setBasicData({...basicData, notes: e.target.value})}
+                className="mt-1"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Button
+                onClick={handleSaveBasicData}
+                disabled={updatePersonMutation.isPending}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                {updatePersonMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    שומר...
+                  </>
+                ) : (
+                  'שמור פרטים בסיסיים'
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Custom Fields */}
