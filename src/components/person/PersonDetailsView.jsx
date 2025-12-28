@@ -171,15 +171,15 @@ export default function PersonDetailsView({ personId }) {
               </div>
             </div>
             <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
                 להצגה במודול אנשי קשר
               </Button>
             </Link>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
                   <LinkIcon className="w-4 h-4 ml-2" />
-                  שייך לחשבון
+                  שייך
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[80vh]">
@@ -212,22 +212,22 @@ export default function PersonDetailsView({ personId }) {
             </Dialog>
           </div>
           {linkedAccountsData.length > 0 && (
-            <div className="mt-2 space-y-2">
+            <div className="mt-4 space-y-2">
               {linkedAccountsData.map(account => (
-                <div key={account.id} className="p-2 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
+                <div key={account.id} className="inline-flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg mr-2">
                   <a 
                     href={createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="text-sm text-green-800 hover:underline flex-1"
+                    className="text-sm text-green-800 hover:underline"
                   >
-                    <span className="font-semibold">משויך לחשבון:</span> {account.client_name} (מס׳ {account.account_number})
+                    <span className="font-semibold">משויך:</span> {account.client_name} ({account.account_number})
                   </a>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleUnlinkAccount(account.id)}
-                    className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 h-6 w-6 p-0"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>
               ))}
