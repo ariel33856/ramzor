@@ -15,18 +15,13 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { borrowerFields } from '../components/case/borrowerFields';
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [columnOrder, setColumnOrder] = useState([
-    { id: 'account_number', label: 'מספר חשבון', visible: true },
-    { id: 'client_name', label: 'שם לקוח', visible: true },
-    { id: 'borrower_id', label: 'תעודת זהות לווה', visible: true },
-    { id: 'borrower_phone', label: 'טלפון לווה', visible: true },
-    { id: 'borrower_email', label: 'אימייל לווה', visible: true }
-  ]);
+  const [columnOrder, setColumnOrder] = useState(borrowerFields);
 
   const statusLabels = {
     new: 'חדש',
@@ -257,6 +252,8 @@ export default function Dashboard() {
                         return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
                       case 'client_name':
                         return <div className="font-semibold text-gray-900">{linkedBorrowerCase?.client_name || caseData.client_name || '—'}</div>;
+                      case 'last_name':
+                        return <span className="text-gray-600">{linkedBorrowerCase?.last_name || caseData.last_name || '—'}</span>;
                       case 'borrower_id':
                         return <span className="text-gray-600">{linkedBorrowerCase?.client_id || '—'}</span>;
                       case 'borrower_phone':
