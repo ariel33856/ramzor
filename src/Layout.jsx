@@ -319,12 +319,27 @@ export default function Layout({ children, currentPageName }) {
                     </>
                   )}
                   {currentPageName === 'ContactsArchive' && (
-                    <Link to={createPageUrl('ArchiveAccounts')}>
-                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                        אנשי קשר פעילים
-                      </Button>
-                    </Link>
+                    <>
+                      <div className="relative w-64">
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <Input
+                          placeholder="חיפוש..."
+                          value={typeof window !== 'undefined' ? window.contactsArchiveSearchTerm || '' : ''}
+                          onChange={(e) => {
+                            if (typeof window !== 'undefined' && window.setContactsArchiveSearchTerm) {
+                              window.setContactsArchiveSearchTerm(e.target.value);
+                            }
+                          }}
+                          className="pr-10"
+                        />
+                      </div>
+                      <Link to={createPageUrl('ArchiveAccounts')}>
+                        <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                          אנשי קשר פעילים
+                        </Button>
+                      </Link>
+                    </>
                   )}
                   {currentPageName === 'ModuleView' && (() => {
                     const urlParams = new URLSearchParams(window.location.search);
