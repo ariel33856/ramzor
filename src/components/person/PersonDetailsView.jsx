@@ -193,34 +193,35 @@ export default function PersonDetailsView({ personId }) {
                     שייך חשבון
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>בחר חשבון לשיוך</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="חיפוש לפי שם או מספר חשבון..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {filteredAccounts.map(account => (
-                      <div
-                        key={account.id}
-                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                        onClick={() => handleLinkToAccount(account.id)}
-                      >
-                        <p className="font-semibold text-gray-900">{account.client_name}</p>
-                        <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
-                      </div>
-                    ))}
-                    {filteredAccounts.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
-                    )}
+                <DialogContent className="max-w-2xl max-h-[80vh]">
+                  <DialogHeader>
+                    <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Input
+                      placeholder="חיפוש לפי שם או מספר חשבון..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                      {filteredAccounts.map(account => (
+                        <div
+                          key={account.id}
+                          className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                          onClick={() => handleLinkToAccount(account.id)}
+                        >
+                          <p className="font-semibold text-gray-900">{account.client_name}</p>
+                          <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                        </div>
+                      ))}
+                      {filteredAccounts.length === 0 && (
+                        <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
 
         </div>
