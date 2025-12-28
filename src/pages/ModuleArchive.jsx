@@ -123,7 +123,7 @@ export default function ModuleArchive() {
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['module-archive-cases', moduleId],
-    queryFn: () => base44.entities.MortgageCase.filter({ module_id: moduleId, is_archived: true }, '-created_date'),
+    queryFn: () => base44.entities.MortgageCase.filter({ module_id: moduleId, is_archived: true }, '-updated_date'),
     enabled: !!moduleId
   });
 

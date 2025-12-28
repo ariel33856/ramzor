@@ -69,7 +69,7 @@ export default function AccountsArchive() {
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['accounts-archive'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => base44.entities.MortgageCase.list('-updated_date')
   });
 
   // Filter only archived accounts without module_id
