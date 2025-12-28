@@ -24,6 +24,9 @@ export default function ArchiveCaseDetails() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [customFields, setCustomFields] = useState([]);
+  const [newFieldDialog, setNewFieldDialog] = useState(false);
+  const [newFieldName, setNewFieldName] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['archive-case', caseId],
@@ -58,6 +61,15 @@ export default function ArchiveCaseDetails() {
       queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
     }
   });
+
+  const handleAddField = () => {
+    if (newFieldName.trim()) {
+      const fieldId = `custom_${Date.now()}`;
+      setCustomFields([...customFields, { id: fieldId, name: newFieldName }]);
+      setNewFieldName('');
+      setNewFieldDialog(false);
+    }
+  };
 
   // Auto-save on data change
   React.useEffect(() => {
@@ -201,12 +213,45 @@ export default function ArchiveCaseDetails() {
                     className="mt-1"
                   />
                 </div>
+                {customFields.map((field) => (
+                  <div key={field.id}>
+                    <Label>{field.name}</Label>
+                    <Input
+                      value={formData[field.id] || ''}
+                      onChange={(e) => setFormData({...formData, [field.id]: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                ))}
               </div>
               <div className="mt-4">
-                <Button variant="outline" className="gap-2">
-                  <Plus className="w-4 h-4" />
-                  הוסף שדה
-                </Button>
+                <Dialog open={newFieldDialog} onOpenChange={setNewFieldDialog}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Plus className="w-4 h-4" />
+                      הוסף שדה
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>הוסף שדה חדש</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>שם השדה</Label>
+                        <Input
+                          value={newFieldName}
+                          onChange={(e) => setNewFieldName(e.target.value)}
+                          placeholder="לדוגמה: מספר פקס"
+                          className="mt-1"
+                        />
+                      </div>
+                      <Button onClick={handleAddField} className="w-full">
+                        הוסף
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
