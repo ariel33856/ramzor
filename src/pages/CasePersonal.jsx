@@ -438,7 +438,7 @@ export default function CasePersonal() {
         </div>
 
         {linkedBorrowers.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-4 px-2">
             <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
             {linkedBorrowers.map((borrower, index) => (
               <LinkedBorrowerCard
@@ -450,8 +450,6 @@ export default function CasePersonal() {
             ))}
           </div>
         )}
-        
-
-    </div>
-  );
-}
+        </>
+        );
+        }
