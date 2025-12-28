@@ -330,8 +330,8 @@ export default function Layout({ children, currentPageName }) {
                     <div className="w-px h-4 bg-blue-300"></div>
                     <h1 className="text-base font-bold text-gray-900">
                       {linkedBorrowers.length > 0 && linkedBorrowers[0] 
-                        ? linkedBorrowers[0].last_name
-                        : caseData.last_name}
+                        ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
+                        : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
                     </h1>
                   </div>
                   <Link to={createPageUrl('Dashboard')}>
