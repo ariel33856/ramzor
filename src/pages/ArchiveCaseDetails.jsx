@@ -153,8 +153,7 @@ export default function ArchiveCaseDetails() {
 
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* פרטים אישיים */}
-            <div className="border-b border-gray-200 pb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">פרטים אישיים</h2>
+            <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>שם לקוח</Label>
@@ -198,123 +197,6 @@ export default function ArchiveCaseDetails() {
                   />
                 </div>
               </div>
-            </div>
-
-            {/* נתונים פיננסיים */}
-            <div className="border-b border-gray-200 pb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">נתונים פיננסיים</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>סכום הלוואה</Label>
-                  <Input
-                    type="number"
-                    value={formData.loan_amount || ''}
-                    onChange={(e) => setFormData({...formData, loan_amount: Number(e.target.value)})}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>שווי נכס</Label>
-                  <Input
-                    type="number"
-                    value={formData.property_value || ''}
-                    onChange={(e) => setFormData({...formData, property_value: Number(e.target.value)})}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>הכנסה חודשית</Label>
-                  <Input
-                    type="number"
-                    value={formData.monthly_income || ''}
-                    onChange={(e) => setFormData({...formData, monthly_income: Number(e.target.value)})}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>הוצאות חודשיות</Label>
-                  <Input
-                    type="number"
-                    value={formData.monthly_expenses || ''}
-                    onChange={(e) => setFormData({...formData, monthly_expenses: Number(e.target.value)})}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>גודל משפחה</Label>
-                  <Input
-                    type="number"
-                    value={formData.family_size || ''}
-                    onChange={(e) => setFormData({...formData, family_size: Number(e.target.value)})}
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* סטטוס וניהול */}
-            <div className="border-b border-gray-200 pb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">סטטוס וניהול</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>סטטוס</Label>
-                  <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(statusLabels).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>דחיפות</Label>
-                  <Select value={formData.urgency} onValueChange={(value) => setFormData({...formData, urgency: value})}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(urgencyLabels).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>יועץ אחראי</Label>
-                  <Input
-                    value={formData.assigned_consultant || ''}
-                    onChange={(e) => setFormData({...formData, assigned_consultant: e.target.value})}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label>בנק יעד</Label>
-                  <Select value={formData.target_bank} onValueChange={(value) => setFormData({...formData, target_bank: value})}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="בחר בנק" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(bankLabels).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            {/* הערות */}
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-4">הערות</h2>
-              <Textarea
-                value={formData.notes || ''}
-                onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                rows={6}
-                placeholder="הערות נוספות..."
-              />
             </div>
 
             <div className="flex justify-end">
