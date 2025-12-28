@@ -59,9 +59,16 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['linked-borrowers', caseData?.linked_borrowers],
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
-      const promises = caseData.linked_borrowers.map(id => 
-        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
-      );
+      const promises = caseData.linked_borrowers.map(async id => {
+        const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+        if (borrower?.person_id) {
+          const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+          if (person) {
+            return { ...borrower, _person: person };
+          }
+        }
+        return borrower;
+      });
       return Promise.all(promises);
     },
     enabled: !!caseData?.linked_borrowers
