@@ -24,9 +24,6 @@ export default function Dashboard() {
     account_number: true,
     // personal - פרטים אישיים ופרטי התקשרות
     client_name: true,
-    client_id: false,
-    client_phone: false,
-    client_email: false,
     // borrower - פרטי הלווה המשויך
     borrower_id: false,
     borrower_phone: false,
@@ -196,30 +193,6 @@ export default function Dashboard() {
                           onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_name: checked})}
                         />
                         <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-id"
-                          checked={visibleColumns.client_id}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_id: checked})}
-                        />
-                        <label htmlFor="col-id" className="text-sm cursor-pointer">תעודת זהות</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-phone"
-                          checked={visibleColumns.client_phone}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_phone: checked})}
-                        />
-                        <label htmlFor="col-phone" className="text-sm cursor-pointer">טלפון</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-email"
-                          checked={visibleColumns.client_email}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_email: checked})}
-                        />
-                        <label htmlFor="col-email" className="text-sm cursor-pointer">אימייל</label>
                       </div>
 
                       <div className="font-semibold text-xs text-gray-500 pt-2">פרטי הלווה המשויך</div>
@@ -419,9 +392,6 @@ export default function Dashboard() {
         <tr className="border-b-2 border-gray-200">
           {visibleColumns.account_number && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">מספר חשבון</th>}
           {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
-          {visibleColumns.client_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>}
-          {visibleColumns.client_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>}
-          {visibleColumns.client_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל</th>}
           {visibleColumns.borrower_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">ת.ז. לווה</th>}
           {visibleColumns.borrower_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון לווה</th>}
           {visibleColumns.borrower_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל לווה</th>}
@@ -466,24 +436,6 @@ export default function Dashboard() {
             {visibleColumns.client_name && (
               <td className="px-6 py-4">
                 <div className="font-semibold text-gray-900">{getLinkedBorrowerName(caseData)}</div>
-              </td>
-            )}
-
-            {visibleColumns.client_id && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.client_id || '—'}
-              </td>
-            )}
-
-            {visibleColumns.client_phone && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.client_phone || '—'}
-              </td>
-            )}
-
-            {visibleColumns.client_email && (
-              <td className="px-6 py-4 text-gray-600">
-                {caseData.client_email || '—'}
               </td>
             )}
 
