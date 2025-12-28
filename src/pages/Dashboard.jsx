@@ -4,15 +4,13 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, Columns, GripVertical, PlusCircle
+  Plus, Search, Filter, Columns, GripVertical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
@@ -24,8 +22,6 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [columnOrder, setColumnOrder] = useState(borrowerFields);
-  const [newFieldDialog, setNewFieldDialog] = useState(false);
-  const [newField, setNewField] = useState({ id: '', label: '' });
 
   const statusLabels = {
     new: 'חדש',
@@ -62,14 +58,6 @@ export default function Dashboard() {
     setColumnOrder(columnOrder.map(col => 
       col.id === columnId ? { ...col, visible: !col.visible } : col
     ));
-  };
-
-  const addNewField = () => {
-    if (newField.id && newField.label) {
-      setColumnOrder([...columnOrder, { ...newField, visible: true }]);
-      setNewField({ id: '', label: '' });
-      setNewFieldDialog(false);
-    }
   };
 
   const { data: allCases = [], isLoading } = useQuery({
@@ -157,44 +145,7 @@ export default function Dashboard() {
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-sm">שדות להצגה וסדר</h4>
-                      <Dialog open={newFieldDialog} onOpenChange={setNewFieldDialog}>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-7 px-2">
-                            <PlusCircle className="w-4 h-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>הוסף שדה חדש</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            <div>
-                              <Label>מזהה שדה (באנגלית, ללא רווחים)</Label>
-                              <Input
-                                value={newField.id}
-                                onChange={(e) => setNewField({...newField, id: e.target.value})}
-                                placeholder="field_name"
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label>תווית שדה</Label>
-                              <Input
-                                value={newField.label}
-                                onChange={(e) => setNewField({...newField, label: e.target.value})}
-                                placeholder="שם השדה"
-                                className="mt-1"
-                              />
-                            </div>
-                            <Button onClick={addNewField} className="w-full">
-                              הוסף שדה
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
+                    <h4 className="font-semibold text-sm">שדות להצגה וסדר</h4>
                     <DragDropContext onDragEnd={handleDragEnd}>
                       <Droppable droppableId="columns">
                         {(provided) => (
@@ -296,15 +247,13 @@ export default function Dashboard() {
             : null;
 
                   const renderCell = (columnId) => {
-                    const value = linkedBorrowerCase?.[columnId] || caseData?.[columnId];
-                    
                     switch(columnId) {
                       case 'account_number':
-                        return <div className="font-semibold text-blue-600">{value || '—'}</div>;
+                        return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
                       case 'client_name':
-                        return <div className="font-semibold text-gray-900">{value || '—'}</div>;
+                        return <div className="font-semibold text-gray-900">{linkedBorrowerCase?.client_name || caseData.client_name || '—'}</div>;
                       case 'last_name':
-                        return <span className="text-gray-600">{value || '—'}</span>;
+                        return <span className="text-gray-600">{linkedBorrowerCase?.last_name || caseData.last_name || '—'}</span>;
                       case 'borrower_id':
                         return <span className="text-gray-600">{linkedBorrowerCase?.client_id || '—'}</span>;
                       case 'borrower_phone':
@@ -312,7 +261,7 @@ export default function Dashboard() {
                       case 'borrower_email':
                         return <span className="text-gray-600">{linkedBorrowerCase?.client_email || '—'}</span>;
                       default:
-                        return <span className="text-gray-600">{value || '—'}</span>;
+                        return '—';
                     }
                   };
 
