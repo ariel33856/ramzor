@@ -453,11 +453,12 @@ export default function Layout({ children, currentPageName }) {
               )}
               {currentPageName === 'CaseDetails' && caseData && (
                 <div className="flex items-center gap-4">
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
-                  </h1>
-                  <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                    <span className="text-xs font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                  <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
+                    <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
+                    <div className="w-px h-6 bg-blue-300"></div>
+                    <h1 className="text-xl font-bold text-gray-900">
+                      {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
+                    </h1>
                   </div>
                   {(linkedPersonViaAccounts || (linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id)) && (
                     <Link to={createPageUrl('PersonDetails') + `?id=${linkedPersonViaAccounts?.id || linkedBorrowers[0].person_id}`}>
