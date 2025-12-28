@@ -214,9 +214,9 @@ export default function PersonDetails() {
                 <div className="mt-2 space-y-2">
                   {linkedAccountsData.map(account => (
                     <div key={account.id} className="p-2 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
-                      <p className="text-sm text-green-800">
+                      <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`} className="text-sm text-green-800 hover:underline flex-1">
                         <span className="font-semibold">משויך לחשבון:</span> {account.client_name} (מס׳ {account.account_number})
-                      </p>
+                      </Link>
                       <Button
                         variant="ghost"
                         size="sm"
