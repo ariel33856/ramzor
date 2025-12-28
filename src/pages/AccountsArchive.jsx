@@ -139,6 +139,12 @@ export default function AccountsArchive() {
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
+            <Link to={createPageUrl('Dashboard')}>
+              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                חשבונות פעילים
+              </Button>
+            </Link>
+
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
