@@ -52,7 +52,9 @@ export default function ArchiveCaseDetails() {
 
   React.useEffect(() => {
     if (caseData) {
-      setFormData(caseData);
+      // Merge custom_data into formData
+      const mergedData = { ...caseData, ...(caseData.custom_data || {}) };
+      setFormData(mergedData);
     }
   }, [caseData]);
 
@@ -79,11 +81,24 @@ export default function ArchiveCaseDetails() {
   React.useEffect(() => {
     if (formData && Object.keys(formData).length > 0 && caseData) {
       const timeoutId = setTimeout(() => {
-        updateMutation.mutate(formData);
+        // Separate custom fields from regular fields
+        const customFieldIds = customFields.map(f => f.id);
+        const custom_data = {};
+        const regularData = {};
+        
+        Object.keys(formData).forEach(key => {
+          if (customFieldIds.includes(key)) {
+            custom_data[key] = formData[key];
+          } else {
+            regularData[key] = formData[key];
+          }
+        });
+        
+        updateMutation.mutate({ ...regularData, custom_data });
       }, 500);
       return () => clearTimeout(timeoutId);
     }
-  }, [formData]);
+  }, [formData, customFields]);
 
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
