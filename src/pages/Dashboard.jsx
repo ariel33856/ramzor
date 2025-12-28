@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, Columns
+  Plus, Search, Filter, Columns, GripVertical
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,18 +14,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [visibleColumns, setVisibleColumns] = useState({
-    account_number: true,
-    client_name: true,
-    borrower_id: true,
-    borrower_phone: true,
-    borrower_email: true
-  });
+  const [columnOrder, setColumnOrder] = useState([
+    { id: 'account_number', label: 'מספר חשבון', visible: true },
+    { id: 'client_name', label: 'שם לקוח', visible: true },
+    { id: 'borrower_id', label: 'תעודת זהות לווה', visible: true },
+    { id: 'borrower_phone', label: 'טלפון לווה', visible: true },
+    { id: 'borrower_email', label: 'אימייל לווה', visible: true }
+  ]);
 
   const statusLabels = {
     new: 'חדש',
@@ -48,6 +49,20 @@ export default function Dashboard() {
   const formatCurrency = (amount) => {
     if (!amount) return '—';
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(columnOrder);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setColumnOrder(items);
+  };
+
+  const toggleColumnVisibility = (columnId) => {
+    setColumnOrder(columnOrder.map(col => 
+      col.id === columnId ? { ...col, visible: !col.visible } : col
+    ));
   };
 
   const { data: allCases = [], isLoading } = useQuery({
@@ -135,49 +150,45 @@ export default function Dashboard() {
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-sm">שדות להצגה</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-account-num"
-                          checked={visibleColumns.account_number}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, account_number: checked})}
-                        />
-                        <label htmlFor="col-account-num" className="text-sm cursor-pointer">מספר חשבון</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-name"
-                          checked={visibleColumns.client_name}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, client_name: checked})}
-                        />
-                        <label htmlFor="col-name" className="text-sm cursor-pointer">שם לקוח</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-borrower-id"
-                          checked={visibleColumns.borrower_id}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_id: checked})}
-                        />
-                        <label htmlFor="col-borrower-id" className="text-sm cursor-pointer">תעודת זהות לווה</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-borrower-phone"
-                          checked={visibleColumns.borrower_phone}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_phone: checked})}
-                        />
-                        <label htmlFor="col-borrower-phone" className="text-sm cursor-pointer">טלפון לווה</label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id="col-borrower-email"
-                          checked={visibleColumns.borrower_email}
-                          onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, borrower_email: checked})}
-                        />
-                        <label htmlFor="col-borrower-email" className="text-sm cursor-pointer">אימייל לווה</label>
-                      </div>
-                    </div>
+                    <h4 className="font-semibold text-sm">שדות להצגה וסדר</h4>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                      <Droppable droppableId="columns">
+                        {(provided) => (
+                          <div 
+                            {...provided.droppableProps} 
+                            ref={provided.innerRef}
+                            className="space-y-2"
+                          >
+                            {columnOrder.map((column, index) => (
+                              <Draggable key={column.id} draggableId={column.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    className={`flex items-center gap-2 p-2 rounded-lg border ${
+                                      snapshot.isDragging ? 'bg-blue-50 border-blue-300' : 'bg-white border-gray-200'
+                                    }`}
+                                  >
+                                    <div {...provided.dragHandleProps}>
+                                      <GripVertical className="w-4 h-4 text-gray-400" />
+                                    </div>
+                                    <Checkbox
+                                      id={`col-${column.id}`}
+                                      checked={column.visible}
+                                      onCheckedChange={() => toggleColumnVisibility(column.id)}
+                                    />
+                                    <label htmlFor={`col-${column.id}`} className="text-sm cursor-pointer flex-1">
+                                      {column.label}
+                                    </label>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                   </div>
                 </PopoverContent>
               </Popover>
@@ -226,11 +237,11 @@ export default function Dashboard() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
-          {visibleColumns.account_number && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">מספר חשבון</th>}
-          {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
-          {visibleColumns.borrower_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">ת.ז. לווה</th>}
-          {visibleColumns.borrower_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון לווה</th>}
-          {visibleColumns.borrower_email && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל לווה</th>}
+          {columnOrder.filter(col => col.visible).map(col => (
+            <th key={col.id} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+              {col.label}
+            </th>
+          ))}
         </tr>
       </thead>
 
@@ -239,6 +250,23 @@ export default function Dashboard() {
           const linkedBorrowerCase = caseData.linked_borrowers && caseData.linked_borrowers.length > 0 
             ? allCases.find(c => c.id === caseData.linked_borrowers[0])
             : null;
+
+                  const renderCell = (columnId) => {
+                    switch(columnId) {
+                      case 'account_number':
+                        return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
+                      case 'client_name':
+                        return <div className="font-semibold text-gray-900">{linkedBorrowerCase?.client_name || caseData.client_name || '—'}</div>;
+                      case 'borrower_id':
+                        return <span className="text-gray-600">{linkedBorrowerCase?.client_id || '—'}</span>;
+                      case 'borrower_phone':
+                        return <span className="text-gray-600">{linkedBorrowerCase?.client_phone || '—'}</span>;
+                      case 'borrower_email':
+                        return <span className="text-gray-600">{linkedBorrowerCase?.client_email || '—'}</span>;
+                      default:
+                        return '—';
+                    }
+                  };
 
                   return (
                   <motion.tr
@@ -249,37 +277,11 @@ export default function Dashboard() {
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                     onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                     >
-                    {visibleColumns.account_number && (
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>
+                    {columnOrder.filter(col => col.visible).map(col => (
+                      <td key={col.id} className="px-6 py-4">
+                        {renderCell(col.id)}
                       </td>
-                    )}
-
-                    {visibleColumns.client_name && (
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-gray-900">
-                          {linkedBorrowerCase?.client_name || caseData.client_name || '—'}
-                        </div>
-                      </td>
-                    )}
-
-                    {visibleColumns.borrower_id && (
-                      <td className="px-6 py-4 text-gray-600">
-                        {linkedBorrowerCase?.client_id || '—'}
-                      </td>
-                    )}
-
-                    {visibleColumns.borrower_phone && (
-                      <td className="px-6 py-4 text-gray-600">
-                        {linkedBorrowerCase?.client_phone || '—'}
-                      </td>
-                    )}
-
-                    {visibleColumns.borrower_email && (
-                      <td className="px-6 py-4 text-gray-600">
-                        {linkedBorrowerCase?.client_email || '—'}
-                      </td>
-                    )}
+                    ))}
             </motion.tr>
             );
             })}
