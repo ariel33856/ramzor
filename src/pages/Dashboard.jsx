@@ -55,25 +55,8 @@ export default function Dashboard() {
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
 
-  const { data: allBorrowers = [] } = useQuery({
-    queryKey: ['all-borrowers'],
-    queryFn: () => base44.entities.Person.filter({ type: 'לווה' })
-  });
-
   // Filter only non-archived cases without module_id (main accounts module)
   const cases = allCases.filter(c => !c.is_archived && !c.module_id);
-
-  // Helper function to get linked borrower name
-    const getLinkedBorrowerName = (caseData) => {
-      if (!caseData.linked_borrowers || caseData.linked_borrowers.length === 0) {
-        return caseData.client_name || '—';
-      }
-      const linkedBorrower = allBorrowers.find(b => b.id === caseData.linked_borrowers[0]);
-      if (linkedBorrower) {
-        return `${linkedBorrower.first_name} ${linkedBorrower.last_name}`;
-      }
-      return caseData.client_name || '—';
-    };
 
   const filteredCases = cases.filter(c => {
     const matchesSearch = !searchTerm || 
