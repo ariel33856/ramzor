@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Save, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     client_phone: borrower.client_phone || '',
     client_email: borrower.client_email || ''
   });
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     setEditData({
@@ -30,9 +31,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
 
   const updateBorrowerMutation = useMutation({
     mutationFn: async (data) => {
-      console.log('Updating borrower:', borrower.id, 'with data:', data);
       const result = await base44.entities.MortgageCase.update(borrower.id, data);
-      console.log('Update result:', result);
       return result;
     },
     onSuccess: () => {
@@ -44,6 +43,31 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     }
   });
 
+  useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    const hasChanges = 
+      editData.client_name !== (borrower.client_name || '') ||
+      editData.last_name !== (borrower.last_name || '') ||
+      editData.client_id !== (borrower.client_id || '') ||
+      editData.client_phone !== (borrower.client_phone || '') ||
+      editData.client_email !== (borrower.client_email || '');
+
+    if (hasChanges) {
+      timeoutRef.current = setTimeout(() => {
+        updateBorrowerMutation.mutate(editData);
+      }, 1000);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [editData]);
+
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
       <div className="flex items-center justify-between mb-4">
@@ -51,21 +75,6 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
           <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">{borrower.client_name}</h4>
         </Link>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => updateBorrowerMutation.mutate(editData)}
-            disabled={updateBorrowerMutation.isPending}
-          >
-            {updateBorrowerMutation.isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <>
-                <Save className="w-4 h-4 ml-2" />
-                שמור שינויים
-              </>
-            )}
-          </Button>
           <Button 
             variant="outline" 
             size="sm"
