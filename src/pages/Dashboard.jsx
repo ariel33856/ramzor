@@ -48,25 +48,28 @@ export default function Dashboard() {
       const borrowerCustom = localStorage.getItem('borrowerCustomFields');
       const customFields = borrowerCustom ? JSON.parse(borrowerCustom) : [];
       
-      let hasNewFields = false;
-      const updatedColumns = [...columnOrder];
-      
-      customFields.forEach(customField => {
-        if (!updatedColumns.find(col => col.id === customField.id)) {
-          updatedColumns.push({ ...customField, label: customField.name, visible: false });
-          hasNewFields = true;
+      setColumnOrder(currentColumns => {
+        let hasNewFields = false;
+        const updatedColumns = [...currentColumns];
+        
+        customFields.forEach(customField => {
+          if (!updatedColumns.find(col => col.id === customField.id)) {
+            updatedColumns.push({ ...customField, label: customField.name, visible: false });
+            hasNewFields = true;
+          }
+        });
+        
+        if (hasNewFields) {
+          localStorage.setItem('dashboardColumns', JSON.stringify(updatedColumns));
+          return updatedColumns;
         }
+        return currentColumns;
       });
-      
-      if (hasNewFields) {
-        setColumnOrder(updatedColumns);
-        localStorage.setItem('dashboardColumns', JSON.stringify(updatedColumns));
-      }
     };
     
     const interval = setInterval(checkForNewFields, 1000);
     return () => clearInterval(interval);
-  }, [columnOrder]);
+  }, []);
 
   const statusLabels = {
     new: 'חדש',
