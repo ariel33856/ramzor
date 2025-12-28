@@ -82,6 +82,17 @@ export default function CasePersonal() {
     queryFn: () => base44.entities.Person.filter({ is_archived: false })
   });
 
+  const { data: linkedContacts = [] } = useQuery({
+    queryKey: ['linked-contacts', caseId],
+    queryFn: async () => {
+      const allPersons = await base44.entities.Person.list();
+      return allPersons.filter(person => 
+        person.linked_accounts && person.linked_accounts.includes(caseId)
+      );
+    },
+    enabled: !!caseId
+  });
+
   const filteredBorrowers = allBorrowers.filter(borrower => 
     borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     borrower.client_id?.includes(searchTerm) ||
@@ -264,30 +275,44 @@ export default function CasePersonal() {
 
   return (
     <>
-      <div className="flex justify-end gap-2 mb-4 px-2">
-          {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
-            <Link to={createPageUrl('PersonDetails') + `?id=${linkedBorrowers[0].person_id}`}>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                <User className="w-4 h-4 ml-2" />
-                הצג איש קשר משויך
-              </Button>
+      {linkedContacts.length > 0 && (
+        <div className="space-y-4 px-2 mb-6">
+          <h3 className="text-lg font-bold text-gray-900">אנשי קשר משויכים ({linkedContacts.length})</h3>
+          {linkedContacts.map((contact) => (
+            <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200 hover:shadow-lg hover:border-green-300 transition-all cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-lg font-bold text-gray-900 mb-2">
+                      {contact.first_name} {contact.last_name}
+                    </h4>
+                    <div className="space-y-1 text-sm text-gray-600">
+                      {contact.id_number && <p>ת.ז: {contact.id_number}</p>}
+                      {contact.phone && <p>טלפון: {contact.phone}</p>}
+                      {contact.email && <p>אימייל: {contact.email}</p>}
+                    </div>
+                  </div>
+                  <User className="w-8 h-8 text-green-600" />
+                </div>
+              </div>
             </Link>
-          )}
+          ))}
         </div>
+      )}
 
-        {linkedBorrowers.length > 0 && (
-          <div className="space-y-4 px-2">
-            <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
-            {linkedBorrowers.map((borrower, index) => (
-              <LinkedBorrowerCard
-                key={`${borrower.id}-${index}`}
-                borrower={borrower}
-                caseId={caseId}
-                onUnlink={(borrowerId) => unlinkBorrowerMutation.mutate(borrowerId)}
-              />
-            ))}
-          </div>
-        )}
-        </>
+      {linkedBorrowers.length > 0 && (
+        <div className="space-y-4 px-2">
+          <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
+          {linkedBorrowers.map((borrower, index) => (
+            <LinkedBorrowerCard
+              key={`${borrower.id}-${index}`}
+              borrower={borrower}
+              caseId={caseId}
+              onUnlink={(borrowerId) => unlinkBorrowerMutation.mutate(borrowerId)}
+            />
+          ))}
+        </div>
+      )}
+    </>
         );
         }
