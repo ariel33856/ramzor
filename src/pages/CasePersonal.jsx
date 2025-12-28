@@ -263,7 +263,7 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
+    <div className="h-full overflow-auto p-1">
       <div className="mx-auto">
         <div className="flex justify-end gap-2 mb-4">
           {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
