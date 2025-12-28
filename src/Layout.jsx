@@ -185,7 +185,7 @@ export default function Layout({ children, currentPageName }) {
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
-                    {currentPageName === 'ArchiveAccounts' && 'לווים'}
+                    {currentPageName === 'ArchiveAccounts' && 'אנשי קשר'}
                     {currentPageName === 'ArchiveCaseDetails' && (currentBorrower?.last_name ? `${currentBorrower.last_name} ${currentBorrower.client_name}` : currentBorrower?.client_name || '')}
                     {currentPageName === 'ModulesManager' && 'ניהול מודולים'}
                     {currentPageName === 'Management' && 'לווים וערבים'}
@@ -228,7 +228,7 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('ArchiveAccounts')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-slate-50 border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-medium">לווים</span>
+                            <span className="text-sm font-medium">אנשי קשר</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
                               <Database className="w-4 h-4 text-white" />
                             </div>
