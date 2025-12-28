@@ -22,13 +22,13 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'list' or 'new'
-  const [newBorrowerData, setNewBorrowerData] = useState({
-    client_name: '',
+  const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
+  const [newContactData, setNewContactData] = useState({
+    first_name: '',
     last_name: '',
-    client_id: '',
-    client_phone: '',
-    client_email: ''
+    id_number: '',
+    phone: '',
+    email: ''
   });
 
   const { data: caseData, isLoading } = useQuery({
@@ -124,11 +124,22 @@ export default function CasePersonal() {
     }
   });
 
-  const createAndLinkBorrowerMutation = useMutation({
-    mutationFn: async (borrowerData) => {
-      // יצירת לווה חדש במודול הלווים (is_archived=true, module_id=null)
+  const createContactAndLinkMutation = useMutation({
+    mutationFn: async (contactData) => {
+      // יצירת איש קשר חדש
+      const newContact = await base44.entities.Person.create({
+        ...contactData,
+        type: 'איש קשר',
+        is_archived: false
+      });
+      
+      // יצירת לווה חדש ממידע איש הקשר
       const newBorrower = await base44.entities.MortgageCase.create({
-        ...borrowerData,
+        client_name: contactData.first_name,
+        last_name: contactData.last_name,
+        client_id: contactData.id_number,
+        client_phone: contactData.phone,
+        client_email: contactData.email,
         is_archived: true,
         module_id: null,
         status: 'new',
@@ -146,15 +157,15 @@ export default function CasePersonal() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
+      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
       setDialogOpen(false);
       setDialogStep('choose');
-      setNewBorrowerData({
-        client_name: '',
+      setNewContactData({
+        first_name: '',
         last_name: '',
-        client_id: '',
-        client_phone: '',
-        client_email: ''
+        id_number: '',
+        phone: '',
+        email: ''
       });
     }
   });
@@ -261,7 +272,7 @@ export default function CasePersonal() {
               <DialogHeader>
                 <DialogTitle>
                   {dialogStep === 'choose' ? 'הוסף לווה' : 
-                   dialogStep === 'new' ? 'הוסף לווה חדש' : 
+                   dialogStep === 'new_contact' ? 'הוסף איש קשר חדש' : 
                    dialogStep === 'contacts' ? 'בחר מאנשי קשר' :
                    'בחר לווה מהרשימה'}
                 </DialogTitle>
@@ -271,10 +282,10 @@ export default function CasePersonal() {
                 <div className="space-y-4 py-4">
                   <Button 
                     className="w-full h-20 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                    onClick={() => setDialogStep('new')}
+                    onClick={() => setDialogStep('new_contact')}
                   >
                     <User className="w-6 h-6 ml-3" />
-                    הוסף לווה חדש
+                    הוסף איש קשר חדש
                   </Button>
                   
                   <Button 
@@ -284,23 +295,15 @@ export default function CasePersonal() {
                     <LinkIcon className="w-6 h-6 ml-3" />
                     בחר מאנשי קשר
                   </Button>
-                  
-                  <Button 
-                    className="w-full h-20 text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    onClick={() => setDialogStep('list')}
-                  >
-                    <LinkIcon className="w-6 h-6 ml-3" />
-                    בחר מלווים קיימים
-                  </Button>
                 </div>
-              ) : dialogStep === 'new' ? (
+              ) : dialogStep === 'new_contact' ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <Label>שם פרטי *</Label>
                       <Input
-                        value={newBorrowerData.client_name}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_name: e.target.value})}
+                        value={newContactData.first_name}
+                        onChange={(e) => setNewContactData({...newContactData, first_name: e.target.value})}
                         placeholder="שם פרטי"
                         className="mt-1"
                       />
@@ -308,8 +311,8 @@ export default function CasePersonal() {
                     <div>
                       <Label>שם משפחה</Label>
                       <Input
-                        value={newBorrowerData.last_name}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, last_name: e.target.value})}
+                        value={newContactData.last_name}
+                        onChange={(e) => setNewContactData({...newContactData, last_name: e.target.value})}
                         placeholder="שם משפחה"
                         className="mt-1"
                       />
@@ -317,8 +320,8 @@ export default function CasePersonal() {
                     <div>
                       <Label>תעודת זהות</Label>
                       <Input
-                        value={newBorrowerData.client_id}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_id: e.target.value})}
+                        value={newContactData.id_number}
+                        onChange={(e) => setNewContactData({...newContactData, id_number: e.target.value})}
                         placeholder="תעודת זהות"
                         className="mt-1"
                       />
@@ -326,8 +329,8 @@ export default function CasePersonal() {
                     <div>
                       <Label>טלפון</Label>
                       <Input
-                        value={newBorrowerData.client_phone}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_phone: e.target.value})}
+                        value={newContactData.phone}
+                        onChange={(e) => setNewContactData({...newContactData, phone: e.target.value})}
                         placeholder="טלפון"
                         className="mt-1"
                       />
@@ -336,8 +339,8 @@ export default function CasePersonal() {
                       <Label>אימייל</Label>
                       <Input
                         type="email"
-                        value={newBorrowerData.client_email}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_email: e.target.value})}
+                        value={newContactData.email}
+                        onChange={(e) => setNewContactData({...newContactData, email: e.target.value})}
                         placeholder="אימייל"
                         className="mt-1"
                       />
@@ -346,10 +349,10 @@ export default function CasePersonal() {
                   <div className="flex gap-2">
                     <Button 
                       className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                      onClick={() => createAndLinkBorrowerMutation.mutate(newBorrowerData)}
-                      disabled={!newBorrowerData.client_name || createAndLinkBorrowerMutation.isPending}
+                      onClick={() => createContactAndLinkMutation.mutate(newContactData)}
+                      disabled={!newContactData.first_name || createContactAndLinkMutation.isPending}
                     >
-                      {createAndLinkBorrowerMutation.isPending ? (
+                      {createContactAndLinkMutation.isPending ? (
                         <>
                           <Loader2 className="w-4 h-4 ml-2 animate-spin" />
                           יוצר...
@@ -365,12 +368,12 @@ export default function CasePersonal() {
                       variant="outline"
                       onClick={() => {
                         setDialogStep('choose');
-                        setNewBorrowerData({
-                          client_name: '',
+                        setNewContactData({
+                          first_name: '',
                           last_name: '',
-                          client_id: '',
-                          client_phone: '',
-                          client_email: ''
+                          id_number: '',
+                          phone: '',
+                          email: ''
                         });
                       }}
                     >
@@ -378,7 +381,7 @@ export default function CasePersonal() {
                     </Button>
                   </div>
                 </div>
-              ) : dialogStep === 'contacts' ? (
+              ) : (
                 <div className="space-y-4">
                   <Input
                     placeholder="חיפוש לפי שם, ת.ז או טלפון..."
@@ -398,39 +401,6 @@ export default function CasePersonal() {
                     ))}
                     {filteredContacts.length === 0 && (
                       <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
-                    )}
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => {
-                      setDialogStep('choose');
-                      setSearchTerm('');
-                    }}
-                  >
-                    חזרה
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <Input
-                    placeholder="חיפוש לפי שם, ת.ז או טלפון..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {filteredBorrowers.map(borrower => (
-                      <div
-                        key={borrower.id}
-                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                        onClick={() => linkBorrowerMutation.mutate(borrower.id)}
-                      >
-                        <p className="font-semibold text-gray-900">{borrower.client_name}</p>
-                        <p className="text-sm text-gray-500">{borrower.client_id} • {borrower.client_phone}</p>
-                      </div>
-                    ))}
-                    {filteredBorrowers.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
                     )}
                   </div>
                   <Button 
