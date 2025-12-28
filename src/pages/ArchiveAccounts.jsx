@@ -37,29 +37,6 @@ export default function ArchiveAccounts() {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <div className="sticky top-[64px] z-50 bg-white p-3 shadow-sm border-b border-gray-100 mb-0 -mt-px">
-        <div className="mx-auto px-2">
-          <div className="flex flex-col md:flex-row gap-3">
-            <Link to={createPageUrl('NewContact')}>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                <UserPlus className="w-4 h-4 ml-2" />
-                איש קשר חדש
-              </Button>
-            </Link>
-
-            <div className="flex-1 relative">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                placeholder="חיפוש לפי שם, טלפון או אימייל..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="mx-auto p-1">
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">

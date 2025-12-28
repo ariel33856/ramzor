@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon
+  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -290,12 +290,20 @@ export default function Layout({ children, currentPageName }) {
                     </>
                   )}
                   {currentPageName === 'ArchiveAccounts' && (
-                    <Link to={createPageUrl('ContactsArchive')}>
-                      <Button variant="outline" className="border-slate-200 hover:border-slate-400">
-                        <Database className="w-4 h-4 ml-2" />
-                        ארכיון
-                      </Button>
-                    </Link>
+                    <>
+                      <Link to={createPageUrl('NewContact')}>
+                        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                          <UserPlus className="w-5 h-5 ml-2" />
+                          איש קשר חדש
+                        </Button>
+                      </Link>
+                      <Link to={createPageUrl('ContactsArchive')}>
+                        <Button variant="outline" className="border-slate-200 hover:border-slate-400">
+                          <Database className="w-4 h-4 ml-2" />
+                          ארכיון
+                        </Button>
+                      </Link>
+                    </>
                   )}
                   {currentPageName === 'ContactsArchive' && (
                     <Link to={createPageUrl('ArchiveAccounts')}>
