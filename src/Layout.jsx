@@ -437,9 +437,9 @@ export default function Layout({ children, currentPageName }) {
                     <span className="text-xs font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                     <div className="w-px h-4 bg-blue-300"></div>
                     <h1 className="text-base font-bold text-gray-900">
-                      {linkedBorrowers.length > 0 && linkedBorrowers[0] 
-                        ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
-                        : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name)}
+                      {linkedBorrowers.length > 0 && linkedBorrowers[0]?._person
+                        ? linkedBorrowers[0]._person.last_name || ''
+                        : ''}
                     </h1>
                   </div>
                   {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
