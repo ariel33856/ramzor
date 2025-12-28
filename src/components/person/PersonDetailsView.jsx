@@ -200,11 +200,11 @@ export default function PersonDetailsView({ personId }) {
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-center">האם לבטל את שיוך החשבון?</AlertDialogTitle>
                         </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                        <AlertDialogFooter className="flex justify-center gap-4">
+                          <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
                           <AlertDialogAction 
                             onClick={() => handleUnlinkAccount(account.id)}
-                            className="bg-red-500 hover:bg-red-600"
+                            className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
                           >
                             כן, לבטל
                           </AlertDialogAction>
