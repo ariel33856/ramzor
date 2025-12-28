@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, Columns, GripVertical, PlusCircle
+  Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -327,6 +327,7 @@ export default function Dashboard() {
               {col.label}
             </th>
           ))}
+          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
         </tr>
       </thead>
 
@@ -365,18 +366,35 @@ export default function Dashboard() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.02 }}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
                     {columnOrder.filter(col => col.visible).map(col => (
-                      <td key={col.id} className="px-6 py-4">
+                      <td 
+                        key={col.id} 
+                        className="px-6 py-4 cursor-pointer"
+                        onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                      >
                         {renderCell(col.id)}
                       </td>
                     ))}
-            </motion.tr>
-            );
-            })}
-            </tbody>
+                    <td className="px-6 py-4">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          archiveMutation.mutate(caseData.id);
+                        }}
+                        className="text-gray-500 hover:text-orange-600 hover:bg-orange-50"
+                      >
+                        <Archive className="w-4 h-4 ml-2" />
+                        ארכב
+                      </Button>
+                    </td>
+                  </motion.tr>
+                  );
+                  })}
+                  </tbody>
             </table>
             </div>
             </div>

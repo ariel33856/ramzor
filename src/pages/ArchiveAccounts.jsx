@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, Columns
+  Plus, Search, Filter, Columns, ArchiveX
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
 
 export default function ArchiveAccounts() {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
@@ -69,6 +70,13 @@ export default function ArchiveAccounts() {
     if (!amount) return '—';
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
+
+  const unarchiveMutation = useMutation({
+    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: false }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
+    }
+  });
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['archive-cases'],
@@ -369,6 +377,7 @@ export default function ArchiveAccounts() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
+          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
           {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם לקוח</th>}
           {visibleColumns.client_id && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>}
           {visibleColumns.client_phone && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>}
@@ -398,65 +407,81 @@ export default function ArchiveAccounts() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: index * 0.02 }}
-            className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}
+            className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
             >
+            <td className="px-6 py-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  unarchiveMutation.mutate(caseData.id);
+                }}
+                className="text-gray-500 hover:text-green-600 hover:bg-green-50"
+              >
+                <ArchiveX className="w-4 h-4 ml-2" />
+                שחזר
+              </Button>
+            </td>
             {visibleColumns.client_name && (
-              <td className="px-6 py-4">
+              <td 
+                className="px-6 py-4 cursor-pointer"
+                onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}
+              >
                 <div className="font-semibold text-gray-900">{caseData.client_name}</div>
               </td>
             )}
 
             {visibleColumns.client_id && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.client_id || '—'}
               </td>
             )}
 
             {visibleColumns.client_phone && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.client_phone || '—'}
               </td>
             )}
 
             {visibleColumns.client_email && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.client_email || '—'}
               </td>
             )}
 
             {visibleColumns.loan_amount && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {formatCurrency(caseData.loan_amount)}
               </td>
             )}
 
             {visibleColumns.property_value && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {formatCurrency(caseData.property_value)}
               </td>
             )}
 
             {visibleColumns.monthly_income && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {formatCurrency(caseData.monthly_income)}
               </td>
             )}
 
             {visibleColumns.monthly_expenses && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {formatCurrency(caseData.monthly_expenses)}
               </td>
             )}
 
             {visibleColumns.family_size && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.family_size || '—'}
               </td>
             )}
 
             {visibleColumns.status && (
-              <td className="px-6 py-4">
+              <td className="px-6 py-4 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   {statusLabels[caseData.status] || caseData.status}
                 </span>
@@ -464,7 +489,7 @@ export default function ArchiveAccounts() {
             )}
 
             {visibleColumns.urgency && (
-              <td className="px-6 py-4">
+              <td className="px-6 py-4 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                   caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
                   caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
@@ -477,7 +502,7 @@ export default function ArchiveAccounts() {
             )}
 
             {visibleColumns.progress && (
-              <td className="px-6 py-4">
+              <td className="px-6 py-4 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-2">
                     <div
@@ -493,43 +518,43 @@ export default function ArchiveAccounts() {
             )}
 
             {visibleColumns.consultant && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.assigned_consultant || 'לא הוקצה'}
               </td>
             )}
 
             {visibleColumns.target_bank && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.target_bank ? bankLabels[caseData.target_bank] : '—'}
               </td>
             )}
 
             {visibleColumns.ltv_ratio && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.ltv_ratio ? `${caseData.ltv_ratio}%` : '—'}
               </td>
             )}
 
             {visibleColumns.dti_ratio && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.dti_ratio ? `${caseData.dti_ratio}%` : '—'}
               </td>
             )}
 
             {visibleColumns.income_per_capita && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {formatCurrency(caseData.income_per_capita)}
               </td>
             )}
 
             {visibleColumns.account_number && (
-              <td className="px-6 py-4 text-gray-600">
+              <td className="px-6 py-4 text-gray-600 cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.account_number || '—'}
               </td>
             )}
 
             {visibleColumns.notes && (
-              <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
+              <td className="px-6 py-4 text-gray-600 max-w-xs truncate cursor-pointer" onClick={() => window.location.href = createPageUrl(`ArchiveCaseDetails?id=${caseData.id}`)}>
                 {caseData.notes || '—'}
               </td>
             )}

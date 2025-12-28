@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
-  Briefcase, Loader2, Search, Filter, Columns, GripVertical, PlusCircle
+  Briefcase, Loader2, Search, Filter, Columns, GripVertical, PlusCircle, ArchiveX
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { borrowerFields } from '../components/case/borrowerFields';
 
 export default function AccountsArchive() {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
@@ -58,6 +59,13 @@ export default function AccountsArchive() {
       });
     }
   }, [customFieldsData]);
+
+  const unarchiveMutation = useMutation({
+    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: false }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['accounts-archive'] });
+    }
+  });
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['accounts-archive'],
@@ -301,6 +309,7 @@ export default function AccountsArchive() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
                     {columnOrder.filter(col => col.visible).map(col => (
                       <th key={col.id} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
                         {col.label}
@@ -343,11 +352,28 @@ export default function AccountsArchive() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: index * 0.02 }}
-                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                        onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                       >
+                        <td className="px-6 py-4">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              unarchiveMutation.mutate(caseData.id);
+                            }}
+                            className="text-gray-500 hover:text-green-600 hover:bg-green-50"
+                          >
+                            <ArchiveX className="w-4 h-4 ml-2" />
+                            שחזר
+                          </Button>
+                        </td>
                         {columnOrder.filter(col => col.visible).map(col => (
-                          <td key={col.id} className="px-6 py-4">
+                          <td 
+                            key={col.id} 
+                            className="px-6 py-4 cursor-pointer"
+                            onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                          >
                             {renderCell(col.id)}
                           </td>
                         ))}
