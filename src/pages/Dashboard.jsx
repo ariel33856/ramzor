@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { borrowerFields } from '../components/case/borrowerFields';
+import { personFields } from '../components/case/personFields';
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [columnOrder, setColumnOrder] = useState(() => {
     const saved = localStorage.getItem('dashboardColumns');
-    return saved ? JSON.parse(saved) : borrowerFields;
+    return saved ? JSON.parse(saved) : personFields;
   });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
@@ -38,24 +38,35 @@ export default function Dashboard() {
     }
   });
 
-  // Fetch custom fields from database
-  const { data: customFieldsData = [] } = useQuery({
-    queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+  // Fetch all persons to extract custom fields from their custom_data
+  const { data: allPersons = [] } = useQuery({
+    queryKey: ['all-persons'],
+    queryFn: () => base44.entities.Person.list()
   });
 
-  // Update columnOrder when custom fields are loaded
+  // Extract unique custom field names from all persons
+  const customFieldNames = React.useMemo(() => {
+    const fieldNamesSet = new Set();
+    allPersons.forEach(person => {
+      if (person.custom_data) {
+        Object.keys(person.custom_data).forEach(key => fieldNamesSet.add(key));
+      }
+    });
+    return Array.from(fieldNamesSet);
+  }, [allPersons]);
+
+  // Update columnOrder when custom fields are detected
   React.useEffect(() => {
-    if (customFieldsData.length > 0) {
+    if (customFieldNames.length > 0) {
       setColumnOrder(currentColumns => {
         const updatedColumns = [...currentColumns];
         let hasChanges = false;
         
-        customFieldsData.forEach(field => {
-          if (!updatedColumns.find(col => col.id === field.field_id)) {
+        customFieldNames.forEach(fieldName => {
+          if (!updatedColumns.find(col => col.id === fieldName)) {
             updatedColumns.push({ 
-              id: field.field_id, 
-              label: field.field_name, 
+              id: fieldName, 
+              label: fieldName, 
               visible: false 
             });
             hasChanges = true;
@@ -69,7 +80,7 @@ export default function Dashboard() {
         return currentColumns;
       });
     }
-  }, [customFieldsData]);
+  }, [customFieldNames]);
 
   const statusLabels = {
     new: 'חדש',
@@ -125,6 +136,22 @@ export default function Dashboard() {
     queryKey: ['cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
   });
+
+  // Create a map of case IDs to their linked persons
+  const caseToPersonMap = React.useMemo(() => {
+    const map = {};
+    allPersons.forEach(person => {
+      if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
+        person.linked_accounts.forEach(caseId => {
+          if (!map[caseId]) {
+            map[caseId] = [];
+          }
+          map[caseId].push(person);
+        });
+      }
+    });
+    return map;
+  }, [allPersons, allCases]);
 
   // Filter only non-archived cases without module_id (main accounts module)
   const cases = allCases.filter(c => !c.is_archived && !c.module_id);
@@ -341,28 +368,38 @@ export default function Dashboard() {
 
       <tbody>
         {filteredCases.map((caseData, index) => {
-          const linkedBorrowerCase = caseData.linked_borrowers && caseData.linked_borrowers.length > 0 
-            ? allCases.find(c => c.id === caseData.linked_borrowers[0])
-            : null;
+          // Get linked person(s) for this case
+          const linkedPersons = caseToPersonMap[caseData.id] || [];
+          const linkedPerson = linkedPersons[0]; // Take first linked person
 
                   const renderCell = (columnId) => {
+                    // Special handling for account_number - comes from case
+                    if (columnId === 'account_number') {
+                      return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
+                    }
+
+                    // All other fields come from linked Person
+                    if (!linkedPerson) {
+                      return <span className="text-gray-600">—</span>;
+                    }
+
                     // Check in custom_data first for custom fields
-                    const customValue = linkedBorrowerCase?.custom_data?.[columnId] || caseData?.custom_data?.[columnId];
-                    const value = customValue || linkedBorrowerCase?.[columnId] || caseData?.[columnId];
-                    
+                    const customValue = linkedPerson.custom_data?.[columnId];
+                    const value = customValue || linkedPerson[columnId];
+
                     switch(columnId) {
-                      case 'account_number':
-                        return <div className="font-semibold text-blue-600">{value || '—'}</div>;
-                      case 'client_name':
+                      case 'first_name':
                         return <div className="font-semibold text-gray-900">{value || '—'}</div>;
                       case 'last_name':
                         return <span className="text-gray-600">{value || '—'}</span>;
-                      case 'borrower_id':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_id || '—'}</span>;
-                      case 'borrower_phone':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_phone || '—'}</span>;
-                      case 'borrower_email':
-                        return <span className="text-gray-600">{linkedBorrowerCase?.client_email || '—'}</span>;
+                      case 'id_number':
+                        return <span className="text-gray-600">{value || '—'}</span>;
+                      case 'phone':
+                        return <span className="text-gray-600">{value || '—'}</span>;
+                      case 'email':
+                        return <span className="text-gray-600">{value || '—'}</span>;
+                      case 'notes':
+                        return <span className="text-gray-600">{value || '—'}</span>;
                       default:
                         return <span className="text-gray-600">{value || '—'}</span>;
                     }
