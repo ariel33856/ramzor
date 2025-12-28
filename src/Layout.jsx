@@ -47,6 +47,7 @@ export default function Layout({ children, currentPageName }) {
                      'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
                      'CaseInsurance', 'CaseProducts', 'CaseAccount', 'ArchiveCaseDetails'];
   const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
+  const personId = currentPageName === 'PersonDetails' ? urlParams.get('id') : null;
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
@@ -81,6 +82,12 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['archive-case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: currentPageName === 'ArchiveCaseDetails' && !!caseId
+  });
+
+  const { data: currentPerson } = useQuery({
+    queryKey: ['person', personId],
+    queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
+    enabled: currentPageName === 'PersonDetails' && !!personId
   });
 
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
@@ -488,6 +495,11 @@ export default function Layout({ children, currentPageName }) {
               })()}
               {currentPageName === 'CalendarPage' && (
                 <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
+              )}
+              {currentPageName === 'PersonDetails' && currentPerson && (
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {currentPerson.first_name} {currentPerson.last_name}
+                </h1>
               )}
             </div>
 
