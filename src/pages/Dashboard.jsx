@@ -26,7 +26,34 @@ export default function Dashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [columnOrder, setColumnOrder] = useState(() => {
     const saved = localStorage.getItem('dashboardColumns');
-    return saved ? JSON.parse(saved) : personFields;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Filter out old borrower fields that are no longer relevant
+        const validPersonFieldIds = personFields.map(f => f.id);
+        const filtered = parsed.filter(col => {
+          // Keep if it's a standard person field
+          if (validPersonFieldIds.includes(col.id)) return true;
+          // Keep if it's a custom field (not one of the old borrower fields)
+          const oldBorrowerFields = ['borrower_id', 'borrower_phone', 'borrower_email', 'client_name', 'client_id'];
+          return !oldBorrowerFields.includes(col.id);
+        });
+        // If we filtered out fields, merge with personFields to ensure all base fields exist
+        if (filtered.length !== parsed.length) {
+          const mergedFields = [...personFields];
+          filtered.forEach(col => {
+            if (!mergedFields.find(f => f.id === col.id)) {
+              mergedFields.push(col);
+            }
+          });
+          return mergedFields;
+        }
+        return filtered;
+      } catch (e) {
+        return personFields;
+      }
+    }
+    return personFields;
   });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
