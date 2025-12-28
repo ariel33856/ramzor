@@ -153,8 +153,8 @@ export default function PersonDetails() {
   }
 
   return (
-    <div className="h-full bg-gray-50/50 overflow-auto p-2">
-      <div className="max-w-4xl mx-auto">
+    <div className="h-full bg-gray-50/50 p-6">
+      <div className="max-w-full mx-auto">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex-1">

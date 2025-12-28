@@ -275,7 +275,7 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="space-y-6 px-2">
+    <div className="space-y-6 p-6">
       {linkedContacts.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-gray-900">אנשי קשר משויכים ({linkedContacts.length})</h3>
