@@ -72,7 +72,9 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
       <div className="flex items-center justify-between mb-4">
         <Link to={createPageUrl('ArchiveCaseDetails') + `?id=${borrower.id}`}>
-          <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">{borrower.client_name}</h4>
+          <h4 className="text-md font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+            {borrower.last_name ? `${borrower.last_name} ${borrower.client_name}` : borrower.client_name}
+          </h4>
         </Link>
         <div className="flex gap-2">
           <Button 
