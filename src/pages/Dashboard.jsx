@@ -23,7 +23,10 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [columnOrder, setColumnOrder] = useState(borrowerFields);
+  const [columnOrder, setColumnOrder] = useState(() => {
+    const saved = localStorage.getItem('dashboardColumns');
+    return saved ? JSON.parse(saved) : borrowerFields;
+  });
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
 
@@ -56,17 +59,22 @@ export default function Dashboard() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setColumnOrder(items);
+    localStorage.setItem('dashboardColumns', JSON.stringify(items));
   };
 
   const toggleColumnVisibility = (columnId) => {
-    setColumnOrder(columnOrder.map(col => 
+    const updated = columnOrder.map(col => 
       col.id === columnId ? { ...col, visible: !col.visible } : col
-    ));
+    );
+    setColumnOrder(updated);
+    localStorage.setItem('dashboardColumns', JSON.stringify(updated));
   };
 
   const addNewField = () => {
     if (newField.id && newField.label) {
-      setColumnOrder([...columnOrder, { ...newField, visible: true }]);
+      const updated = [...columnOrder, { ...newField, visible: true }];
+      setColumnOrder(updated);
+      localStorage.setItem('dashboardColumns', JSON.stringify(updated));
       setNewField({ id: '', label: '' });
       setNewFieldDialog(false);
     }
