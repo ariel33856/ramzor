@@ -183,16 +183,6 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex items-center gap-4">
               {(currentPageName === 'Dashboard' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'Products') && (
                 <>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {currentPageName === 'Dashboard' && 'חשבונות'}
-                    {currentPageName === 'ArchiveAccounts' && 'לווים'}
-                    {currentPageName === 'ArchiveCaseDetails' && (currentBorrower?.last_name || '')}
-                    {currentPageName === 'ModulesManager' && 'ניהול מודולים'}
-                    {currentPageName === 'Management' && 'לווים וערבים'}
-                    {currentPageName === 'Marketing' && 'משכנתאות'}
-                    {currentPageName === 'Sales' && 'עסקאות'}
-                    {currentPageName === 'Products' && 'נכסים'}
-                  </h1>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-lg shadow-indigo-500/25">
