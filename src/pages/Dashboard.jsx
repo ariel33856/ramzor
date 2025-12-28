@@ -326,7 +326,7 @@ export default function Dashboard() {
           </motion.div>
         ) : (
 <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-  <div className="overflow-x-auto max-h-[100vh]">
+  <div className="overflow-x-auto max-h-[75vh]">
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
