@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/button';
 
 export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   const queryClient = useQueryClient();
-  const { data: customFieldsData = [] } = useQuery({
-    queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+  const [customFields, setCustomFields] = useState(() => {
+    const saved = localStorage.getItem('borrowerCustomFields');
+    return saved ? JSON.parse(saved) : [];
   });
   
   const [editData, setEditData] = useState({
@@ -73,7 +73,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
     if (hasChanges) {
       timeoutRef.current = setTimeout(() => {
         // Separate custom fields from regular fields
-        const customFieldIds = customFieldsData.map(f => f.field_id);
+        const customFieldIds = customFields.map(f => f.id);
         const custom_data = {};
         const regularData = {};
         
@@ -94,7 +94,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [editData, customFieldsData]);
+  }, [editData, customFields]);
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
@@ -169,12 +169,12 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
             className="mt-1"
           />
         </div>
-        {customFieldsData.map((field) => (
-          <div key={field.field_id}>
-            <Label className="text-gray-600">{field.field_name}</Label>
+        {customFields.map((field) => (
+          <div key={field.id}>
+            <Label className="text-gray-600">{field.name}</Label>
             <Input
-              value={editData[field.field_id] || ''}
-              onChange={(e) => setEditData({...editData, [field.field_id]: e.target.value})}
+              value={editData[field.id] || ''}
+              onChange={(e) => setEditData({...editData, [field.id]: e.target.value})}
               className="mt-1"
             />
           </div>

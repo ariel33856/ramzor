@@ -23,9 +23,9 @@ export default function ArchiveCaseDetails() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const { data: customFieldsData = [] } = useQuery({
-    queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+  const [customFields, setCustomFields] = useState(() => {
+    const saved = localStorage.getItem('borrowerCustomFields');
+    return saved ? JSON.parse(saved) : [];
   });
   const [isAddingField, setIsAddingField] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
@@ -66,25 +66,14 @@ export default function ArchiveCaseDetails() {
     }
   });
 
-  const addFieldMutation = useMutation({
-    mutationFn: (fieldData) => base44.entities.CustomField.create(fieldData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['custom-fields-borrower'] });
-      setNewFieldName('');
-      setIsAddingField(false);
-    }
-  });
-
   const handleAddField = () => {
     if (newFieldName.trim()) {
       const fieldId = `custom_${Date.now()}`;
-      addFieldMutation.mutate({
-        field_id: fieldId,
-        field_name: newFieldName,
-        module_type: 'borrower',
-        field_type: 'text',
-        order: customFieldsData.length
-      });
+      const updated = [...customFields, { id: fieldId, name: newFieldName }];
+      setCustomFields(updated);
+      localStorage.setItem('borrowerCustomFields', JSON.stringify(updated));
+      setNewFieldName('');
+      setIsAddingField(false);
     }
   };
 
@@ -93,7 +82,7 @@ export default function ArchiveCaseDetails() {
     if (formData && Object.keys(formData).length > 0 && caseData) {
       const timeoutId = setTimeout(() => {
         // Separate custom fields from regular fields
-        const customFieldIds = customFieldsData.map(f => f.field_id);
+        const customFieldIds = customFields.map(f => f.id);
         const custom_data = {};
         const regularData = {};
         
@@ -109,7 +98,7 @@ export default function ArchiveCaseDetails() {
       }, 500);
       return () => clearTimeout(timeoutId);
     }
-  }, [formData, customFieldsData]);
+  }, [formData, customFields]);
 
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
@@ -243,12 +232,12 @@ export default function ArchiveCaseDetails() {
                     className="mt-1"
                   />
                 </div>
-                {customFieldsData.map((field) => (
-                  <div key={field.field_id}>
-                    <Label>{field.field_name}</Label>
+                {customFields.map((field) => (
+                  <div key={field.id}>
+                    <Label>{field.name}</Label>
                     <Input
-                      value={formData[field.field_id] || ''}
-                      onChange={(e) => setFormData({...formData, [field.field_id]: e.target.value})}
+                      value={formData[field.id] || ''}
+                      onChange={(e) => setFormData({...formData, [field.id]: e.target.value})}
                       className="mt-1"
                     />
                   </div>
