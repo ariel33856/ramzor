@@ -461,9 +461,7 @@ export default function Layout({ children, currentPageName }) {
                     </h1>
                   </div>
 
-                  <Button className="h-9 bg-gradient-to-r from-gray-600 to-gray-600 hover:from-gray-700 hover:to-gray-700 text-white">
-                    {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || 'שם משפחה'}
-                  </Button>
+
                   <Link to={createPageUrl('Dashboard')}>
                     <Button className="h-9 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
                       <ArrowRight className="w-4 h-4 ml-2" />
