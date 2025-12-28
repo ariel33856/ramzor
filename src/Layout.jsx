@@ -154,7 +154,6 @@ export default function Layout({ children, currentPageName }) {
         * {
           font-family: 'Inter', 'Heebo', sans-serif;
         }
-        overflow: hidden;
         
         ::-webkit-scrollbar {
           width: 6px;
