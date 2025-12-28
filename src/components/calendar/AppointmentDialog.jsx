@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -11,12 +11,21 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Plus } from 'lucide-react';
 
 export default function AppointmentDialog({ open, onOpenChange, cases = [], caseId, selectedTimeSlot, appointment }) {
   const queryClient = useQueryClient();
+  const [showNewContactForm, setShowNewContactForm] = useState(false);
+  const [newContactData, setNewContactData] = useState({
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    type: 'איש קשר'
+  });
   const [formData, setFormData] = useState({
     case_id: caseId || '',
+    contact_person_id: '',
     title: '',
     description: '',
     date: new Date(),
@@ -26,6 +35,21 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     notes: '',
     status: 'scheduled'
   });
+
+  const { data: allContacts = [] } = useQuery({
+    queryKey: ['persons'],
+    queryFn: () => base44.entities.Person.list()
+  });
+
+  const { data: selectedCase } = useQuery({
+    queryKey: ['case-for-appointment', formData.case_id],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: formData.case_id }).then(res => res[0]),
+    enabled: !!formData.case_id
+  });
+
+  const relatedContacts = formData.case_id && selectedCase?.linked_borrowers 
+    ? allContacts.filter(c => selectedCase.linked_borrowers.includes(c.id))
+    : [];
 
   useEffect(() => {
     if (selectedTimeSlot) {
@@ -50,6 +74,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     if (appointment) {
       setFormData({
         case_id: appointment.case_id || '',
+        contact_person_id: appointment.contact_person_id || '',
         title: appointment.title || '',
         description: appointment.description || '',
         date: appointment.date ? new Date(appointment.date) : new Date(),
@@ -62,6 +87,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
     } else if (!caseId) {
       setFormData({
         case_id: '',
+        contact_person_id: '',
         title: '',
         description: '',
         date: new Date(),
@@ -73,6 +99,22 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
       });
     }
   }, [appointment, caseId]);
+
+  const createContactMutation = useMutation({
+    mutationFn: (data) => base44.entities.Person.create(data),
+    onSuccess: (newContact) => {
+      queryClient.invalidateQueries({ queryKey: ['persons'] });
+      setFormData({ ...formData, contact_person_id: newContact.id });
+      setShowNewContactForm(false);
+      setNewContactData({
+        first_name: '',
+        last_name: '',
+        phone: '',
+        email: '',
+        type: 'איש קשר'
+      });
+    }
+  });
 
   const createAppointmentMutation = useMutation({
     mutationFn: (data) => {
@@ -90,6 +132,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
       onOpenChange(false);
       setFormData({
         case_id: '',
+        contact_person_id: '',
         title: '',
         description: '',
         date: new Date(),
@@ -130,29 +173,122 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
             />
           </div>
 
-          {!caseId && (
-            <div>
-              <Label>חשבון משויך</Label>
-              <Select
-                value={formData.case_id}
-                onValueChange={(value) => setFormData({ ...formData, case_id: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר חשבון (אופציונלי)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={null}>ללא שיוך לחשבון</SelectItem>
-                  {cases.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.client_name} - {c.client_id}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
           <div className="grid grid-cols-2 gap-4">
+            {!caseId && (
+              <div>
+                <Label>חשבון משויך</Label>
+                <Select
+                  value={formData.case_id}
+                  onValueChange={(value) => setFormData({ ...formData, case_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="בחר חשבון (אופציונלי)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>ללא שיוך לחשבון</SelectItem>
+                    {cases.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.client_name} - {c.client_id}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            <div>
+              <Label>איש קשר</Label>
+              {showNewContactForm ? (
+                <div className="space-y-2 p-3 border rounded-lg bg-gray-50">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="שם פרטי"
+                      value={newContactData.first_name}
+                      onChange={(e) => setNewContactData({ ...newContactData, first_name: e.target.value })}
+                    />
+                    <Input
+                      placeholder="שם משפחה"
+                      value={newContactData.last_name}
+                      onChange={(e) => setNewContactData({ ...newContactData, last_name: e.target.value })}
+                    />
+                  </div>
+                  <Input
+                    placeholder="טלפון"
+                    value={newContactData.phone}
+                    onChange={(e) => setNewContactData({ ...newContactData, phone: e.target.value })}
+                  />
+                  <Input
+                    placeholder="אימייל"
+                    value={newContactData.email}
+                    onChange={(e) => setNewContactData({ ...newContactData, email: e.target.value })}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => createContactMutation.mutate(newContactData)}
+                      disabled={!newContactData.first_name || !newContactData.last_name}
+                    >
+                      שמור
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setShowNewContactForm(false);
+                        setNewContactData({ first_name: '', last_name: '', phone: '', email: '', type: 'איש קשר' });
+                      }}
+                    >
+                      ביטול
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Select
+                  value={formData.contact_person_id}
+                  onValueChange={(value) => {
+                    if (value === 'new') {
+                      setShowNewContactForm(true);
+                    } else {
+                      setFormData({ ...formData, contact_person_id: value });
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="בחר איש קשר (אופציונלי)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>ללא איש קשר</SelectItem>
+                    {relatedContacts.length > 0 && (
+                      <>
+                        <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">אנשי קשר משויכים לחשבון</div>
+                        {relatedContacts.map((contact) => (
+                          <SelectItem key={contact.id} value={contact.id}>
+                            {contact.first_name} {contact.last_name} {contact.phone && `- ${contact.phone}`}
+                          </SelectItem>
+                        ))}
+                      </>
+                    )}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">כל אנשי הקשר</div>
+                    {allContacts.filter(c => !relatedContacts.find(rc => rc.id === c.id)).map((contact) => (
+                      <SelectItem key={contact.id} value={contact.id}>
+                        {contact.first_name} {contact.last_name} {contact.phone && `- ${contact.phone}`}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="new">
+                      <div className="flex items-center gap-2 text-blue-600 font-semibold">
+                        <Plus className="w-4 h-4" />
+                        <span>הוסף איש קשר חדש</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
               <Label>תאריך *</Label>
               <Popover>
