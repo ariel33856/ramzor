@@ -164,6 +164,11 @@ export default function PersonDetailsView({ personId }) {
                 className="text-xl font-bold"
               />
             </div>
+            <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
+              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                להצגה במודול אנשי קשר
+              </Button>
+            </Link>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
