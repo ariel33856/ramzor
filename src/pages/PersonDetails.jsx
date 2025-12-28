@@ -49,21 +49,23 @@ export default function PersonDetails() {
   };
 
   const handleFieldValueChange = (fieldId, value) => {
-    setCustomFields(customFields.map(f => 
+    const updatedFields = customFields.map(f => 
       f.id === fieldId ? { ...f, value } : f
-    ));
-  };
-
-  const handleSaveBasicData = () => {
-    updatePersonMutation.mutate(basicData);
-  };
-
-  const handleSave = () => {
+    );
+    setCustomFields(updatedFields);
+    
+    // Auto-save custom fields
     const customData = {};
-    customFields.forEach(field => {
+    updatedFields.forEach(field => {
       customData[field.name] = field.value;
     });
     updatePersonMutation.mutate({ custom_data: customData });
+  };
+
+  const handleBasicDataChange = (field, value) => {
+    const updatedData = { ...basicData, [field]: value };
+    setBasicData(updatedData);
+    updatePersonMutation.mutate(updatedData);
   };
 
   React.useEffect(() => {
@@ -119,13 +121,13 @@ export default function PersonDetails() {
               <div className="grid grid-cols-2 gap-2">
                 <Input
                   value={basicData.first_name}
-                  onChange={(e) => setBasicData({...basicData, first_name: e.target.value})}
+                  onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
                   placeholder="שם פרטי"
                   className="text-xl font-bold"
                 />
                 <Input
                   value={basicData.last_name}
-                  onChange={(e) => setBasicData({...basicData, last_name: e.target.value})}
+                  onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
                   placeholder="שם משפחה"
                   className="text-xl font-bold"
                 />
@@ -145,7 +147,7 @@ export default function PersonDetails() {
               <Label className="text-sm">תעודת זהות</Label>
               <Input
                 value={basicData.id_number}
-                onChange={(e) => setBasicData({...basicData, id_number: e.target.value})}
+                onChange={(e) => handleBasicDataChange('id_number', e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -153,7 +155,7 @@ export default function PersonDetails() {
               <Label className="text-sm">טלפון</Label>
               <Input
                 value={basicData.phone}
-                onChange={(e) => setBasicData({...basicData, phone: e.target.value})}
+                onChange={(e) => handleBasicDataChange('phone', e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -162,7 +164,7 @@ export default function PersonDetails() {
               <Input
                 type="email"
                 value={basicData.email}
-                onChange={(e) => setBasicData({...basicData, email: e.target.value})}
+                onChange={(e) => handleBasicDataChange('email', e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -170,25 +172,9 @@ export default function PersonDetails() {
               <Label className="text-sm">הערות</Label>
               <Input
                 value={basicData.notes}
-                onChange={(e) => setBasicData({...basicData, notes: e.target.value})}
+                onChange={(e) => handleBasicDataChange('notes', e.target.value)}
                 className="mt-1"
               />
-            </div>
-            <div className="md:col-span-2">
-              <Button
-                onClick={handleSaveBasicData}
-                disabled={updatePersonMutation.isPending}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                {updatePersonMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                    שומר...
-                  </>
-                ) : (
-                  'שמור פרטים בסיסיים'
-                )}
-              </Button>
             </div>
           </div>
 
@@ -241,22 +227,7 @@ export default function PersonDetails() {
               </div>
             )}
 
-            {customFields.length > 0 && (
-              <Button
-                onClick={handleSave}
-                disabled={updatePersonMutation.isPending}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-              >
-                {updatePersonMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
-                    שומר...
-                  </>
-                ) : (
-                  'שמור שדות'
-                )}
-              </Button>
-            )}
+
           </div>
         </div>
       </div>
