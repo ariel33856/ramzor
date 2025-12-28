@@ -41,15 +41,29 @@ export default function ContactsArchive() {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <div className="mx-auto p-2">
+      <div className="mx-auto p-1">
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white rounded-lg p-4 border border-gray-200">
-                <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse mb-2" />
-                <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse" />
-              </div>
-            ))}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[75vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <tr key={i} className="border-b border-gray-100">
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : filteredContacts.length === 0 ? (
           <motion.div
@@ -62,55 +76,66 @@ export default function ContactsArchive() {
             <p className="text-gray-400">אנשי קשר שתעביר לארכיון יופיעו כאן</p>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredContacts.map((contact, index) => (
-              <motion.div
-                key={contact.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.03 }}
-                className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-all"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-900">
-                      {contact.first_name} {contact.last_name}
-                    </h3>
-                    {contact.id_number && (
-                      <p className="text-sm text-gray-500">ת.ז: {contact.id_number}</p>
-                    )}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => unarchiveMutation.mutate(contact.id)}
-                    className="text-gray-400 hover:text-green-600 hover:bg-green-50"
-                  >
-                    <ArchiveX className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <div className="space-y-2">
-                  {contact.phone && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span className="font-medium">טלפון:</span>
-                      <span>{contact.phone}</span>
-                    </div>
-                  )}
-                  {contact.email && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span className="font-medium">אימייל:</span>
-                      <span className="truncate">{contact.email}</span>
-                    </div>
-                  )}
-                  {contact.notes && (
-                    <div className="text-sm text-gray-500 mt-2 pt-2 border-t border-gray-100">
-                      <p className="line-clamp-2">{contact.notes}</p>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[75vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם פרטי</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם משפחה</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הערות</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredContacts.map((contact, index) => (
+                    <motion.tr
+                      key={contact.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.02 }}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <span className="font-semibold text-gray-900">{contact.first_name || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-600">{contact.last_name || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-600">{contact.id_number || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-600">{contact.phone || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-600 truncate max-w-[200px] inline-block">{contact.email || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-500 text-sm line-clamp-1">{contact.notes || '—'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            unarchiveMutation.mutate(contact.id);
+                          }}
+                          className="text-gray-500 hover:text-green-600 hover:bg-green-50"
+                        >
+                          <ArchiveX className="w-4 h-4 ml-2" />
+                          שחזר
+                        </Button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
