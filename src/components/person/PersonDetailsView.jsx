@@ -198,7 +198,7 @@ export default function PersonDetailsView({ personId }) {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle className="text-center">האם לבטל את שיוך החשבון?</AlertDialogTitle>
+                          <AlertDialogTitle className="text-center">האם לבטל את שיוך החשבון‎?</AlertDialogTitle>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="flex justify-center gap-4">
                           <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
