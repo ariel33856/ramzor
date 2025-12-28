@@ -10,12 +10,18 @@ import { Button } from '@/components/ui/button';
 
 export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   const queryClient = useQueryClient();
+  const [customFields, setCustomFields] = useState(() => {
+    const saved = localStorage.getItem('borrowerCustomFields');
+    return saved ? JSON.parse(saved) : [];
+  });
+  
   const [editData, setEditData] = useState({
     client_name: borrower.client_name || '',
     last_name: borrower.last_name || '',
     client_id: borrower.client_id || '',
     client_phone: borrower.client_phone || '',
-    client_email: borrower.client_email || ''
+    client_email: borrower.client_email || '',
+    ...(borrower.custom_data || {})
   });
   const timeoutRef = useRef(null);
 
@@ -25,7 +31,8 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
       last_name: borrower.last_name || '',
       client_id: borrower.client_id || '',
       client_phone: borrower.client_phone || '',
-      client_email: borrower.client_email || ''
+      client_email: borrower.client_email || '',
+      ...(borrower.custom_data || {})
     });
   }, [borrower]);
 
@@ -53,11 +60,32 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
       editData.last_name !== (borrower.last_name || '') ||
       editData.client_id !== (borrower.client_id || '') ||
       editData.client_phone !== (borrower.client_phone || '') ||
-      editData.client_email !== (borrower.client_email || '');
+      editData.client_email !== (borrower.client_email || '') ||
+      JSON.stringify(editData) !== JSON.stringify({ 
+        client_name: borrower.client_name || '',
+        last_name: borrower.last_name || '',
+        client_id: borrower.client_id || '',
+        client_phone: borrower.client_phone || '',
+        client_email: borrower.client_email || '',
+        ...(borrower.custom_data || {})
+      });
 
     if (hasChanges) {
       timeoutRef.current = setTimeout(() => {
-        updateBorrowerMutation.mutate(editData);
+        // Separate custom fields from regular fields
+        const customFieldIds = customFields.map(f => f.id);
+        const custom_data = {};
+        const regularData = {};
+        
+        Object.keys(editData).forEach(key => {
+          if (customFieldIds.includes(key)) {
+            custom_data[key] = editData[key];
+          } else {
+            regularData[key] = editData[key];
+          }
+        });
+        
+        updateBorrowerMutation.mutate({ ...regularData, custom_data });
       }, 1000);
     }
 
@@ -66,7 +94,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [editData]);
+  }, [editData, customFields]);
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200 hover:shadow-lg hover:border-blue-300 transition-all">
@@ -141,6 +169,16 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
             className="mt-1"
           />
         </div>
+        {customFields.map((field) => (
+          <div key={field.id}>
+            <Label className="text-gray-600">{field.name}</Label>
+            <Input
+              value={editData[field.id] || ''}
+              onChange={(e) => setEditData({...editData, [field.id]: e.target.value})}
+              className="mt-1"
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
