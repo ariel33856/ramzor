@@ -1,7 +1,6 @@
 import AIBot from './pages/AIBot';
 import AllDashboards from './pages/AllDashboards';
 import ArchiveAccounts from './pages/ArchiveAccounts';
-import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
 import Boards from './pages/Boards';
 import CalendarPage from './pages/CalendarPage';
 import CaseAccount from './pages/CaseAccount';
@@ -40,6 +39,7 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
+import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -47,7 +47,6 @@ export const PAGES = {
     "AIBot": AIBot,
     "AllDashboards": AllDashboards,
     "ArchiveAccounts": ArchiveAccounts,
-    "ArchiveCaseDetails": ArchiveCaseDetails,
     "Boards": Boards,
     "CalendarPage": CalendarPage,
     "CaseAccount": CaseAccount,
@@ -86,6 +85,7 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
+    "ArchiveCaseDetails": ArchiveCaseDetails,
 }
 
 export const pagesConfig = {

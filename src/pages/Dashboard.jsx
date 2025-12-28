@@ -316,7 +316,9 @@ export default function Dashboard() {
             : null;
 
                   const renderCell = (columnId) => {
-                    const value = linkedBorrowerCase?.[columnId] || caseData?.[columnId];
+                    // Check in custom_data first for custom fields
+                    const customValue = linkedBorrowerCase?.custom_data?.[columnId] || caseData?.custom_data?.[columnId];
+                    const value = customValue || linkedBorrowerCase?.[columnId] || caseData?.[columnId];
                     
                     switch(columnId) {
                       case 'account_number':
