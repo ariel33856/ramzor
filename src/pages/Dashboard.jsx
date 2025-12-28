@@ -146,7 +146,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gray-50/50 overflow-x-hidden">
       {/* Filters */}
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">

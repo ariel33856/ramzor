@@ -1,4 +1,5 @@
 import AIBot from './pages/AIBot';
+import AccountsArchive from './pages/AccountsArchive';
 import AllDashboards from './pages/AllDashboards';
 import ArchiveAccounts from './pages/ArchiveAccounts';
 import ArchiveCaseDetails from './pages/ArchiveCaseDetails';
@@ -26,6 +27,7 @@ import CaseTracking from './pages/CaseTracking';
 import CaseWorkflow from './pages/CaseWorkflow';
 import ClientPortal from './pages/ClientPortal';
 import Communication from './pages/Communication';
+import ContactsArchive from './pages/ContactsArchive';
 import Dashboard from './pages/Dashboard';
 import ERP from './pages/ERP';
 import Management from './pages/Management';
@@ -36,19 +38,18 @@ import ModuleCaseDetails from './pages/ModuleCaseDetails';
 import ModuleView from './pages/ModuleView';
 import ModulesManager from './pages/ModulesManager';
 import NewCase from './pages/NewCase';
+import NewContact from './pages/NewContact';
 import Notifications from './pages/Notifications';
 import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import AccountsArchive from './pages/AccountsArchive';
-import ContactsArchive from './pages/ContactsArchive';
-import NewContact from './pages/NewContact';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AIBot": AIBot,
+    "AccountsArchive": AccountsArchive,
     "AllDashboards": AllDashboards,
     "ArchiveAccounts": ArchiveAccounts,
     "ArchiveCaseDetails": ArchiveCaseDetails,
@@ -76,6 +77,7 @@ export const PAGES = {
     "CaseWorkflow": CaseWorkflow,
     "ClientPortal": ClientPortal,
     "Communication": Communication,
+    "ContactsArchive": ContactsArchive,
     "Dashboard": Dashboard,
     "ERP": ERP,
     "Management": Management,
@@ -86,14 +88,12 @@ export const PAGES = {
     "ModuleView": ModuleView,
     "ModulesManager": ModulesManager,
     "NewCase": NewCase,
+    "NewContact": NewContact,
     "Notifications": Notifications,
     "PersonDetails": PersonDetails,
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "AccountsArchive": AccountsArchive,
-    "ContactsArchive": ContactsArchive,
-    "NewContact": NewContact,
 }
 
 export const pagesConfig = {
