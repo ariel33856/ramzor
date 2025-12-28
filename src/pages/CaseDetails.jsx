@@ -56,14 +56,12 @@ export default function CaseDetails() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
 
-  const { data: caseData, isLoading } = useQuery({
-    queryKey: ['case', caseId],
-    queryFn: async () => {
-      const allCases = await base44.entities.MortgageCase.list();
-      return allCases.find(c => c.id === caseId);
-    },
-    enabled: !!caseId
+  const { data: casesList = [], isLoading } = useQuery({
+    queryKey: ['cases'],
+    queryFn: () => base44.entities.MortgageCase.list()
   });
+
+  const caseData = caseId ? casesList.find(c => c.id === caseId) : null;
 
   if (isLoading) {
     return (
