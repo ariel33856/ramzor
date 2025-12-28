@@ -199,8 +199,8 @@ export default function PersonDetailsView({ personId }) {
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
-                            <span>האם לבטל את שיוך החשבון</span>
                             <span>?</span>
+                            <span>האם לבטל את שיוך החשבון</span>
                           </AlertDialogTitle>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="flex justify-center gap-4">
