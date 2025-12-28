@@ -80,6 +80,20 @@ export default function Layout({ children, currentPageName }) {
     enabled: !!caseData?.person_id
   });
 
+  const { data: allPersons = [] } = useQuery({
+    queryKey: ['all-persons'],
+    queryFn: () => base44.entities.Person.list(),
+    enabled: !!caseId
+  });
+
+  // Find person linked via Person.linked_accounts
+  const linkedPersonViaAccounts = React.useMemo(() => {
+    if (!caseId || !allPersons.length) return null;
+    return allPersons.find(person => 
+      person.linked_accounts && person.linked_accounts.includes(caseId)
+    );
+  }, [caseId, allPersons]);
+
   const { data: modules = [] } = useQuery({
     queryKey: ['modules'],
     queryFn: () => base44.entities.Module.list('order')
@@ -440,13 +454,13 @@ export default function Layout({ children, currentPageName }) {
               {currentPageName === 'CaseDetails' && caseData && (
                 <div className="flex items-center gap-4">
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
+                    {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
                   </h1>
                   <div className="px-3 py-1.5 bg-blue-50 border-2 border-blue-200 rounded-lg">
                     <span className="text-xs font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                   </div>
-                  {linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id && (
-                    <Link to={createPageUrl('PersonDetails') + `?id=${linkedBorrowers[0].person_id}`}>
+                  {(linkedPersonViaAccounts || (linkedBorrowers.length > 0 && linkedBorrowers[0]?.person_id)) && (
+                    <Link to={createPageUrl('PersonDetails') + `?id=${linkedPersonViaAccounts?.id || linkedBorrowers[0].person_id}`}>
                       <Button className="h-9 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white">
                         <User className="w-4 h-4 ml-2" />
                         הצג איש קשר משויך
@@ -454,7 +468,7 @@ export default function Layout({ children, currentPageName }) {
                     </Link>
                   )}
                   <Button className="h-9 bg-gradient-to-r from-gray-600 to-gray-600 hover:from-gray-700 hover:to-gray-700 text-white">
-                    {caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || 'שם משפחה'}
+                    {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || 'שם משפחה'}
                   </Button>
                   <Link to={createPageUrl('Dashboard')}>
                     <Button className="h-9 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
@@ -468,7 +482,7 @@ export default function Layout({ children, currentPageName }) {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
                 if (!currentTab) return null;
                 const Icon = currentTab.icon;
-                const displayName = caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
+                const displayName = linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
                 return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
