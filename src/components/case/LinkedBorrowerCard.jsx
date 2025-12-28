@@ -38,8 +38,29 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
 
   const updateBorrowerMutation = useMutation({
     mutationFn: async (data) => {
-      const result = await base44.entities.MortgageCase.update(borrower.id, data);
-      return result;
+      // אם ללווה יש person_id, נעדכן את ה-Person במקום את ה-MortgageCase
+      if (borrower.person_id) {
+        const personData = {
+          first_name: data.client_name,
+          last_name: data.last_name,
+          id_number: data.client_id,
+          phone: data.client_phone,
+          email: data.client_email,
+          custom_data: data.custom_data
+        };
+        await base44.entities.Person.update(borrower.person_id, personData);
+      }
+      
+      // נעדכן גם את ה-MortgageCase אם יש נתונים שאינם קשורים לאיש הקשר
+      const borrowerSpecificData = {};
+      if (data.status) borrowerSpecificData.status = data.status;
+      if (data.urgency) borrowerSpecificData.urgency = data.urgency;
+      
+      if (Object.keys(borrowerSpecificData).length > 0) {
+        await base44.entities.MortgageCase.update(borrower.id, borrowerSpecificData);
+      }
+      
+      return true;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
@@ -47,6 +68,8 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
       queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
       queryClient.invalidateQueries({ queryKey: ['archive-case', borrower.id] });
       queryClient.invalidateQueries({ queryKey: ['case'] });
+      queryClient.invalidateQueries({ queryKey: ['person'] });
+      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
     }
   });
 
