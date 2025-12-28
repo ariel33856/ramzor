@@ -150,8 +150,8 @@ export default function PersonDetailsView({ personId }) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <div className="grid grid-cols-2 gap-2 flex-1">
-              <div>
+            <div className="grid grid-cols-2 gap-2 w-auto">
+              <div className="w-48">
                 <Label className="text-sm font-medium mb-1">שם פרטי</Label>
                 <Input
                   value={basicData.first_name}
@@ -160,7 +160,7 @@ export default function PersonDetailsView({ personId }) {
                   className="text-xl font-bold"
                 />
               </div>
-              <div>
+              <div className="w-48">
                 <Label className="text-sm font-medium mb-1">שם משפחה</Label>
                 <Input
                   value={basicData.last_name}
