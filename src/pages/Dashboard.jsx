@@ -280,19 +280,19 @@ export default function Dashboard() {
 
             {visibleColumns.borrower_id && (
               <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.client_id || '—'}
+                {linkedBorrower?.id_number || '—'}
               </td>
             )}
 
             {visibleColumns.borrower_phone && (
               <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.client_phone || '—'}
+                {linkedBorrower?.phone || '—'}
               </td>
             )}
 
             {visibleColumns.borrower_email && (
               <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.client_email || '—'}
+                {linkedBorrower?.email || '—'}
               </td>
             )}
             </motion.tr>
