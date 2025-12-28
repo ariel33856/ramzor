@@ -462,9 +462,9 @@ export default function Layout({ children, currentPageName }) {
                 const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
                 if (!currentTab) return null;
                 const Icon = currentTab.icon;
-                const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0] 
-                  ? (linkedBorrowers[0].last_name ? `${linkedBorrowers[0].last_name} ${linkedBorrowers[0].client_name}` : linkedBorrowers[0].client_name)
-                  : (caseData.last_name ? `${caseData.last_name} ${caseData.client_name}` : caseData.client_name);
+                const displayName = linkedBorrowers.length > 0 && linkedBorrowers[0]?._person
+                  ? linkedBorrowers[0]._person.last_name || ''
+                  : '';
                 return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
