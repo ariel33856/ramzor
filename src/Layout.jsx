@@ -173,6 +173,10 @@ export default function Layout({ children, currentPageName }) {
         ::-webkit-scrollbar-thumb:hover {
           background: #94a3b8;
         }
+
+        html {
+        overflow-x: hidden;
+        }
       `}</style>
 
       {/* Main Content */}
