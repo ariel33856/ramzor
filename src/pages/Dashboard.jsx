@@ -253,59 +253,50 @@ export default function Dashboard() {
 
       <tbody>
         {filteredCases.map((caseData, index) => {
-          const linkedBorrower = caseData.linked_borrowers && caseData.linked_borrowers.length > 0 
-            ? allBorrowers.find(b => b.id === caseData.linked_borrowers[0])
+          const linkedBorrowerCase = caseData.linked_borrowers && caseData.linked_borrowers.length > 0 
+            ? allCases.find(c => c.id === caseData.linked_borrowers[0])
             : null;
 
-          return (
-          <motion.tr
-            key={caseData.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: index * 0.02 }}
-            className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-            onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
-            >
-            {visibleColumns.account_number && (
-              <td className="px-6 py-4">
-                <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>
-              </td>
-            )}
+                  return (
+                  <motion.tr
+                    key={caseData.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.02 }}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                    >
+                    {visibleColumns.account_number && (
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>
+                      </td>
+                    )}
 
-            {visibleColumns.client_name && (
-              <td className="px-6 py-4">
-                <div className="font-semibold text-gray-900">
-                  {(() => {
-                    if (!caseData.linked_borrowers || caseData.linked_borrowers.length === 0) {
-                      return caseData.client_name || '—';
-                    }
-                    const linkedBorrower = allBorrowers.find(b => b.id === caseData.linked_borrowers[0]);
-                    if (linkedBorrower) {
-                      return `${linkedBorrower.first_name} ${linkedBorrower.last_name}`;
-                    }
-                    return caseData.client_name || '—';
-                  })()}
-                </div>
-              </td>
-            )}
+                    {visibleColumns.client_name && (
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-gray-900">
+                          {linkedBorrowerCase?.client_name || caseData.client_name || '—'}
+                        </div>
+                      </td>
+                    )}
 
-            {visibleColumns.borrower_id && (
-              <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.id_number || '—'}
-              </td>
-            )}
+                    {visibleColumns.borrower_id && (
+                      <td className="px-6 py-4 text-gray-600">
+                        {linkedBorrowerCase?.client_id || '—'}
+                      </td>
+                    )}
 
-            {visibleColumns.borrower_phone && (
-              <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.phone || '—'}
-              </td>
-            )}
+                    {visibleColumns.borrower_phone && (
+                      <td className="px-6 py-4 text-gray-600">
+                        {linkedBorrowerCase?.client_phone || '—'}
+                      </td>
+                    )}
 
-            {visibleColumns.borrower_email && (
-              <td className="px-6 py-4 text-gray-600">
-                {linkedBorrower?.email || '—'}
-              </td>
-            )}
+                    {visibleColumns.borrower_email && (
+                      <td className="px-6 py-4 text-gray-600">
+                        {linkedBorrowerCase?.client_email || '—'}
+                      </td>
+                    )}
             </motion.tr>
             );
             })}
