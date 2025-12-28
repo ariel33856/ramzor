@@ -201,9 +201,9 @@ export default function PersonDetailsView({ personId }) {
                           <AlertDialogTitle>לבטל את שיוך החשבון?</AlertDialogTitle>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>ביטול</AlertDialogCancel>
+                          <AlertDialogCancel>לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
                           <AlertDialogAction onClick={() => handleUnlinkAccount(account.id)}>
-                            אישור
+                            כן, לבטל
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
