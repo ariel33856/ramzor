@@ -132,16 +132,16 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
 
           {!caseId && (
             <div>
-              <Label>לקוח</Label>
+              <Label>חשבון משויך</Label>
               <Select
                 value={formData.case_id}
                 onValueChange={(value) => setFormData({ ...formData, case_id: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="בחר לקוח (אופציונלי)" />
+                  <SelectValue placeholder="בחר חשבון (אופציונלי)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={null}>ללא שיוך ללקוח</SelectItem>
+                  <SelectItem value={null}>ללא שיוך לחשבון</SelectItem>
                   {cases.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       {c.client_name} - {c.client_id}
