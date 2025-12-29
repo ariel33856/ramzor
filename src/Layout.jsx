@@ -613,7 +613,8 @@ export default function Layout({ children, currentPageName }) {
                   ) : (
                     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap px-6">
+                          <Trash2 className="w-4 h-4 mr-2" />
                           <LinkIcon className="w-4 h-4 ml-2" />
                           שייך חשבון
                         </Button>
