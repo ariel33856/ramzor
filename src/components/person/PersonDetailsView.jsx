@@ -295,7 +295,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">אימייל</Label>
+          <Label className="text-sm whitespace-nowrap">תאריך הנפקה</Label>
           <Input
             type="email"
             value={basicData.email}
