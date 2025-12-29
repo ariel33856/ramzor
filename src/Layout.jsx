@@ -567,10 +567,11 @@ export default function Layout({ children, currentPageName }) {
                   )}
                   {currentPageName === 'PersonDetails' && currentPerson && (
                   <>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {currentPerson.first_name} {currentPerson.last_name}
-                  </h1>
-                  <AlertDialog>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {currentPerson.first_name} {currentPerson.last_name}
+                    </h1>
+                    <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
                         <Trash2 className="w-5 h-5" />
@@ -599,8 +600,9 @@ export default function Layout({ children, currentPageName }) {
                         <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
                       </AlertDialogFooter>
                     </AlertDialogContent>
-                  </AlertDialog>
-                  {currentPerson.linked_accounts && currentPerson.linked_accounts.length > 0 ? (
+                    </AlertDialog>
+                    </div>
+                    {currentPerson.linked_accounts && currentPerson.linked_accounts.length > 0 ? (
                     allCases.filter(acc => currentPerson.linked_accounts.includes(acc.id)).map(account => (
                       <Link key={account.id} to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
                         <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
