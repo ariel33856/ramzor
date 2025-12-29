@@ -299,7 +299,7 @@ export default function CasePersonal() {
             <div className="text-sm text-gray-600">אנשי קשר משויכים ({linkedContacts.length})</div>
             <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
                   <LinkIcon className="w-4 h-4 ml-1" />
                   הוסף איש קשר
                 </Button>
