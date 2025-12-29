@@ -149,7 +149,7 @@ export default function PersonDetailsView({ personId }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-2 border-blue-200 rounded-2xl p-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
