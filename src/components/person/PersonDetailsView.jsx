@@ -290,7 +290,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div>
-          <Label className="text-sm">טלפון</Label>
+          <Label className="text-sm">תאריך לידה</Label>
           <Input
             value={basicData.phone}
             onChange={(e) => handleBasicDataChange('phone', e.target.value)}
