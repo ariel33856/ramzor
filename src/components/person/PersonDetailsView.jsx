@@ -157,6 +157,27 @@ export default function PersonDetailsView({ personId }) {
     updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
   };
 
+  const handleUnlinkSpouse = async () => {
+    if (spouseId) {
+      // Remove spouse_id from current person
+      const currentCustomData = { ...(person?.custom_data || {}) };
+      delete currentCustomData.spouse_id;
+      await updatePersonMutation.mutateAsync({ custom_data: currentCustomData });
+      
+      // Remove spouse_id from the spouse
+      const spouse = await base44.entities.Person.filter({ id: spouseId }).then(res => res[0]);
+      if (spouse) {
+        const spouseCustomData = { ...(spouse.custom_data || {}) };
+        delete spouseCustomData.spouse_id;
+        await base44.entities.Person.update(spouseId, { custom_data: spouseCustomData });
+      }
+      
+      setSpouseId(null);
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      queryClient.invalidateQueries({ queryKey: ['spouse', spouseId] });
+    }
+  };
+
   const filteredAccounts = accounts.filter(acc => 
     !linkedAccounts.includes(acc.id) &&
     (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -333,12 +354,43 @@ export default function PersonDetailsView({ personId }) {
             </Dialog>
           )}
           {spouseId && linkedSpouse ? (
-            <Button 
-              onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap cursor-pointer"
-            >
-              {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
-            </Button>
+            <div className="flex items-center gap-0">
+              <Button 
+                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap cursor-pointer rounded-l-none"
+              >
+                {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-purple-500 rounded-r-none"
+                    title="בטל שיוך"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                      <span>?</span>
+                      <span>האם לבטל את שיוך בן/בת הזוג</span>
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex justify-center gap-4">
+                    <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר משויך</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleUnlinkSpouse}
+                      className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                    >
+                      כן, לבטל
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           ) : (
             <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
               <DialogTrigger asChild>
