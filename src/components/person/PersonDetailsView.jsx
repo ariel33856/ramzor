@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Loader2, Link as LinkIcon } from 'lucide-react';
+import { Plus, Trash2, Loader2, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -17,6 +17,7 @@ export default function PersonDetailsView({ personId }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [linkedAccounts, setLinkedAccounts] = useState([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -147,8 +148,24 @@ export default function PersonDetailsView({ personId }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Collapsible Header */}
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors border-b"
+      >
+        <h2 className="text-lg font-bold text-gray-900">פרטי איש קשר</h2>
+        {isCollapsed ? (
+          <ChevronDown className="w-5 h-5 text-gray-500" />
+        ) : (
+          <ChevronUp className="w-5 h-5 text-gray-500" />
+        )}
+      </button>
+
+      {/* Content */}
+      {!isCollapsed && (
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <div className="grid grid-cols-2 gap-2 w-auto">
@@ -345,6 +362,8 @@ export default function PersonDetailsView({ personId }) {
           </div>
         )}
       </div>
+        </div>
+      )}
     </div>
   );
 }
