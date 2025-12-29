@@ -639,7 +639,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">שדה 1</Label>
+          <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input className="w-32" />
         </div>
         <div className="flex items-center gap-2">
