@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function PersonDetailsView({ personId }) {
   const queryClient = useQueryClient();
@@ -21,7 +20,6 @@ export default function PersonDetailsView({ personId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
   const [isCollapsed2, setIsCollapsed2] = useState(false);
-  const [relationshipType, setRelationshipType] = useState('לווה');
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -177,26 +175,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
-            <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className={`whitespace-nowrap ${
-                    relationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' :
-                    relationshipType === 'ערב' ? 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600' :
-                    relationshipType === 'ערב ממשכן' ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
-                    relationshipType === 'בן/בת זוג' ? 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500' :
-                    'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
-                  }`}>
-                    {relationshipType ? `זיקה לחשבון: ${relationshipType}` : 'זיקה לחשבון'}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
-                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">ערב</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">ערב ממשכן</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">בן/בת זוג</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex items-center gap-0.5">
               {linkedAccountsData.map(account => (
                 <div key={account.id} className="flex items-center gap-0">
                   <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
@@ -235,7 +214,7 @@ export default function PersonDetailsView({ personId }) {
                   </AlertDialog>
                 </div>
               ))}
-            </>
+            </div>
           ) : (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
@@ -339,27 +318,11 @@ export default function PersonDetailsView({ personId }) {
           <Input />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מיקרוד</Label>
+          <Label className="text-sm whitespace-nowrap">סטטוס  משפחתי</Label>
           <Input />
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מצב משפחתי</Label>
-          <Input />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">שדה 1</Label>
-          <Input />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">שדה 2</Label>
-          <Input />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">שדה 3</Label>
-          <Input />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">שדה 4</Label>
           <Input />
         </div>
       </div>
