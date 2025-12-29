@@ -336,22 +336,20 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Custom Fields List */}
         {customFields.length > 0 && (
-          <div className="space-y-3 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
             {customFields.map((field) => (
-              <div key={field.id} className="flex gap-2 items-start">
-                <div className="flex-1">
-                  <Label className="text-sm font-medium mb-1">{field.name}</Label>
-                  <Input
-                    value={field.value}
-                    onChange={(e) => handleFieldValueChange(field.id, e.target.value)}
-                    placeholder={`הכנס ערך ל-${field.name}...`}
-                  />
-                </div>
+              <div key={field.id} className="flex items-center gap-2">
+                <Label className="text-sm font-medium whitespace-nowrap">{field.name}</Label>
+                <Input
+                  value={field.value}
+                  onChange={(e) => handleFieldValueChange(field.id, e.target.value)}
+                  placeholder={`ערך...`}
+                />
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => handleRemoveField(field.id)}
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50 mt-6"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
