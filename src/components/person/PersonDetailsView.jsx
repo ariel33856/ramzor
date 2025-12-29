@@ -346,6 +346,22 @@ export default function PersonDetailsView({ personId }) {
           <Label className="text-sm whitespace-nowrap">מצב משפחתי</Label>
           <Input />
         </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">שדה 1</Label>
+          <Input />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">שדה 2</Label>
+          <Input />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">שדה 3</Label>
+          <Input />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">שדה 4</Label>
+          <Input />
+        </div>
       </div>
 
 
