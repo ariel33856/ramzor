@@ -316,7 +316,7 @@ export default function PersonDetailsView({ personId }) {
           <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
-                שייך בן זוג
+                {gender === 'male' ? 'שייך בת זוג' : 'שייך בן זוג'}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[80vh]">
