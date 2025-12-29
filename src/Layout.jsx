@@ -471,7 +471,10 @@ export default function Layout({ children, currentPageName }) {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle className="text-center">האם להעביר חשבון לארכיון?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                          <span>?</span>
+                          <span>האם להעביר חשבון לארכיון</span>
+                        </AlertDialogTitle>
                       </AlertDialogHeader>
                       <AlertDialogFooter className="flex justify-center gap-4">
                         <AlertDialogAction 
