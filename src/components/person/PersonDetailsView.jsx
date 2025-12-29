@@ -334,10 +334,10 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מין</Label>
           <Select>
-            <SelectTrigger>
+            <SelectTrigger className="w-24">
               <SelectValue placeholder="בחר מין" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="w-24">
               <SelectItem value="male">זכר</SelectItem>
               <SelectItem value="female">נקבה</SelectItem>
             </SelectContent>
