@@ -279,38 +279,34 @@ export default function PersonDetailsView({ personId }) {
       {!isCollapsed && (
         <div className="p-6">
       {/* Basic Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b">
-        <div>
-          <Label className="text-sm">תעודת זהות</Label>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6 border-b">
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">תעודת זהות</Label>
           <Input
             value={basicData.id_number}
             onChange={(e) => handleBasicDataChange('id_number', e.target.value)}
-            className="mt-1"
           />
         </div>
-        <div>
-          <Label className="text-sm">תאריך לידה</Label>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
           <Input
             value={basicData.phone}
             onChange={(e) => handleBasicDataChange('phone', e.target.value)}
-            className="mt-1"
           />
         </div>
-        <div className="md:col-span-2">
-          <Label className="text-sm">אימייל</Label>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">אימייל</Label>
           <Input
             type="email"
             value={basicData.email}
             onChange={(e) => handleBasicDataChange('email', e.target.value)}
-            className="mt-1"
           />
         </div>
-        <div className="md:col-span-2">
-          <Label className="text-sm">הערות</Label>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">הערות</Label>
           <Input
             value={basicData.notes}
             onChange={(e) => handleBasicDataChange('notes', e.target.value)}
-            className="mt-1"
           />
         </div>
       </div>
