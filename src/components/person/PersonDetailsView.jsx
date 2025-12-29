@@ -24,6 +24,8 @@ export default function PersonDetailsView({ personId }) {
   const [isCollapsed2, setIsCollapsed2] = useState(false);
   const [relationshipType, setRelationshipType] = useState('לווה');
   const [gender, setGender] = useState('male');
+  const [spouseDialogOpen, setSpouseDialogOpen] = useState(false);
+  const [spouseSearchTerm, setSpouseSearchTerm] = useState('');
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -42,6 +44,11 @@ export default function PersonDetailsView({ personId }) {
   const { data: allAccounts = [] } = useQuery({
     queryKey: ['all-accounts'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date')
+  });
+
+  const { data: allContacts = [] } = useQuery({
+    queryKey: ['all-contacts-spouse'],
+    queryFn: () => base44.entities.Person.filter({ is_archived: false })
   });
 
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
@@ -275,9 +282,50 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           )}
-          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
-            כפתור חדש
-          </Button>
+          <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
+                שייך בן זוג
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר בן/בת זוג</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש איש קשר..."
+                  value={spouseSearchTerm}
+                  onChange={(e) => setSpouseSearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {allContacts
+                    .filter(contact => 
+                      contact.id !== personId &&
+                      (contact.first_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                      contact.last_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                      contact.phone?.includes(spouseSearchTerm))
+                    )
+                    .map(contact => (
+                      <div
+                        key={contact.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => {
+                          // TODO: Link spouse logic
+                          setSpouseDialogOpen(false);
+                          setSpouseSearchTerm('');
+                        }}
+                      >
+                        <p className="font-semibold text-gray-900">
+                          {contact.first_name} {contact.last_name}
+                        </p>
+                        <p className="text-sm text-gray-500">{contact.phone}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="w-full">
             <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full">
               להצגה במודול אנשי קשר
