@@ -559,6 +559,36 @@ export default function Layout({ children, currentPageName }) {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPerson.first_name} {currentPerson.last_name}
                   </h1>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                          <span>?</span>
+                          <span>האם להעביר איש קשר לארכיון</span>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex justify-center gap-4">
+                        <AlertDialogAction 
+                          onClick={() => {
+                            base44.entities.Person.update(personId, { is_archived: true }).then(() => {
+                              queryClient.invalidateQueries({ queryKey: ['person', personId] });
+                              queryClient.invalidateQueries({ queryKey: ['contacts'] });
+                              window.location.href = createPageUrl('ArchiveAccounts');
+                            });
+                          }}
+                          className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                        >
+                          העבר לארכיון
+                        </AlertDialogAction>
+                        <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                   <Link to={createPageUrl('ArchiveAccounts')}>
                     <Button variant="outline">
                       <Database className="w-4 h-4 ml-2" />
