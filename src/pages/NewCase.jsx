@@ -124,8 +124,8 @@ export default function NewCase() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
-      <div className="max-w-3xl mx-auto">
+    <div className="h-full bg-gray-50/50 p-2 overflow-hidden flex items-center justify-center">
+      <div className="w-full max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -165,7 +165,7 @@ export default function NewCase() {
                     </div>
                   </div>
 
-                  <div className="space-y-2 max-h-96 overflow-y-auto border rounded-lg p-2">
+                  <div className="space-y-2 max-h-[40vh] overflow-y-auto border rounded-lg p-2">
                     {filteredPersons.map(person => (
                       <div
                         key={person.id}
