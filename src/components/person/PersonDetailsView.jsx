@@ -174,11 +174,11 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
               {linkedAccountsData.map(account => (
-                <div key={account.id} className="flex items-center gap-1">
+                <div key={account.id} className="flex items-center gap-0">
                   <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
-                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
                       חשבון משויך: {account.client_name} ({account.account_number})
                     </Button>
                   </Link>
@@ -187,7 +187,7 @@ export default function PersonDetailsView({ personId }) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-r-none"
                         title="בטל שיוך"
                       >
                         <Trash2 className="w-4 h-4" />
