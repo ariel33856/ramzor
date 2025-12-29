@@ -554,49 +554,155 @@ export default function Layout({ children, currentPageName }) {
                   {currentPageName === 'CalendarPage' && (
                   <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
                   )}
-                  {currentPageName === 'PersonDetails' && currentPerson && (
-                  <>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {currentPerson.first_name} {currentPerson.last_name}
-                  </h1>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
-                        <Trash2 className="w-5 h-5" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
-                          <span>?</span>
-                          <span>האם להעביר איש קשר לארכיון</span>
-                        </AlertDialogTitle>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="flex justify-center gap-4">
-                        <AlertDialogAction 
-                          onClick={() => {
-                            base44.entities.Person.update(personId, { is_archived: true }).then(() => {
-                              queryClient.invalidateQueries({ queryKey: ['person', personId] });
-                              queryClient.invalidateQueries({ queryKey: ['contacts'] });
-                              window.location.href = createPageUrl('ArchiveAccounts');
-                            });
-                          }}
-                          className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
-                        >
-                          העבר לארכיון
-                        </AlertDialogAction>
-                        <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                  <Link to={createPageUrl('ArchiveAccounts')}>
-                    <Button variant="outline">
-                      <Database className="w-4 h-4 ml-2" />
-                      אנשי קשר
-                    </Button>
-                  </Link>
-                  </>
-                  )}
+                  {currentPageName === 'PersonDetails' && currentPerson && (() => {
+                    const linkedAccountsData = allCases.filter(acc => 
+                      currentPerson.linked_accounts && currentPerson.linked_accounts.includes(acc.id)
+                    );
+                    return (
+                      <>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          {currentPerson.first_name} {currentPerson.last_name}
+                        </h1>
+
+                        {linkedAccountsData.length > 0 ? (
+                          <div className="flex items-center gap-2">
+                            {linkedAccountsData.map(account => (
+                              <div key={account.id} className="flex items-center gap-1">
+                                <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
+                                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                                    חשבון משויך: {account.client_name} ({account.account_number})
+                                  </Button>
+                                </Link>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9"
+                                      title="בטל שיוך"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                                        <span>?</span>
+                                        <span>האם לבטל את שיוך החשבון</span>
+                                      </AlertDialogTitle>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter className="flex justify-center gap-4">
+                                      <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                                      <AlertDialogAction 
+                                        onClick={() => {
+                                          const person = allCases.find(c => c.id === personId);
+                                          if (person) {
+                                            const updatedAccounts = (currentPerson.linked_accounts || []).filter(id => id !== account.id);
+                                            base44.entities.Person.update(personId, { linked_accounts: updatedAccounts }).then(() => {
+                                              queryClient.invalidateQueries({ queryKey: ['person', personId] });
+                                              queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+                                              queryClient.invalidateQueries({ queryKey: ['all-cases'] });
+                                            });
+                                          }
+                                        }}
+                                        className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                                      >
+                                        כן, לבטל
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                            <DialogTrigger asChild>
+                              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                                <LinkIcon className="w-4 h-4 ml-2" />
+                                שייך חשבון
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[80vh]">
+                              <DialogHeader>
+                                <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4">
+                                <Input
+                                  placeholder="חיפוש לפי שם או מספר חשבון..."
+                                  value={searchTerm}
+                                  onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                <div className="space-y-2 max-h-96 overflow-y-auto">
+                                  {accounts.filter(acc => 
+                                    !currentPerson.linked_accounts?.includes(acc.id) &&
+                                    (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    acc.account_number?.toString().includes(searchTerm))
+                                  ).map(account => (
+                                    <div
+                                      key={account.id}
+                                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                      onClick={() => {
+                                        const updatedAccounts = [...(currentPerson.linked_accounts || []), account.id];
+                                        base44.entities.Person.update(personId, { linked_accounts: updatedAccounts }).then(() => {
+                                          queryClient.invalidateQueries({ queryKey: ['person', personId] });
+                                          queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+                                          queryClient.invalidateQueries({ queryKey: ['all-cases'] });
+                                          setDialogOpen(false);
+                                          setSearchTerm('');
+                                        });
+                                      }}
+                                    >
+                                      <p className="font-semibold text-gray-900">{account.client_name}</p>
+                                      <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
+                              <Trash2 className="w-5 h-5" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                                <span>?</span>
+                                <span>האם להעביר איש קשר לארכיון</span>
+                              </AlertDialogTitle>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="flex justify-center gap-4">
+                              <AlertDialogAction 
+                                onClick={() => {
+                                  base44.entities.Person.update(personId, { is_archived: true }).then(() => {
+                                    queryClient.invalidateQueries({ queryKey: ['person', personId] });
+                                    queryClient.invalidateQueries({ queryKey: ['contacts'] });
+                                    window.location.href = createPageUrl('ArchiveAccounts');
+                                  });
+                                }}
+                                className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                              >
+                                העבר לארכיון
+                              </AlertDialogAction>
+                              <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+
+                        <Link to={createPageUrl('ArchiveAccounts')}>
+                          <Button variant="outline">
+                            <Database className="w-4 h-4 ml-2" />
+                            אנשי קשר
+                          </Button>
+                        </Link>
+                      </>
+                    );
+                  })()}
                   </div>
 
                   <div className="flex items-center gap-2">
