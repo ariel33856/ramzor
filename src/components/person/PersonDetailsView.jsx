@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function PersonDetailsView({ personId }) {
   const queryClient = useQueryClient();
@@ -176,9 +177,19 @@ export default function PersonDetailsView({ personId }) {
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
             <>
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
-                זיקה לחשבון
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
+                    זיקה לחשבון
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>לווה</DropdownMenuItem>
+                  <DropdownMenuItem>ערב</DropdownMenuItem>
+                  <DropdownMenuItem>ערב ממשכן</DropdownMenuItem>
+                  <DropdownMenuItem>בן/בת זוג</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               {linkedAccountsData.map(account => (
                 <div key={account.id} className="flex items-center gap-0">
                   <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
