@@ -108,7 +108,7 @@ export default function NewCase() {
     setSaving(true);
 
     // Create new person in Person entity
-    const newPerson = await base44.entities.Person.create({
+    await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
@@ -117,8 +117,8 @@ export default function NewCase() {
       type: 'איש קשר'
     });
 
-    // Now create account with this person
-    await handleCreateWithPerson(newPerson.id);
+    setSaving(false);
+    navigate(createPageUrl('ArchiveAccounts'));
   };
 
 
