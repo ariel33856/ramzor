@@ -311,53 +311,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
       </div>
 
-      {/* Custom Fields */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">שדות מותאמים אישית</h2>
-        </div>
 
-        {/* Add New Field */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="שם השדה החדש..."
-            value={newFieldName}
-            onChange={(e) => setNewFieldName(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddField()}
-          />
-          <Button 
-            onClick={handleAddField}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            <Plus className="w-4 h-4 ml-2" />
-            הוסף שדה
-          </Button>
-        </div>
-
-        {/* Custom Fields List */}
-        {customFields.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-            {customFields.map((field) => (
-              <div key={field.id} className="flex items-center gap-2">
-                <Label className="text-sm font-medium whitespace-nowrap">{field.name}</Label>
-                <Input
-                  value={field.value}
-                  onChange={(e) => handleFieldValueChange(field.id, e.target.value)}
-                  placeholder={`ערך...`}
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveField(field.id)}
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
         </div>
       )}
       </div>
