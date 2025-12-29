@@ -27,6 +27,7 @@ export default function PersonDetailsView({ personId }) {
   const [spouseDialogOpen, setSpouseDialogOpen] = useState(false);
   const [spouseSearchTerm, setSpouseSearchTerm] = useState('');
   const [showNewSpouseForm, setShowNewSpouseForm] = useState(false);
+  const [spouseId, setSpouseId] = useState(null);
   const [newSpouseData, setNewSpouseData] = useState({
     first_name: '',
     last_name: '',
@@ -59,6 +60,12 @@ export default function PersonDetailsView({ personId }) {
     queryFn: () => base44.entities.Person.filter({ is_archived: false })
   });
 
+  const { data: linkedSpouse } = useQuery({
+    queryKey: ['spouse', spouseId],
+    queryFn: () => base44.entities.Person.filter({ id: spouseId }).then(res => res[0]),
+    enabled: !!spouseId
+  });
+
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
 
   const linkedAccountsData = allAccounts.filter(acc => 
@@ -80,10 +87,16 @@ export default function PersonDetailsView({ personId }) {
         type: 'איש קשר',
         is_archived: false
       });
+      // Update current person with spouse_id
+      await base44.entities.Person.update(personId, { 
+        custom_data: { ...(person?.custom_data || {}), spouse_id: newSpouse.id }
+      });
       return newSpouse;
     },
-    onSuccess: () => {
+    onSuccess: (newSpouse) => {
       queryClient.invalidateQueries({ queryKey: ['all-contacts-spouse'] });
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      setSpouseId(newSpouse.id);
       setShowNewSpouseForm(false);
       setNewSpouseData({
         first_name: '',
@@ -171,6 +184,11 @@ export default function PersonDetailsView({ personId }) {
           value
         }));
         setCustomFields(fields);
+        
+        // Load spouse_id from custom_data
+        if (person.custom_data.spouse_id) {
+          setSpouseId(person.custom_data.spouse_id);
+        }
       }
     }
   }, [person]);
@@ -313,12 +331,19 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           )}
-          <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
-            <DialogTrigger asChild>
+          {spouseId && linkedSpouse ? (
+            <Link to={createPageUrl('PersonDetails') + `?id=${spouseId}`}>
               <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
-                {gender === 'male' ? 'שדך בת זוג' : 'שדך בן זוג'}
+                {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
               </Button>
-            </DialogTrigger>
+            </Link>
+          ) : (
+            <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
+                  {gender === 'male' ? 'שדך בת זוג' : 'שדך בן זוג'}
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[80vh]">
               <DialogHeader>
                 <DialogTitle>בחר בן/בת זוג</DialogTitle>
@@ -350,8 +375,12 @@ export default function PersonDetailsView({ personId }) {
                           <div
                             key={contact.id}
                             className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                            onClick={() => {
-                              // TODO: Link spouse logic
+                            onClick={async () => {
+                              // Update person with spouse_id
+                              await updatePersonMutation.mutateAsync({ 
+                                custom_data: { ...(person?.custom_data || {}), spouse_id: contact.id }
+                              });
+                              setSpouseId(contact.id);
                               setSpouseDialogOpen(false);
                               setSpouseSearchTerm('');
                             }}
@@ -427,7 +456,8 @@ export default function PersonDetailsView({ personId }) {
                 )}
               </div>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          )}
           <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="w-full">
             <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full">
               להצגה במודול אנשי קשר
