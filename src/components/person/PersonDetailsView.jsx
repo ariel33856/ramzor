@@ -641,35 +641,17 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setNumChildren(prev => Math.max(0, prev - 1))}
-            >
-              -
-            </Button>
-            <Input 
-              value={numChildren}
-              onChange={(e) => {
-                const val = parseInt(e.target.value) || 0;
-                setNumChildren(Math.min(30, Math.max(0, val)));
-              }}
-              className="w-12 text-center h-8 [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100"
-              type="number"
-              min="0"
-              max="30"
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setNumChildren(prev => Math.min(30, prev + 1))}
-            >
-              +
-            </Button>
-          </div>
+          <Input 
+            value={numChildren}
+            onChange={(e) => {
+              const val = parseInt(e.target.value) || 0;
+              setNumChildren(Math.min(30, Math.max(0, val)));
+            }}
+            className="w-12 text-center h-8 [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100"
+            type="number"
+            min="0"
+            max="30"
+          />
           <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
             <Plus className="w-4 h-4 ml-2" />
             הוסף ילד
