@@ -26,6 +26,14 @@ export default function PersonDetailsView({ personId }) {
   const [gender, setGender] = useState('male');
   const [spouseDialogOpen, setSpouseDialogOpen] = useState(false);
   const [spouseSearchTerm, setSpouseSearchTerm] = useState('');
+  const [showNewSpouseForm, setShowNewSpouseForm] = useState(false);
+  const [newSpouseData, setNewSpouseData] = useState({
+    first_name: '',
+    last_name: '',
+    id_number: '',
+    phone: '',
+    email: ''
+  });
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -62,6 +70,29 @@ export default function PersonDetailsView({ personId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+    }
+  });
+
+  const createSpouseMutation = useMutation({
+    mutationFn: async (spouseData) => {
+      const newSpouse = await base44.entities.Person.create({
+        ...spouseData,
+        type: 'איש קשר',
+        is_archived: false
+      });
+      return newSpouse;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['all-contacts-spouse'] });
+      setShowNewSpouseForm(false);
+      setNewSpouseData({
+        first_name: '',
+        last_name: '',
+        id_number: '',
+        phone: '',
+        email: ''
+      });
+      setSpouseDialogOpen(false);
     }
   });
 
@@ -293,36 +324,107 @@ export default function PersonDetailsView({ personId }) {
                 <DialogTitle>בחר בן/בת זוג</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <Input
-                  placeholder="חיפוש איש קשר..."
-                  value={spouseSearchTerm}
-                  onChange={(e) => setSpouseSearchTerm(e.target.value)}
-                />
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {allContacts
-                    .filter(contact => 
-                      contact.id !== personId &&
-                      (contact.first_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
-                      contact.last_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
-                      contact.phone?.includes(spouseSearchTerm))
-                    )
-                    .map(contact => (
-                      <div
-                        key={contact.id}
-                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                        onClick={() => {
-                          // TODO: Link spouse logic
-                          setSpouseDialogOpen(false);
-                          setSpouseSearchTerm('');
-                        }}
-                      >
-                        <p className="font-semibold text-gray-900">
-                          {contact.first_name} {contact.last_name}
-                        </p>
-                        <p className="text-sm text-gray-500">{contact.phone}</p>
+                {!showNewSpouseForm ? (
+                  <>
+                    <Button 
+                      onClick={() => setShowNewSpouseForm(true)}
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    >
+                      <Plus className="w-4 h-4 ml-2" />
+                      הוסף איש קשר חדש
+                    </Button>
+                    <Input
+                      placeholder="חיפוש איש קשר..."
+                      value={spouseSearchTerm}
+                      onChange={(e) => setSpouseSearchTerm(e.target.value)}
+                    />
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                      {allContacts
+                        .filter(contact => 
+                          contact.id !== personId &&
+                          (contact.first_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                          contact.last_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                          contact.phone?.includes(spouseSearchTerm))
+                        )
+                        .map(contact => (
+                          <div
+                            key={contact.id}
+                            className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                            onClick={() => {
+                              // TODO: Link spouse logic
+                              setSpouseDialogOpen(false);
+                              setSpouseSearchTerm('');
+                            }}
+                          >
+                            <p className="font-semibold text-gray-900">
+                              {contact.first_name} {contact.last_name}
+                            </p>
+                            <p className="text-sm text-gray-500">{contact.phone}</p>
+                          </div>
+                        ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <Button 
+                      onClick={() => setShowNewSpouseForm(false)}
+                      variant="outline"
+                      className="mb-4"
+                    >
+                      חזרה לרשימה
+                    </Button>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>שם פרטי</Label>
+                        <Input
+                          value={newSpouseData.first_name}
+                          onChange={(e) => setNewSpouseData({...newSpouseData, first_name: e.target.value})}
+                          placeholder="שם פרטי"
+                        />
                       </div>
-                    ))}
-                </div>
+                      <div>
+                        <Label>שם משפחה</Label>
+                        <Input
+                          value={newSpouseData.last_name}
+                          onChange={(e) => setNewSpouseData({...newSpouseData, last_name: e.target.value})}
+                          placeholder="שם משפחה"
+                        />
+                      </div>
+                      <div>
+                        <Label>תעודת זהות</Label>
+                        <Input
+                          value={newSpouseData.id_number}
+                          onChange={(e) => setNewSpouseData({...newSpouseData, id_number: e.target.value})}
+                          placeholder="תעודת זהות"
+                        />
+                      </div>
+                      <div>
+                        <Label>טלפון</Label>
+                        <Input
+                          value={newSpouseData.phone}
+                          onChange={(e) => setNewSpouseData({...newSpouseData, phone: e.target.value})}
+                          placeholder="טלפון"
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <Label>אימייל</Label>
+                        <Input
+                          type="email"
+                          value={newSpouseData.email}
+                          onChange={(e) => setNewSpouseData({...newSpouseData, email: e.target.value})}
+                          placeholder="אימייל"
+                        />
+                      </div>
+                    </div>
+                    <Button 
+                      onClick={() => createSpouseMutation.mutate(newSpouseData)}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      disabled={!newSpouseData.first_name || !newSpouseData.last_name}
+                    >
+                      צור איש קשר
+                    </Button>
+                  </div>
+                )}
               </div>
             </DialogContent>
           </Dialog>
