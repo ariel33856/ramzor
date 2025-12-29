@@ -21,6 +21,7 @@ export default function PersonDetailsView({ personId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
   const [isCollapsed2, setIsCollapsed2] = useState(false);
+  const [relationshipType, setRelationshipType] = useState('');
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -180,14 +181,14 @@ export default function PersonDetailsView({ personId }) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
-                    זיקה לחשבון
+                    {relationshipType ? `זיקה לחשבון: ${relationshipType}` : 'זיקה לחשבון'}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>לווה</DropdownMenuItem>
-                  <DropdownMenuItem>ערב</DropdownMenuItem>
-                  <DropdownMenuItem>ערב ממשכן</DropdownMenuItem>
-                  <DropdownMenuItem>בן/בת זוג</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')}>לווה</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')}>ערב</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')}>ערב ממשכן</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')}>בן/בת זוג</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {linkedAccountsData.map(account => (
