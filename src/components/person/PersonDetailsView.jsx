@@ -21,7 +21,7 @@ export default function PersonDetailsView({ personId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
   const [isCollapsed2, setIsCollapsed2] = useState(false);
-  const [relationshipType, setRelationshipType] = useState('');
+  const [relationshipType, setRelationshipType] = useState('לווה');
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
