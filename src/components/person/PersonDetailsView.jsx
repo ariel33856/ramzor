@@ -314,11 +314,11 @@ export default function PersonDetailsView({ personId }) {
           <Input />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">יישוב מגורים</Label>
+          <Label className="text-sm whitespace-nowrap">אזרחות נוספת</Label>
           <Input />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מיקוד</Label>
+          <Label className="text-sm whitespace-nowrap">מיקרוד</Label>
           <Input />
         </div>
         <div className="flex items-center gap-2">
