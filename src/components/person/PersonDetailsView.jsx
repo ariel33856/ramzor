@@ -425,29 +425,46 @@ export default function PersonDetailsView({ personId }) {
                           contact.last_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
                           contact.phone?.includes(spouseSearchTerm))
                         )
-                        .map(contact => (
-                          <div
-                            key={contact.id}
-                            className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                            onClick={async () => {
-                              // Update both persons with spouse_id
-                              await updatePersonMutation.mutateAsync({ 
-                                custom_data: { ...(person?.custom_data || {}), spouse_id: contact.id }
-                              });
-                              await base44.entities.Person.update(contact.id, {
-                                custom_data: { ...(contact.custom_data || {}), spouse_id: personId }
-                              });
-                              setSpouseId(contact.id);
-                              setSpouseDialogOpen(false);
-                              setSpouseSearchTerm('');
-                            }}
-                          >
-                            <p className="font-semibold text-gray-900">
-                              {contact.first_name} {contact.last_name}
-                            </p>
-                            <p className="text-sm text-gray-500">{contact.phone}</p>
-                          </div>
-                        ))}
+                        .map(contact => {
+                          const isAlreadyLinked = contact.custom_data?.spouse_id;
+                          return (
+                            <div
+                              key={contact.id}
+                              className={`p-4 border rounded-lg transition-colors ${
+                                isAlreadyLinked 
+                                  ? 'bg-gray-100 border-gray-300 cursor-not-allowed opacity-60' 
+                                  : 'hover:bg-gray-50 cursor-pointer'
+                              }`}
+                              onClick={async () => {
+                                if (isAlreadyLinked) return;
+                                // Update both persons with spouse_id
+                                await updatePersonMutation.mutateAsync({ 
+                                  custom_data: { ...(person?.custom_data || {}), spouse_id: contact.id }
+                                });
+                                await base44.entities.Person.update(contact.id, {
+                                  custom_data: { ...(contact.custom_data || {}), spouse_id: personId }
+                                });
+                                setSpouseId(contact.id);
+                                setSpouseDialogOpen(false);
+                                setSpouseSearchTerm('');
+                              }}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-semibold text-gray-900">
+                                    {contact.first_name} {contact.last_name}
+                                  </p>
+                                  <p className="text-sm text-gray-500">{contact.phone}</p>
+                                </div>
+                                {isAlreadyLinked && (
+                                  <span className="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded">
+                                    משויך כבר
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                     </div>
                   </>
                 ) : (
