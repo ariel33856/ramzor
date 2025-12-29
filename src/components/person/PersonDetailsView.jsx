@@ -337,7 +337,7 @@ export default function PersonDetailsView({ personId }) {
             <SelectTrigger className="w-24">
               <SelectValue placeholder="בחר מין" />
             </SelectTrigger>
-            <SelectContent className="w-24">
+            <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
               <SelectItem value="male">זכר</SelectItem>
               <SelectItem value="female">נקבה</SelectItem>
             </SelectContent>
