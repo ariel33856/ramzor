@@ -85,7 +85,8 @@ export default function PersonDetailsView({ personId }) {
       const newSpouse = await base44.entities.Person.create({
         ...spouseData,
         type: 'איש קשר',
-        is_archived: false
+        is_archived: false,
+        custom_data: { spouse_id: personId }
       });
       // Update current person with spouse_id
       await base44.entities.Person.update(personId, { 
@@ -377,9 +378,12 @@ export default function PersonDetailsView({ personId }) {
                             key={contact.id}
                             className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                             onClick={async () => {
-                              // Update person with spouse_id
+                              // Update both persons with spouse_id
                               await updatePersonMutation.mutateAsync({ 
                                 custom_data: { ...(person?.custom_data || {}), spouse_id: contact.id }
+                              });
+                              await base44.entities.Person.update(contact.id, {
+                                custom_data: { ...(contact.custom_data || {}), spouse_id: personId }
                               });
                               setSpouseId(contact.id);
                               setSpouseDialogOpen(false);
