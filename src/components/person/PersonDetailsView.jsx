@@ -18,6 +18,7 @@ export default function PersonDetailsView({ personId }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [linkedAccounts, setLinkedAccounts] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
   const [isCollapsed2, setIsCollapsed2] = useState(false);
   const [basicData, setBasicData] = useState({
     first_name: '',
@@ -365,6 +366,29 @@ export default function PersonDetailsView({ personId }) {
       </div>
         </div>
       )}
+      </div>
+
+      {/* New Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Collapsible Header */}
+        <button
+          onClick={() => setIsCollapsed1_5(!isCollapsed1_5)}
+          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
+        >
+          {isCollapsed1_5 ? (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          )}
+          <h2 className="text-lg font-bold text-gray-900">כרטיסיה חדשה</h2>
+        </button>
+
+        {/* Content */}
+        {!isCollapsed1_5 && (
+          <div className="p-6">
+            <p className="text-gray-600">תוכן הכרטיסיה...</p>
+          </div>
+        )}
       </div>
 
       {/* Second Card */}
