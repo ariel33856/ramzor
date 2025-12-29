@@ -151,7 +151,7 @@ export default function PersonDetailsView({ personId }) {
   return (
     <div className="space-y-4">
       {/* Action Buttons */}
-      <div className="flex items-start gap-2 flex-wrap">
+      <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="grid grid-cols-2 gap-2 w-auto">
           <div className="w-96">
             <Label className="text-sm font-medium mb-1">שם פרטי</Label>
