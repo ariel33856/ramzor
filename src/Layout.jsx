@@ -595,7 +595,7 @@ export default function Layout({ children, currentPageName }) {
                       אנשי קשר
                     </Button>
                   </Link>
-                  <Button variant="outline"></Button>
+                  <Button variant="outline" className="w-60"></Button>
                   </>
                   )}
                   </div>
