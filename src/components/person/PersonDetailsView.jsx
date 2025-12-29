@@ -343,7 +343,7 @@ export default function PersonDetailsView({ personId }) {
           <Input />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מצב משפחתי</Label>
+          <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
           <Input />
         </div>
         <div className="flex items-center gap-2">
