@@ -24,6 +24,8 @@ export default function CasePersonal() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [contactSearchTerm, setContactSearchTerm] = useState('');
   const [newContactData, setNewContactData] = useState({
     first_name: '',
     last_name: '',
@@ -207,6 +209,21 @@ export default function CasePersonal() {
     }
   });
 
+  const linkContactToAccountMutation = useMutation({
+    mutationFn: async (contactId) => {
+      const contact = await base44.entities.Person.filter({ id: contactId }).then(res => res[0]);
+      const currentAccounts = contact.linked_accounts || [];
+      await base44.entities.Person.update(contactId, {
+        linked_accounts: [...currentAccounts, caseId]
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+      setContactDialogOpen(false);
+      setContactSearchTerm('');
+    }
+  });
+
   const [formData, setFormData] = useState({
     client_name: '',
     client_id: '',
@@ -280,10 +297,55 @@ export default function CasePersonal() {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <div className="text-sm text-gray-600">אנשי קשר משויכים ({linkedContacts.length})</div>
-            <Button variant="outline" size="sm">
-              <LinkIcon className="w-4 h-4 ml-1" />
-              הוסף איש קשר
-            </Button>
+            <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <LinkIcon className="w-4 h-4 ml-1" />
+                  הוסף איש קשר
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר איש קשר לשיוך</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="חיפוש לפי שם או מספר טלפון..."
+                    value={contactSearchTerm}
+                    onChange={(e) => setContactSearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {allContacts
+                      .filter(contact => 
+                        !linkedContacts.some(lc => lc.id === contact.id) &&
+                        (contact.first_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                        contact.last_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                        contact.phone?.includes(contactSearchTerm))
+                      )
+                      .map(contact => (
+                        <div
+                          key={contact.id}
+                          className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                          onClick={() => linkContactToAccountMutation.mutate(contact.id)}
+                        >
+                          <p className="font-semibold text-gray-900">
+                            {contact.first_name} {contact.last_name}
+                          </p>
+                          <p className="text-sm text-gray-500">{contact.phone}</p>
+                        </div>
+                      ))}
+                    {allContacts.filter(contact => 
+                      !linkedContacts.some(lc => lc.id === contact.id) &&
+                      (contact.first_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                      contact.last_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                      contact.phone?.includes(contactSearchTerm))
+                    ).length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
+                    )}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
           {linkedContacts.map((contact) => (
             <PersonDetailsView key={contact.id} personId={contact.id} />
