@@ -275,6 +275,9 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           )}
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
+            כפתור חדש
+          </Button>
           <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="w-full">
             <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full">
               להצגה במודול אנשי קשר
