@@ -180,15 +180,21 @@ export default function PersonDetailsView({ personId }) {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
+                  <Button className={`whitespace-nowrap ${
+                    relationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' :
+                    relationshipType === 'ערב' ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600' :
+                    relationshipType === 'ערב ממשכן' ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
+                    relationshipType === 'בן/בת זוג' ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600' :
+                    'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
+                  }`}>
                     {relationshipType ? `זיקה לחשבון: ${relationshipType}` : 'זיקה לחשבון'}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
-                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center">לווה</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center">ערב</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center">ערב ממשכן</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')} className="justify-center">בן/בת זוג</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 mb-1">ערב</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">ערב ממשכן</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')} className="justify-center bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600">בן/בת זוג</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {linkedAccountsData.map(account => (
