@@ -334,7 +334,7 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מין</Label>
           <Select>
-            <SelectTrigger className="w-[70px]">
+            <SelectTrigger className="w-[70px] [&>span]:pr-4">
               <SelectValue placeholder="בחר"/>
             </SelectTrigger>
             <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
