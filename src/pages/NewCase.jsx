@@ -6,7 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { 
   User, Phone, Mail, Home, Banknote, Users, 
-  Building2, ChevronRight, ChevronLeft, Check, Loader2, Search, Plus 
+  Building2, ChevronRight, ChevronLeft, Check, Loader2, Search, Plus, X 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -130,7 +130,15 @@ export default function NewCase() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 relative">
+            <Button
+              onClick={() => navigate(createPageUrl('Dashboard'))}
+              variant="ghost"
+              size="icon"
+              className="absolute left-4 top-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </Button>
             <div className="flex items-center gap-4 mb-8">
               <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
                 <User className="w-8 h-8 text-white" />
