@@ -278,7 +278,7 @@ export default function Dashboard() {
                                     style={{
                                       ...provided.draggableProps.style,
                                       transform: snapshot.isDragging && provided.draggableProps.style?.transform
-                                        ? `${provided.draggableProps.style.transform} translateY(-80px)`
+                                        ? `${provided.draggableProps.style.transform} translateY(-90px)`
                                         : provided.draggableProps.style?.transform
                                     }}
                                     className={`flex items-center gap-2 p-2 rounded-lg border ${
