@@ -172,7 +172,7 @@ export default function PersonDetailsView({ personId }) {
             />
           </div>
         </div>
-        <div className="mr-auto flex flex-col gap-2">
+        <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
             <div className="flex items-center gap-2">
               {linkedAccountsData.map(account => (
