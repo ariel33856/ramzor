@@ -178,8 +178,11 @@ export default function PersonDetailsView({ personId }) {
             <div className="flex items-center gap-0.5">
               {linkedAccountsData.map(account => (
                 <div key={account.id} className="flex items-center gap-0">
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap rounded-r-none">
+                    זיקה לחשבון
+                  </Button>
                   <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
-                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
+                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-none">
                       חשבון משויך: {account.client_name} ({account.account_number})
                     </Button>
                   </Link>
