@@ -103,7 +103,7 @@ export default function Layout({ children, currentPageName }) {
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
-    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive'
+    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive' || currentPageName === 'PersonDetails'
   });
 
   const { data: currentBorrower } = useQuery({
