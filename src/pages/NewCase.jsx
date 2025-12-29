@@ -135,7 +135,7 @@ export default function NewCase() {
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              className="absolute left-4 top-4 text-red-500 hover:text-red-600 hover:bg-red-50 border-2 border-red-500 hover:border-red-600"
             >
               <X className="w-5 h-5" />
             </Button>
