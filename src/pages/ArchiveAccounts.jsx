@@ -26,6 +26,35 @@ export default function ArchiveAccounts() {
 
   const contacts = allPeople.filter(p => p.type === 'איש קשר' && !p.is_archived);
 
+  // Extract all unique field names including custom fields
+  const allFieldNames = React.useMemo(() => {
+    const fieldNamesSet = new Set(['first_name', 'last_name', 'id_number', 'phone', 'email', 'notes']);
+    contacts.forEach(contact => {
+      if (contact.custom_data) {
+        Object.keys(contact.custom_data).forEach(key => fieldNamesSet.add(key));
+      }
+    });
+    return Array.from(fieldNamesSet);
+  }, [contacts]);
+
+  const getFieldLabel = (fieldName) => {
+    const labels = {
+      first_name: 'שם פרטי',
+      last_name: 'שם משפחה',
+      id_number: 'תעודת זהות',
+      phone: 'טלפון',
+      email: 'אימייל',
+      notes: 'הערות'
+    };
+    return labels[fieldName] || fieldName;
+  };
+
+  const getFieldValue = (contact, fieldName) => {
+    if (contact[fieldName]) return contact[fieldName];
+    if (contact.custom_data && contact.custom_data[fieldName]) return contact.custom_data[fieldName];
+    return '—';
+  };
+
   const filteredContacts = contacts.filter(c => {
     const matchesSearch = !searchTerm || 
       c.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,13 +112,11 @@ export default function ArchiveAccounts() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם פרטי</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם משפחה</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תעודת זהות</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">טלפון</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">אימייל</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">הערות</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
+                    {allFieldNames.map(fieldName => (
+                      <th key={fieldName} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+                        {getFieldLabel(fieldName)}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -102,38 +129,13 @@ export default function ArchiveAccounts() {
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                       onClick={() => window.location.href = createPageUrl(`PersonDetails?id=${contact.id}`)}
                     >
-                      <td className="px-6 py-4">
-                        <span className="font-semibold text-gray-900">{contact.first_name || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-gray-600">{contact.last_name || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-gray-600">{contact.id_number || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-gray-600">{contact.phone || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-gray-600 truncate max-w-[200px] inline-block">{contact.email || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-gray-500 text-sm line-clamp-1">{contact.notes || '—'}</span>
-                      </td>
-                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            archiveMutation.mutate(contact.id);
-                          }}
-                          className="text-gray-500 hover:text-orange-600 hover:bg-orange-50"
-                        >
-                          <Archive className="w-4 h-4 ml-2" />
-                          ארכב
-                        </Button>
-                      </td>
+                      {allFieldNames.map(fieldName => (
+                        <td key={fieldName} className="px-6 py-4">
+                          <span className={fieldName === 'first_name' ? 'font-semibold text-gray-900' : 'text-gray-600'}>
+                            {getFieldValue(contact, fieldName)}
+                          </span>
+                        </td>
+                      ))}
                     </motion.tr>
                   ))}
                 </tbody>
