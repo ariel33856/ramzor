@@ -277,8 +277,8 @@ export default function Dashboard() {
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                     style={provided.draggableProps.style}
-                                    className={`flex items-center gap-2 p-2 rounded-lg border cursor-grab ${
-                                      snapshot.isDragging ? 'bg-blue-50 border-blue-300' : 'bg-white border-gray-200'
+                                    className={`flex items-center gap-2 p-2 rounded-lg border ${
+                                      snapshot.isDragging ? 'bg-blue-50 border-blue-300 cursor-grabbing' : 'bg-white border-gray-200 cursor-grab'
                                     }`}
                                   >
                                     <GripVertical className="w-4 h-4 text-gray-400" />
