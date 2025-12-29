@@ -357,14 +357,24 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="married">נשואה</SelectItem>
                     <SelectItem value="single">רווקה</SelectItem>
                     <SelectItem value="divorced">גרושה</SelectItem>
-                    <SelectItem value="common_law">ידועה בציבור</SelectItem>
+                    <SelectItem value="common_law">
+                      <div className="flex flex-col items-center leading-tight text-center">
+                        <span>ידועה</span>
+                        <span>בציבור</span>
+                      </div>
+                    </SelectItem>
                   </>
                 ) : (
                   <>
                     <SelectItem value="married">נשוי</SelectItem>
                     <SelectItem value="single">רווק</SelectItem>
                     <SelectItem value="divorced">גרוש</SelectItem>
-                    <SelectItem value="common_law">ידוע בציבור</SelectItem>
+                    <SelectItem value="common_law">
+                      <div className="flex flex-col items-center leading-tight text-center">
+                        <span>ידוע</span>
+                        <span>בציבור</span>
+                      </div>
+                    </SelectItem>
                   </>
                 )}
               </SelectContent>
