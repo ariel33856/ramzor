@@ -489,7 +489,7 @@ export default function Layout({ children, currentPageName }) {
                         >
                           העבר לארכיון
                         </AlertDialogAction>
-                        <AlertDialogCancel className="px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
+                        <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
