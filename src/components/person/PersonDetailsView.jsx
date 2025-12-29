@@ -332,11 +332,12 @@ export default function PersonDetailsView({ personId }) {
             </Dialog>
           )}
           {spouseId && linkedSpouse ? (
-            <Link to={createPageUrl('PersonDetails') + `?id=${spouseId}`}>
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
-                {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap cursor-pointer"
+            >
+              {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
+            </Button>
           ) : (
             <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
               <DialogTrigger asChild>
