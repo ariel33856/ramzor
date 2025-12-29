@@ -275,14 +275,13 @@ export default function Dashboard() {
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
                                     style={provided.draggableProps.style}
-                                    className={`flex items-center gap-2 p-2 rounded-lg border ${
+                                    className={`flex items-center gap-2 p-2 rounded-lg border cursor-grab ${
                                       snapshot.isDragging ? 'bg-blue-50 border-blue-300' : 'bg-white border-gray-200'
                                     }`}
                                   >
-                                    <div {...provided.dragHandleProps}>
-                                      <GripVertical className="w-4 h-4 text-gray-400" />
-                                    </div>
+                                    <GripVertical className="w-4 h-4 text-gray-400" />
                                     <Checkbox
                                       id={`col-${column.id}`}
                                       checked={column.visible}
