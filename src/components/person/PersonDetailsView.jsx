@@ -150,6 +150,113 @@ export default function PersonDetailsView({ personId }) {
 
   return (
     <div className="space-y-4">
+      {/* Action Buttons */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <div className="grid grid-cols-2 gap-2 w-auto">
+          <div className="w-96">
+            <Label className="text-sm font-medium mb-1">שם פרטי</Label>
+            <Input
+              value={basicData.first_name}
+              onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+              placeholder="שם פרטי"
+              className="text-xl font-bold"
+            />
+          </div>
+          <div className="w-96">
+            <Label className="text-sm font-medium mb-1">שם משפחה</Label>
+            <Input
+              value={basicData.last_name}
+              onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+              placeholder="שם משפחה"
+              className="text-xl font-bold"
+            />
+          </div>
+        </div>
+        <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
+          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
+            להצגה במודול אנשי קשר
+          </Button>
+        </Link>
+        {linkedAccountsData.length > 0 ? (
+          <div className="flex items-center gap-2">
+            {linkedAccountsData.map(account => (
+              <div key={account.id} className="flex items-center gap-1">
+                <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
+                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                    חשבון משויך: {account.client_name} ({account.account_number})
+                  </Button>
+                </Link>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9"
+                      title="בטל שיוך"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                        <span>?</span>
+                        <span>האם לבטל את שיוך החשבון</span>
+                      </AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex justify-center gap-4">
+                      <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={() => handleUnlinkAccount(account.id)}
+                        className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                      >
+                        כן, לבטל
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                <LinkIcon className="w-4 h-4 ml-2" />
+                שייך חשבון
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש לפי שם או מספר חשבון..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filteredAccounts.map(account => (
+                    <div
+                      key={account.id}
+                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => handleLinkToAccount(account.id)}
+                    >
+                      <p className="font-semibold text-gray-900">{account.client_name}</p>
+                      <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                    </div>
+                  ))}
+                  {filteredAccounts.length === 0 && (
+                    <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+
       {/* First Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Collapsible Header */}
@@ -168,117 +275,6 @@ export default function PersonDetailsView({ personId }) {
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="grid grid-cols-2 gap-2 w-auto">
-              <div className="w-96">
-                <Label className="text-sm font-medium mb-1">שם פרטי</Label>
-                <Input
-                  value={basicData.first_name}
-                  onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-                  placeholder="שם פרטי"
-                  className="text-xl font-bold"
-                />
-              </div>
-              <div className="w-96">
-                <Label className="text-sm font-medium mb-1">שם משפחה</Label>
-                <Input
-                  value={basicData.last_name}
-                  onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-                  placeholder="שם משפחה"
-                  className="text-xl font-bold"
-                />
-              </div>
-            </div>
-            <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
-                להצגה במודול אנשי קשר
-              </Button>
-            </Link>
-            {linkedAccountsData.length > 0 ? (
-              <div className="flex items-center gap-2">
-                {linkedAccountsData.map(account => (
-                  <div key={account.id} className="flex items-center gap-1">
-                    <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
-                      <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
-                        חשבון משויך: {account.client_name} ({account.account_number})
-                      </Button>
-                    </Link>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9"
-                          title="בטל שיוך"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
-                            <span>?</span>
-                            <span>האם לבטל את שיוך החשבון</span>
-                          </AlertDialogTitle>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex justify-center gap-4">
-                          <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
-                          <AlertDialogAction 
-                            onClick={() => handleUnlinkAccount(account.id)}
-                            className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
-                          >
-                            כן, לבטל
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
-                    <LinkIcon className="w-4 h-4 ml-2" />
-                    שייך חשבון
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh]">
-                  <DialogHeader>
-                    <DialogTitle>בחר חשבון לשיוך</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input
-                      placeholder="חיפוש לפי שם או מספר חשבון..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                      {filteredAccounts.map(account => (
-                        <div
-                          key={account.id}
-                          className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                          onClick={() => handleLinkToAccount(account.id)}
-                        >
-                          <p className="font-semibold text-gray-900">{account.client_name}</p>
-                          <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
-                        </div>
-                      ))}
-                      {filteredAccounts.length === 0 && (
-                        <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
-                      )}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
-          </div>
-
-        </div>
-      </div>
-
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b">
         <div>
