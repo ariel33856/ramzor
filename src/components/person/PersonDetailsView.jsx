@@ -152,23 +152,23 @@ export default function PersonDetailsView({ personId }) {
     <div className="space-y-4">
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-        <div className="grid grid-cols-2 gap-2 w-auto">
-          <div className="w-96">
-            <Label className="text-sm font-medium mb-1">שם פרטי</Label>
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium whitespace-nowrap">שם פרטי</Label>
             <Input
               value={basicData.first_name}
               onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
               placeholder="שם פרטי"
-              className="text-xl font-bold"
+              className="text-xl font-bold w-64"
             />
           </div>
-          <div className="w-96">
-            <Label className="text-sm font-medium mb-1">שם משפחה</Label>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium whitespace-nowrap">שם משפחה</Label>
             <Input
               value={basicData.last_name}
               onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
               placeholder="שם משפחה"
-              className="text-xl font-bold"
+              className="text-xl font-bold w-64"
             />
           </div>
         </div>
