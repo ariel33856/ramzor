@@ -38,25 +38,23 @@ export default function NewCase() {
   const isArchive = urlParams.get('archive') === 'true';
   const moduleId = urlParams.get('moduleId');
 
-  const { data: allBorrowers = [] } = useQuery({
-    queryKey: ['all-borrowers'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+  const { data: allPersons = [] } = useQuery({
+    queryKey: ['all-persons'],
+    queryFn: () => base44.entities.Person.list()
   });
 
-  const filteredBorrowers = allBorrowers.filter(borrower => 
-    borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    borrower.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    borrower.client_id?.includes(searchTerm) ||
-    borrower.client_phone?.includes(searchTerm)
+  const filteredPersons = allPersons.filter(person => 
+    person.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    person.id_number?.includes(searchTerm) ||
+    person.phone?.includes(searchTerm)
   );
 
-  const handleCreateWithBorrower = async (borrowerId) => {
+  const handleCreateWithPerson = async (personId) => {
     setSaving(true);
 
     const caseData = {
       client_name: '',
-      linked_borrowers: [borrowerId],
-      loan_amount: 0,
       status: 'new',
       urgency: 'medium',
       progress_percentage: 0,
@@ -78,6 +76,13 @@ export default function NewCase() {
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
 
+    // Link person to account
+    const person = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+    const linkedAccounts = person.linked_accounts || [];
+    await base44.entities.Person.update(personId, {
+      linked_accounts: [...linkedAccounts, newCase.id]
+    });
+
     // Create audit log
     await base44.entities.AuditLog.create({
       case_id: newCase.id,
@@ -97,22 +102,23 @@ export default function NewCase() {
     }
   };
 
-  const handleCreateNewBorrower = async () => {
+  const handleCreateNewPerson = async () => {
     if (!newBorrowerData.client_name.trim()) return;
     
     setSaving(true);
 
-    // Create borrower in borrowers module
-    const newBorrower = await base44.entities.MortgageCase.create({
-      ...newBorrowerData,
-      is_archived: true,
-      module_id: null,
-      status: 'new',
-      urgency: 'medium'
+    // Create new person in Person entity
+    const newPerson = await base44.entities.Person.create({
+      first_name: newBorrowerData.client_name,
+      last_name: newBorrowerData.last_name || '',
+      id_number: newBorrowerData.client_id || '',
+      phone: newBorrowerData.client_phone || '',
+      email: newBorrowerData.client_email || '',
+      type: 'איש קשר'
     });
 
-    // Now create account with this borrower
-    await handleCreateWithBorrower(newBorrower.id);
+    // Now create account with this person
+    await handleCreateWithPerson(newPerson.id);
   };
 
 
@@ -143,40 +149,40 @@ export default function NewCase() {
                     className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
                     <Plus className="w-5 h-5 ml-2" />
-                    צור לווה חדש
+                    צור איש קשר חדש
                   </Button>
 
                   <div>
-                    <Label className="text-lg">או בחר לווה מהרשימה</Label>
+                    <Label className="text-lg">או בחר איש קשר מהרשימה</Label>
                     <div className="relative mt-2">
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <Input
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="חפש לווה לפי שם, ת.ז או טלפון..."
+                        placeholder="חפש איש קשר לפי שם, ת.ז או טלפון..."
                         className="pr-10 text-lg h-12"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2 max-h-96 overflow-y-auto border rounded-lg p-2">
-                    {filteredBorrowers.map(borrower => (
+                    {filteredPersons.map(person => (
                       <div
-                        key={borrower.id}
+                        key={person.id}
                         className="p-4 border rounded-lg hover:bg-blue-50 cursor-pointer transition-colors"
-                        onClick={() => handleCreateWithBorrower(borrower.id)}
+                        onClick={() => handleCreateWithPerson(person.id)}
                       >
                         <p className="font-semibold text-gray-900">
-                          {borrower.last_name ? `${borrower.last_name} ${borrower.client_name}` : borrower.client_name}
+                          {person.first_name} {person.last_name}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {borrower.client_id && `ת.ז: ${borrower.client_id}`}
-                          {borrower.client_phone && ` • טלפון: ${borrower.client_phone}`}
+                          {person.id_number && `ת.ז: ${person.id_number}`}
+                          {person.phone && ` • טלפון: ${person.phone}`}
                         </p>
                       </div>
                     ))}
-                    {filteredBorrowers.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו לווים</p>
+                    {filteredPersons.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
                     )}
                   </div>
                 </>
@@ -234,7 +240,7 @@ export default function NewCase() {
 
                   <div className="flex gap-2">
                     <Button
-                      onClick={handleCreateNewBorrower}
+                      onClick={handleCreateNewPerson}
                       disabled={saving || !newBorrowerData.client_name.trim()}
                       className="flex-1 h-12 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                     >
