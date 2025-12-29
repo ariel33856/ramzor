@@ -348,23 +348,23 @@ export default function PersonDetailsView({ personId }) {
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
             <Select>
-              <SelectTrigger className="w-20 h-7 text-xs">
+              <SelectTrigger className="w-20">
                 <SelectValue placeholder="בחר"/>
               </SelectTrigger>
-              <SelectContent className="text-xs min-w-[5rem]">
+              <SelectContent className="min-w-[5rem]">
                 {gender === 'female' ? (
                   <>
-                    <SelectItem value="married" className="h-6">נשואה</SelectItem>
-                    <SelectItem value="single" className="h-6">רווקה</SelectItem>
-                    <SelectItem value="divorced" className="h-6">גרושה</SelectItem>
-                    <SelectItem value="common_law" className="h-6">ידועה בציבור</SelectItem>
+                    <SelectItem value="married">נשואה</SelectItem>
+                    <SelectItem value="single">רווקה</SelectItem>
+                    <SelectItem value="divorced">גרושה</SelectItem>
+                    <SelectItem value="common_law">ידועה בציבור</SelectItem>
                   </>
                 ) : (
                   <>
-                    <SelectItem value="married" className="h-6">נשוי</SelectItem>
-                    <SelectItem value="single" className="h-6">רווק</SelectItem>
-                    <SelectItem value="divorced" className="h-6">גרוש</SelectItem>
-                    <SelectItem value="common_law" className="h-6">ידוע בציבור</SelectItem>
+                    <SelectItem value="married">נשוי</SelectItem>
+                    <SelectItem value="single">רווק</SelectItem>
+                    <SelectItem value="divorced">גרוש</SelectItem>
+                    <SelectItem value="common_law">ידוע בציבור</SelectItem>
                   </>
                 )}
               </SelectContent>
