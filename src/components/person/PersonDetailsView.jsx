@@ -309,6 +309,22 @@ export default function PersonDetailsView({ personId }) {
             onChange={(e) => handleBasicDataChange('notes', e.target.value)}
           />
         </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">כתובת</Label>
+          <Input placeholder="כתובת..." />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">עיר</Label>
+          <Input placeholder="עיר..." />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">מיקוד</Label>
+          <Input placeholder="מיקוד..." />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">מצב משפחתי</Label>
+          <Input placeholder="מצב משפחתי..." />
+        </div>
       </div>
 
 
