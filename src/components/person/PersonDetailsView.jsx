@@ -656,7 +656,7 @@ export default function PersonDetailsView({ personId }) {
                 const val = parseInt(e.target.value) || 0;
                 setNumChildren(Math.min(30, Math.max(0, val)));
               }}
-              className="w-12 text-center h-8"
+              className="w-12 text-center h-8 [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100"
               type="number"
               min="0"
               max="30"
