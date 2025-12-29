@@ -508,6 +508,8 @@ export default function Layout({ children, currentPageName }) {
                   if (!currentTab) return null;
                   const Icon = currentTab.icon;
                   const displayName = linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
+
+                  const firstName = linkedPersonViaAccounts?.first_name || caseLinkedPerson?.first_name || linkedBorrowers[0]?._person?.first_name || caseData?.first_name || '';
                   return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
@@ -515,7 +517,7 @@ export default function Layout({ children, currentPageName }) {
                         <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                         <div className="w-px h-6 bg-blue-300"></div>
                         <h1 className="text-xl font-bold text-gray-900">
-                          {displayName}
+                          {displayName} {firstName}
                         </h1>
                       </div>
                     </Link>
