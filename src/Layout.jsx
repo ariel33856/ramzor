@@ -122,6 +122,8 @@ export default function Layout({ children, currentPageName }) {
   const [personDialogOpen, setPersonDialogOpen] = useState(false);
   const [personSearchTerm, setPersonSearchTerm] = useState('');
 
+  const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
+
   const linkedAccountsData = allCases.filter(acc => 
     linkedAccounts.includes(acc.id)
   );
@@ -161,8 +163,6 @@ export default function Layout({ children, currentPageName }) {
       setLinkedAccounts(currentPerson.linked_accounts);
     }
   }, [currentPerson]);
-
-  const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
 
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
