@@ -303,7 +303,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">תוקף</Label>
+          <Label className="text-sm whitespace-nowrap">תוקף ת.ז.</Label>
           <Input
             value={basicData.notes}
             onChange={(e) => handleBasicDataChange('notes', e.target.value)}
