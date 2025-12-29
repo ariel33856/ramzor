@@ -184,11 +184,11 @@ export default function PersonDetailsView({ personId }) {
                     {relationshipType ? `זיקה לחשבון: ${relationshipType}` : 'זיקה לחשבון'}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')}>לווה</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')}>ערב</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')}>ערב ממשכן</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')}>בן/בת זוג</DropdownMenuItem>
+                <DropdownMenuContent align="end" className="text-center">
+                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center">לווה</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center">ערב</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center">ערב ממשכן</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')} className="justify-center">בן/בת זוג</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {linkedAccountsData.map(account => (
