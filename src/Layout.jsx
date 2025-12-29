@@ -465,7 +465,7 @@ export default function Layout({ children, currentPageName }) {
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
+                      <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50 mr-4">
                         <Trash2 className="w-5 h-5" />
                       </Button>
                     </AlertDialogTrigger>
