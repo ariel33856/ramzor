@@ -278,7 +278,7 @@ export default function CasePersonal() {
     <div className="space-y-6 p-6">
       {linkedContacts.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-gray-900">אנשי קשר משויכים ({linkedContacts.length})</h3>
+          <div className="text-sm text-gray-600">אנשי קשר משויכים ({linkedContacts.length})</div>
           {linkedContacts.map((contact) => (
             <PersonDetailsView key={contact.id} personId={contact.id} />
           ))}
