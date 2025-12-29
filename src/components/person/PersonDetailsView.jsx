@@ -184,7 +184,7 @@ export default function PersonDetailsView({ personId }) {
                     {relationshipType ? `זיקה לחשבון: ${relationshipType}` : 'זיקה לחשבון'}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="text-center">
+                <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
                   <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center">לווה</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center">ערב</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center">ערב ממשכן</DropdownMenuItem>
