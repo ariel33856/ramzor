@@ -103,7 +103,7 @@ export default function Layout({ children, currentPageName }) {
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
-    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive'
+    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive' || currentPageName === 'PersonDetails'
   });
 
   const { data: currentBorrower } = useQuery({
@@ -122,17 +122,28 @@ export default function Layout({ children, currentPageName }) {
 
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
-      return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
-        const account = result[0];
-        const currentBorrowers = account.linked_borrowers || [];
-        return base44.entities.MortgageCase.update(accountId, { 
-          linked_borrowers: [...currentBorrowers, caseId] 
+      if (currentPageName === 'ArchiveCaseDetails') {
+        return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
+          const account = result[0];
+          const currentBorrowers = account.linked_borrowers || [];
+          return base44.entities.MortgageCase.update(accountId, { 
+            linked_borrowers: [...currentBorrowers, caseId] 
+          });
         });
-      });
+      } else if (currentPageName === 'PersonDetails') {
+        return base44.entities.Person.filter({ id: personId }).then(async (result) => {
+          const person = result[0];
+          const currentAccounts = person.linked_accounts || [];
+          return base44.entities.Person.update(personId, {
+            linked_accounts: [...currentAccounts, accountId]
+          });
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
       queryClient.invalidateQueries({ queryKey: ['all-cases'] });
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
       setDialogOpen(false);
       setSearchTerm('');
     }
@@ -589,13 +600,65 @@ export default function Layout({ children, currentPageName }) {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
+                  {currentPerson.linked_accounts && currentPerson.linked_accounts.length > 0 ? (
+                    allCases.filter(acc => currentPerson.linked_accounts.includes(acc.id)).map(account => (
+                      <Link key={account.id} to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
+                        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                          חשבון משויך: {account.client_name} ({account.account_number})
+                        </Button>
+                      </Link>
+                    ))
+                  ) : (
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                          <LinkIcon className="w-4 h-4 ml-2" />
+                          שייך חשבון
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl max-h-[80vh]">
+                        <DialogHeader>
+                          <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <Input
+                            placeholder="חיפוש לפי שם או מספר חשבון..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                          />
+                          <div className="space-y-2 max-h-96 overflow-y-auto">
+                            {accounts.filter(acc => 
+                              !currentPerson.linked_accounts?.includes(acc.id) &&
+                              (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              acc.account_number?.toString().includes(searchTerm))
+                            ).map(account => (
+                              <div
+                                key={account.id}
+                                className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                                onClick={() => linkToAccountMutation.mutate(account.id)}
+                              >
+                                <p className="font-semibold text-gray-900">{account.client_name}</p>
+                                <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                              </div>
+                            ))}
+                            {accounts.filter(acc => 
+                              !currentPerson.linked_accounts?.includes(acc.id) &&
+                              (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              acc.account_number?.toString().includes(searchTerm))
+                            ).length === 0 && (
+                              <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                            )}
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                   <Link to={createPageUrl('ArchiveAccounts')}>
                     <Button variant="outline">
                       <Database className="w-4 h-4 ml-2" />
                       אנשי קשר
                     </Button>
                   </Link>
-                  <Button variant="outline" className="w-60"></Button>
                   </>
                   )}
                   </div>
