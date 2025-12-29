@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, Loader2, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -340,7 +341,15 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מין</Label>
-          <Input />
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="בחר מין" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">זכר</SelectItem>
+              <SelectItem value="female">נקבה</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
