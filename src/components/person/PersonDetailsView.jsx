@@ -345,7 +345,17 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2 mr-8">
           <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
-          <Input className="w-32" />
+          <Select>
+            <SelectTrigger className="w-32">
+              <SelectValue placeholder="בחר"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="married">נשוי</SelectItem>
+              <SelectItem value="single">רווק</SelectItem>
+              <SelectItem value="divorced">גרוש</SelectItem>
+              <SelectItem value="common_law">ידוע בציבור</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">שדה 1</Label>
