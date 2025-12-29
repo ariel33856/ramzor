@@ -348,10 +348,10 @@ export default function PersonDetailsView({ personId }) {
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
             <Select>
-              <SelectTrigger className="w-32 h-7 text-xs">
+              <SelectTrigger className="w-16 h-7 text-xs">
                 <SelectValue placeholder="בחר"/>
               </SelectTrigger>
-              <SelectContent className="text-xs">
+              <SelectContent className="text-xs min-w-[4rem]">
                 {gender === 'female' ? (
                   <>
                     <SelectItem value="married" className="h-6">נשואה</SelectItem>
