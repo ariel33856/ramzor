@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Users, Settings, LogOut,
   Menu, X, Bell, Search, ChevronDown, Home, Building2,
   TrendingUp, ShoppingCart, UserCheck, Trello, Package,
-  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus, User
+  Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus, User, Trash2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -462,6 +462,33 @@ export default function Layout({ children, currentPageName }) {
                       {linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || ''}
                     </h1>
                   </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-center">האם להעביר חשבון לארכיון?</AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex justify-center gap-4">
+                        <AlertDialogAction 
+                          onClick={() => {
+                            base44.entities.MortgageCase.update(caseId, { is_archived: true }).then(() => {
+                              queryClient.invalidateQueries({ queryKey: ['cases'] });
+                              queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+                              window.location.href = createPageUrl('Dashboard');
+                            });
+                          }}
+                          className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                        >
+                          העבר לארכיון
+                        </AlertDialogAction>
+                        <AlertDialogCancel className="px-8 py-3 text-lg flex-1 max-w-xs">ביטול</AlertDialogCancel>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
 
 
                   <Link to={createPageUrl('Dashboard')}>
