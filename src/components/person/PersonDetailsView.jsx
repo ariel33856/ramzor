@@ -152,14 +152,14 @@ export default function PersonDetailsView({ personId }) {
       {/* Collapsible Header */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors border-b"
+        className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
       >
-        <h2 className="text-lg font-bold text-gray-900">פרטי איש קשר</h2>
         {isCollapsed ? (
           <ChevronDown className="w-5 h-5 text-gray-500" />
         ) : (
           <ChevronUp className="w-5 h-5 text-gray-500" />
         )}
+        <h2 className="text-lg font-bold text-gray-900">פרטי איש קשר</h2>
       </button>
 
       {/* Content */}
