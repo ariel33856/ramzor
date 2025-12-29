@@ -118,6 +118,50 @@ export default function Layout({ children, currentPageName }) {
     enabled: currentPageName === 'PersonDetails' && !!personId
   });
 
+  const [linkedAccounts, setLinkedAccounts] = useState([]);
+  const [personDialogOpen, setPersonDialogOpen] = useState(false);
+  const [personSearchTerm, setPersonSearchTerm] = useState('');
+
+  const linkedAccountsData = allCases.filter(acc => 
+    linkedAccounts.includes(acc.id)
+  );
+
+  const updatePersonMutation = useMutation({
+    mutationFn: (data) => base44.entities.Person.update(personId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      queryClient.invalidateQueries({ queryKey: ['all-persons'] });
+    }
+  });
+
+  const handleLinkToAccount = (accountId) => {
+    if (!linkedAccounts.includes(accountId)) {
+      const updatedAccounts = [...linkedAccounts, accountId];
+      setLinkedAccounts(updatedAccounts);
+      updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
+      setPersonDialogOpen(false);
+      setPersonSearchTerm('');
+    }
+  };
+
+  const handleUnlinkAccount = (accountId) => {
+    const updatedAccounts = linkedAccounts.filter(id => id !== accountId);
+    setLinkedAccounts(updatedAccounts);
+    updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
+  };
+
+  const filteredAccountsForPerson = accounts.filter(acc => 
+    !linkedAccounts.includes(acc.id) &&
+    (acc.client_name?.toLowerCase().includes(personSearchTerm.toLowerCase()) ||
+    acc.account_number?.toString().includes(personSearchTerm))
+  );
+
+  React.useEffect(() => {
+    if (currentPerson?.linked_accounts) {
+      setLinkedAccounts(currentPerson.linked_accounts);
+    }
+  }, [currentPerson]);
+
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
 
   const linkToAccountMutation = useMutation({
@@ -595,7 +639,84 @@ export default function Layout({ children, currentPageName }) {
                       אנשי קשר
                     </Button>
                   </Link>
-                  <Button variant="outline" className="w-60"></Button>
+                  {linkedAccountsData.length > 0 ? (
+          <div className="flex items-center gap-2">
+            {linkedAccountsData.map(account => (
+              <div key={account.id} className="flex items-center gap-1">
+                <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
+                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                    חשבון משויך: {account.client_name} ({account.account_number})
+                  </Button>
+                </Link>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9"
+                      title="בטל שיוך"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                        <span>?</span>
+                        <span>האם לבטל את שיוך החשבון</span>
+                      </AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex justify-center gap-4">
+                      <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={() => handleUnlinkAccount(account.id)}
+                        className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                      >
+                        כן, לבטל
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Dialog open={personDialogOpen} onOpenChange={setPersonDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                <LinkIcon className="w-4 h-4 ml-2" />
+                שייך חשבון
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש לפי שם או מספר חשבון..."
+                  value={personSearchTerm}
+                  onChange={(e) => setPersonSearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filteredAccountsForPerson.map(account => (
+                    <div
+                      key={account.id}
+                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => handleLinkToAccount(account.id)}
+                    >
+                      <p className="font-semibold text-gray-900">{account.client_name}</p>
+                      <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                    </div>
+                  ))}
+                  {filteredAccountsForPerson.length === 0 && (
+                    <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
                   </>
                   )}
                   </div>
