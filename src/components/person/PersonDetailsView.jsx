@@ -215,9 +215,9 @@ export default function PersonDetailsView({ personId }) {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  </div>
-                  ))}
-                  </>
+                </div>
+              ))}
+            </>
           ) : (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
