@@ -343,7 +343,7 @@ export default function PersonDetailsView({ personId }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mr-8">
           <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
           <Input className="w-32" />
         </div>
