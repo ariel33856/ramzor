@@ -311,19 +311,19 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">כתובת</Label>
-          <Input placeholder="כתובת..." />
+          <Input />
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">עיר</Label>
-          <Input placeholder="עיר..." />
+          <Input />
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מיקוד</Label>
-          <Input placeholder="מיקוד..." />
+          <Input />
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מצב משפחתי</Label>
-          <Input placeholder="מצב משפחתי..." />
+          <Input />
         </div>
       </div>
 
