@@ -173,7 +173,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         {linkedAccountsData.length > 0 ? (
-          <div className="flex items-center gap-2 mt-[5px]">
+          <div className="flex items-center gap-2 mt-[5px] mr-auto">
             {linkedAccountsData.map(account => (
               <div key={account.id} className="flex items-center gap-1">
                 <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
@@ -214,6 +214,7 @@ export default function PersonDetailsView({ personId }) {
             ))}
           </div>
         ) : (
+          <div className="mr-auto">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap mt-[5px]">
@@ -249,8 +250,9 @@ export default function PersonDetailsView({ personId }) {
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         )}
-        <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="mr-auto">
+        <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
           <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap mt-[5px]">
             להצגה במודול אנשי קשר
           </Button>
