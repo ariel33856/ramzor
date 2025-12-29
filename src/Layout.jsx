@@ -387,12 +387,14 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     );
                   })()}
-                  <Link to={createPageUrl('AllDashboards')}>
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
-                      <Layers className="w-5 h-5 ml-2" />
-                      דשבורדים
-                    </Button>
-                  </Link>
+                  {currentPageName !== 'ArchiveAccounts' && currentPageName !== 'ContactsArchive' && (
+                    <Link to={createPageUrl('AllDashboards')}>
+                      <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25">
+                        <Layers className="w-5 h-5 ml-2" />
+                        דשבורדים
+                      </Button>
+                    </Link>
+                  )}
                   {currentPageName === 'ArchiveCaseDetails' && (
                     <>
                       <Link to={createPageUrl('ArchiveAccounts')}>
@@ -438,10 +440,10 @@ export default function Layout({ children, currentPageName }) {
                       </Dialog>
                     </>
                   )}
-                </>
-              )}
-              {currentPageName === 'AllDashboards' && (
-                <>
+                  </>
+                  )}
+                  {currentPageName === 'AllDashboards' && (
+                  <>
                   <h1 className="text-2xl font-bold text-gray-900">דשבורדים</h1>
                   <Link to={createPageUrl('Dashboard')}>
                     <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg shadow-green-500/25">
@@ -449,10 +451,10 @@ export default function Layout({ children, currentPageName }) {
                       חשבונות
                     </Button>
                   </Link>
-                </>
-              )}
-              {currentPageName === 'CaseDetails' && caseData && (
-                <div className="flex items-center gap-4">
+                  </>
+                  )}
+                  {currentPageName === 'CaseDetails' && caseData && (
+                  <div className="flex items-center gap-4">
                   <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3">
                     <span className="text-sm font-medium text-blue-900">חשבון מס' {caseData.account_number}</span>
                     <div className="w-px h-6 bg-blue-300"></div>
@@ -468,14 +470,14 @@ export default function Layout({ children, currentPageName }) {
                       חזרה לרשימת החשבונות
                     </Button>
                   </Link>
-                </div>
-              )}
-              {casePageTitles[currentPageName] && caseData && (() => {
-                const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
-                if (!currentTab) return null;
-                const Icon = currentTab.icon;
-                const displayName = linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
-                return (
+                  </div>
+                  )}
+                  {casePageTitles[currentPageName] && caseData && (() => {
+                  const currentTab = tabs.find(tab => pageMapping[tab.id] === currentPageName);
+                  if (!currentTab) return null;
+                  const Icon = currentTab.icon;
+                  const displayName = linkedPersonViaAccounts?.last_name || caseLinkedPerson?.last_name || linkedBorrowers[0]?._person?.last_name || caseData?.last_name || '';
+                  return (
                   <>
                     <Link to={createPageUrl('CaseDetails') + `?id=${caseId}`}>
                       <div className="px-4 py-2 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center gap-3 cursor-pointer hover:bg-blue-100 hover:border-blue-300 transition-all">
@@ -516,13 +518,13 @@ export default function Layout({ children, currentPageName }) {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </>
-                );
-              })()}
-              {currentPageName === 'CalendarPage' && (
-                <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
-              )}
-              {currentPageName === 'PersonDetails' && currentPerson && (
-                <>
+                  );
+                  })()}
+                  {currentPageName === 'CalendarPage' && (
+                  <h1 className="text-2xl font-bold text-gray-900">יומן</h1>
+                  )}
+                  {currentPageName === 'PersonDetails' && currentPerson && (
+                  <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPerson.first_name} {currentPerson.last_name}
                   </h1>
@@ -532,24 +534,24 @@ export default function Layout({ children, currentPageName }) {
                       אנשי קשר
                     </Button>
                   </Link>
-                </>
-              )}
-            </div>
+                  </>
+                  )}
+                  </div>
 
-            <div className="flex items-center gap-2">
-              <Link to={createPageUrl('Dashboard')}>
-                <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
+                  <div className="flex items-center gap-2">
+                  <Link to={createPageUrl('Dashboard')}>
+                  <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
                   <Home className="w-5 h-5 text-gray-500" />
-                </Button>
-              </Link>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                  </Button>
+                  </Link>
+                  <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
                   <Button variant="ghost">
                     ניהול
                     <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-auto min-w-[160px] p-2 space-y-4 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-auto min-w-[160px] p-2 space-y-4 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
                   <Link to={createPageUrl('ManagementHub')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-purple-300 hover:border-purple-500 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -560,7 +562,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Marketing')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-blue-50 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -571,7 +573,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Sales')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-purple-50 border-2 border-purple-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -582,7 +584,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Dashboard')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -593,7 +595,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Boards')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-orange-50 border-2 border-orange-200 hover:border-orange-400 hover:bg-orange-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -604,7 +606,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Products')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-pink-50 border-2 border-pink-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -615,7 +617,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('ERP')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -626,7 +628,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('SearchPage')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-cyan-50 border-2 border-cyan-200 hover:border-cyan-400 hover:bg-cyan-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -637,7 +639,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('AIBot')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-violet-50 border-2 border-violet-200 hover:border-violet-400 hover:bg-violet-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -648,7 +650,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Notifications')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-red-50 border-2 border-red-200 hover:border-red-400 hover:bg-red-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -659,7 +661,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('CalendarPage')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-teal-50 border-2 border-teal-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -670,7 +672,7 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                  
+
                   <Link to={createPageUrl('Communication')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-amber-50 border-2 border-amber-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
@@ -681,21 +683,21 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="w-5 h-5 text-gray-500" />
-                <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
-              </Button>
-            </div>
-          </div>
-        </header>
+                  </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="w-5 h-5 text-gray-500" />
+                  <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
+                  </Button>
+                  </div>
+                  </div>
+                  </header>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
-}
+                  {/* Page Content */}
+                  <main className="flex-1 overflow-y-auto">
+                  {children}
+                  </main>
+                  </div>
+                  </div>
+                  );
+                  }
