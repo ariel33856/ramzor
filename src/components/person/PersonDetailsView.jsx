@@ -151,7 +151,7 @@ export default function PersonDetailsView({ personId }) {
   return (
     <div className="space-y-4">
       {/* Action Buttons */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-start gap-2 flex-wrap">
         <div className="grid grid-cols-2 gap-2 w-auto">
           <div className="w-96">
             <Label className="text-sm font-medium mb-1">שם פרטי</Label>
@@ -172,13 +172,8 @@ export default function PersonDetailsView({ personId }) {
             />
           </div>
         </div>
-        <Link to={createPageUrl('PersonDetails') + `?id=${personId}`}>
-          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap">
-            להצגה במודול אנשי קשר
-          </Button>
-        </Link>
         {linkedAccountsData.length > 0 ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-[5px]">
             {linkedAccountsData.map(account => (
               <div key={account.id} className="flex items-center gap-1">
                 <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
@@ -221,7 +216,7 @@ export default function PersonDetailsView({ personId }) {
         ) : (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+              <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap mt-[5px]">
                 <LinkIcon className="w-4 h-4 ml-2" />
                 שייך חשבון
               </Button>
@@ -255,6 +250,11 @@ export default function PersonDetailsView({ personId }) {
             </DialogContent>
           </Dialog>
         )}
+        <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="mr-auto">
+          <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap mt-[5px]">
+            להצגה במודול אנשי קשר
+          </Button>
+        </Link>
       </div>
 
       {/* First Card */}
