@@ -23,6 +23,7 @@ export default function PersonDetailsView({ personId }) {
   const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
   const [isCollapsed2, setIsCollapsed2] = useState(false);
   const [relationshipType, setRelationshipType] = useState('לווה');
+  const [gender, setGender] = useState('male');
   const [basicData, setBasicData] = useState({
     first_name: '',
     last_name: '',
@@ -333,7 +334,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מין</Label>
-          <Select>
+          <Select value={gender} onValueChange={setGender}>
             <SelectTrigger className="w-[70px] [&>span]:pr-4">
               <SelectValue placeholder="בחר"/>
             </SelectTrigger>
@@ -350,10 +351,21 @@ export default function PersonDetailsView({ personId }) {
               <SelectValue placeholder="בחר"/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="married">נשוי</SelectItem>
-              <SelectItem value="single">רווק</SelectItem>
-              <SelectItem value="divorced">גרוש</SelectItem>
-              <SelectItem value="common_law">ידוע בציבור</SelectItem>
+              {gender === 'female' ? (
+                <>
+                  <SelectItem value="married">נשואה</SelectItem>
+                  <SelectItem value="single">רווקה</SelectItem>
+                  <SelectItem value="divorced">גרושה</SelectItem>
+                  <SelectItem value="common_law">ידועה בציבור</SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value="married">נשוי</SelectItem>
+                  <SelectItem value="single">רווק</SelectItem>
+                  <SelectItem value="divorced">גרוש</SelectItem>
+                  <SelectItem value="common_law">ידוע בציבור</SelectItem>
+                </>
+              )}
             </SelectContent>
           </Select>
         </div>
