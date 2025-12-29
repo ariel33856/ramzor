@@ -332,42 +332,44 @@ export default function PersonDetailsView({ personId }) {
             onChange={(e) => handleBasicDataChange('notes', e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מין</Label>
-          <Select value={gender} onValueChange={setGender}>
-            <SelectTrigger className="w-[70px] [&>span]:pr-4">
-              <SelectValue placeholder="בחר"/>
-            </SelectTrigger>
-            <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
-              <SelectItem value="male">זכר</SelectItem>
-              <SelectItem value="female">נקבה</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center gap-2 mr-8">
-          <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
-          <Select>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="בחר"/>
-            </SelectTrigger>
-            <SelectContent>
-              {gender === 'female' ? (
-                <>
-                  <SelectItem value="married">נשואה</SelectItem>
-                  <SelectItem value="single">רווקה</SelectItem>
-                  <SelectItem value="divorced">גרושה</SelectItem>
-                  <SelectItem value="common_law">ידועה בציבור</SelectItem>
-                </>
-              ) : (
-                <>
-                  <SelectItem value="married">נשוי</SelectItem>
-                  <SelectItem value="single">רווק</SelectItem>
-                  <SelectItem value="divorced">גרוש</SelectItem>
-                  <SelectItem value="common_law">ידוע בציבור</SelectItem>
-                </>
-              )}
-            </SelectContent>
-          </Select>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Label className="text-sm whitespace-nowrap">מין</Label>
+            <Select value={gender} onValueChange={setGender}>
+              <SelectTrigger className="w-[70px] [&>span]:pr-4">
+                <SelectValue placeholder="בחר"/>
+              </SelectTrigger>
+              <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
+                <SelectItem value="male">זכר</SelectItem>
+                <SelectItem value="female">נקבה</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
+            <Select>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="בחר"/>
+              </SelectTrigger>
+              <SelectContent>
+                {gender === 'female' ? (
+                  <>
+                    <SelectItem value="married">נשואה</SelectItem>
+                    <SelectItem value="single">רווקה</SelectItem>
+                    <SelectItem value="divorced">גרושה</SelectItem>
+                    <SelectItem value="common_law">ידועה בציבור</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="married">נשוי</SelectItem>
+                    <SelectItem value="single">רווק</SelectItem>
+                    <SelectItem value="divorced">גרוש</SelectItem>
+                    <SelectItem value="common_law">ידוע בציבור</SelectItem>
+                  </>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">שדה 1</Label>
