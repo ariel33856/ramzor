@@ -652,6 +652,10 @@ export default function PersonDetailsView({ personId }) {
             min="0"
             max="30"
           />
+          <Input 
+            type="date"
+            className="w-40"
+          />
           <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
             <Plus className="w-4 h-4 ml-2" />
             הוסף ילד
