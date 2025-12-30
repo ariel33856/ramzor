@@ -575,14 +575,14 @@ export default function PersonDetailsView({ personId }) {
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
+          <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
           <Input
             value={basicData.id_number}
             onChange={(e) => handleBasicDataChange('id_number', e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
+          <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
           <Input
             value={basicData.phone}
             onChange={(e) => handleBasicDataChange('phone', e.target.value)}
