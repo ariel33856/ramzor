@@ -653,10 +653,12 @@ export default function PersonDetailsView({ personId }) {
             max="30"
           />
           <div className="flex items-center gap-0">
-            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
-              <Plus className="w-4 h-4 ml-2" />
-              גילאי הילדים
+            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-none border-l border-emerald-700">
+              <Plus className="w-4 h-4" />
             </Button>
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-2 text-sm font-medium whitespace-nowrap rounded-l-none border-l border-emerald-700">
+              גילאי הילדים
+            </div>
             <Input 
               placeholder="DD-MM-YYYY"
               className="w-40 rounded-r-none"
