@@ -647,9 +647,25 @@ export default function PersonDetailsView({ personId }) {
             <PopoverTrigger asChild>
               <Input 
                 className="w-10 text-center h-8 cursor-pointer"
-                type="number"
-                min="0"
-                max="120"
+                value={(() => {
+                  const validDates = childrenDates.filter(d => d.length === 10);
+                  if (validDates.length === 0) return '';
+                  
+                  const ages = validDates.map(dateStr => {
+                    const [day, month, year] = dateStr.split('-').map(Number);
+                    const birthDate = new Date(year, month - 1, day);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                      age--;
+                    }
+                    return age;
+                  });
+                  
+                  const avgAge = Math.round(ages.reduce((a, b) => a + b, 0) / ages.length);
+                  return avgAge.toString();
+                })()}
                 readOnly
               />
             </PopoverTrigger>
