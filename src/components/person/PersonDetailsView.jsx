@@ -675,6 +675,14 @@ export default function PersonDetailsView({ personId }) {
                     if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
                     const formattedValue = value.slice(0, 10);
                     
+                    // Validate date if complete
+                    if (formattedValue.length === 10) {
+                      const [day, month, year] = formattedValue.split('-').map(Number);
+                      if (month < 1 || month > 12) return;
+                      const daysInMonth = new Date(year, month, 0).getDate();
+                      if (day < 1 || day > daysInMonth) return;
+                    }
+                    
                     const newDates = [...childrenDates];
                     newDates[index] = formattedValue;
                     setChildrenDates(newDates);
