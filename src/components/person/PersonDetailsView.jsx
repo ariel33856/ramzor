@@ -216,6 +216,11 @@ export default function PersonDetailsView({ personId }) {
         if (person.custom_data.spouse_id) {
           setSpouseId(person.custom_data.spouse_id);
         }
+        
+        // Load num_siblings from custom_data
+        if (person.custom_data.num_siblings) {
+          setNumSiblings(person.custom_data.num_siblings);
+        }
       }
     }
   }, [person]);
@@ -748,7 +753,13 @@ export default function PersonDetailsView({ personId }) {
           <Input 
             type="number" 
             value={numSiblings}
-            onChange={(e) => setNumSiblings(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setNumSiblings(value);
+              updatePersonMutation.mutate({ 
+                custom_data: { ...(person?.custom_data || {}), num_siblings: value }
+              });
+            }}
             className="w-12 text-center h-8" 
           />
         </div>
