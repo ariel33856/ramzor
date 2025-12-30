@@ -642,7 +642,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">גיל</Label>
+          <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
           <Input 
             className="w-10 text-center h-8"
             type="number"
