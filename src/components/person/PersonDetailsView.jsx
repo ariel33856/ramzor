@@ -365,8 +365,8 @@ export default function PersonDetailsView({ personId }) {
                   </div>
                 </div>
               </DialogContent>
-              </Dialog>
-              ) : null}
+            </Dialog>
+          ) : null}
           {spouseId && linkedSpouse ? (
             <div className="flex items-center gap-0">
               <Button 
