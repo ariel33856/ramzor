@@ -642,6 +642,13 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">גיל</Label>
+          <Input 
+            className="w-10 text-center h-8"
+            type="number"
+            min="0"
+            max="120"
+          />
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
             value={numChildren}
