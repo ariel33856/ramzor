@@ -597,6 +597,7 @@ export default function PersonDetailsView({ personId }) {
               const formattedValue = value.slice(0, 10);
               handleBasicDataChange('phone', formattedValue);
             }}
+            className="text-center"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -626,6 +627,7 @@ export default function PersonDetailsView({ personId }) {
               const formattedValue = value.slice(0, 10);
               handleBasicDataChange('email', formattedValue);
             }}
+            className="text-center"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -641,6 +643,7 @@ export default function PersonDetailsView({ personId }) {
               const formattedValue = value.slice(0, 10);
               handleBasicDataChange('notes', formattedValue);
             }}
+            className="text-center"
           />
         </div>
         <div className="flex items-center gap-4">
