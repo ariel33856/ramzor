@@ -627,26 +627,26 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="married" className="justify-center text-center">נשואה</SelectItem>
                     <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
                     <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
+                    <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
                     <SelectItem value="common_law" className="justify-center">
                       <div className="flex flex-col items-center leading-tight text-center">
                         <span>ידועה</span>
                         <span>בציבור</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
                   </>
                 ) : (
                   <>
                     <SelectItem value="married" className="justify-center text-center">נשוי</SelectItem>
                     <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
                     <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
+                    <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
                     <SelectItem value="common_law" className="justify-center">
                       <div className="flex flex-col items-center leading-tight text-center">
                         <span>ידוע</span>
                         <span>בציבור</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
                   </>
                 )}
               </SelectContent>
