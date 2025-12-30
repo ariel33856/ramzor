@@ -709,14 +709,15 @@ export default function PersonDetailsView({ personId }) {
               </PopoverContent>
             </Popover>
           ))}
+          </div>
+          <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
             value={childrenDates.filter(d => d.length === 10).length}
             className="w-12 text-center h-8"
             readOnly
           />
-
-        </div>
+          </div>
         <div></div>
         <div></div>
 
