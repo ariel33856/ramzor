@@ -305,7 +305,7 @@ export default function PersonDetailsView({ personId }) {
                 <div key={account.id} className="flex items-center gap-0">
                   <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
                     <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
-                      חשבון משויך: {account.client_name} ({account.account_number})
+                      חשבון משויך: {account.client_name} {account.account_number}
                     </Button>
                   </Link>
                   <AlertDialog>
