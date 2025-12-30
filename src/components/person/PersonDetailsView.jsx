@@ -50,6 +50,7 @@ export default function PersonDetailsView({ personId }) {
   const [numSiblings, setNumSiblings] = useState('');
   const [manualNumChildren, setManualNumChildren] = useState('');
   const [manualNumChildrenUnder18, setManualNumChildrenUnder18] = useState('');
+  const [showChildrenWarning, setShowChildrenWarning] = useState(false);
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -732,7 +733,14 @@ export default function PersonDetailsView({ personId }) {
           <Input 
             type="number"
             value={manualNumChildren}
-            onChange={(e) => setManualNumChildren(e.target.value)}
+            onChange={(e) => {
+              setManualNumChildren(e.target.value);
+              const actualCount = childrenDates.filter(d => d.length === 10).length;
+              if (e.target.value && parseInt(e.target.value) !== actualCount) {
+                setShowChildrenWarning(true);
+                setTimeout(() => setShowChildrenWarning(false), 3000);
+              }
+            }}
             placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
             className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
               manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
@@ -745,7 +753,25 @@ export default function PersonDetailsView({ personId }) {
           <Input 
             type="number"
             value={manualNumChildrenUnder18}
-            onChange={(e) => setManualNumChildrenUnder18(e.target.value)}
+            onChange={(e) => {
+              setManualNumChildrenUnder18(e.target.value);
+              const actualCount = childrenDates.filter(d => {
+                if (d.length !== 10) return false;
+                const [day, month, year] = d.split('-').map(Number);
+                const birthDate = new Date(year, month - 1, day);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                  age--;
+                }
+                return age < 18;
+              }).length;
+              if (e.target.value && parseInt(e.target.value) !== actualCount) {
+                setShowChildrenWarning(true);
+                setTimeout(() => setShowChildrenWarning(false), 3000);
+              }
+            }}
             placeholder={childrenDates.filter(d => {
               if (d.length !== 10) return false;
               const [day, month, year] = d.split('-').map(Number);
@@ -790,6 +816,11 @@ export default function PersonDetailsView({ personId }) {
             className="w-12 text-center h-8" 
           />
         </div>
+        {showChildrenWarning && (
+          <div className="col-span-4 text-red-600 text-sm font-medium">
+            נא למלא תאריכי לידה של הילדים
+          </div>
+        )}
         <div></div>
         <div></div>
 
