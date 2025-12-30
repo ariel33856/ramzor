@@ -577,21 +577,29 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
           <Input
-            value={basicData.id_number}
-            onChange={(e) => handleBasicDataChange('id_number', e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
-          <Input
+            type="date"
             value={basicData.phone}
             onChange={(e) => handleBasicDataChange('phone', e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
+          <Input
+            value={basicData.id_number}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '');
+              if (value.length <= 9) {
+                handleBasicDataChange('id_number', value);
+              }
+            }}
+            maxLength={9}
+            placeholder="9 ספרות"
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך הנפקת ת.ז.</Label>
           <Input
-            type="email"
+            type="date"
             value={basicData.email}
             onChange={(e) => handleBasicDataChange('email', e.target.value)}
           />
@@ -599,6 +607,7 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תוקף ת.ז.</Label>
           <Input
+            type="date"
             value={basicData.notes}
             onChange={(e) => handleBasicDataChange('notes', e.target.value)}
           />
