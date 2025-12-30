@@ -726,8 +726,6 @@ export default function PersonDetailsView({ personId }) {
             className="w-12 text-center h-8"
             readOnly
           />
-        </div>
-        <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' ילדים מתחת גיל 18</Label>
           <Input 
             value={childrenDates.filter(d => {
@@ -746,6 +744,7 @@ export default function PersonDetailsView({ personId }) {
             readOnly
           />
         </div>
+        <div></div>
         <div></div>
 
         <div className="flex items-center gap-2">
