@@ -677,22 +677,9 @@ export default function PersonDetailsView({ personId }) {
                     e.target.value = value.slice(0, 10);
                   }}
                 />
-                <div className="flex items-center gap-2">
-                  <Input 
-                    placeholder="DD-MM-YYYY"
-                    className="flex-1"
-                    maxLength={10}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, '');
-                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                      e.target.value = value.slice(0, 10);
-                    }}
-                  />
-                  <Button size="icon" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
+                <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <Plus className="w-4 h-4" />
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
