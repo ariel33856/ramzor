@@ -664,7 +664,7 @@ export default function PersonDetailsView({ personId }) {
                 </div>
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-80" align="start">
+            <PopoverContent align="start" style={{ width: 'var(--radix-popover-trigger-width)' }}>
               <div className="space-y-3">
                 <Input 
                   placeholder="DD-MM-YYYY"
