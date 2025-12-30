@@ -744,7 +744,7 @@ export default function PersonDetailsView({ personId }) {
             readOnly
           />
           <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
-          <Input className="w-12 text-center h-8" />
+          <Input type="number" className="w-12 text-center h-8" />
         </div>
         <div></div>
         <div></div>
