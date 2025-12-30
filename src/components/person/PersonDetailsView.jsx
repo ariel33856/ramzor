@@ -628,6 +628,7 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
                     <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
                     <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
+                    <SelectItem value="separated" className="justify-center text-center">פרודה</SelectItem>
                     <SelectItem value="common_law" className="justify-center">
                       <div className="flex flex-col items-center leading-tight text-center">
                         <span>ידועה</span>
@@ -641,6 +642,7 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
                     <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
                     <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
+                    <SelectItem value="separated" className="justify-center text-center">פרוד</SelectItem>
                     <SelectItem value="common_law" className="justify-center">
                       <div className="flex flex-col items-center leading-tight text-center">
                         <span>ידוע</span>
