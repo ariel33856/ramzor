@@ -641,18 +641,16 @@ export default function PersonDetailsView({ personId }) {
             </Select>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Input 
-                className="w-10 text-center h-8 cursor-pointer"
-                value={(() => {
-                  const validDates = childrenDates.filter(d => d.length === 10);
-                  if (validDates.length === 0) return '';
-                  
-                  const ages = validDates.map(dateStr => {
-                    const [day, month, year] = dateStr.split('-').map(Number);
+          {childrenDates.map((date, index) => (
+            <Popover key={index}>
+              <PopoverTrigger asChild>
+                <Input 
+                  className="w-10 text-center h-8 cursor-pointer"
+                  value={(() => {
+                    if (date.length !== 10) return '';
+                    const [day, month, year] = date.split('-').map(Number);
                     const birthDate = new Date(year, month - 1, day);
                     const today = new Date();
                     let age = today.getFullYear() - birthDate.getFullYear();
@@ -660,39 +658,35 @@ export default function PersonDetailsView({ personId }) {
                     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                       age--;
                     }
-                    return age;
-                  });
-                  
-                  const avgAge = Math.round(ages.reduce((a, b) => a + b, 0) / ages.length);
-                  return avgAge.toString();
-                })()}
-                readOnly
-              />
-            </PopoverTrigger>
-            <PopoverContent align="start" style={{ width: '200px' }}>
-              <div className="space-y-3">
-                {childrenDates.map((date, index) => (
-                  <Input 
-                    key={index}
-                    placeholder="DD-MM-YYYY"
-                    className="w-full"
-                    maxLength={10}
-                    value={date}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, '');
-                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                      const formattedValue = value.slice(0, 10);
-                      
-                      const newDates = [...childrenDates];
-                      newDates[index] = formattedValue;
-                      setChildrenDates(newDates);
-                    }}
-                  />
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+                    return age.toString();
+                  })()}
+                  readOnly
+                />
+              </PopoverTrigger>
+              <PopoverContent align="start" style={{ width: '200px' }}>
+                <Input 
+                  placeholder="DD-MM-YYYY"
+                  className="w-full"
+                  maxLength={10}
+                  value={date}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                    if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                    const formattedValue = value.slice(0, 10);
+                    
+                    const newDates = [...childrenDates];
+                    newDates[index] = formattedValue;
+                    setChildrenDates(newDates);
+                    
+                    if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                      setChildrenDates([...newDates, '']);
+                    }
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          ))}
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
             value={numChildren}
