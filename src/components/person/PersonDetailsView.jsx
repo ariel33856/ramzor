@@ -828,7 +828,7 @@ export default function PersonDetailsView({ personId }) {
       </div>
 
       {showChildrenWarning && (
-        <div className="text-red-600 text-sm font-medium text-center mt-4">
+        <div className="text-red-600 text-sm font-medium text-center" style={{ marginTop: '-40px', marginLeft: '30px' }}>
           נא למלא תאריכי לידה של הילדים
         </div>
       )}
