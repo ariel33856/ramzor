@@ -587,9 +587,16 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
           <Input
-            type="date"
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
             value={basicData.phone}
-            onChange={(e) => handleBasicDataChange('phone', e.target.value)}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('phone', formattedValue);
+            }}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -609,17 +616,31 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך הנפקת ת.ז.</Label>
           <Input
-            type="date"
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
             value={basicData.email}
-            onChange={(e) => handleBasicDataChange('email', e.target.value)}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('email', formattedValue);
+            }}
           />
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תוקף ת.ז.</Label>
           <Input
-            type="date"
+            placeholder="DD-MM-YYYY"
+            maxLength={10}
             value={basicData.notes}
-            onChange={(e) => handleBasicDataChange('notes', e.target.value)}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('notes', formattedValue);
+            }}
           />
         </div>
         <div className="flex items-center gap-4">
