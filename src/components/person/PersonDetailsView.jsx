@@ -648,7 +648,7 @@ export default function PersonDetailsView({ personId }) {
             <Popover key={index}>
               <PopoverTrigger asChild>
                 <Input 
-                  className="w-6 text-center h-8 cursor-pointer"
+                  className="w-6 text-center h-8 cursor-pointer px-0"
                   value={(() => {
                     if (date.length !== 10) return '';
                     const [day, month, year] = date.split('-').map(Number);
