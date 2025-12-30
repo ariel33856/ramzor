@@ -655,7 +655,7 @@ export default function PersonDetailsView({ personId }) {
           <div className="flex items-center gap-0">
             <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
               <Plus className="w-4 h-4 ml-2" />
-              הוסף ילד
+              גילאי הילדים
             </Button>
             <Input 
               placeholder="DD-MM-YYYY"
