@@ -11,6 +11,7 @@ import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export default function PersonDetailsView({ personId }) {
   const queryClient = useQueryClient();
@@ -652,25 +653,49 @@ export default function PersonDetailsView({ personId }) {
             min="0"
             max="30"
           />
-          <div className="flex items-center gap-0">
-            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-none border-l border-emerald-700">
-              <Plus className="w-4 h-4" />
-            </Button>
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-2 text-sm font-medium whitespace-nowrap rounded-l-none border-l border-emerald-700">
-              גילאי הילדים
-            </div>
-            <Input 
-              placeholder="DD-MM-YYYY"
-              className="w-40 rounded-r-none"
-              maxLength={10}
-              onChange={(e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                e.target.value = value.slice(0, 10);
-              }}
-            />
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center gap-0 cursor-pointer">
+                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-none border-l border-emerald-700">
+                  <Plus className="w-4 h-4" />
+                </Button>
+                <div className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-3 py-2 text-sm font-medium whitespace-nowrap rounded-l-none border-l border-emerald-700">
+                  גילאי הילדים
+                </div>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" align="start">
+              <div className="space-y-3">
+                <Input 
+                  placeholder="DD-MM-YYYY"
+                  className="w-full"
+                  maxLength={10}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                    if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                    e.target.value = value.slice(0, 10);
+                  }}
+                />
+                <div className="flex items-center gap-2">
+                  <Button size="icon" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                  <Input 
+                    placeholder="DD-MM-YYYY"
+                    className="flex-1"
+                    maxLength={10}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                      e.target.value = value.slice(0, 10);
+                    }}
+                  />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <div></div>
         <div></div>
