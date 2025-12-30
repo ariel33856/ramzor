@@ -678,7 +678,7 @@ export default function PersonDetailsView({ personId }) {
                   <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
                   <Input 
                     placeholder="DD-MM-YYYY"
-                    className="w-full text-center"
+                    className="w-full"
                     maxLength={10}
                     value={date}
                     onChange={(e) => {
