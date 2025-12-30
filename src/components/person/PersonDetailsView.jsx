@@ -47,6 +47,7 @@ export default function PersonDetailsView({ personId }) {
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
   const [dateError, setDateError] = useState('');
+  const [numSiblings, setNumSiblings] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -744,7 +745,12 @@ export default function PersonDetailsView({ personId }) {
             readOnly
           />
           <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
-          <Input type="number" className="w-12 text-center h-8" />
+          <Input 
+            type="number" 
+            value={numSiblings}
+            onChange={(e) => setNumSiblings(e.target.value)}
+            className="w-12 text-center h-8" 
+          />
         </div>
         <div></div>
         <div></div>
