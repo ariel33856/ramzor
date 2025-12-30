@@ -644,7 +644,16 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
-          {childrenDates.map((date, index) => (
+          {[...childrenDates]
+            .sort((a, b) => {
+              if (a.length !== 10 || b.length !== 10) return 0;
+              const [dayA, monthA, yearA] = a.split('-').map(Number);
+              const [dayB, monthB, yearB] = b.split('-').map(Number);
+              const dateA = new Date(yearA, monthA - 1, dayA);
+              const dateB = new Date(yearB, monthB - 1, dayB);
+              return dateB - dateA; // תאריך חדש יותר = גיל צעיר יותר = יופיע ראשון
+            })
+            .map((date, index) => (
             <Popover key={index}>
               <PopoverTrigger asChild>
                 <Input 
