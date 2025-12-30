@@ -743,7 +743,7 @@ export default function PersonDetailsView({ personId }) {
             className="w-12 text-center h-8"
             readOnly
           />
-          <Label className="text-sm whitespace-nowrap">אחים (מהאב ומהאם יחד)</Label>
+          <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
           <Input className="w-12 text-center h-8" />
         </div>
         <div></div>
