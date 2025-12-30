@@ -45,6 +45,7 @@ export default function PersonDetailsView({ personId }) {
     notes: ''
   });
   const [numChildren, setNumChildren] = useState(0);
+  const [childrenDates, setChildrenDates] = useState(['']);
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -666,20 +667,30 @@ export default function PersonDetailsView({ personId }) {
             </PopoverTrigger>
             <PopoverContent align="start" style={{ width: 'var(--radix-popover-trigger-width)' }}>
               <div className="space-y-3">
-                <Input 
-                  placeholder="DD-MM-YYYY"
-                  className="w-full"
-                  maxLength={10}
-                  onChange={(e) => {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                    if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                    e.target.value = value.slice(0, 10);
-                  }}
-                />
-                <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                  <Plus className="w-4 h-4" />
-                </Button>
+                {childrenDates.map((date, index) => (
+                  <Input 
+                    key={index}
+                    placeholder="DD-MM-YYYY"
+                    className="w-full"
+                    maxLength={10}
+                    value={date}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                      const formattedValue = value.slice(0, 10);
+                      
+                      const newDates = [...childrenDates];
+                      newDates[index] = formattedValue;
+                      setChildrenDates(newDates);
+                      
+                      // Add new field if current field is filled and is the last one
+                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                        setChildrenDates([...newDates, '']);
+                      }
+                    }}
+                  />
+                ))}
               </div>
             </PopoverContent>
           </Popover>
