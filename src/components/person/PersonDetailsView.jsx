@@ -699,46 +699,7 @@ export default function PersonDetailsView({ personId }) {
             min="0"
             max="30"
           />
-          <Popover>
-            <PopoverTrigger asChild>
-              <div className="flex items-center gap-0 cursor-pointer">
-                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-none border-l border-emerald-700">
-                  <Plus className="w-4 h-4" />
-                </Button>
-                <div className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-3 py-2 text-sm font-medium whitespace-nowrap rounded-l-none border-l border-emerald-700">
-                  גילאי הילדים
-                </div>
-              </div>
-            </PopoverTrigger>
-            <PopoverContent align="start" style={{ width: 'var(--radix-popover-trigger-width)' }}>
-              <div className="space-y-3">
-                {childrenDates.map((date, index) => (
-                  <Input 
-                    key={index}
-                    placeholder="DD-MM-YYYY"
-                    className="w-full"
-                    maxLength={10}
-                    value={date}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, '');
-                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                      const formattedValue = value.slice(0, 10);
-                      
-                      const newDates = [...childrenDates];
-                      newDates[index] = formattedValue;
-                      setChildrenDates(newDates);
-                      
-                      // Add new field if current field is filled and is the last one
-                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
-                        setChildrenDates([...newDates, '']);
-                      }
-                    }}
-                  />
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+
         </div>
         <div></div>
         <div></div>
