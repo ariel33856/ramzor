@@ -48,6 +48,8 @@ export default function PersonDetailsView({ personId }) {
   const [childrenDates, setChildrenDates] = useState(['']);
   const [dateError, setDateError] = useState('');
   const [numSiblings, setNumSiblings] = useState('');
+  const [manualNumChildren, setManualNumChildren] = useState('');
+  const [manualNumChildrenUnder18, setManualNumChildrenUnder18] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -728,13 +730,22 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
-            value={childrenDates.filter(d => d.length === 10).length}
-            className="w-12 text-center h-8"
-            readOnly
+            type="number"
+            value={manualNumChildren}
+            onChange={(e) => setManualNumChildren(e.target.value)}
+            placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
+            className={`w-12 text-center h-8 ${
+              manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
+                ? 'border-red-500 bg-red-50'
+                : ''
+            }`}
           />
           <Label className="text-sm whitespace-nowrap">מס' ילדים מתחת גיל 18</Label>
           <Input 
-            value={childrenDates.filter(d => {
+            type="number"
+            value={manualNumChildrenUnder18}
+            onChange={(e) => setManualNumChildrenUnder18(e.target.value)}
+            placeholder={childrenDates.filter(d => {
               if (d.length !== 10) return false;
               const [day, month, year] = d.split('-').map(Number);
               const birthDate = new Date(year, month - 1, day);
@@ -745,9 +756,23 @@ export default function PersonDetailsView({ personId }) {
                 age--;
               }
               return age < 18;
-            }).length}
-            className="w-12 text-center h-8"
-            readOnly
+            }).length.toString()}
+            className={`w-12 text-center h-8 ${
+              manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
+                if (d.length !== 10) return false;
+                const [day, month, year] = d.split('-').map(Number);
+                const birthDate = new Date(year, month - 1, day);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                  age--;
+                }
+                return age < 18;
+              }).length
+                ? 'border-red-500 bg-red-50'
+                : ''
+            }`}
           />
           <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
           <Input 
