@@ -642,6 +642,74 @@ export default function PersonDetailsView({ personId }) {
             </Select>
           </div>
         </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
+          {childrenDates.map((date, index) => (
+            <Popover key={index}>
+              <PopoverTrigger asChild>
+                <Input 
+                  className="w-10 text-center h-8 cursor-pointer"
+                  value={(() => {
+                    if (date.length !== 10) return '';
+                    const [day, month, year] = date.split('-').map(Number);
+                    const birthDate = new Date(year, month - 1, day);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                      age--;
+                    }
+                    return age.toString();
+                  })()}
+                  readOnly
+                />
+              </PopoverTrigger>
+              <PopoverContent align="center" style={{ width: '161px' }}>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
+                  <Input 
+                    placeholder="DD-MM-YYYY"
+                    className="w-full"
+                    maxLength={10}
+                    value={date}
+                    onChange={(e) => {
+                      setDateError('');
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                      const formattedValue = value.slice(0, 10);
+
+                      // Validate date if complete
+                      if (formattedValue.length === 10) {
+                        const [day, month, year] = formattedValue.split('-').map(Number);
+                        if (month < 1 || month > 12) {
+                          setDateError('נא להזין תאריך חוקי');
+                          return;
+                        }
+                        const daysInMonth = new Date(year, month, 0).getDate();
+                        if (day < 1 || day > daysInMonth) {
+                          setDateError('נא להזין תאריך חוקי');
+                          return;
+                        }
+                      }
+
+                      const newDates = [...childrenDates];
+                      newDates[index] = formattedValue;
+                      setChildrenDates(newDates);
+
+                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                        setChildrenDates([...newDates, '']);
+                      }
+                    }}
+                  />
+                  {dateError && (
+                    <p className="text-sm text-red-600">{dateError}</p>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+          ))}
+        </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
