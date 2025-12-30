@@ -687,10 +687,6 @@ export default function PersonDetailsView({ personId }) {
                       const newDates = [...childrenDates];
                       newDates[index] = formattedValue;
                       setChildrenDates(newDates);
-                      
-                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
-                        setChildrenDates([...newDates, '']);
-                      }
                     }}
                   />
                 ))}
