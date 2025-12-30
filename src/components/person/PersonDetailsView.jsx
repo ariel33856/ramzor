@@ -286,9 +286,9 @@ export default function PersonDetailsView({ personId }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
                   <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב')} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">ערב</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('ערב ממשכן')} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">ערב ממשכן</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType('בן/בת זוג')} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">בן/בת זוג</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'ערב' : 'ערבה')} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">{gender === 'male' ? 'ערב' : 'ערבה'}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת')} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'בן זוג' : 'בת זוג')} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {linkedAccountsData.map(account => (
