@@ -727,7 +727,25 @@ export default function PersonDetailsView({ personId }) {
             readOnly
           />
         </div>
-        <div></div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">מס' ילדים מתחת גיל 18</Label>
+          <Input 
+            value={childrenDates.filter(d => {
+              if (d.length !== 10) return false;
+              const [day, month, year] = d.split('-').map(Number);
+              const birthDate = new Date(year, month - 1, day);
+              const today = new Date();
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+              }
+              return age < 18;
+            }).length}
+            className="w-12 text-center h-8"
+            readOnly
+          />
+        </div>
         <div></div>
 
         <div className="flex items-center gap-2">
