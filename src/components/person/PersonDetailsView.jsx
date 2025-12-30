@@ -664,9 +664,9 @@ export default function PersonDetailsView({ personId }) {
                   readOnly
                 />
               </PopoverTrigger>
-              <PopoverContent align="center" style={{ width: '140px' }}>
+              <PopoverContent align="center" style={{ width: '161px' }}>
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">הזן תאריך לידה</Label>
+                  <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
                   <Input 
                     placeholder="DD-MM-YYYY"
                     className="w-full"
