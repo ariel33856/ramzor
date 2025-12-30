@@ -643,12 +643,44 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
-          <Input 
-            className="w-10 text-center h-8"
-            type="number"
-            min="0"
-            max="120"
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Input 
+                className="w-10 text-center h-8 cursor-pointer"
+                type="number"
+                min="0"
+                max="120"
+                readOnly
+              />
+            </PopoverTrigger>
+            <PopoverContent align="start" style={{ width: '200px' }}>
+              <div className="space-y-3">
+                {childrenDates.map((date, index) => (
+                  <Input 
+                    key={index}
+                    placeholder="DD-MM-YYYY"
+                    className="w-full"
+                    maxLength={10}
+                    value={date}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                      const formattedValue = value.slice(0, 10);
+                      
+                      const newDates = [...childrenDates];
+                      newDates[index] = formattedValue;
+                      setChildrenDates(newDates);
+                      
+                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                        setChildrenDates([...newDates, '']);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
           <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
           <Input 
             value={numChildren}
