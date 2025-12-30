@@ -229,6 +229,16 @@ export default function PersonDetailsView({ personId }) {
     }
   }, [person]);
 
+  React.useEffect(() => {
+    if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
+      setRelationshipType(gender === 'male' ? 'ערב' : 'ערבה');
+    } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
+      setRelationshipType(gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת');
+    } else if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
+      setRelationshipType(gender === 'male' ? 'בן זוג' : 'בת זוג');
+    }
+  }, [gender]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
