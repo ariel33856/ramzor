@@ -734,11 +734,12 @@ export default function PersonDetailsView({ personId }) {
             value={manualNumChildren}
             onChange={(e) => setManualNumChildren(e.target.value)}
             placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
-            className={`w-12 text-center h-8 ${
+            className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
               manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
                 ? 'border-red-500 bg-red-50'
                 : ''
             }`}
+            style={{ MozAppearance: 'textfield' }}
           />
           <Label className="text-sm whitespace-nowrap">מס' ילדים מתחת גיל 18</Label>
           <Input 
@@ -757,7 +758,7 @@ export default function PersonDetailsView({ personId }) {
               }
               return age < 18;
             }).length.toString()}
-            className={`w-12 text-center h-8 ${
+            className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
               manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
                 if (d.length !== 10) return false;
                 const [day, month, year] = d.split('-').map(Number);
@@ -773,6 +774,7 @@ export default function PersonDetailsView({ personId }) {
                 ? 'border-red-500 bg-red-50'
                 : ''
             }`}
+            style={{ MozAppearance: 'textfield' }}
           />
           <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
           <Input 
