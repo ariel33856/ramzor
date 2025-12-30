@@ -664,7 +664,6 @@ export default function PersonDetailsView({ personId }) {
 
         <div></div>
         <div></div>
-        <div></div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">שדה 3</Label>
           <Input />
