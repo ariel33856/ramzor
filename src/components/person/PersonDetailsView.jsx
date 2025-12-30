@@ -256,7 +256,7 @@ export default function PersonDetailsView({ personId }) {
               value={basicData.first_name}
               onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
               placeholder="שם פרטי"
-              className="text-xl font-bold w-32"
+              className="text-xl font-bold w-40"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function PersonDetailsView({ personId }) {
               value={basicData.last_name}
               onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
               placeholder="שם משפחה"
-              className="text-xl font-bold w-32"
+              className="text-xl font-bold w-40"
             />
           </div>
         </div>
