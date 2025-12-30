@@ -743,14 +743,13 @@ export default function PersonDetailsView({ personId }) {
             className="w-12 text-center h-8"
             readOnly
           />
+          <Label className="text-sm whitespace-nowrap">אחים</Label>
+          <Input className="w-12 text-center h-8" />
         </div>
         <div></div>
         <div></div>
 
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">אחים</Label>
-          <Input />
-        </div>
+        <div></div>
         <div></div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">שדה 4</Label>
