@@ -51,6 +51,7 @@ export default function PersonDetailsView({ personId }) {
   const [manualNumChildren, setManualNumChildren] = useState('');
   const [manualNumChildrenUnder18, setManualNumChildrenUnder18] = useState('');
   const [showChildrenWarning, setShowChildrenWarning] = useState(false);
+  const [maritalStatus, setMaritalStatus] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -364,8 +365,8 @@ export default function PersonDetailsView({ personId }) {
                   </div>
                 </div>
               </DialogContent>
-            </Dialog>
-          )}
+              </Dialog>
+              ) : null}
           {spouseId && linkedSpouse ? (
             <div className="flex items-center gap-0">
               <Button 
@@ -404,7 +405,7 @@ export default function PersonDetailsView({ personId }) {
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-          ) : (
+          ) : (maritalStatus === 'married' || maritalStatus === 'separated' || maritalStatus === 'common_law') ? (
             <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
@@ -617,7 +618,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
-            <Select>
+            <Select value={maritalStatus} onValueChange={setMaritalStatus}>
               <SelectTrigger className="w-20">
                 <SelectValue placeholder="בחר"/>
               </SelectTrigger>
