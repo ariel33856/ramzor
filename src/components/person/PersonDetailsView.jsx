@@ -816,11 +816,6 @@ export default function PersonDetailsView({ personId }) {
             className="w-12 text-center h-8" 
           />
         </div>
-        {showChildrenWarning && (
-          <div className="col-span-4 text-red-600 text-sm font-medium">
-            נא למלא תאריכי לידה של הילדים
-          </div>
-        )}
         <div></div>
         <div></div>
 
@@ -832,6 +827,11 @@ export default function PersonDetailsView({ personId }) {
         </div>
       </div>
 
+      {showChildrenWarning && (
+        <div className="text-red-600 text-sm font-medium text-center mt-4">
+          נא למלא תאריכי לידה של הילדים
+        </div>
+      )}
 
         </div>
       )}
