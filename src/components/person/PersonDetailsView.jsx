@@ -46,6 +46,7 @@ export default function PersonDetailsView({ personId }) {
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
+  const [dateError, setDateError] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -664,34 +665,46 @@ export default function PersonDetailsView({ personId }) {
                 />
               </PopoverTrigger>
               <PopoverContent align="start" style={{ width: '200px' }}>
-                <Input 
-                  placeholder="DD-MM-YYYY"
-                  className="w-full"
-                  maxLength={10}
-                  value={date}
-                  onChange={(e) => {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                    if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                    const formattedValue = value.slice(0, 10);
-                    
-                    // Validate date if complete
-                    if (formattedValue.length === 10) {
-                      const [day, month, year] = formattedValue.split('-').map(Number);
-                      if (month < 1 || month > 12) return;
-                      const daysInMonth = new Date(year, month, 0).getDate();
-                      if (day < 1 || day > daysInMonth) return;
-                    }
-                    
-                    const newDates = [...childrenDates];
-                    newDates[index] = formattedValue;
-                    setChildrenDates(newDates);
-                    
-                    if (formattedValue.length === 10 && index === childrenDates.length - 1) {
-                      setChildrenDates([...newDates, '']);
-                    }
-                  }}
-                />
+                <div className="space-y-2">
+                  <Input 
+                    placeholder="DD-MM-YYYY"
+                    className="w-full"
+                    maxLength={10}
+                    value={date}
+                    onChange={(e) => {
+                      setDateError('');
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                      const formattedValue = value.slice(0, 10);
+
+                      // Validate date if complete
+                      if (formattedValue.length === 10) {
+                        const [day, month, year] = formattedValue.split('-').map(Number);
+                        if (month < 1 || month > 12) {
+                          setDateError('נא להזין תאריך חוקי');
+                          return;
+                        }
+                        const daysInMonth = new Date(year, month, 0).getDate();
+                        if (day < 1 || day > daysInMonth) {
+                          setDateError('נא להזין תאריך חוקי');
+                          return;
+                        }
+                      }
+
+                      const newDates = [...childrenDates];
+                      newDates[index] = formattedValue;
+                      setChildrenDates(newDates);
+
+                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                        setChildrenDates([...newDates, '']);
+                      }
+                    }}
+                  />
+                  {dateError && (
+                    <p className="text-sm text-red-600">{dateError}</p>
+                  )}
+                </div>
               </PopoverContent>
             </Popover>
           ))}
