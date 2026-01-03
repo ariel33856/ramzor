@@ -87,7 +87,7 @@ export default function CaseDetails() {
   const activeTabData = tabs.find(t => t.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
