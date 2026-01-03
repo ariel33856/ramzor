@@ -108,7 +108,7 @@ export default function NewCase() {
     setSaving(true);
 
     // Create new person in Person entity
-    await base44.entities.Person.create({
+    const newPerson = await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
@@ -117,8 +117,53 @@ export default function NewCase() {
       type: 'איש קשר'
     });
 
+    // Create new MortgageCase
+    const caseData = {
+      client_name: '',
+      status: 'new',
+      urgency: 'medium',
+      progress_percentage: 0,
+      is_archived: isArchive,
+      module_id: moduleId || null,
+      person_id: newPerson.id
+    };
+
+    // Only add account number for main accounts module (no moduleId)
+    if (!moduleId) {
+      const allCases = await base44.entities.MortgageCase.list();
+      const accountNumbers = allCases
+        .filter(c => c.account_number)
+        .map(c => c.account_number);
+      const maxAccountNumber = accountNumbers.length > 0 
+        ? Math.max(...accountNumbers)
+        : 72515;
+      caseData.account_number = maxAccountNumber + 1;
+    }
+
+    const newCase = await base44.entities.MortgageCase.create(caseData);
+
+    // Link person to account
+    await base44.entities.Person.update(newPerson.id, {
+      linked_accounts: [newCase.id]
+    });
+
+    // Create audit log
+    await base44.entities.AuditLog.create({
+      case_id: newCase.id,
+      action_type: 'status_change',
+      actor: 'user',
+      description: `חשבון חדש נפתח`,
+      severity: 'info'
+    });
+
     setSaving(false);
-    navigate(createPageUrl('ArchiveAccounts'));
+    if (moduleId) {
+      navigate(createPageUrl(`ModuleView?moduleId=${moduleId}`));
+    } else if (isArchive) {
+      navigate(createPageUrl(`ArchiveAccounts`));
+    } else {
+      navigate(createPageUrl(`CaseDetails?id=${newCase.id}`));
+    }
   };
 
 
