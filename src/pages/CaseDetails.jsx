@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,13 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
 import { Button } from '@/components/ui/button';
+import confetti from 'canvas-confetti';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 // Import all case page components
 import CasePersonal from './CasePersonal';
@@ -55,6 +62,9 @@ export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  const isNew = urlParams.get('new') === 'true';
+  const accountNumber = urlParams.get('accountNumber');
+  const [showCongrats, setShowCongrats] = useState(false);
 
   const { data: casesList = [], isLoading } = useQuery({
     queryKey: ['cases'],
@@ -62,6 +72,42 @@ export default function CaseDetails() {
   });
 
   const caseData = caseId ? casesList.find(c => c.id === caseId) : null;
+
+  useEffect(() => {
+    if (isNew && accountNumber && caseData) {
+      setShowCongrats(true);
+      
+      // Fire confetti
+      const duration = 3000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#3b82f6', '#8b5cf6', '#ec4899']
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#3b82f6', '#8b5cf6', '#ec4899']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+      frame();
+
+      // Remove new parameter from URL
+      const newUrl = window.location.pathname + `?id=${caseId}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [isNew, accountNumber, caseData, caseId]);
 
   if (isLoading) {
     return (
@@ -88,6 +134,29 @@ export default function CaseDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              🎉 מזל טוב! 🎉
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center py-6">
+            <p className="text-2xl font-semibold text-gray-900 mb-2">
+              חשבון מס׳ {accountNumber}
+            </p>
+            <p className="text-xl font-medium text-gray-700">
+              נפתח בהצלחה!
+            </p>
+          </div>
+          <Button 
+            onClick={() => setShowCongrats(false)}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          >
+            בואו נתחיל!
+          </Button>
+        </DialogContent>
+      </Dialog>
       <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
