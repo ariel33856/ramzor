@@ -22,32 +22,9 @@ export default function NewContact() {
   });
 
   const createContactMutation = useMutation({
-    mutationFn: async (data) => {
-      // יצירת איש קשר חדש
-      const newContact = await base44.entities.Person.create(data);
-      
-      // יצירת חשבון חדש
-      const newAccount = await base44.entities.MortgageCase.create({
-        client_name: `${data.first_name} ${data.last_name}`,
-        last_name: data.last_name,
-        client_id: data.id_number,
-        client_phone: data.phone,
-        client_email: data.email,
-        status: 'new',
-        urgency: 'medium',
-        is_archived: false
-      });
-      
-      // שיוך איש הקשר לחשבון החדש
-      await base44.entities.Person.update(newContact.id, {
-        linked_accounts: [newAccount.id]
-      });
-      
-      return { newContact, newAccount };
-    },
+    mutationFn: (data) => base44.entities.Person.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['cases'] });
       window.location.href = createPageUrl('ArchiveAccounts');
     }
   });
