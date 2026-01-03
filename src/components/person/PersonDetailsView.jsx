@@ -556,11 +556,12 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           ) : null}
-          <Link to={createPageUrl('PersonDetails') + `?id=${personId}`} className="w-full">
-            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full">
-              להצגה במודול אנשי קשר
-            </Button>
-          </Link>
+          <Button 
+            onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${personId}`}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full"
+          >
+            להצגה במודול אנשי קשר
+          </Button>
         </div>
       </div>
 
