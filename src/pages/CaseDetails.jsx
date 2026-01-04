@@ -123,11 +123,15 @@ export default function CaseDetails() {
     );
   }
 
-  if (!caseId || !caseData) {
-    window.location.href = createPageUrl('Dashboard');
+  if (!caseData) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">תיק לא נמצא</h2>
+          <Link to={createPageUrl('Dashboard')}>
+            <Button>חזרה לדשבורד</Button>
+          </Link>
+        </div>
       </div>
     );
   }
