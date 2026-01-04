@@ -293,17 +293,18 @@ export default function CasePersonal() {
 
   return (
     <div className="space-y-6 p-6">
-      {linkedContacts.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          {linkedContacts.length > 0 && (
             <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
-            <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
-                  <LinkIcon className="w-4 h-4 ml-1" />
-                  הוסף איש קשר
-                </Button>
-              </DialogTrigger>
+          )}
+          <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
+                <LinkIcon className="w-4 h-4 ml-1" />
+                {linkedContacts.length > 0 ? 'הוסף איש קשר' : 'שייך איש קשר'}
+              </Button>
+            </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[80vh]">
                 <DialogHeader>
                   <DialogTitle>בחר איש קשר לשיוך</DialogTitle>
@@ -347,11 +348,10 @@ export default function CasePersonal() {
               </DialogContent>
             </Dialog>
           </div>
-          {linkedContacts.map((contact) => (
-            <PersonDetailsView key={contact.id} personId={contact.id} />
-          ))}
-        </div>
-      )}
+        {linkedContacts.map((contact) => (
+          <PersonDetailsView key={contact.id} personId={contact.id} />
+        ))}
+      </div>
 
       {linkedBorrowers.length > 0 && (
         <div className="space-y-4">
