@@ -270,25 +270,19 @@ export default function CasePersonal() {
     updateMutation.mutate(formData);
   };
 
-  if (!caseId) {
-    window.location.href = createPageUrl('Dashboard');
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
+  React.useEffect(() => {
+    if (!caseId) {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  }, [caseId]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
+  React.useEffect(() => {
+    if (!isLoading && !caseData && caseId) {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  }, [isLoading, caseData, caseId]);
 
-  if (!caseData) {
-    window.location.href = createPageUrl('Dashboard');
+  if (!caseId || isLoading || !caseData) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
