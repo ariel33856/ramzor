@@ -169,10 +169,10 @@ export default function CaseDetails() {
           <div className="grid grid-cols-4 gap-6">
             {/* מידע אישי */}
             <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-4">
                 מידע אישי
               </button>
-              <div className="space-y-3">
+              <div className="space-y-4 flex-1 flex flex-col">
                 {tabs.filter(tab => ['personal', 'contact', 'contacts'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -183,7 +183,7 @@ export default function CaseDetails() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
-                        w-full relative p-4 rounded-xl border-2 transition-all duration-300
+                        w-full relative p-6 rounded-xl border-2 transition-all duration-300 flex-1
                         ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
@@ -218,10 +218,10 @@ export default function CaseDetails() {
 
             {/* ניהול וארגון */}
             <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-4">
                 ניהול וארגון
               </button>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -232,7 +232,7 @@ export default function CaseDetails() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
-                        relative p-4 rounded-xl border-2 transition-all duration-300
+                        relative p-6 rounded-xl border-2 transition-all duration-300
                         ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
@@ -267,10 +267,10 @@ export default function CaseDetails() {
 
             {/* ניתוח וביצועים */}
             <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-4">
                 ניתוח וביצועים
               </button>
-              <div className="space-y-3">
+              <div className="space-y-4 flex-1 flex flex-col">
                 {tabs.filter(tab => ['profiles', 'metrics', 'dashboards'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -281,7 +281,7 @@ export default function CaseDetails() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
-                        w-full relative p-4 rounded-xl border-2 transition-all duration-300
+                        w-full relative p-6 rounded-xl border-2 transition-all duration-300 flex-1
                         ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
@@ -316,10 +316,10 @@ export default function CaseDetails() {
 
             {/* פיננסים ומוצרים */}
             <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-4">
                 פיננסים ומוצרים
               </button>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 {tabs.filter(tab => ['calculator', 'payments', 'insurance', 'products', 'account'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -330,7 +330,7 @@ export default function CaseDetails() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
-                        relative p-4 rounded-xl border-2 transition-all duration-300
+                        relative p-6 rounded-xl border-2 transition-all duration-300
                         ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
