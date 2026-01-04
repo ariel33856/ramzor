@@ -103,6 +103,11 @@ export default function CaseDetails() {
       };
       frame();
 
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        setShowCongrats(false);
+      }, 2000);
+
       // Remove new parameter from URL
       const newUrl = window.location.pathname + `?id=${caseId}`;
       window.history.replaceState({}, '', newUrl);
@@ -135,26 +140,30 @@ export default function CaseDetails() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              🎉 מזל טוב! 🎉
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-center py-6">
-            <p className="text-2xl font-semibold text-gray-900 mb-2">
-              חשבון מס׳ {accountNumber}
-            </p>
-            <p className="text-xl font-medium text-gray-700">
-              נפתח בהצלחה!
-            </p>
+        <DialogContent className="sm:max-w-lg border-4 border-transparent bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-lg"></div>
+          <div className="relative">
+            <DialogHeader>
+              <DialogTitle className="text-center text-4xl font-black mb-4">
+                <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
+                  🎉 מזל טוב! 🎉
+                </span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="text-center py-8 space-y-4">
+              <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl p-6 shadow-xl transform hover:scale-105 transition-transform">
+                <p className="text-5xl font-black text-white mb-2 drop-shadow-lg">
+                  {accountNumber}
+                </p>
+                <p className="text-xl font-bold text-white/90">
+                  חשבון מס׳
+                </p>
+              </div>
+              <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                נפתח בהצלחה! ✨
+              </p>
+            </div>
           </div>
-          <Button 
-            onClick={() => setShowCongrats(false)}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            בואו נתחיל!
-          </Button>
         </DialogContent>
       </Dialog>
       <div className="mx-auto p-2 md:p-3">
