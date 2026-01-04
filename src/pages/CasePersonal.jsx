@@ -365,5 +365,5 @@ export default function CasePersonal() {
         </div>
       )}
     </div>
-        );
-        }
+  );
+}
