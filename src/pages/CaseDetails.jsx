@@ -165,7 +165,7 @@ export default function CaseDetails() {
       </Dialog>
       <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid */}
-        <div className="flex flex-wrap gap-3 mb-6 [&>*]:flex-grow [&>*]:basis-[140px] [&>*]:max-w-[200px]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
