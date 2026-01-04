@@ -148,7 +148,7 @@ export default function PersonDetailsView({ personId }) {
       queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       setDialogOpen(false);
-      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}`;
+      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}&new=true&accountNumber=${newAccount.account_number}`;
     }
   });
 
