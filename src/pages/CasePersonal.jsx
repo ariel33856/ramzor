@@ -270,8 +270,22 @@ export default function CasePersonal() {
     updateMutation.mutate(formData);
   };
 
-  if (!caseId || isLoading || !caseData) {
-    return <div></div>;
+  React.useEffect(() => {
+    if (!isLoading && (!caseId || !caseData)) {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  }, [caseId, caseData, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (!caseId || !caseData) {
+    return null;
   }
 
   return (
