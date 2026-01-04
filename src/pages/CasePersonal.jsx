@@ -303,49 +303,49 @@ export default function CasePersonal() {
                 {linkedContacts.length > 0 ? 'הוסף איש קשר' : 'שייך איש קשר'}
               </Button>
             </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>בחר איש קשר לשיוך</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="חיפוש לפי שם או מספר טלפון..."
-                    value={contactSearchTerm}
-                    onChange={(e) => setContactSearchTerm(e.target.value)}
-                  />
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {allContacts
-                      .filter(contact => 
-                        !linkedContacts.some(lc => lc.id === contact.id) &&
-                        (contact.first_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
-                        contact.last_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
-                        contact.phone?.includes(contactSearchTerm))
-                      )
-                      .map(contact => (
-                        <div
-                          key={contact.id}
-                          className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                          onClick={() => linkContactToAccountMutation.mutate(contact.id)}
-                        >
-                          <p className="font-semibold text-gray-900">
-                            {contact.first_name} {contact.last_name}
-                          </p>
-                          <p className="text-sm text-gray-500">{contact.phone}</p>
-                        </div>
-                      ))}
-                    {allContacts.filter(contact => 
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר איש קשר לשיוך</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש לפי שם או מספר טלפון..."
+                  value={contactSearchTerm}
+                  onChange={(e) => setContactSearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {allContacts
+                    .filter(contact => 
                       !linkedContacts.some(lc => lc.id === contact.id) &&
                       (contact.first_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
                       contact.last_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
                       contact.phone?.includes(contactSearchTerm))
-                    ).length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
-                    )}
-                  </div>
+                    )
+                    .map(contact => (
+                      <div
+                        key={contact.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => linkContactToAccountMutation.mutate(contact.id)}
+                      >
+                        <p className="font-semibold text-gray-900">
+                          {contact.first_name} {contact.last_name}
+                        </p>
+                        <p className="text-sm text-gray-500">{contact.phone}</p>
+                      </div>
+                    ))}
+                  {allContacts.filter(contact => 
+                    !linkedContacts.some(lc => lc.id === contact.id) &&
+                    (contact.first_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                    contact.last_name?.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+                    contact.phone?.includes(contactSearchTerm))
+                  ).length === 0 && (
+                    <p className="text-center text-gray-500 py-8">לא נמצאו אנשי קשר</p>
+                  )}
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         {linkedContacts.map((contact) => (
           <PersonDetailsView key={contact.id} personId={contact.id} />
         ))}
