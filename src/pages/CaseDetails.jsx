@@ -165,7 +165,7 @@ export default function CaseDetails() {
       </Dialog>
       <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8 gap-2 mb-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -176,7 +176,7 @@ export default function CaseDetails() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`
-                  relative p-4 rounded-xl border-2 transition-all duration-300
+                  relative p-2 rounded-xl border-2 transition-all duration-300
                   ${tab.bg}
                   ${isActive 
                     ? `${tab.border} shadow-lg` 
@@ -184,17 +184,17 @@ export default function CaseDetails() {
                   }
                 `}
               >
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-1">
                   <div className={`
-                    w-12 h-12 rounded-xl flex items-center justify-center
+                    w-8 h-8 rounded-xl flex items-center justify-center
                     bg-gradient-to-br ${tab.gradient} shadow-md
                     ${isActive ? 'scale-110' : ''}
                     transition-transform duration-300
                   `}>
-                    <Icon className="w-6 h-6 text-white" />
+                    <Icon className="w-4 h-4 text-white" />
                   </div>
                   <span className={`
-                    text-xs font-medium text-center leading-tight
+                    text-[10px] font-medium text-center leading-tight
                     ${isActive ? 'text-gray-900' : 'text-gray-600'}
                   `}>
                     {tab.label}
