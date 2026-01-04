@@ -119,6 +119,37 @@ export default function PersonDetailsView({ personId }) {
     }
   });
 
+  const createNewAccountMutation = useMutation({
+    mutationFn: async () => {
+      // Get max account number
+      const maxAccountNumber = allAccounts.length > 0 
+        ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
+        : 0;
+      
+      // Create new account
+      const newAccount = await base44.entities.MortgageCase.create({
+        account_number: maxAccountNumber + 1,
+        status: 'new',
+        urgency: 'medium',
+        is_archived: false
+      });
+
+      // Link person to account
+      const updatedAccounts = [...linkedAccounts, newAccount.id];
+      await base44.entities.Person.update(personId, {
+        linked_accounts: updatedAccounts
+      });
+
+      return newAccount;
+    },
+    onSuccess: (newAccount) => {
+      queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      setDialogOpen(false);
+      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}`;
+    }
+  });
+
   const handleAddField = () => {
     if (newFieldName.trim()) {
       const fieldId = `custom_${Date.now()}`;
@@ -353,12 +384,18 @@ export default function PersonDetailsView({ personId }) {
                   <DialogTitle>בחר חשבון לשיוך</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <Link to={createPageUrl('NewCase')}>
-                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <Button 
+                    onClick={() => createNewAccountMutation.mutate()}
+                    disabled={createNewAccountMutation.isPending}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    {createNewAccountMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
                       <Plus className="w-4 h-4 ml-2" />
-                      צור חשבון חדש
-                    </Button>
-                  </Link>
+                    )}
+                    צור חשבון חדש
+                  </Button>
                   <Input
                     placeholder="חיפוש לפי שם או מספר חשבון..."
                     value={searchTerm}
