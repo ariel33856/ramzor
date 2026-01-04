@@ -75,6 +75,12 @@ export default function CaseDetails() {
   });
 
   useEffect(() => {
+    if (!caseId || (!isLoading && !caseData)) {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  }, [caseId, caseData, isLoading]);
+
+  useEffect(() => {
     if (isNew && accountNumber && caseData) {
       setShowCongrats(true);
       
@@ -122,26 +128,6 @@ export default function CaseDetails() {
       </div>
     );
   }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-600">שגיאה בטעינת נתונים</h2>
-          <p className="text-gray-600 mt-2">{error.message}</p>
-          <Button onClick={() => window.location.reload()} className="mt-4">
-            רענן דף
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    if (!caseId || (!isLoading && !caseData)) {
-      window.location.href = createPageUrl('Dashboard');
-    }
-  }, [caseId, caseData, isLoading]);
 
   if (!caseId || !caseData) {
     return null;
