@@ -146,7 +146,7 @@ export default function CaseDetails() {
             <DialogHeader>
               <DialogTitle className="text-center text-4xl font-black mb-4">
                 <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
-                  🎉 מזל טוב! 🎉
+                  🎉 מזל טוב 🎉
                 </span>
               </DialogTitle>
             </DialogHeader>
@@ -157,7 +157,7 @@ export default function CaseDetails() {
                 </p>
               </div>
               <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                נפתח בהצלחה! ✨
+                נפתח בהצלחה ✨
               </p>
             </div>
           </div>
