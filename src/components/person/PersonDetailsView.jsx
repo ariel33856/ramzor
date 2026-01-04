@@ -126,8 +126,10 @@ export default function PersonDetailsView({ personId }) {
         ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
         : 0;
       
-      // Create new account
+      // Create new account with person's name
       const newAccount = await base44.entities.MortgageCase.create({
+        client_name: person.first_name,
+        last_name: person.last_name,
         account_number: maxAccountNumber + 1,
         status: 'new',
         urgency: 'medium',
