@@ -165,11 +165,11 @@ export default function CaseDetails() {
       </Dialog>
       <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid - Organized by Categories */}
-        <div className="space-y-6 mb-6">
-          {/* מידע אישי ותקשורת */}
+        <div className="space-y-4 mb-6">
+          {/* מידע אישי */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">מידע אישי ותקשורת</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">מידע אישי</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {tabs.filter(tab => ['personal', 'contact', 'contacts'].includes(tab.id)).map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -213,58 +213,11 @@ export default function CaseDetails() {
             </div>
           </div>
 
-          {/* ניהול תיק */}
+          {/* ניהול וארגון */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">ניהול תיק</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking'].includes(tab.id)).map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <motion.button
-                    key={tab.id}
-                    onClick={() => setActiveTab(isActive ? null : tab.id)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`
-                      relative p-4 rounded-xl border-2 transition-all duration-300
-                      ${tab.bg}
-                      ${isActive 
-                        ? `${tab.border} shadow-lg` 
-                        : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
-                      }
-                    `}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <div className={`
-                        w-12 h-12 rounded-xl flex items-center justify-center
-                        bg-gradient-to-br ${tab.gradient} shadow-md
-                        ${isActive ? 'scale-110' : ''}
-                        transition-transform duration-300
-                      `}>
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <span className={`
-                        text-xs font-medium text-center leading-tight
-                        ${isActive ? 'text-gray-900' : 'text-gray-600'}
-                      `}>
-                        {tab.label}
-                      </span>
-                      {isActive && (
-                        <ChevronUp className="w-4 h-4 text-gray-600 absolute bottom-1" />
-                      )}
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* מסמכים ונתונים */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">מסמכים ונתונים</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {tabs.filter(tab => ['documents', 'data'].includes(tab.id)).map((tab) => {
+            <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">ניהול וארגון</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id)).map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
@@ -310,7 +263,7 @@ export default function CaseDetails() {
           {/* ניתוח וביצועים */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">ניתוח וביצועים</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {tabs.filter(tab => ['profiles', 'metrics', 'dashboards'].includes(tab.id)).map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -357,7 +310,7 @@ export default function CaseDetails() {
           {/* פיננסים ומוצרים */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-2 pr-2">פיננסים ומוצרים</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {tabs.filter(tab => ['calculator', 'payments', 'insurance', 'products', 'account'].includes(tab.id)).map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
