@@ -147,12 +147,22 @@ export default function Dashboard() {
   const cases = allCases.filter(c => !c.is_archived && !c.module_id);
 
   const filteredCases = cases.filter(c => {
-    const matchesSearch = !searchTerm || 
-      c.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.client_id?.includes(searchTerm);
-    const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
-    const matchesUrgency = urgencyFilter === 'all' || c.urgency === urgencyFilter;
-    return matchesSearch && matchesStatus && matchesUrgency;
+    try {
+      const linkedPersons = caseToPersonMap[c.id] || [];
+      const linkedPerson = linkedPersons[0];
+
+      const matchesSearch = !searchTerm || 
+        linkedPerson?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        linkedPerson?.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        linkedPerson?.id_number?.includes(searchTerm) ||
+        linkedPerson?.phone?.includes(searchTerm) ||
+        c.account_number?.toString().includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+      const matchesUrgency = urgencyFilter === 'all' || c.urgency === urgencyFilter;
+      return matchesSearch && matchesStatus && matchesUrgency;
+    } catch (e) {
+      return false;
+    }
   });
 
   const stats = {
@@ -369,35 +379,39 @@ export default function Dashboard() {
           const linkedPerson = linkedPersons[0]; // Take first linked person
 
                   const renderCell = (columnId) => {
-                    // Special handling for account_number - comes from case
-                    if (columnId === 'account_number') {
-                      return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
-                    }
+                    try {
+                      // Special handling for account_number - comes from case
+                      if (columnId === 'account_number') {
+                        return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
+                      }
 
-                    // All other fields come from linked Person
-                    if (!linkedPerson) {
+                      // All other fields come from linked Person
+                      if (!linkedPerson) {
+                        return <span className="text-gray-600">—</span>;
+                      }
+
+                      // Check in custom_data first for custom fields
+                      const customValue = linkedPerson.custom_data?.[columnId];
+                      const value = customValue || linkedPerson[columnId];
+
+                      switch(columnId) {
+                        case 'first_name':
+                          return <div className="font-semibold text-gray-900">{value || '—'}</div>;
+                        case 'last_name':
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                        case 'id_number':
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                        case 'phone':
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                        case 'email':
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                        case 'notes':
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                        default:
+                          return <span className="text-gray-600">{value || '—'}</span>;
+                      }
+                    } catch (e) {
                       return <span className="text-gray-600">—</span>;
-                    }
-
-                    // Check in custom_data first for custom fields
-                    const customValue = linkedPerson.custom_data?.[columnId];
-                    const value = customValue || linkedPerson[columnId];
-
-                    switch(columnId) {
-                      case 'first_name':
-                        return <div className="font-semibold text-gray-900">{value || '—'}</div>;
-                      case 'last_name':
-                        return <span className="text-gray-600">{value || '—'}</span>;
-                      case 'id_number':
-                        return <span className="text-gray-600">{value || '—'}</span>;
-                      case 'phone':
-                        return <span className="text-gray-600">{value || '—'}</span>;
-                      case 'email':
-                        return <span className="text-gray-600">{value || '—'}</span>;
-                      case 'notes':
-                        return <span className="text-gray-600">{value || '—'}</span>;
-                      default:
-                        return <span className="text-gray-600">{value || '—'}</span>;
                     }
                   };
 
