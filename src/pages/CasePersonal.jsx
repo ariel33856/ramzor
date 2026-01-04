@@ -308,6 +308,12 @@ export default function CasePersonal() {
                 <DialogTitle>בחר איש קשר לשיוך</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
+                <Link to={createPageUrl('NewContact')}>
+                  <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                    <LinkIcon className="w-4 h-4 ml-2" />
+                    צור איש קשר חדש
+                  </Button>
+                </Link>
                 <Input
                   placeholder="חיפוש לפי שם או מספר טלפון..."
                   value={contactSearchTerm}
