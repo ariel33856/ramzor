@@ -66,9 +66,11 @@ export default function CaseDetails() {
   const accountNumber = urlParams.get('accountNumber');
   const [showCongrats, setShowCongrats] = useState(false);
 
-  const { data: casesList = [], isLoading } = useQuery({
+  const { data: casesList = [], isLoading, error } = useQuery({
     queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list()
+    queryFn: () => base44.entities.MortgageCase.list(),
+    retry: 1,
+    staleTime: 30000
   });
 
   const caseData = caseId ? casesList.find(c => c.id === caseId) : null;
@@ -122,7 +124,34 @@ export default function CaseDetails() {
     );
   }
 
-  if (!caseId || !caseData) {
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-600">שגיאה בטעינת נתונים</h2>
+          <p className="text-gray-600 mt-2">{error.message}</p>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            רענן דף
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!caseId) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900">לא צוין מזהה תיק</h2>
+          <Link to={createPageUrl('Dashboard')} className="text-blue-600 hover:underline mt-2 inline-block">
+            חזרה לדשבורד
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!caseData) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
         <div className="text-center">
@@ -135,7 +164,7 @@ export default function CaseDetails() {
     );
   }
 
-  const activeTabData = tabs.find(t => t.id === activeTab);
+  const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
@@ -367,7 +396,7 @@ export default function CaseDetails() {
 
         {/* Expandable Content Area */}
         <AnimatePresence>
-          {activeTab && (
+          {activeTab && activeTabData && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -390,7 +419,7 @@ export default function CaseDetails() {
                 </h2>
               </Link>
 
-              {React.createElement(pageComponents[activeTab])}
+              {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
             </motion.div>
           )}
         </AnimatePresence>
