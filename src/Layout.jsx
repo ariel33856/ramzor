@@ -53,7 +53,9 @@ export default function Layout({ children, currentPageName }) {
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
-    enabled: !!caseId
+    enabled: !!caseId,
+    retry: 1,
+    staleTime: 30000
   });
 
   const { data: linkedBorrowers = [] } = useQuery({
@@ -61,30 +63,40 @@ export default function Layout({ children, currentPageName }) {
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(async id => {
-        const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
-        if (borrower?.person_id) {
-          const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
-          if (person) {
-            return { ...borrower, _person: person };
+        try {
+          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+          if (borrower?.person_id) {
+            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+            if (person) {
+              return { ...borrower, _person: person };
+            }
           }
+          return borrower;
+        } catch (e) {
+          return null;
         }
-        return borrower;
       });
-      return Promise.all(promises);
+      return (await Promise.all(promises)).filter(b => b !== null);
     },
-    enabled: !!caseData?.linked_borrowers
+    enabled: !!caseData?.linked_borrowers,
+    retry: 1,
+    staleTime: 30000
   });
 
   const { data: caseLinkedPerson } = useQuery({
     queryKey: ['case-linked-person', caseData?.person_id],
     queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
-    enabled: !!caseData?.person_id
+    enabled: !!caseData?.person_id,
+    retry: 1,
+    staleTime: 30000
   });
 
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
     queryFn: () => base44.entities.Person.list(),
-    enabled: !!caseId
+    enabled: !!caseId,
+    retry: 1,
+    staleTime: 30000
   });
 
   // Find person linked via Person.linked_accounts
@@ -97,25 +109,33 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: modules = [] } = useQuery({
     queryKey: ['modules'],
-    queryFn: () => base44.entities.Module.list('order')
+    queryFn: () => base44.entities.Module.list('order'),
+    retry: 1,
+    staleTime: 60000
   });
 
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
-    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive'
+    enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive',
+    retry: 1,
+    staleTime: 30000
   });
 
   const { data: currentBorrower } = useQuery({
     queryKey: ['archive-case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
-    enabled: currentPageName === 'ArchiveCaseDetails' && !!caseId
+    enabled: currentPageName === 'ArchiveCaseDetails' && !!caseId,
+    retry: 1,
+    staleTime: 30000
   });
 
   const { data: currentPerson } = useQuery({
     queryKey: ['person', personId],
     queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
-    enabled: currentPageName === 'PersonDetails' && !!personId
+    enabled: currentPageName === 'PersonDetails' && !!personId,
+    retry: 1,
+    staleTime: 30000
   });
 
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);

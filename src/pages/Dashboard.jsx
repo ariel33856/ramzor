@@ -39,7 +39,9 @@ export default function Dashboard() {
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list()
+    queryFn: () => base44.entities.Person.list(),
+    retry: 1,
+    staleTime: 30000
   });
 
   // Extract unique custom field names from all persons
@@ -124,7 +126,9 @@ export default function Dashboard() {
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    retry: 1,
+    staleTime: 30000
   });
 
   // Create a map of case IDs to their linked persons
