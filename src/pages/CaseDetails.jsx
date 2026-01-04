@@ -168,8 +168,10 @@ export default function CaseDetails() {
         <div className="mb-6">
           <div className="grid grid-cols-4 gap-6">
             {/* מידע אישי */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">מידע אישי</h3>
+            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+                מידע אישי
+              </button>
               <div className="space-y-3">
                 {tabs.filter(tab => ['personal', 'contact', 'contacts'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
@@ -215,8 +217,10 @@ export default function CaseDetails() {
             </div>
 
             {/* ניהול וארגון */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">ניהול וארגון</h3>
+            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+                ניהול וארגון
+              </button>
               <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
@@ -262,8 +266,10 @@ export default function CaseDetails() {
             </div>
 
             {/* ניתוח וביצועים */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">ניתוח וביצועים</h3>
+            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+                ניתוח וביצועים
+              </button>
               <div className="space-y-3">
                 {tabs.filter(tab => ['profiles', 'metrics', 'dashboards'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
@@ -309,8 +315,10 @@ export default function CaseDetails() {
             </div>
 
             {/* פיננסים ומוצרים */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 text-center">פיננסים ומוצרים</h3>
+            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+              <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
+                פיננסים ומוצרים
+              </button>
               <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['calculator', 'payments', 'insurance', 'products', 'account'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
