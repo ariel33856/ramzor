@@ -137,30 +137,14 @@ export default function CaseDetails() {
     );
   }
 
-  if (!caseId) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">לא צוין מזהה תיק</h2>
-          <Link to={createPageUrl('Dashboard')} className="text-blue-600 hover:underline mt-2 inline-block">
-            חזרה לדשבורד
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!caseId || (!isLoading && !caseData)) {
+      window.location.href = createPageUrl('Dashboard');
+    }
+  }, [caseId, caseData, isLoading]);
 
-  if (!caseData) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">תיק לא נמצא</h2>
-          <Link to={createPageUrl('Dashboard')} className="text-blue-600 hover:underline mt-2 inline-block">
-            חזרה לדשבורד
-          </Link>
-        </div>
-      </div>
-    );
+  if (!caseId || !caseData) {
+    return null;
   }
 
   const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
