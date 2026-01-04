@@ -295,9 +295,7 @@ export default function CasePersonal() {
     <div className="space-y-6 p-6">
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          {linkedContacts.length > 0 && (
-            <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
-          )}
+          <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
           <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
