@@ -162,7 +162,7 @@ export default function NewCase() {
     } else if (isArchive) {
       navigate(createPageUrl(`ArchiveAccounts`));
     } else {
-      navigate(createPageUrl(`CaseDetails?id=${newCase.id}`));
+      navigate(createPageUrl(`CaseDetails?id=${newCase.id}&new=true&accountNumber=${newCase.account_number}`));
     }
   };
 
