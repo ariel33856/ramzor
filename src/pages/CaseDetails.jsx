@@ -153,7 +153,7 @@ export default function CaseDetails() {
             <div className="text-center py-8 space-y-4">
               <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl p-6 shadow-xl transform hover:scale-105 transition-transform">
                 <p className="text-5xl font-black text-white drop-shadow-lg">
-                  חשבון מס׳ {accountNumber}
+                  חשבון מס׳ {accountNumber || caseData?.account_number}
                 </p>
               </div>
               <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
