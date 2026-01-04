@@ -66,14 +66,13 @@ export default function CaseDetails() {
   const accountNumber = urlParams.get('accountNumber');
   const [showCongrats, setShowCongrats] = useState(false);
 
-  const { data: casesList = [], isLoading, error } = useQuery({
-    queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list(),
+  const { data: caseData, isLoading, error } = useQuery({
+    queryKey: ['case', caseId],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    enabled: !!caseId,
     retry: 1,
     staleTime: 30000
   });
-
-  const caseData = caseId ? casesList.find(c => c.id === caseId) : null;
 
   useEffect(() => {
     if (isNew && accountNumber && caseData) {
