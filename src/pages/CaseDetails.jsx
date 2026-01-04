@@ -184,10 +184,10 @@ export default function CaseDetails() {
                       whileTap={{ scale: 0.95 }}
                       className={`
                         w-full relative p-4 rounded-xl border-2 transition-all duration-300
-                        bg-gradient-to-br ${tab.gradient}
+                        ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
-                          : 'border-white hover:border-gray-200 hover:shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                         }
                       `}
                     >
@@ -201,12 +201,13 @@ export default function CaseDetails() {
                           <Icon className="w-6 h-6 text-white" />
                         </div>
                         <span className={`
-                          text-xs font-medium text-center leading-tight text-white
+                          text-xs font-medium text-center leading-tight
+                          ${isActive ? 'text-gray-900' : 'text-gray-600'}
                         `}>
                           {tab.label}
                         </span>
                         {isActive && (
-                          <ChevronUp className="w-4 h-4 text-white absolute bottom-1" />
+                          <ChevronUp className="w-4 h-4 text-gray-600 absolute bottom-1" />
                         )}
                       </div>
                     </motion.button>
@@ -232,10 +233,10 @@ export default function CaseDetails() {
                       whileTap={{ scale: 0.95 }}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300
-                        bg-gradient-to-br ${tab.gradient}
+                        ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
-                          : 'border-white hover:border-gray-200 hover:shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                         }
                       `}
                     >
@@ -249,12 +250,13 @@ export default function CaseDetails() {
                           <Icon className="w-6 h-6 text-white" />
                         </div>
                         <span className={`
-                          text-xs font-medium text-center leading-tight text-white
+                          text-xs font-medium text-center leading-tight
+                          ${isActive ? 'text-gray-900' : 'text-gray-600'}
                         `}>
                           {tab.label}
                         </span>
                         {isActive && (
-                          <ChevronUp className="w-4 h-4 text-white absolute bottom-1" />
+                          <ChevronUp className="w-4 h-4 text-gray-600 absolute bottom-1" />
                         )}
                       </div>
                     </motion.button>
@@ -280,10 +282,10 @@ export default function CaseDetails() {
                       whileTap={{ scale: 0.95 }}
                       className={`
                         w-full relative p-4 rounded-xl border-2 transition-all duration-300
-                        bg-gradient-to-br ${tab.gradient}
+                        ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
-                          : 'border-white hover:border-gray-200 hover:shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                         }
                       `}
                     >
@@ -297,12 +299,13 @@ export default function CaseDetails() {
                           <Icon className="w-6 h-6 text-white" />
                         </div>
                         <span className={`
-                          text-xs font-medium text-center leading-tight text-white
+                          text-xs font-medium text-center leading-tight
+                          ${isActive ? 'text-gray-900' : 'text-gray-600'}
                         `}>
                           {tab.label}
                         </span>
                         {isActive && (
-                          <ChevronUp className="w-4 h-4 text-white absolute bottom-1" />
+                          <ChevronUp className="w-4 h-4 text-gray-600 absolute bottom-1" />
                         )}
                       </div>
                     </motion.button>
@@ -328,10 +331,10 @@ export default function CaseDetails() {
                       whileTap={{ scale: 0.95 }}
                       className={`
                         relative p-4 rounded-xl border-2 transition-all duration-300
-                        bg-gradient-to-br ${tab.gradient}
+                        ${tab.bg}
                         ${isActive 
                           ? `${tab.border} shadow-lg` 
-                          : 'border-white hover:border-gray-200 hover:shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
                         }
                       `}
                     >
@@ -345,12 +348,13 @@ export default function CaseDetails() {
                           <Icon className="w-6 h-6 text-white" />
                         </div>
                         <span className={`
-                          text-xs font-medium text-center leading-tight text-white
+                          text-xs font-medium text-center leading-tight
+                          ${isActive ? 'text-gray-900' : 'text-gray-600'}
                         `}>
                           {tab.label}
                         </span>
                         {isActive && (
-                          <ChevronUp className="w-4 h-4 text-white absolute bottom-1" />
+                          <ChevronUp className="w-4 h-4 text-gray-600 absolute bottom-1" />
                         )}
                       </div>
                     </motion.button>
