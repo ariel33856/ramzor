@@ -270,11 +270,14 @@ export default function CasePersonal() {
     updateMutation.mutate(formData);
   };
 
-  React.useEffect(() => {
-    if (!isLoading && (!caseId || !caseData)) {
-      window.location.href = createPageUrl('Dashboard');
-    }
-  }, [caseId, caseData, isLoading]);
+  if (!caseId) {
+    window.location.href = createPageUrl('Dashboard');
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -284,8 +287,13 @@ export default function CasePersonal() {
     );
   }
 
-  if (!caseId || !caseData) {
-    return null;
+  if (!caseData) {
+    window.location.href = createPageUrl('Dashboard');
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
   }
 
   return (
