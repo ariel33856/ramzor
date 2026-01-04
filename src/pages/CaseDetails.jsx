@@ -103,10 +103,10 @@ export default function CaseDetails() {
       };
       frame();
 
-      // Auto close after 1 second
+      // Auto close after 2.5 seconds
       setTimeout(() => {
         setShowCongrats(false);
-      }, 1000);
+      }, 2500);
 
       // Remove new parameter from URL
       const newUrl = window.location.pathname + `?id=${caseId}`;
