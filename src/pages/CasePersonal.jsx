@@ -270,38 +270,8 @@ export default function CasePersonal() {
     updateMutation.mutate(formData);
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
-  if (!caseData) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">תיק לא נמצא</h2>
-          <Link to={createPageUrl('Dashboard')} className="text-blue-600 hover:underline mt-2 inline-block">
-            חזרה לדשבורד
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!caseId) {
-    return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">מזהה תיק חסר</h2>
-          <Link to={createPageUrl('Dashboard')}>
-            <Button className="mt-4">חזרה לדשבורד</Button>
-          </Link>
-        </div>
-      </div>
-    );
+  if (!caseId || isLoading || !caseData) {
+    return <div></div>;
   }
 
   return (
