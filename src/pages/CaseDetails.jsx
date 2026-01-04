@@ -75,12 +75,6 @@ export default function CaseDetails() {
   });
 
   useEffect(() => {
-    if (!caseId || (!isLoading && !caseData)) {
-      window.location.href = createPageUrl('Dashboard');
-    }
-  }, [caseId, caseData, isLoading]);
-
-  useEffect(() => {
     if (isNew && accountNumber && caseData) {
       setShowCongrats(true);
       
@@ -130,7 +124,12 @@ export default function CaseDetails() {
   }
 
   if (!caseId || !caseData) {
-    return null;
+    window.location.href = createPageUrl('Dashboard');
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
   }
 
   const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
