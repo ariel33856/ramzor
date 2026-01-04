@@ -291,6 +291,19 @@ export default function CasePersonal() {
     );
   }
 
+  if (!caseId) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900">מזהה תיק חסר</h2>
+          <Link to={createPageUrl('Dashboard')}>
+            <Button className="mt-4">חזרה לדשבורד</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 p-6">
       <div className="space-y-4">
