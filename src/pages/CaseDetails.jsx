@@ -168,7 +168,7 @@ export default function CaseDetails() {
         <div className="mb-6">
           <div className="grid grid-cols-4 gap-6">
             {/* מידע אישי */}
-            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+            <div className="border-2 border-blue-200 rounded-xl p-4 bg-blue-50 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
                 מידע אישי
               </button>
@@ -217,7 +217,7 @@ export default function CaseDetails() {
             </div>
 
             {/* ניהול וארגון */}
-            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+            <div className="border-2 border-purple-200 rounded-xl p-4 bg-purple-50 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
                 ניהול וארגון
               </button>
@@ -266,7 +266,7 @@ export default function CaseDetails() {
             </div>
 
             {/* ניתוח וביצועים */}
-            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+            <div className="border-2 border-green-200 rounded-xl p-4 bg-green-50 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
                 ניתוח וביצועים
               </button>
@@ -315,7 +315,7 @@ export default function CaseDetails() {
             </div>
 
             {/* פיננסים ומוצרים */}
-            <div className="border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+            <div className="border-2 border-orange-200 rounded-xl p-4 bg-orange-50 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
                 פיננסים ומוצרים
               </button>
