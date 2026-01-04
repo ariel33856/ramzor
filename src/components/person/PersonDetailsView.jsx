@@ -353,6 +353,12 @@ export default function PersonDetailsView({ personId }) {
                   <DialogTitle>בחר חשבון לשיוך</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
+                  <Link to={createPageUrl('NewCase')}>
+                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                      <Plus className="w-4 h-4 ml-2" />
+                      צור חשבון חדש
+                    </Button>
+                  </Link>
                   <Input
                     placeholder="חיפוש לפי שם או מספר חשבון..."
                     value={searchTerm}
