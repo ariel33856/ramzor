@@ -1,0 +1,151 @@
+import React, { useState } from 'react';
+import { ChevronDown, ChevronLeft } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { mainGroups, tabComponents } from './FieldsHierarchy';
+import { tabs } from '@/components/CaseTabs';
+
+export default function FieldsSelector({ selectedFields, onFieldToggle }) {
+  const [expandedGroups, setExpandedGroups] = useState({});
+  const [expandedTabs, setExpandedTabs] = useState({});
+  const [expandedComponents, setExpandedComponents] = useState({});
+
+  const toggleGroup = (groupId) => {
+    setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
+  const toggleTab = (tabId) => {
+    setExpandedTabs(prev => ({ ...prev, [tabId]: !prev[tabId] }));
+  };
+
+  const toggleComponent = (componentId) => {
+    setExpandedComponents(prev => ({ ...prev, [componentId]: !prev[componentId] }));
+  };
+
+  const isFieldSelected = (fieldId) => {
+    return selectedFields.includes(fieldId);
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="gap-2">
+          <ChevronDown className="w-4 h-4" />
+          בחר שדות להצגה
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-96 max-h-[600px] overflow-y-auto">
+        <div className="space-y-2">
+          <h4 className="font-semibold text-sm mb-4">בחר שדות להצגה בטבלה</h4>
+          
+          {mainGroups.map(group => {
+            const groupTabs = tabs.filter(tab => group.tabIds.includes(tab.id));
+            const isGroupExpanded = expandedGroups[group.id];
+            
+            return (
+              <div key={group.id} className="border rounded-lg overflow-hidden">
+                {/* קבוצה ראשית */}
+                <button
+                  onClick={() => toggleGroup(group.id)}
+                  className={`w-full px-3 py-2 flex items-center justify-between bg-${group.color}-50 hover:bg-${group.color}-100 transition-colors`}
+                >
+                  <span className="font-semibold text-sm">{group.label}</span>
+                  {isGroupExpanded ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronLeft className="w-4 h-4" />
+                  )}
+                </button>
+
+                {/* כרטיסיות */}
+                {isGroupExpanded && (
+                  <div className="bg-white">
+                    {groupTabs.map(tab => {
+                      const components = tabComponents[tab.id] || [];
+                      const isTabExpanded = expandedTabs[tab.id];
+                      
+                      if (components.length === 0) return null;
+                      
+                      return (
+                        <div key={tab.id} className="border-t">
+                          <button
+                            onClick={() => toggleTab(tab.id)}
+                            className="w-full px-4 py-2 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              {React.createElement(tab.icon, { className: "w-4 h-4" })}
+                              <span className="text-sm">{tab.label}</span>
+                            </div>
+                            {isTabExpanded ? (
+                              <ChevronDown className="w-3 h-3" />
+                            ) : (
+                              <ChevronLeft className="w-3 h-3" />
+                            )}
+                          </button>
+
+                          {/* קומפוננטות */}
+                          {isTabExpanded && (
+                            <div className="bg-gray-50">
+                              {components.map(component => {
+                                const isComponentExpanded = expandedComponents[component.id];
+                                
+                                return (
+                                  <div key={component.id} className="border-t border-gray-200">
+                                    <button
+                                      onClick={() => toggleComponent(component.id)}
+                                      className="w-full px-6 py-2 flex items-center justify-between hover:bg-gray-100 transition-colors"
+                                    >
+                                      <span className="text-sm text-gray-700">{component.label}</span>
+                                      {isComponentExpanded ? (
+                                        <ChevronDown className="w-3 h-3" />
+                                      ) : (
+                                        <ChevronLeft className="w-3 h-3" />
+                                      )}
+                                    </button>
+
+                                    {/* שדות */}
+                                    {isComponentExpanded && (
+                                      <div className="bg-white">
+                                        {component.fields.map(field => (
+                                          <div
+                                            key={field.id}
+                                            className="px-8 py-2 flex items-center gap-2 hover:bg-blue-50 transition-colors"
+                                          >
+                                            <Checkbox
+                                              id={`field-${field.id}`}
+                                              checked={isFieldSelected(field.id)}
+                                              onCheckedChange={() => onFieldToggle(field.id)}
+                                            />
+                                            <label
+                                              htmlFor={`field-${field.id}`}
+                                              className="text-sm cursor-pointer flex-1"
+                                            >
+                                              {field.label}
+                                            </label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}

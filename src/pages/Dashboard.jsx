@@ -18,16 +18,18 @@ import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { personFields } from '../components/case/personFields';
+import FieldsSelector from '../components/dashboard/FieldsSelector';
+import { getAllFields, getFieldValue } from '../components/dashboard/FieldsHierarchy';
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  // Initialize with Person fields only, ignore old localStorage with borrower fields
-  const [columnOrder, setColumnOrder] = useState(personFields);
-  const [newFieldDialog, setNewFieldDialog] = useState(false);
-  const [newField, setNewField] = useState({ id: '', label: '' });
+  const [selectedFields, setSelectedFields] = useState(() => {
+    const saved = localStorage.getItem('dashboardSelectedFields');
+    return saved ? JSON.parse(saved) : ['account_number', 'first_name', 'last_name'];
+  });
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -35,6 +37,16 @@ export default function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ['cases'] });
     }
   });
+
+  const handleFieldToggle = (fieldId) => {
+    setSelectedFields(prev => {
+      const newFields = prev.includes(fieldId)
+        ? prev.filter(id => id !== fieldId)
+        : [...prev, fieldId];
+      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
+      return newFields;
+    });
+  };
 
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
@@ -45,35 +57,8 @@ export default function Dashboard() {
     refetchOnWindowFocus: false
   });
 
-  // Extract unique custom field names from all persons
-  const customFieldNames = React.useMemo(() => {
-    const fieldNamesSet = new Set();
-    allPersons.forEach(person => {
-      if (person.custom_data) {
-        Object.keys(person.custom_data).forEach(key => fieldNamesSet.add(key));
-      }
-    });
-    return Array.from(fieldNamesSet);
-  }, [allPersons]);
-
-  // Rebuild columnOrder with Person fields + custom fields from Person entities
-  React.useEffect(() => {
-    // Start with base Person fields
-    const baseFields = [...personFields];
-    
-    // Add custom fields from Person entities
-    customFieldNames.forEach(fieldName => {
-      if (!baseFields.find(col => col.id === fieldName)) {
-        baseFields.push({ 
-          id: fieldName, 
-          label: fieldName, 
-          visible: false 
-        });
-      }
-    });
-    
-    setColumnOrder(baseFields);
-  }, [customFieldNames]);
+  // קבל את כל השדות האפשריים מההיררכיה
+  const allAvailableFields = React.useMemo(() => getAllFields(), []);
 
   const statusLabels = {
     new: 'חדש',
@@ -96,33 +81,6 @@ export default function Dashboard() {
   const formatCurrency = (amount) => {
     if (!amount) return '—';
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
-  };
-
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(columnOrder);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setColumnOrder(items);
-    localStorage.setItem('dashboardColumns', JSON.stringify(items));
-  };
-
-  const toggleColumnVisibility = (columnId) => {
-    const updated = columnOrder.map(col => 
-      col.id === columnId ? { ...col, visible: !col.visible } : col
-    );
-    setColumnOrder(updated);
-    localStorage.setItem('dashboardColumns', JSON.stringify(updated));
-  };
-
-  const addNewField = () => {
-    if (newField.id && newField.label) {
-      const updated = [...columnOrder, { ...newField, visible: true }];
-      setColumnOrder(updated);
-      localStorage.setItem('dashboardColumns', JSON.stringify(updated));
-      setNewField({ id: '', label: '' });
-      setNewFieldDialog(false);
-    }
   };
 
   const { data: allCases = [], isLoading } = useQuery({
@@ -231,99 +189,10 @@ export default function Dashboard() {
               </SelectContent>
               </Select>
 
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Columns className="w-4 h-4" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-64 max-h-[500px] overflow-y-auto">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-sm">שדות להצגה וסדר</h4>
-                      <Dialog open={newFieldDialog} onOpenChange={setNewFieldDialog}>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-7 px-2">
-                            <PlusCircle className="w-4 h-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>הוסף שדה חדש</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            <div>
-                              <Label>מזהה שדה (באנגלית, ללא רווחים)</Label>
-                              <Input
-                                value={newField.id}
-                                onChange={(e) => setNewField({...newField, id: e.target.value})}
-                                placeholder="field_name"
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label>תווית שדה</Label>
-                              <Input
-                                value={newField.label}
-                                onChange={(e) => setNewField({...newField, label: e.target.value})}
-                                placeholder="שם השדה"
-                                className="mt-1"
-                              />
-                            </div>
-                            <Button onClick={addNewField} className="w-full">
-                              הוסף שדה
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                    <DragDropContext onDragEnd={handleDragEnd}>
-                      <Droppable droppableId="columns">
-                        {(provided) => (
-                          <div 
-                            {...provided.droppableProps} 
-                            ref={provided.innerRef}
-                            className="space-y-2"
-                          >
-                            {columnOrder.map((column, index) => (
-                              <Draggable key={column.id} draggableId={column.id} index={index}>
-                                {(provided, snapshot) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    style={{
-                                      ...provided.draggableProps.style,
-                                      transform: snapshot.isDragging && provided.draggableProps.style?.transform
-                                        ? `${provided.draggableProps.style.transform} translateY(-100px)`
-                                        : provided.draggableProps.style?.transform
-                                    }}
-                                    className={`flex items-center gap-2 p-2 rounded-lg border ${
-                                      snapshot.isDragging ? 'bg-blue-50 border-blue-300' : 'bg-white border-gray-200'
-                                    }`}
-                                  >
-                                    <div {...provided.dragHandleProps}>
-                                      <GripVertical className="w-4 h-4 text-gray-400" />
-                                    </div>
-                                    <Checkbox
-                                      id={`col-${column.id}`}
-                                      checked={column.visible}
-                                      onCheckedChange={() => toggleColumnVisibility(column.id)}
-                                    />
-                                    <label htmlFor={`col-${column.id}`} className="text-sm cursor-pointer flex-1">
-                                      {column.label}
-                                    </label>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <FieldsSelector 
+                selectedFields={selectedFields}
+                onFieldToggle={handleFieldToggle}
+              />
             </div>
             </div>
             </div>
@@ -369,57 +238,22 @@ export default function Dashboard() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
-          {columnOrder.filter(col => col.visible).map(col => (
-            <th key={col.id} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-              {col.label}
-            </th>
-          ))}
+          {selectedFields.map(fieldId => {
+            const field = allAvailableFields.find(f => f.id === fieldId);
+            return (
+              <th key={fieldId} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+                {field?.label || fieldId}
+              </th>
+            );
+          })}
           <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
         </tr>
       </thead>
 
       <tbody>
         {filteredCases.map((caseData, index) => {
-          // Get linked person(s) for this case
           const linkedPersons = caseToPersonMap[caseData.id] || [];
-          const linkedPerson = linkedPersons[0]; // Take first linked person
-
-                  const renderCell = (columnId) => {
-                    try {
-                      // Special handling for account_number - comes from case
-                      if (columnId === 'account_number') {
-                        return <div className="font-semibold text-blue-600">{caseData.account_number || '—'}</div>;
-                      }
-
-                      // All other fields come from linked Person
-                      if (!linkedPerson) {
-                        return <span className="text-gray-600">—</span>;
-                      }
-
-                      // Check in custom_data first for custom fields
-                      const customValue = linkedPerson.custom_data?.[columnId];
-                      const value = customValue || linkedPerson[columnId];
-
-                      switch(columnId) {
-                        case 'first_name':
-                          return <div className="font-semibold text-gray-900">{value || '—'}</div>;
-                        case 'last_name':
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                        case 'id_number':
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                        case 'phone':
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                        case 'email':
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                        case 'notes':
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                        default:
-                          return <span className="text-gray-600">{value || '—'}</span>;
-                      }
-                    } catch (e) {
-                      return <span className="text-gray-600">—</span>;
-                    }
-                  };
+          const linkedPerson = linkedPersons[0];
 
                   return (
                   <motion.tr
@@ -429,15 +263,26 @@ export default function Dashboard() {
                     transition={{ delay: index * 0.02 }}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
-                    {columnOrder.filter(col => col.visible).map(col => (
-                      <td 
-                        key={col.id} 
-                        className="px-6 py-4 cursor-pointer"
-                        onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
-                      >
-                        {renderCell(col.id)}
-                      </td>
-                    ))}
+                    {selectedFields.map(fieldId => {
+                      const field = allAvailableFields.find(f => f.id === fieldId);
+                      const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
+
+                      return (
+                        <td 
+                          key={fieldId} 
+                          className="px-6 py-4 cursor-pointer"
+                          onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                        >
+                          {fieldId === 'account_number' ? (
+                            <div className="font-semibold text-blue-600">{value}</div>
+                          ) : fieldId === 'first_name' ? (
+                            <div className="font-semibold text-gray-900">{value}</div>
+                          ) : (
+                            <span className="text-gray-600">{value}</span>
+                          )}
+                        </td>
+                      );
+                    })}
                     <td className="px-6 py-4">
                       <Button
                         variant="ghost"
