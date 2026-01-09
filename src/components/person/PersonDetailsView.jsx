@@ -791,22 +791,38 @@ export default function PersonDetailsView({ personId }) {
             .map((date, index) => (
             <Popover key={index}>
               <PopoverTrigger asChild>
-                <Input 
-                  className="w-6 text-center h-8 cursor-pointer px-0"
-                  value={(() => {
+                <div className="w-auto min-w-[24px] h-8 cursor-pointer flex items-center justify-center border rounded-md bg-white hover:bg-gray-50">
+                  {(() => {
                     if (date.length !== 10) return '';
                     const [day, month, year] = date.split('-').map(Number);
                     const birthDate = new Date(year, month - 1, day);
                     const today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    const monthDiff = today.getMonth() - birthDate.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                      age--;
+
+                    let years = today.getFullYear() - birthDate.getFullYear();
+                    let months = today.getMonth() - birthDate.getMonth();
+                    let days = today.getDate() - birthDate.getDate();
+
+                    if (days < 0) {
+                      months--;
+                      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                      days += prevMonth.getDate();
                     }
-                    return age.toString();
+
+                    if (months < 0) {
+                      years--;
+                      months += 12;
+                    }
+
+                    const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+
+                    return (
+                      <span className="px-1">
+                        <span className="text-base font-semibold">{years}</span>
+                        <span className="text-xs text-gray-600">.{decimal}</span>
+                      </span>
+                    );
                   })()}
-                  readOnly
-                />
+                </div>
               </PopoverTrigger>
               <PopoverContent align="center" style={{ width: '161px' }}>
                 <div className="space-y-2">
