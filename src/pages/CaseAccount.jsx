@@ -175,12 +175,14 @@ export default function CaseAccount() {
               <div className="bg-gray-50 rounded-xl p-6">
                 <label className="text-sm font-medium text-gray-600 block mb-2">תאריך פתיחת חשבון</label>
                 <p className="text-xl font-semibold text-gray-900">
-                  {caseData.created_date ? new Date(caseData.created_date).toLocaleDateString('he-IL', { 
+                  {caseData.created_date ? new Date(caseData.created_date).toLocaleString('he-IL', { 
+                    timeZone: 'Asia/Jerusalem',
                     year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
+                    month: '2-digit', 
+                    day: '2-digit',
                     hour: '2-digit',
-                    minute: '2-digit'
+                    minute: '2-digit',
+                    second: '2-digit'
                   }) : 'לא זמין'}
                 </p>
               </div>
