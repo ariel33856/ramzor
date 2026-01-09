@@ -811,7 +811,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Label className="text-sm whitespace-nowrap">גילאי הילדים</Label>
+          <Label className="text-sm whitespace-nowrap">גילאי הילדים:</Label>
           {[...childrenDates]
             .sort((a, b) => {
               if (a.length !== 10 || b.length !== 10) return 0;
