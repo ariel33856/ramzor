@@ -159,13 +159,6 @@ export default function CaseAccount() {
               </div>
 
               <div className="bg-gray-50 rounded-xl p-6">
-                <label className="text-sm font-medium text-gray-600 block mb-2">סכום הלוואה</label>
-                <p className="text-xl font-semibold text-gray-900">
-                  ₪{caseData.loan_amount?.toLocaleString() || '0'}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-6">
                 <label className="text-sm font-medium text-gray-600 block mb-2">סטטוס</label>
                 <p className="text-xl font-semibold text-gray-900">
                   {caseData.status === 'new' && 'חדש'}
