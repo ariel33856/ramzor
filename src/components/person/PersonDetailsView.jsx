@@ -652,11 +652,19 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
           <Input
-            placeholder="DD-MM-YYYY"
+            placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
             value={basicData.phone}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+
+              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
+              if (value.length === 6) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
               if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
               if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
               const formattedValue = value.slice(0, 10);
@@ -695,11 +703,19 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך הנפקת ת.ז.</Label>
           <Input
-            placeholder="DD-MM-YYYY"
+            placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
             value={basicData.email}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+
+              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
+              if (value.length === 6) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
               if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
               if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
               const formattedValue = value.slice(0, 10);
@@ -711,11 +727,19 @@ export default function PersonDetailsView({ personId }) {
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תוקף ת.ז.</Label>
           <Input
-            placeholder="DD-MM-YYYY"
+            placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
             value={basicData.notes}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+
+              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
+              if (value.length === 6) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
               if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
               if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
               const formattedValue = value.slice(0, 10);
@@ -828,13 +852,21 @@ export default function PersonDetailsView({ personId }) {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
                   <Input 
-                    placeholder="DD-MM-YYYY"
+                    placeholder="DDMMYY או DDMMYYYY"
                     className="w-full"
                     maxLength={10}
                     value={date}
                     onChange={(e) => {
                       setDateError('');
                       let value = e.target.value.replace(/\D/g, '');
+
+                      // אם הוזנו 6 ספרות בדיוק - השלם את השנה
+                      if (value.length === 6) {
+                        const yearPart = parseInt(value.slice(4, 6));
+                        const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                        value = value.slice(0, 4) + fullYear;
+                      }
+
                       if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
                       if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
                       const formattedValue = value.slice(0, 10);
