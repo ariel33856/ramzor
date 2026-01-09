@@ -38,12 +38,12 @@ export const tabComponents = {
     {
       id: 'person_details',
       label: 'פרטי איש קשר',
-      fields: personFields.map(field => ({
-        id: field.id,
-        label: field.label,
-        source: 'person', // מאיזו ישות מגיע הנתון
-        visible: field.visible || false
-      }))
+      fields: [
+        { id: 'first_name', label: 'שם פרטי', source: 'person', visible: false },
+        { id: 'last_name', label: 'שם משפחה', source: 'person', visible: false },
+        { id: 'id_number', label: 'תעודת זהות', source: 'person', visible: false },
+        { id: 'type', label: 'סוג', source: 'person', visible: false }
+      ]
     }
   ],
   contact: [
@@ -52,7 +52,75 @@ export const tabComponents = {
       label: 'פרטי התקשרות',
       fields: [
         { id: 'phone', label: 'טלפון', source: 'person', visible: false },
-        { id: 'email', label: 'אימייל', source: 'person', visible: false }
+        { id: 'email', label: 'אימייל', source: 'person', visible: false },
+        { id: 'notes', label: 'הערות', source: 'person', visible: false }
+      ]
+    }
+  ],
+  contacts: [
+    {
+      id: 'linked_contacts',
+      label: 'אנשי קשר משויכים',
+      fields: [
+        { id: 'linked_accounts', label: 'חשבונות משויכים', source: 'person', visible: false }
+      ]
+    }
+  ],
+  summary: [
+    {
+      id: 'case_summary',
+      label: 'תקציר כללי',
+      fields: [
+        { id: 'client_name', label: 'שם לקוח', source: 'case', visible: false },
+        { id: 'last_name', label: 'שם משפחה', source: 'case', visible: false },
+        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
+      ]
+    }
+  ],
+  notes: [
+    {
+      id: 'case_notes',
+      label: 'הערות התיק',
+      fields: [
+        { id: 'notes', label: 'הערות', source: 'case', visible: false }
+      ]
+    }
+  ],
+  status: [
+    {
+      id: 'status_info',
+      label: 'מידע סטטוס',
+      fields: [
+        { id: 'status', label: 'סטטוס', source: 'case', visible: false },
+        { id: 'urgency', label: 'דחיפות', source: 'case', visible: false },
+        { id: 'assigned_consultant', label: 'יועץ אחראי', source: 'case', visible: false }
+      ]
+    }
+  ],
+  data: [
+    {
+      id: 'financial_data',
+      label: 'נתונים פיננסיים',
+      fields: [
+        { id: 'property_value', label: 'שווי נכס', source: 'case', visible: false },
+        { id: 'loan_amount', label: 'סכום הלוואה', source: 'case', visible: false },
+        { id: 'monthly_income', label: 'הכנסה חודשית', source: 'case', visible: false },
+        { id: 'monthly_expenses', label: 'הוצאות חודשיות', source: 'case', visible: false },
+        { id: 'family_size', label: 'גודל משפחה', source: 'case', visible: false },
+        { id: 'ltv_ratio', label: 'יחס LTV', source: 'case', visible: false },
+        { id: 'dti_ratio', label: 'יחס DTI', source: 'case', visible: false },
+        { id: 'income_per_capita', label: 'הכנסה לנפש', source: 'case', visible: false }
+      ]
+    }
+  ],
+  profiles: [
+    {
+      id: 'client_profile',
+      label: 'פרופיל לקוח',
+      fields: [
+        { id: 'client_id', label: 'תעודת זהות', source: 'case', visible: false },
+        { id: 'client_phone', label: 'טלפון', source: 'case', visible: false },
+        { id: 'client_email', label: 'אימייל', source: 'case', visible: false }
       ]
     }
   ],
@@ -62,12 +130,31 @@ export const tabComponents = {
       label: 'מידע חשבון',
       fields: [
         { id: 'account_number', label: 'מספר חשבון', source: 'case', visible: true },
+        { id: 'target_bank', label: 'בנק יעד', source: 'case', visible: false },
+        { id: 'created_date', label: 'תאריך פתיחה', source: 'case', visible: false },
+        { id: 'module_id', label: 'מודול', source: 'case', visible: false }
+      ]
+    }
+  ],
+  workflow: [
+    {
+      id: 'workflow_status',
+      label: 'תהליך עבודה',
+      fields: [
         { id: 'status', label: 'סטטוס', source: 'case', visible: false },
-        { id: 'created_date', label: 'תאריך פתיחה', source: 'case', visible: false }
+        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
+      ]
+    }
+  ],
+  metrics: [
+    {
+      id: 'case_metrics',
+      label: 'מדדי תיק',
+      fields: [
+        { id: 'red_flags', label: 'דגלים אדומים', source: 'case', visible: false }
       ]
     }
   ]
-  // ניתן להוסיף כרטיסיות נוספות כאן
 };
 
 // פונקציה לקבלת כל השדות האפשריים
@@ -102,13 +189,76 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
   if (!field) return '—';
   
   if (field.source === 'case') {
-    return caseData?.[field.id] || '—';
+    const value = caseData?.[field.id];
+    
+    // טיפול מיוחד בשדות ספציפיים
+    if (field.id === 'status') {
+      const statusLabels = {
+        new: 'חדש',
+        documents_pending: 'ממתין למסמכים',
+        documents_review: 'בבדיקה',
+        financial_analysis: 'ניתוח פיננסי',
+        bank_submission: 'הוגש לבנק',
+        approved: 'אושר',
+        rejected: 'נדחה',
+        completed: 'הושלם'
+      };
+      return statusLabels[value] || value || '—';
+    }
+    
+    if (field.id === 'urgency') {
+      const urgencyLabels = {
+        low: 'נמוכה',
+        medium: 'בינונית',
+        high: 'גבוהה',
+        critical: 'קריטית'
+      };
+      return urgencyLabels[value] || value || '—';
+    }
+    
+    if (field.id === 'target_bank') {
+      const bankLabels = {
+        hapoalim: 'הפועלים',
+        leumi: 'לאומי',
+        mizrahi: 'מזרחי',
+        discount: 'דיסקונט',
+        fibi: 'פיבי',
+        other: 'אחר'
+      };
+      return bankLabels[value] || value || '—';
+    }
+    
+    if (field.id === 'created_date' && value) {
+      const date = new Date(value);
+      const israelTime = new Date(date.getTime() + (2 * 60 * 60 * 1000));
+      return israelTime.toLocaleDateString('he-IL');
+    }
+    
+    if (['property_value', 'loan_amount', 'monthly_income', 'monthly_expenses'].includes(field.id) && value) {
+      return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(value);
+    }
+    
+    if (field.id === 'red_flags' && Array.isArray(value)) {
+      return value.length > 0 ? value.join(', ') : '—';
+    }
+    
+    // בדוק ב-custom_data אם לא נמצא
+    const customValue = caseData?.custom_data?.[field.id];
+    return value || customValue || '—';
   } else if (field.source === 'person') {
     if (!linkedPerson) return '—';
     
     // בדוק קודם ב-custom_data
     const customValue = linkedPerson.custom_data?.[field.id];
     const value = customValue || linkedPerson[field.id];
+    
+    if (field.id === 'linked_accounts' && Array.isArray(value)) {
+      return value.length > 0 ? `${value.length} חשבונות` : '—';
+    }
+    
+    if (field.id === 'type') {
+      return value || '—';
+    }
     
     return value || '—';
   }
