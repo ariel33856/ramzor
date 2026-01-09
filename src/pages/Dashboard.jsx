@@ -374,7 +374,7 @@ export default function Dashboard() {
               {col.label}
             </th>
           ))}
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">פעולות</th>
+          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
         </tr>
       </thead>
 
