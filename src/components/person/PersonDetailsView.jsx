@@ -657,9 +657,10 @@ export default function PersonDetailsView({ personId }) {
             value={basicData.phone}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.phone.replace(/\D/g, '').length;
 
-              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
-              if (value.length === 6) {
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
                 const yearPart = parseInt(value.slice(4, 6));
                 const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
                 value = value.slice(0, 4) + fullYear;
@@ -708,9 +709,10 @@ export default function PersonDetailsView({ personId }) {
             value={basicData.email}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.email.replace(/\D/g, '').length;
 
-              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
-              if (value.length === 6) {
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
                 const yearPart = parseInt(value.slice(4, 6));
                 const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
                 value = value.slice(0, 4) + fullYear;
@@ -732,9 +734,10 @@ export default function PersonDetailsView({ personId }) {
             value={basicData.notes}
             onChange={(e) => {
               let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.notes.replace(/\D/g, '').length;
 
-              // אם הוזנו 6 ספרות בדיוק - השלם את השנה
-              if (value.length === 6) {
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
                 const yearPart = parseInt(value.slice(4, 6));
                 const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
                 value = value.slice(0, 4) + fullYear;
@@ -859,9 +862,10 @@ export default function PersonDetailsView({ personId }) {
                     onChange={(e) => {
                       setDateError('');
                       let value = e.target.value.replace(/\D/g, '');
+                      const currentLength = date.replace(/\D/g, '').length;
 
-                      // אם הוזנו 6 ספרות בדיוק - השלם את השנה
-                      if (value.length === 6) {
+                      // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+                      if (value.length === 6 && value.length >= currentLength) {
                         const yearPart = parseInt(value.slice(4, 6));
                         const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
                         value = value.slice(0, 4) + fullYear;
