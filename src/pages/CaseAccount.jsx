@@ -175,15 +175,18 @@ export default function CaseAccount() {
               <div className="bg-gray-50 rounded-xl p-6">
                 <label className="text-sm font-medium text-gray-600 block mb-2">תאריך פתיחת חשבון</label>
                 <p className="text-xl font-semibold text-gray-900">
-                  {caseData.created_date ? new Date(caseData.created_date).toLocaleString('he-IL', { 
-                    timeZone: 'Asia/Jerusalem',
-                    year: 'numeric', 
-                    month: '2-digit', 
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                  }) : 'לא זמין'}
+                  {caseData.created_date ? (() => {
+                    const date = new Date(caseData.created_date);
+                    const israelTime = new Date(date.getTime() + (2 * 60 * 60 * 1000));
+                    return israelTime.toLocaleString('he-IL', { 
+                      year: 'numeric', 
+                      month: '2-digit', 
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit'
+                    });
+                  })() : 'לא זמין'}
                 </p>
               </div>
             </div>
