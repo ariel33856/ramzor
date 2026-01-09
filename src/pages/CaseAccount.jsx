@@ -44,6 +44,17 @@ export default function CaseAccount() {
     enabled: !!caseData?.linked_borrowers
   });
 
+  const { data: linkedContacts = [] } = useQuery({
+    queryKey: ['linked-contacts', caseId],
+    queryFn: async () => {
+      const allPersons = await base44.entities.Person.list();
+      return allPersons.filter(person => 
+        person.linked_accounts && person.linked_accounts.includes(caseId)
+      );
+    },
+    enabled: !!caseId
+  });
+
   const linkMutation = useMutation({
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
@@ -122,13 +133,29 @@ export default function CaseAccount() {
               <div className="bg-gray-50 rounded-xl p-6">
                 <label className="text-sm font-medium text-gray-600 block mb-2">שם לקוח</label>
                 <p className="text-xl font-semibold text-gray-900">
-                  {linkedBorrowers.length > 0 && linkedBorrowers[0] ? linkedBorrowers[0].client_name : caseData.client_name}
+                  {linkedContacts.length > 0 
+                    ? `${linkedContacts[0].first_name || ''} ${linkedContacts[0].last_name || ''}`
+                    : (linkedBorrowers.length > 0 && linkedBorrowers[0] 
+                      ? linkedBorrowers[0].client_name 
+                      : caseData.client_name)}
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-xl p-6">
-                <label className="text-sm font-medium text-gray-600 block mb-2">תעודת זהות</label>
-                <p className="text-xl font-semibold text-gray-900">{caseData.client_id}</p>
+                <label className="text-sm font-medium text-gray-600 block mb-2">אנשי קשר משויכים</label>
+                {linkedContacts.length > 0 ? (
+                  <div className="space-y-2">
+                    {linkedContacts.map(contact => (
+                      <div key={contact.id} className="bg-white rounded-lg p-3 border border-blue-200">
+                        <p className="font-semibold text-gray-900">
+                          {contact.first_name} {contact.last_name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">אין אנשי קשר משויכים</p>
+                )}
               </div>
 
               <div className="bg-gray-50 rounded-xl p-6">
