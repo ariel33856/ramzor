@@ -13,6 +13,24 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+const validateIsraeliID = (id) => {
+  // הוסף 0 בהתחלה אם יש 8 ספרות
+  id = String(id).padStart(9, '0');
+  
+  // בדוק שיש בדיוק 9 ספרות
+  if (!/^\d{9}$/.test(id)) return false;
+  
+  // חשב ספרת ביקורת
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    let digit = Number(id[i]);
+    let step = digit * ((i % 2) + 1);
+    sum += step > 9 ? step - 9 : step;
+  }
+  
+  return sum % 10 === 0;
+};
+
 export default function PersonDetailsView({ personId }) {
   const queryClient = useQueryClient();
   const [customFields, setCustomFields] = useState([]);
@@ -52,6 +70,7 @@ export default function PersonDetailsView({ personId }) {
   const [manualNumChildrenUnder18, setManualNumChildrenUnder18] = useState('');
   const [showChildrenWarning, setShowChildrenWarning] = useState(false);
   const [maritalStatus, setMaritalStatus] = useState('married');
+  const [idError, setIdError] = useState('');
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -648,17 +667,30 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
-          <Input
-            value={basicData.id_number}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, '');
-              if (value.length <= 9) {
-                handleBasicDataChange('id_number', value);
-              }
-            }}
-            maxLength={9}
-            placeholder="9 ספרות"
-          />
+          <div className="flex flex-col gap-1 flex-1">
+            <Input
+              value={basicData.id_number}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 9) {
+                  handleBasicDataChange('id_number', value);
+                  if (value.length === 9 || value.length === 8) {
+                    if (!validateIsraeliID(value)) {
+                      setIdError('מספר תעודת זהות לא תקין');
+                    } else {
+                      setIdError('');
+                    }
+                  } else {
+                    setIdError('');
+                  }
+                }
+              }}
+              maxLength={9}
+              placeholder="9 ספרות"
+              className={idError ? 'border-red-500' : ''}
+            />
+            {idError && <span className="text-xs text-red-600">{idError}</span>}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">תאריך הנפקת ת.ז.</Label>
