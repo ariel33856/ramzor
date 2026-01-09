@@ -75,17 +75,23 @@ export default function PersonDetailsView({ personId }) {
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
     queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
-    enabled: !!personId
+    enabled: !!personId,
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const { data: allAccounts = [] } = useQuery({
     queryKey: ['all-accounts'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const { data: allContacts = [] } = useQuery({
     queryKey: ['all-contacts-spouse'],
-    queryFn: () => base44.entities.Person.filter({ is_archived: false })
+    queryFn: () => base44.entities.Person.filter({ is_archived: false }),
+    enabled: spouseDialogOpen,
+    staleTime: 5 * 60 * 1000
   });
 
   const { data: linkedSpouse } = useQuery({

@@ -41,7 +41,8 @@ export default function Dashboard() {
     queryKey: ['all-persons'],
     queryFn: () => base44.entities.Person.list(),
     retry: 1,
-    staleTime: 30000
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   // Extract unique custom field names from all persons
@@ -128,7 +129,8 @@ export default function Dashboard() {
     queryKey: ['cases'],
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
     retry: 1,
-    staleTime: 30000
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   // Create a map of case IDs to their linked persons

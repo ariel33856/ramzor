@@ -55,7 +55,8 @@ export default function Layout({ children, currentPageName }) {
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId,
     retry: 1,
-    staleTime: 30000
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const { data: linkedBorrowers = [] } = useQuery({
@@ -96,7 +97,8 @@ export default function Layout({ children, currentPageName }) {
     queryFn: () => base44.entities.Person.list(),
     enabled: !!caseId,
     retry: 1,
-    staleTime: 30000
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   // Find person linked via Person.linked_accounts
@@ -111,7 +113,8 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['modules'],
     queryFn: () => base44.entities.Module.list('order'),
     retry: 1,
-    staleTime: 60000
+    staleTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const { data: allCases = [] } = useQuery({
@@ -119,7 +122,8 @@ export default function Layout({ children, currentPageName }) {
     queryFn: () => base44.entities.MortgageCase.list('-created_date'),
     enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive',
     retry: 1,
-    staleTime: 30000
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const { data: currentBorrower } = useQuery({
