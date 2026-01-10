@@ -55,12 +55,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
   const handleFiles = async (files) => {
     setError(null);
+    setIsUploading(true);
     try {
       for (const file of Array.from(files)) {
         try {
-          setIsUploading(true);
           const { file_url } = await base44.integrations.Core.UploadFile({ file });
-          setIsUploading(false);
           
           const fileId = Date.now() + Math.random();
           const newFile = {
