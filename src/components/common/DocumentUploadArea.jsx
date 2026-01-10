@@ -36,31 +36,15 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     }
   };
 
-  const cropImageToSquare = (base64Image, callback) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const squareSize = Math.min(img.width, img.height);
-      const startX = (img.width - squareSize) / 2;
-      const startY = (img.height - squareSize) / 2;
-
-      canvas.width = squareSize;
-      canvas.height = squareSize;
-      ctx.drawImage(img, startX, startY, squareSize, squareSize, 0, 0, squareSize, squareSize);
-      callback(canvas.toDataURL());
-    };
-    img.src = base64Image;
-  };
-
   const handleFiles = async (files) => {
-    setError(null);
     setIsUploading(true);
+    setError(null);
     try {
       for (const file of Array.from(files)) {
         try {
+          console.log('Uploading file:', file.name);
           const { file_url } = await base44.integrations.Core.UploadFile({ file });
-          
+          console.log('File uploaded:', file_url);
           const fileId = Date.now() + Math.random();
           const newFile = {
             id: fileId,
@@ -69,41 +53,33 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
             size: (file.size / 1024 / 1024).toFixed(2),
             type: file.type
           };
-          
           setUploadedFiles(prev => [...prev, newFile]);
+          
           if (onDocumentUpload) {
             onDocumentUpload(newFile);
           }
           
-          // Handle images: crop to square and optionally run AI detection
+          // Run AI detection in background if it's an image
           if (file.type.startsWith('image/')) {
+            setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
             const reader = new FileReader();
             reader.onload = (e) => {
-              const base64Image = e.target.result;
-              // תמיד חתוך לריבוע
-              cropImageToSquare(base64Image, (squaredImage) => {
-                if (onPreviewChange) {
-                  onPreviewChange(squaredImage);
-                }
-              });
-              // בהקביל, הרץ סינון AI בהקע
-              setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
-              runHumanDetection(file_url, base64Image, fileId);
+              runHumanDetection(file_url, e.target.result, fileId);
             };
             reader.readAsDataURL(file);
           } else {
             setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
           }
         } catch (fileError) {
-          setIsUploading(false);
           console.error('Error uploading file:', file.name, fileError);
           setError(`שגיאה בהעלאת קובץ: ${file.name}`);
         }
       }
     } catch (error) {
-      setIsUploading(false);
       console.error('Upload error:', error);
       setError('שגיאה בהעלאת הקבצים');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -124,25 +100,27 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         }
       });
 
+      console.log('Detection result:', result);
+      
       const hasHuman = result?.has_human === true;
       setAiDetectionStatus(prev => ({ 
         ...prev, 
         [fileId]: hasHuman ? 'detected' : 'not-detected' 
       }));
 
-      // אם AI זיהה דמות, חתוך לפי הקואורדינטות
       if (hasHuman && onPreviewChange && result?.x !== undefined && result?.y !== undefined && result?.width !== undefined && result?.height !== undefined) {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const padding = 20;
+          const padding = 20; // הוסף מרווח כדי לוודא שלא נחתוך
           const x = Math.max(0, (result.x / 100) * img.width - padding);
           const y = Math.max(0, (result.y / 100) * img.height - padding);
           const width = ((result.width / 100) * img.width) + (padding * 2);
           const height = ((result.height / 100) * img.height) + (padding * 2);
 
+          // וודא שלא יוצאים מגבולות התמונה
           const cropWidth = Math.min(width, img.width - x);
           const cropHeight = Math.min(height, img.height - y);
           const squareSize = Math.min(cropWidth, cropHeight);
@@ -150,15 +128,21 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           if (x >= 0 && y >= 0 && squareSize > 0) {
             canvas.width = squareSize;
             canvas.height = squareSize;
+
             ctx.drawImage(img, x, y, squareSize, squareSize, 0, 0, squareSize, squareSize);
-            onPreviewChange(canvas.toDataURL());
+            const croppedImage = canvas.toDataURL();
+            onPreviewChange(croppedImage);
+          } else {
+            onPreviewChange(base64Image);
           }
         };
         img.src = base64Image;
+      } else if (hasHuman && onPreviewChange) {
+        onPreviewChange(base64Image);
       }
     } catch (error) {
       console.error('AI detection error:', error);
-      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-detected' }));
     }
   };
 
