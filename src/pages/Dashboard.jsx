@@ -553,7 +553,7 @@ export default function Dashboard() {
                       return (
                         <td 
                           key={fieldId} 
-                          className="px-6 py-4 cursor-pointer"
+                          className="px-6 py-4 cursor-pointer relative"
                           style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
                           onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                         >
@@ -564,6 +564,7 @@ export default function Dashboard() {
                           ) : (
                             <span className="text-gray-600">{value}</span>
                           )}
+                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-300 pointer-events-none" />
                         </td>
                       );
                     })}
