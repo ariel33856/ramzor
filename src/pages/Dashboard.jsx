@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
   Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive,
-  ArrowUp, ArrowDown
+  ArrowUp, ArrowDown, FilterX
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,8 @@ export default function Dashboard() {
     return saved ? JSON.parse(saved) : ['account_number', 'first_name', 'last_name'];
   });
   const [columnMenuOpen, setColumnMenuOpen] = useState(null);
+  const [columnFilters, setColumnFilters] = useState({});
+  const [filterDialogOpen, setFilterDialogOpen] = useState(null);
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -72,6 +74,45 @@ export default function Dashboard() {
       return newFields;
     });
     setColumnMenuOpen(null);
+  };
+
+  const toggleColumnFilter = (fieldId, value) => {
+    setColumnFilters(prev => {
+      const currentFilters = prev[fieldId] || [];
+      const newFilters = currentFilters.includes(value)
+        ? currentFilters.filter(v => v !== value)
+        : [...currentFilters, value];
+      
+      if (newFilters.length === 0) {
+        const { [fieldId]: removed, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [fieldId]: newFilters };
+    });
+  };
+
+  const clearColumnFilter = (fieldId) => {
+    setColumnFilters(prev => {
+      const { [fieldId]: removed, ...rest } = prev;
+      return rest;
+    });
+    setFilterDialogOpen(null);
+  };
+
+  const getUniqueValuesForField = (fieldId) => {
+    const field = allAvailableFields.find(f => f.id === fieldId);
+    if (!field) return [];
+    
+    const values = new Set();
+    cases.forEach(caseData => {
+      const linkedPersons = caseToPersonMap[caseData.id] || [];
+      const linkedPerson = linkedPersons[0];
+      const value = getFieldValue(field, caseData, linkedPerson, allPersons);
+      if (value && value !== '—') {
+        values.add(value);
+      }
+    });
+    return Array.from(values).sort();
   };
 
   // Fetch all persons to extract custom fields from their custom_data
@@ -149,7 +190,17 @@ export default function Dashboard() {
         c.account_number?.toString().includes(searchTerm);
       const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
       const matchesUrgency = urgencyFilter === 'all' || c.urgency === urgencyFilter;
-      return matchesSearch && matchesStatus && matchesUrgency;
+      
+      // Check column filters
+      const matchesColumnFilters = Object.entries(columnFilters).every(([fieldId, filterValues]) => {
+        if (filterValues.length === 0) return true;
+        const field = allAvailableFields.find(f => f.id === fieldId);
+        if (!field) return true;
+        const value = getFieldValue(field, c, linkedPerson, allPersons);
+        return filterValues.includes(value);
+      });
+      
+      return matchesSearch && matchesStatus && matchesUrgency && matchesColumnFilters;
     } catch (e) {
       return false;
     }
@@ -219,9 +270,45 @@ export default function Dashboard() {
                 selectedFields={selectedFields}
                 onFieldToggle={handleFieldToggle}
               />
-            </div>
-            </div>
-            </div>
+              </div>
+              </div>
+              </div>
+
+              {/* Filter Dialog */}
+              <Dialog open={!!filterDialogOpen} onOpenChange={(open) => !open && setFilterDialogOpen(null)}>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>
+                    סנן לפי {allAvailableFields.find(f => f.id === filterDialogOpen)?.label}
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filterDialogOpen && getUniqueValuesForField(filterDialogOpen).map(value => (
+                    <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                      <Checkbox
+                        checked={columnFilters[filterDialogOpen]?.includes(value) || false}
+                        onCheckedChange={() => toggleColumnFilter(filterDialogOpen, value)}
+                      />
+                      <label className="flex-1 cursor-pointer text-sm">
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2 justify-end mt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => clearColumnFilter(filterDialogOpen)}
+                  >
+                    <FilterX className="w-4 h-4 ml-2" />
+                    נקה סינון
+                  </Button>
+                  <Button onClick={() => setFilterDialogOpen(null)}>
+                    סגור
+                  </Button>
+                </div>
+              </DialogContent>
+              </Dialog>
 
             <div className="flex-1 overflow-hidden p-1">
         {/* Cases Content */}
@@ -298,6 +385,23 @@ export default function Dashboard() {
                           מקם מאוחר יותר
                         </Button>
                       )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start"
+                        onClick={() => {
+                          setFilterDialogOpen(fieldId);
+                          setColumnMenuOpen(null);
+                        }}
+                      >
+                        <Filter className="w-4 h-4 ml-2" />
+                        סנן
+                        {columnFilters[fieldId]?.length > 0 && (
+                          <span className="mr-1 px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
+                            {columnFilters[fieldId].length}
+                          </span>
+                        )}
+                      </Button>
                     </div>
                   </PopoverContent>
                 </Popover>
