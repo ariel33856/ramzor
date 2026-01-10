@@ -359,7 +359,9 @@ export default function Dashboard() {
                                       ...provided.draggableProps.style,
                                       position: snapshot.isDragging ? 'fixed' : 'relative',
                                       zIndex: snapshot.isDragging ? 9999 : 1,
-                                      pointerEvents: snapshot.isDragging ? 'none' : 'auto'
+                                      pointerEvents: snapshot.isDragging ? 'none' : 'auto',
+                                      left: snapshot.isDragging ? `${(provided.draggableProps.style?.left || 0) - 50}px` : undefined,
+                                      top: snapshot.isDragging ? `${(provided.draggableProps.style?.top || 0) - 50}px` : undefined
                                     }}
                                     className={`
                                       flex items-center gap-3 p-3 rounded-lg border-2 transition-all
