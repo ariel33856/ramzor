@@ -86,50 +86,77 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const runHumanDetection = (file_url, base64Image, fileId) => {
     (async () => {
       try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה עם קצת padding סביבה (לא לחתוך את הדמות עצמה): {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} כאשר הערכים הם אחוזים מגודל התמונה. אם אין בנאדם, החזר {\"has_human\": false}",
-        file_urls: [file_url],
-        response_json_schema: {
-          type: "object",
-          properties: {
-            has_human: { type: "boolean" },
-            x: { type: "number" },
-            y: { type: "number" },
-            width: { type: "number" },
-            height: { type: "number" }
+        const result = await base44.integrations.Core.InvokeLLM({
+          prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק (לא לחתוך את הדמות עצמה, רק את שאר התמונה): {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} כאשר הערכים הם אחוזים מגודל התמונה. אם אין בנאדם, החזר {\"has_human\": false}",
+          file_urls: [file_url],
+          response_json_schema: {
+            type: "object",
+            properties: {
+              has_human: { type: "boolean" },
+              x: { type: "number" },
+              y: { type: "number" },
+              width: { type: "number" },
+              height: { type: "number" }
+            }
           }
+        });
+
+        const hasHuman = result?.has_human === true;
+        setAiDetectionStatus(prev => ({ 
+          ...prev, 
+          [fileId]: hasHuman ? 'detected' : 'not-detected' 
+        }));
+
+        if (hasHuman && result?.x !== undefined) {
+          const img = new Image();
+          img.onload = async () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const x = (result.x / 100) * img.width;
+            const y = (result.y / 100) * img.height;
+            const width = (result.width / 100) * img.width;
+            const height = (result.height / 100) * img.height;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+            const croppedDataUrl = canvas.toDataURL('image/png');
+
+            // Convert data URL to blob and upload
+            const blob = await fetch(croppedDataUrl).then(res => res.blob());
+            const croppedFile = new File([blob], 'cropped.png', { type: 'image/png' });
+            
+            try {
+              const { file_url: croppedUrl } = await base44.integrations.Core.UploadFile({ file: croppedFile });
+              
+              // Update the uploaded file with the cropped version
+              setUploadedFiles(prev => 
+                prev.map(f => f.id === fileId ? { ...f, url: croppedUrl } : f)
+              );
+              
+              // Call the callback with updated file
+              if (onDocumentUpload) {
+                onDocumentUpload({ 
+                  id: fileId,
+                  name: 'cropped_image.png',
+                  url: croppedUrl,
+                  size: (blob.size / 1024 / 1024).toFixed(2),
+                  type: 'image/png'
+                });
+              }
+              
+              if (onPreviewChange) {
+                onPreviewChange(croppedDataUrl);
+              }
+            } catch (uploadError) {
+              console.error('Error uploading cropped image:', uploadError);
+              setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+            }
+          };
+          img.src = base64Image;
         }
-      });
-
-      const hasHuman = result?.has_human === true;
-      setAiDetectionStatus(prev => ({ 
-        ...prev, 
-        [fileId]: hasHuman ? 'detected' : 'not-detected' 
-      }));
-
-      if (hasHuman && onPreviewChange && result?.x !== undefined) {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-
-          const x = (result.x / 100) * img.width;
-          const y = (result.y / 100) * img.height;
-          const width = (result.width / 100) * img.width;
-          const height = (result.height / 100) * img.height;
-
-          canvas.width = width;
-          canvas.height = height;
-
-          ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-          const croppedImage = canvas.toDataURL();
-
-          onPreviewChange(croppedImage);
-        };
-        img.src = base64Image;
-      } else if (hasHuman && onPreviewChange) {
-        onPreviewChange(base64Image);
-      }
       } catch (error) {
         console.error('AI detection error:', error);
         setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
