@@ -44,6 +44,7 @@ export const tabComponents = {
         { id: 'phone', label: 'טלפון', source: 'person', visible: false },
         { id: 'email', label: 'אימייל', source: 'person', visible: false },
         { id: 'notes', label: 'הערות', source: 'person', visible: false },
+        { id: 'residential_city', label: 'יישוב מגורים', source: 'person', visible: false },
         { id: 'address', label: 'כתובת', source: 'person', visible: false },
         { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
         { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false },

@@ -68,6 +68,7 @@ export default function PersonDetailsView({ personId }) {
     phone: '',
     email: '',
     notes: '',
+    residential_city: '',
     address: ''
   });
   const [numChildren, setNumChildren] = useState(0);
@@ -268,6 +269,7 @@ export default function PersonDetailsView({ personId }) {
         phone: person.phone || '',
         email: person.email || '',
         notes: person.notes || '',
+        residential_city: person.residential_city || '',
         address: person.address || ''
       });
       
@@ -766,7 +768,16 @@ export default function PersonDetailsView({ personId }) {
             className="text-center"
           />
         </div>
-        <div className="flex items-center gap-2 col-span-2">
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.residential_city}</Label>
+          <Input
+            value={basicData.residential_city || ''}
+            onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
+            placeholder={personFields.residential_city}
+            className="flex-1"
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">{personFields.address}</Label>
           <Input
             value={basicData.address || ''}
