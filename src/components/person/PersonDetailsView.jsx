@@ -13,6 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
+import DocumentUploadArea from '@/components/common/DocumentUploadArea';
 
 const validateIsraeliID = (id) => {
   // הוסף 0 בהתחלה אם יש 8 ספרות
@@ -664,6 +665,15 @@ export default function PersonDetailsView({ personId }) {
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
+      {/* Document Upload Area */}
+      <div className="mb-6 pb-6">
+        <DocumentUploadArea 
+          onDocumentUpload={(file) => {
+            console.log('Document uploaded:', file);
+          }}
+        />
+      </div>
+
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
