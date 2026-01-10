@@ -74,6 +74,17 @@ export default function Dashboard() {
     setColumnMenuOpen(null);
   };
 
+  const handleColumnDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const newFields = Array.from(selectedFields);
+    const [removed] = newFields.splice(result.source.index, 1);
+    newFields.splice(result.destination.index, 0, removed);
+    
+    setSelectedFields(newFields);
+    localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
+  };
+
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
@@ -259,53 +270,75 @@ export default function Dashboard() {
             <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
           </motion.div>
         ) : (
+<DragDropContext onDragEnd={handleColumnDragEnd}>
 <div className="bg-white rounded-xl shadow-sm border border-gray-100">
   <div className="overflow-x-auto max-h-[100vh]">
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
-        <tr className="border-b-2 border-gray-200">
-          {selectedFields.map((fieldId, index) => {
-            const field = allAvailableFields.find(f => f.id === fieldId);
-            return (
-              <th key={fieldId} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-                <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
-                  <PopoverTrigger asChild>
-                    <button className="hover:text-blue-600 transition-colors cursor-pointer">
-                      {field?.label || fieldId}
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-40 p-2" align="start">
-                    <div className="space-y-1">
-                      {index > 0 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => moveColumnEarlier(fieldId)}
-                        >
-                          <ArrowUp className="w-4 h-4 ml-2" />
-                          מקם מוקדם יותר
-                        </Button>
-                      )}
-                      {index < selectedFields.length - 1 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => moveColumnLater(fieldId)}
-                        >
-                          <ArrowDown className="w-4 h-4 ml-2" />
-                          מקם מאוחר יותר
-                        </Button>
-                      )}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </th>
-            );
-          })}
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
-        </tr>
+        <Droppable droppableId="columns" direction="horizontal">
+          {(provided) => (
+            <tr 
+              className="border-b-2 border-gray-200"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {selectedFields.map((fieldId, index) => {
+                const field = allAvailableFields.find(f => f.id === fieldId);
+                return (
+                  <Draggable key={fieldId} draggableId={fieldId} index={index}>
+                    {(provided, snapshot) => (
+                      <th 
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className={`px-6 py-4 text-right text-sm font-semibold text-gray-700 ${
+                          snapshot.isDragging ? 'bg-blue-100 shadow-lg' : ''
+                        }`}
+                      >
+                        <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
+                          <PopoverTrigger asChild>
+                            <button className="hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-2">
+                              <GripVertical className="w-4 h-4 text-gray-400" />
+                              {field?.label || fieldId}
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-40 p-2" align="start">
+                            <div className="space-y-1">
+                              {index > 0 && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="w-full justify-start"
+                                  onClick={() => moveColumnEarlier(fieldId)}
+                                >
+                                  <ArrowUp className="w-4 h-4 ml-2" />
+                                  מקם מוקדם יותר
+                                </Button>
+                              )}
+                              {index < selectedFields.length - 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="w-full justify-start"
+                                  onClick={() => moveColumnLater(fieldId)}
+                                >
+                                  <ArrowDown className="w-4 h-4 ml-2" />
+                                  מקם מאוחר יותר
+                                </Button>
+                              )}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </th>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+              <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
+            </tr>
+          )}
+        </Droppable>
       </thead>
 
       <tbody>
@@ -362,6 +395,7 @@ export default function Dashboard() {
             </table>
             </div>
             </div>
+</DragDropContext>
             )}
             </div>
             </div>
