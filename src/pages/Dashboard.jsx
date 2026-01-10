@@ -515,18 +515,16 @@ export default function Dashboard() {
                     </div>
                     </PopoverContent>
                     </Popover>
-                    {index < selectedFields.length - 1 && (
                     <div
-                    className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                      resizingColumn === fieldId ? 'bg-blue-500' : 'bg-transparent hover:bg-blue-300'
-                    }`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      const th = e.currentTarget.parentElement;
-                      handleColumnResize(fieldId, e.clientX, th.offsetWidth);
-                    }}
+                      className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
+                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-transparent hover:bg-blue-300'
+                      }`}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        const th = e.currentTarget.parentElement;
+                        handleColumnResize(fieldId, e.clientX, th.offsetWidth);
+                      }}
                     />
-                    )}
                     </th>
                     );
                     })}
