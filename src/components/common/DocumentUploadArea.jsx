@@ -42,37 +42,104 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     try {
       for (const file of Array.from(files)) {
         try {
-          console.log('Uploading file:', file.name);
-          const { file_url } = await base44.integrations.Core.UploadFile({ file });
-          console.log('File uploaded:', file_url);
           const fileId = Date.now() + Math.random();
-          const newFile = {
-            id: fileId,
-            name: file.name,
-            url: file_url,
-            size: (file.size / 1024 / 1024).toFixed(2),
-            type: file.type
-          };
-          setUploadedFiles(prev => [...prev, newFile]);
           
-          if (onDocumentUpload) {
-            onDocumentUpload(newFile);
-          }
-          
-          // Run AI detection in background if it's an image
+          // For images, detect human first before uploading
           if (file.type.startsWith('image/')) {
             setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
             const reader = new FileReader();
-            reader.onload = (e) => {
-              runHumanDetection(file_url, e.target.result, fileId);
+            reader.onload = async (e) => {
+              try {
+                const base64 = e.target.result;
+                const result = await base44.integrations.Core.InvokeLLM({
+                  prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק: {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} אם אין בנאדם, החזר {\"has_human\": false}",
+                  file_urls: [base64],
+                  response_json_schema: {
+                    type: "object",
+                    properties: {
+                      has_human: { type: "boolean" },
+                      x: { type: "number" },
+                      y: { type: "number" },
+                      width: { type: "number" },
+                      height: { type: "number" }
+                    }
+                  }
+                });
+
+                let fileToUpload = file;
+                let uploadFileName = file.name;
+
+                // If human detected, crop the image
+                if (result?.has_human && result?.x !== undefined) {
+                  const img = new Image();
+                  img.onload = async () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    const x = (result.x / 100) * img.width;
+                    const y = (result.y / 100) * img.height;
+                    const width = (result.width / 100) * img.width;
+                    const height = (result.height / 100) * img.height;
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+
+                    const croppedBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    
+                    // Upload cropped image
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file: croppedBlob });
+                    
+                    const newFile = {
+                      id: fileId,
+                      name: 'cropped_' + file.name,
+                      url: file_url,
+                      size: (croppedBlob.size / 1024 / 1024).toFixed(2),
+                      type: 'image/png'
+                    };
+                    setUploadedFiles(prev => [...prev, newFile]);
+                    if (onDocumentUpload) onDocumentUpload(newFile);
+                    if (onPreviewChange) onPreviewChange(canvas.toDataURL());
+                    setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detected' }));
+                  };
+                  img.src = base64;
+                } else {
+                  // No human detected, upload original
+                  const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                  const newFile = {
+                    id: fileId,
+                    name: file.name,
+                    url: file_url,
+                    size: (file.size / 1024 / 1024).toFixed(2),
+                    type: file.type
+                  };
+                  setUploadedFiles(prev => [...prev, newFile]);
+                  if (onDocumentUpload) onDocumentUpload(newFile);
+                  setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-detected' }));
+                }
+              } catch (error) {
+                console.error('AI detection error:', error);
+                setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+              }
             };
             reader.readAsDataURL(file);
           } else {
+            // Non-image files, upload directly
+            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+            const newFile = {
+              id: fileId,
+              name: file.name,
+              url: file_url,
+              size: (file.size / 1024 / 1024).toFixed(2),
+              type: file.type
+            };
+            setUploadedFiles(prev => [...prev, newFile]);
+            if (onDocumentUpload) onDocumentUpload(newFile);
             setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
           }
         } catch (fileError) {
-          console.error('Error uploading file:', file.name, fileError);
-          setError(`שגיאה בהעלאת קובץ: ${file.name}`);
+          console.error('Error processing file:', file.name, fileError);
+          setError(`שגיאה בעיבוד קובץ: ${file.name}`);
         }
       }
     } catch (error) {
