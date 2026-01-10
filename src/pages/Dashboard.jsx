@@ -332,7 +332,7 @@ export default function Dashboard() {
 
               {/* Reorder Dialog */}
               <Dialog open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-md overflow-visible">
                   <DialogHeader>
                     <DialogTitle>סדר עמודות</DialogTitle>
                   </DialogHeader>
@@ -344,6 +344,7 @@ export default function Dashboard() {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           className="space-y-2 max-h-96 overflow-y-auto"
+                          style={{ position: 'relative', zIndex: 1 }}
                         >
                           {selectedFields.map((fieldId, index) => {
                             const field = allAvailableFields.find(f => f.id === fieldId);
@@ -354,10 +355,16 @@ export default function Dashboard() {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      position: snapshot.isDragging ? 'fixed' : 'relative',
+                                      zIndex: snapshot.isDragging ? 9999 : 1,
+                                      pointerEvents: snapshot.isDragging ? 'none' : 'auto'
+                                    }}
                                     className={`
                                       flex items-center gap-3 p-3 rounded-lg border-2 transition-all
                                       ${snapshot.isDragging 
-                                        ? 'bg-blue-50 border-blue-300 shadow-lg' 
+                                        ? 'bg-blue-50 border-blue-300 shadow-2xl scale-105' 
                                         : 'bg-white border-gray-200 hover:border-gray-300'
                                       }
                                     `}
