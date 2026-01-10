@@ -97,27 +97,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         [fileId]: hasHuman ? 'detected' : 'not-detected' 
       }));
       
-      if (hasHuman && onPreviewChange && result?.x !== undefined) {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          const x = (result.x / 100) * img.width;
-          const y = (result.y / 100) * img.height;
-          const width = (result.width / 100) * img.width;
-          const height = (result.height / 100) * img.height;
-          
-          canvas.width = width;
-          canvas.height = height;
-          
-          ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-          const croppedImage = canvas.toDataURL();
-          
-          onPreviewChange(croppedImage);
-        };
-        img.src = base64Image;
-      } else if (hasHuman && onPreviewChange) {
+      if (hasHuman && onPreviewChange) {
         onPreviewChange(base64Image);
       }
     } catch (error) {
