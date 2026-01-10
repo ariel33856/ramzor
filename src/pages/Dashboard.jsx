@@ -27,20 +27,55 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [selectedFields, setSelectedFields] = useState(() => {
-    const saved = localStorage.getItem('dashboardSelectedFields');
-    return saved ? JSON.parse(saved) : ['account_number', 'first_name', 'last_name'];
+  const [user, setUser] = useState(null);
+  const [filterUser, setFilterUser] = useState('all');
+  
+  // Load user data including preferences
+  useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me().then(u => {
+      setUser(u);
+      if (u.dashboard_preferences) {
+        if (u.dashboard_preferences.selectedFields) setSelectedFields(u.dashboard_preferences.selectedFields);
+        if (u.dashboard_preferences.columnWidths) setColumnWidths(u.dashboard_preferences.columnWidths);
+      }
+      return u;
+    }),
+    staleTime: 60000
   });
+
+  // Get list of all users for admin filter
+  const { data: usersList = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+    enabled: user?.role === 'admin',
+    staleTime: 5 * 60 * 1000
+  });
+
+  const [selectedFields, setSelectedFields] = useState(['account_number', 'first_name', 'last_name']);
   const [columnMenuOpen, setColumnMenuOpen] = useState(null);
   const [columnFilters, setColumnFilters] = useState({});
   const [rangeFilters, setRangeFilters] = useState({});
   const [filterDialogOpen, setFilterDialogOpen] = useState(null);
   const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
-  const [columnWidths, setColumnWidths] = useState(() => {
-    const saved = localStorage.getItem('dashboardColumnWidths');
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [columnWidths, setColumnWidths] = useState({});
   const [resizingColumn, setResizingColumn] = useState(null);
+
+  // Function to save preferences
+  const savePreferences = async (updates) => {
+    if (!user) return;
+    const newPrefs = {
+      ...user.dashboard_preferences,
+      ...updates
+    };
+    try {
+      await base44.auth.updateMe({ dashboard_preferences: newPrefs });
+      // Update local user object to reflect changes without reload
+      setUser({ ...user, dashboard_preferences: newPrefs });
+    } catch (e) {
+      console.error('Failed to save preferences', e);
+    }
+  };
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -50,36 +85,33 @@ export default function Dashboard() {
   });
 
   const handleFieldToggle = (fieldId) => {
-    setSelectedFields(prev => {
-      const newFields = prev.includes(fieldId)
-        ? prev.filter(id => id !== fieldId)
-        : [...prev, fieldId];
-      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
-      return newFields;
-    });
+    const newFields = selectedFields.includes(fieldId)
+      ? selectedFields.filter(id => id !== fieldId)
+      : [...selectedFields, fieldId];
+    
+    setSelectedFields(newFields);
+    savePreferences({ selectedFields: newFields });
   };
 
   const moveColumnEarlier = (fieldId) => {
-    setSelectedFields(prev => {
-      const index = prev.indexOf(fieldId);
-      if (index <= 0) return prev;
-      const newFields = [...prev];
-      [newFields[index - 1], newFields[index]] = [newFields[index], newFields[index - 1]];
-      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
-      return newFields;
-    });
+    const index = selectedFields.indexOf(fieldId);
+    if (index <= 0) return;
+    const newFields = [...selectedFields];
+    [newFields[index - 1], newFields[index]] = [newFields[index], newFields[index - 1]];
+    
+    setSelectedFields(newFields);
+    savePreferences({ selectedFields: newFields });
     setColumnMenuOpen(null);
   };
 
   const moveColumnLater = (fieldId) => {
-    setSelectedFields(prev => {
-      const index = prev.indexOf(fieldId);
-      if (index === -1 || index >= prev.length - 1) return prev;
-      const newFields = [...prev];
-      [newFields[index], newFields[index + 1]] = [newFields[index + 1], newFields[index]];
-      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
-      return newFields;
-    });
+    const index = selectedFields.indexOf(fieldId);
+    if (index === -1 || index >= selectedFields.length - 1) return;
+    const newFields = [...selectedFields];
+    [newFields[index], newFields[index + 1]] = [newFields[index + 1], newFields[index]];
+    
+    setSelectedFields(newFields);
+    savePreferences({ selectedFields: newFields });
     setColumnMenuOpen(null);
   };
 
@@ -237,8 +269,24 @@ export default function Dashboard() {
   };
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    queryKey: ['cases', user?.role, user?.email, filterUser],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      // Admin logic
+      if (user.role === 'admin') {
+        if (filterUser && filterUser !== 'all') {
+           // If filtering by specific user
+           return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        }
+        // Show all
+        return base44.entities.MortgageCase.list('-created_date');
+      }
+      
+      // Regular user logic - only show their own
+      return base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date');
+    },
+    enabled: !!user,
     retry: 1,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
@@ -344,6 +392,22 @@ export default function Dashboard() {
               />
             </div>
             
+            {user?.role === 'admin' && (
+              <Select value={filterUser} onValueChange={setFilterUser}>
+                <SelectTrigger className="w-full md:w-48 border-orange-200 bg-orange-50 text-orange-900">
+                  <SelectValue placeholder="סנן לפי משתמש" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל המשתמשים</SelectItem>
+                  {usersList.map(u => (
+                    <SelectItem key={u.id} value={u.email}>
+                      {u.first_name || u.email} {u.last_name || ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full md:w-48">
                 <SelectValue placeholder="סטטוס" />
