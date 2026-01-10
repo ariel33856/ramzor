@@ -266,12 +266,11 @@ export default function Dashboard() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           className={`px-6 py-4 text-right text-sm font-semibold text-gray-700 ${
-                            snapshot.isDragging ? 'bg-blue-200 shadow-2xl opacity-90 rounded-lg scale-105' : ''
+                            snapshot.isDragging ? 'bg-blue-200 shadow-2xl opacity-90 rounded-lg' : ''
                           }`}
                           style={{
                             ...provided.draggableProps.style,
-                            cursor: snapshot.isDragging ? 'grabbing' : 'grab',
-                            position: snapshot.isDragging ? 'fixed' : 'static'
+                            cursor: snapshot.isDragging ? 'grabbing' : 'grab'
                           }}
                         >
                           <div className="flex items-center gap-2 justify-end">
