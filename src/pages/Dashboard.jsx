@@ -33,6 +33,7 @@ export default function Dashboard() {
   });
   const [columnMenuOpen, setColumnMenuOpen] = useState(null);
   const [columnFilters, setColumnFilters] = useState({});
+  const [rangeFilters, setRangeFilters] = useState({});
   const [filterDialogOpen, setFilterDialogOpen] = useState(null);
   const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
   const [columnWidths, setColumnWidths] = useState(() => {
@@ -102,7 +103,22 @@ export default function Dashboard() {
       const { [fieldId]: removed, ...rest } = prev;
       return rest;
     });
+    setRangeFilters(prev => {
+      const { [fieldId]: removed, ...rest } = prev;
+      return rest;
+    });
     setFilterDialogOpen(null);
+  };
+
+  const setRangeFilter = (fieldId, from, to) => {
+    if (!from && !to) {
+      setRangeFilters(prev => {
+        const { [fieldId]: removed, ...rest } = prev;
+        return rest;
+      });
+    } else {
+      setRangeFilters(prev => ({ ...prev, [fieldId]: { from, to } }));
+    }
   };
 
   const getUniqueValuesForField = (fieldId) => {
@@ -269,8 +285,29 @@ export default function Dashboard() {
         const value = getFieldValue(field, c, linkedPerson, allPersons);
         return filterValues.includes(value);
       });
+
+      // Check range filters
+      const matchesRangeFilters = Object.entries(rangeFilters).every(([fieldId, range]) => {
+        const field = allAvailableFields.find(f => f.id === fieldId);
+        if (!field) return true;
+        const value = getFieldValue(field, c, linkedPerson, allPersons);
+        if (!value || value === '—') return false;
+        
+        const valueStr = String(value).toLowerCase();
+        const fromStr = range.from ? String(range.from).toLowerCase() : '';
+        const toStr = range.to ? String(range.to).toLowerCase() : '';
+        
+        if (fromStr && toStr) {
+          return valueStr >= fromStr && valueStr <= toStr;
+        } else if (fromStr) {
+          return valueStr >= fromStr;
+        } else if (toStr) {
+          return valueStr <= toStr;
+        }
+        return true;
+      });
       
-      return matchesSearch && matchesStatus && matchesUrgency && matchesColumnFilters;
+      return matchesSearch && matchesStatus && matchesUrgency && matchesColumnFilters && matchesRangeFilters;
     } catch (e) {
       return false;
     }
@@ -496,9 +533,9 @@ export default function Dashboard() {
                     <PopoverTrigger asChild>
                       <button className="relative hover:text-blue-600 transition-colors">
                         <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
-                        {columnFilters[fieldId]?.length > 0 && (
+                        {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
                           <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
-                            {columnFilters[fieldId].length}
+                            {columnFilters[fieldId]?.length || '↔'}
                           </span>
                         )}
                       </button>
@@ -508,7 +545,30 @@ export default function Dashboard() {
                         <h4 className="font-semibold text-sm">
                           סנן לפי {field?.label || fieldId}
                         </h4>
-                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                        
+                        {/* Range Filter */}
+                        <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                          <p className="text-xs font-medium text-gray-700">סינון לפי טווח</p>
+                          <div className="flex gap-2 items-center">
+                            <Input
+                              placeholder="מ..."
+                              value={rangeFilters[fieldId]?.from || ''}
+                              onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
+                              className="h-8 text-sm"
+                            />
+                            <span className="text-gray-500">-</span>
+                            <Input
+                              placeholder="עד..."
+                              value={rangeFilters[fieldId]?.to || ''}
+                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
+                              className="h-8 text-sm"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Checkbox Filter */}
+                        <div className="space-y-2 max-h-60 overflow-y-auto">
+                          <p className="text-xs font-medium text-gray-700">או בחר ערכים ספציפיים:</p>
                           {getUniqueValuesForField(fieldId).map(value => (
                             <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
                               <Checkbox
