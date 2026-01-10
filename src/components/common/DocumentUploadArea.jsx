@@ -125,27 +125,25 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         }
       });
 
-      console.log('Detection result:', result);
-      
       const hasHuman = result?.has_human === true;
       setAiDetectionStatus(prev => ({ 
         ...prev, 
         [fileId]: hasHuman ? 'detected' : 'not-detected' 
       }));
 
+      // אם AI זיהה דמות, חתוך לפי הקואורדינטות
       if (hasHuman && onPreviewChange && result?.x !== undefined && result?.y !== undefined && result?.width !== undefined && result?.height !== undefined) {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const padding = 20; // הוסף מרווח כדי לוודא שלא נחתוך
+          const padding = 20;
           const x = Math.max(0, (result.x / 100) * img.width - padding);
           const y = Math.max(0, (result.y / 100) * img.height - padding);
           const width = ((result.width / 100) * img.width) + (padding * 2);
           const height = ((result.height / 100) * img.height) + (padding * 2);
 
-          // וודא שלא יוצאים מגבולות התמונה
           const cropWidth = Math.min(width, img.width - x);
           const cropHeight = Math.min(height, img.height - y);
           const squareSize = Math.min(cropWidth, cropHeight);
@@ -153,21 +151,15 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           if (x >= 0 && y >= 0 && squareSize > 0) {
             canvas.width = squareSize;
             canvas.height = squareSize;
-
             ctx.drawImage(img, x, y, squareSize, squareSize, 0, 0, squareSize, squareSize);
-            const croppedImage = canvas.toDataURL();
-            onPreviewChange(croppedImage);
-          } else {
-            onPreviewChange(base64Image);
+            onPreviewChange(canvas.toDataURL());
           }
         };
         img.src = base64Image;
-      } else if (hasHuman && onPreviewChange) {
-        onPreviewChange(base64Image);
       }
     } catch (error) {
       console.error('AI detection error:', error);
-      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-detected' }));
+      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
     }
   };
 
