@@ -39,45 +39,32 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     setIsUploading(true);
     try {
       for (const file of Array.from(files)) {
-        // Convert file to base64 for upload
-        const reader = new FileReader();
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const fileId = Date.now() + Math.random();
+        const newFile = {
+          id: fileId,
+          name: file.name,
+          url: file_url,
+          size: (file.size / 1024 / 1024).toFixed(2),
+          type: file.type
+        };
+        setUploadedFiles(prev => [...prev, newFile]);
         
-        await new Promise((resolve, reject) => {
-          reader.onload = async (e) => {
-            try {
-              const base64Image = e.target.result;
-              const { file_url } = await base44.integrations.Core.UploadFile({ file: base64Image });
-              const fileId = Date.now() + Math.random();
-              const newFile = {
-                id: fileId,
-                name: file.name,
-                url: file_url,
-                size: (file.size / 1024 / 1024).toFixed(2),
-                type: file.type
-              };
-              setUploadedFiles(prev => [...prev, newFile]);
-              
-              if (onDocumentUpload) {
-                onDocumentUpload(newFile);
-              }
-              
-              // Run AI detection in background if it's an image
-              if (file.type.startsWith('image/')) {
-                setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
-                runHumanDetection(file_url, base64Image, fileId);
-              } else {
-                setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
-              }
-              
-              resolve();
-            } catch (error) {
-              console.error('Upload error:', error);
-              reject(error);
-            }
+        if (onDocumentUpload) {
+          onDocumentUpload(newFile);
+        }
+        
+        // Run AI detection in background if it's an image
+        if (file.type.startsWith('image/')) {
+          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            runHumanDetection(file_url, e.target.result, fileId);
           };
-          reader.onerror = reject;
           reader.readAsDataURL(file);
-        });
+        } else {
+          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
+        }
       }
     } catch (error) {
       console.error('Upload error:', error);
