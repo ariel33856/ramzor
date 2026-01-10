@@ -60,7 +60,8 @@ export default function PersonDetailsView({ personId }) {
     id_number: '',
     phone: '',
     email: '',
-    notes: ''
+    notes: '',
+    address: ''
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
@@ -259,7 +260,8 @@ export default function PersonDetailsView({ personId }) {
         id_number: person.id_number || '',
         phone: person.phone || '',
         email: person.email || '',
-        notes: person.notes || ''
+        notes: person.notes || '',
+        address: person.address || ''
       });
       
       if (person.linked_accounts) {
@@ -755,6 +757,15 @@ export default function PersonDetailsView({ personId }) {
               handleBasicDataChange('notes', formattedValue);
             }}
             className="text-center"
+          />
+        </div>
+        <div className="flex items-center gap-2 col-span-2">
+          <Label className="text-sm whitespace-nowrap">כתובת</Label>
+          <Input
+            value={basicData.address || ''}
+            onChange={(e) => handleBasicDataChange('address', e.target.value)}
+            placeholder="כתובת מלאה"
+            className="flex-1"
           />
         </div>
         <div className="flex items-center gap-4">
