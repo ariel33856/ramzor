@@ -123,12 +123,13 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           // וודא שלא יוצאים מגבולות התמונה
           const cropWidth = Math.min(width, img.width - x);
           const cropHeight = Math.min(height, img.height - y);
+          const squareSize = Math.min(cropWidth, cropHeight);
 
-          if (x >= 0 && y >= 0 && cropWidth > 0 && cropHeight > 0) {
-            canvas.width = cropWidth;
-            canvas.height = cropHeight;
+          if (x >= 0 && y >= 0 && squareSize > 0) {
+            canvas.width = squareSize;
+            canvas.height = squareSize;
 
-            ctx.drawImage(img, x, y, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+            ctx.drawImage(img, x, y, squareSize, squareSize, 0, 0, squareSize, squareSize);
             const croppedImage = canvas.toDataURL();
             onPreviewChange(croppedImage);
           } else {
