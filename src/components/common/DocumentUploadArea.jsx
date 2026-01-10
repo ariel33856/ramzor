@@ -48,12 +48,26 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         };
         setUploadedFiles(prev => [...prev, newFile]);
         
-        // Set preview if it's an image
+        // Check for human figures if it's an image
         if (file.type.startsWith('image/')) {
           const reader = new FileReader();
-          reader.onload = (e) => {
-            if (onPreviewChange) {
-              onPreviewChange(e.target.result);
+          reader.onload = async (e) => {
+            const base64Image = e.target.result;
+            
+            try {
+              const result = await base44.integrations.Core.InvokeLLM({
+                prompt: "בדוק אם יש דמות אנושית או פנים בתמונה הזו. תשובה בקצרה: כן או לא",
+                file_urls: [file_url]
+              });
+              
+              // Display preview only if human figure detected
+              if (result && result.toLowerCase().includes('כן')) {
+                if (onPreviewChange) {
+                  onPreviewChange(base64Image);
+                }
+              }
+            } catch (error) {
+              console.error('AI detection error:', error);
             }
           };
           reader.readAsDataURL(file);
