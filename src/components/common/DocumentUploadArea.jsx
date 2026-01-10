@@ -86,7 +86,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק (לא לחתוך את הדמות עצמה): {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} אם אין בנאדם, החזר {\"has_human\": false}",
+        prompt: "בדוק בעיון את התמונה. האם יש בה דמות אנושית אמיתית (אדם/בני אדם)? ענה רק בודק בעיון וודא שזו דמות אנושית בפועל ולא אובייקט, בעל חיים, או דיוקן. אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק: {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} אם אין דמות אנושית, החזר בדיוק {\"has_human\": false}",
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -100,6 +100,8 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         }
       });
 
+      console.log('Detection result:', result);
+      
       const hasHuman = result?.has_human === true;
       setAiDetectionStatus(prev => ({ 
         ...prev, 
@@ -131,7 +133,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
       }
     } catch (error) {
       console.error('AI detection error:', error);
-      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-detected' }));
     }
   };
 
