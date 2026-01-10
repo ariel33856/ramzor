@@ -36,15 +36,32 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     }
   };
 
+  const cropImageToSquare = (base64Image, callback) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const squareSize = Math.min(img.width, img.height);
+      const startX = (img.width - squareSize) / 2;
+      const startY = (img.height - squareSize) / 2;
+
+      canvas.width = squareSize;
+      canvas.height = squareSize;
+      ctx.drawImage(img, startX, startY, squareSize, squareSize, 0, 0, squareSize, squareSize);
+      callback(canvas.toDataURL());
+    };
+    img.src = base64Image;
+  };
+
   const handleFiles = async (files) => {
-    setIsUploading(true);
     setError(null);
     try {
       for (const file of Array.from(files)) {
         try {
-          console.log('Uploading file:', file.name);
+          setIsUploading(true);
           const { file_url } = await base44.integrations.Core.UploadFile({ file });
-          console.log('File uploaded:', file_url);
+          setIsUploading(false);
+          
           const fileId = Date.now() + Math.random();
           const newFile = {
             id: fileId,
@@ -53,33 +70,41 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
             size: (file.size / 1024 / 1024).toFixed(2),
             type: file.type
           };
-          setUploadedFiles(prev => [...prev, newFile]);
           
+          setUploadedFiles(prev => [...prev, newFile]);
           if (onDocumentUpload) {
             onDocumentUpload(newFile);
           }
           
-          // Run AI detection in background if it's an image
+          // Handle images: crop to square and optionally run AI detection
           if (file.type.startsWith('image/')) {
-            setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
             const reader = new FileReader();
             reader.onload = (e) => {
-              runHumanDetection(file_url, e.target.result, fileId);
+              const base64Image = e.target.result;
+              // תמיד חתוך לריבוע
+              cropImageToSquare(base64Image, (squaredImage) => {
+                if (onPreviewChange) {
+                  onPreviewChange(squaredImage);
+                }
+              });
+              // בהקביל, הרץ סינון AI בהקע
+              setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
+              runHumanDetection(file_url, base64Image, fileId);
             };
             reader.readAsDataURL(file);
           } else {
             setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
           }
         } catch (fileError) {
+          setIsUploading(false);
           console.error('Error uploading file:', file.name, fileError);
           setError(`שגיאה בהעלאת קובץ: ${file.name}`);
         }
       }
     } catch (error) {
+      setIsUploading(false);
       console.error('Upload error:', error);
       setError('שגיאה בהעלאת הקבצים');
-    } finally {
-      setIsUploading(false);
     }
   };
 
