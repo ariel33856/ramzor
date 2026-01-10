@@ -465,35 +465,48 @@ export default function Dashboard() {
                 className="px-6 py-4 text-right text-sm font-semibold text-gray-700 relative"
                 style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
               >
-                <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
-                  <PopoverTrigger asChild>
-                    <button className="hover:text-blue-600 transition-colors cursor-pointer">
-                      {field?.label || fieldId}
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-40 p-2" align="start">
-                    <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
+                    <PopoverTrigger asChild>
+                      <button className="hover:text-blue-600 transition-colors cursor-pointer">
+                        {field?.label || fieldId}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-40 p-2" align="start">
+                      <div className="space-y-1">
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start"
-                        onClick={() => {
-                          setFilterDialogOpen(fieldId);
-                          setColumnMenuOpen(null);
-                        }}
-                      >
-                        <Filter className="w-4 h-4 ml-2" />
-                        סנן
-                        {columnFilters[fieldId]?.length > 0 && (
-                          <span className="mr-1 px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
-                            {columnFilters[fieldId].length}
-                          </span>
-                        )}
-                      </Button>
-                    </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setFilterDialogOpen(fieldId);
+                            setColumnMenuOpen(null);
+                          }}
+                        >
+                          <Filter className="w-4 h-4 ml-2" />
+                          סנן
+                          {columnFilters[fieldId]?.length > 0 && (
+                            <span className="mr-1 px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
+                              {columnFilters[fieldId].length}
+                            </span>
+                          )}
+                        </Button>
+                      </div>
                     </PopoverContent>
-                    </Popover>
+                  </Popover>
+                  <button
+                    onClick={() => setFilterDialogOpen(fieldId)}
+                    className="relative hover:text-blue-600 transition-colors"
+                  >
+                    <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
+                    {columnFilters[fieldId]?.length > 0 && (
+                      <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
+                        {columnFilters[fieldId].length}
+                      </span>
+                    )}
+                  </button>
+                </div>
                     <div
                       className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
                         resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-100'
