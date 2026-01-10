@@ -3,10 +3,11 @@ import { Upload, Loader2, X, File } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 
-export default function DocumentUploadArea({ onDocumentUpload }) {
+export default function DocumentUploadArea({ onDocumentUpload, showPreview = false }) {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [preview, setPreview] = useState(null);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -43,9 +44,18 @@ export default function DocumentUploadArea({ onDocumentUpload }) {
           id: Date.now() + Math.random(),
           name: file.name,
           url: file_url,
-          size: (file.size / 1024 / 1024).toFixed(2)
+          size: (file.size / 1024 / 1024).toFixed(2),
+          type: file.type
         };
         setUploadedFiles(prev => [...prev, newFile]);
+        
+        // Set preview if it's an image
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => setPreview(e.target.result);
+          reader.readAsDataURL(file);
+        }
+        
         if (onDocumentUpload) {
           onDocumentUpload(newFile);
         }
@@ -62,7 +72,16 @@ export default function DocumentUploadArea({ onDocumentUpload }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
+      {showPreview && preview && (
+        <div className="border-2 border-blue-200 rounded-lg p-2 bg-blue-50">
+          <img 
+            src={preview} 
+            alt="Preview" 
+            className="w-full h-auto rounded object-contain max-h-64"
+          />
+        </div>
+      )}
       <label
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
