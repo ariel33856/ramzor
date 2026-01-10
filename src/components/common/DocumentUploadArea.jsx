@@ -137,6 +137,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
       console.error('AI detection error:', error);
       setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
     }
+    })();
   };
 
 
