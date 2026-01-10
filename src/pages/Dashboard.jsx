@@ -517,7 +517,7 @@ export default function Dashboard() {
                     </Popover>
                     <div
                       className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-200'
+                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-100'
                       }`}
                       onMouseDown={(e) => {
                         e.preventDefault();
@@ -564,7 +564,7 @@ export default function Dashboard() {
                           ) : (
                             <span className="text-gray-600">{value}</span>
                           )}
-                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-200 pointer-events-none" />
+                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 pointer-events-none" />
                         </td>
                       );
                     })}
