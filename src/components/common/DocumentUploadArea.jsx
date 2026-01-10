@@ -126,10 +126,9 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
             // Convert data URL to blob and upload
             const blob = await fetch(croppedDataUrl).then(res => res.blob());
-            const croppedFile = new File([blob], 'cropped.png', { type: 'image/png' });
             
             try {
-              const { file_url: croppedUrl } = await base44.integrations.Core.UploadFile({ file: croppedFile });
+              const { file_url: croppedUrl } = await base44.integrations.Core.UploadFile({ file: blob });
               
               // Update the uploaded file with the cropped version
               setUploadedFiles(prev => 
