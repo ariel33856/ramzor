@@ -39,27 +39,104 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     setIsUploading(true);
     try {
       for (const file of Array.from(files)) {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        const fileId = Date.now() + Math.random();
-        const newFile = {
-          id: fileId,
-          name: file.name,
-          url: file_url,
-          size: (file.size / 1024 / 1024).toFixed(2),
-          type: file.type
-        };
-        setUploadedFiles(prev => [...prev, newFile]);
+        // Convert file to base64 for upload
+        const reader = new FileReader();
         
-        if (onDocumentUpload) {
-          onDocumentUpload(newFile);
-        }
-        
-        // Run AI detection in background if it's an image
-        if (file.type.startsWith('image/')) {
-          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
-          const reader = new FileReader();
+        await new Promise((resolve, reject) => {
           reader.onload = async (e) => {
-            const base64Image = e.target.result;
+            try {
+              const base64Image = e.target.result;
+              const { file_url } = await base44.integrations.Core.UploadFile({ file: base64Image });
+              const fileId = Date.now() + Math.random();
+              const newFile = {
+                id: fileId,
+                name: file.name,
+                url: file_url,
+                size: (file.size / 1024 / 1024).toFixed(2),
+                type: file.type
+              };
+              setUploadedFiles(prev => [...prev, newFile]);
+              
+              if (onDocumentUpload) {
+                onDocumentUpload(newFile);
+              }
+              
+              // Run AI detection in background if it's an image
+              if (file.type.startsWith('image/')) {
+                setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
+                detectHuman(file_url, base64Image, fileId);
+              } else {
+                setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
+              }
+              
+              resolve();
+            } catch (error) {
+              console.error('Upload error:', error);
+              reject(error);
+            }
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const detectHuman = async (file_url, base64Image, fileId) => {
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON: {\"has_human\": true/false, \"x\": 0-100, \"y\": 0-100, \"width\": 0-100, \"height\": 0-100} כאשר הערכים הם אחוזים מגודל התמונה. אם אין בנאדם, החזר {\"has_human\": false}",
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            has_human: { type: "boolean" },
+            x: { type: "number" },
+            y: { type: "number" },
+            width: { type: "number" },
+            height: { type: "number" }
+          }
+        }
+      });
+      
+      const hasHuman = result?.has_human === true;
+      setAiDetectionStatus(prev => ({ 
+        ...prev, 
+        [fileId]: hasHuman ? 'detected' : 'not-detected' 
+      }));
+      
+      if (hasHuman && onPreviewChange && result?.x !== undefined) {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          const x = (result.x / 100) * img.width;
+          const y = (result.y / 100) * img.height;
+          const width = (result.width / 100) * img.width;
+          const height = (result.height / 100) * img.height;
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+          const croppedImage = canvas.toDataURL();
+          
+          onPreviewChange(croppedImage);
+        };
+        img.src = base64Image;
+      } else if (hasHuman && onPreviewChange) {
+        onPreviewChange(base64Image);
+      }
+    } catch (error) {
+      console.error('AI detection error:', error);
+      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+    }
+  };
             
             try {
               const result = await base44.integrations.Core.InvokeLLM({
