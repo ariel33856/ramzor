@@ -144,6 +144,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
   return (
     <div className="w-full">
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded-lg">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
       <label
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
