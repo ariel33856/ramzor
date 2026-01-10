@@ -114,21 +114,24 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const x = (result.x / 100) * img.width;
-          const y = (result.y / 100) * img.height;
-          const width = (result.width / 100) * img.width;
-          const height = (result.height / 100) * img.height;
+          const padding = 20; // הוסף מרווח כדי לוודא שלא נחתוך
+          const x = Math.max(0, (result.x / 100) * img.width - padding);
+          const y = Math.max(0, (result.y / 100) * img.height - padding);
+          const width = ((result.width / 100) * img.width) + (padding * 2);
+          const height = ((result.height / 100) * img.height) + (padding * 2);
 
-          // בדוק שהערכים תקינים
-          if (x >= 0 && y >= 0 && width > 0 && height > 0) {
-            canvas.width = width;
-            canvas.height = height;
+          // וודא שלא יוצאים מגבולות התמונה
+          const cropWidth = Math.min(width, img.width - x);
+          const cropHeight = Math.min(height, img.height - y);
 
-            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+          if (x >= 0 && y >= 0 && cropWidth > 0 && cropHeight > 0) {
+            canvas.width = cropWidth;
+            canvas.height = cropHeight;
+
+            ctx.drawImage(img, x, y, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
             const croppedImage = canvas.toDataURL();
             onPreviewChange(croppedImage);
           } else {
-            console.warn('Invalid crop coordinates:', { x, y, width, height });
             onPreviewChange(base64Image);
           }
         };
