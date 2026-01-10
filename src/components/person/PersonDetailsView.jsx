@@ -666,7 +666,7 @@ export default function PersonDetailsView({ personId }) {
       {!isCollapsed && (
         <div className="p-6">
       {/* Document Upload Area */}
-      <div className="mb-6 pb-6">
+      <div className="mb-6 pb-6 w-1/5">
         <DocumentUploadArea 
           onDocumentUpload={(file) => {
             console.log('Document uploaded:', file);
