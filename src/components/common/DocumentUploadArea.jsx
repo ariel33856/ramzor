@@ -108,7 +108,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
         [fileId]: hasHuman ? 'detected' : 'not-detected' 
       }));
 
-      if (hasHuman && onPreviewChange && result?.x !== undefined) {
+      if (hasHuman && onPreviewChange && result?.x !== undefined && result?.y !== undefined && result?.width !== undefined && result?.height !== undefined) {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
@@ -119,13 +119,18 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           const width = (result.width / 100) * img.width;
           const height = (result.height / 100) * img.height;
 
-          canvas.width = width;
-          canvas.height = height;
+          // בדוק שהערכים תקינים
+          if (x >= 0 && y >= 0 && width > 0 && height > 0) {
+            canvas.width = width;
+            canvas.height = height;
 
-          ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-          const croppedImage = canvas.toDataURL();
-
-          onPreviewChange(croppedImage);
+            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+            const croppedImage = canvas.toDataURL();
+            onPreviewChange(croppedImage);
+          } else {
+            console.warn('Invalid crop coordinates:', { x, y, width, height });
+            onPreviewChange(base64Image);
+          }
         };
         img.src = base64Image;
       } else if (hasHuman && onPreviewChange) {
