@@ -677,7 +677,13 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         {documentPreview && (
-          <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50">
+          <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50 relative">
+            <button
+              onClick={() => setDocumentPreview(null)}
+              className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors"
+            >
+              ✕
+            </button>
             <img 
               src={documentPreview} 
               alt="Preview" 
