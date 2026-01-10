@@ -184,7 +184,7 @@ export const getAllFields = () => {
   return allFields;
 };
 
-// פונקציה לקבלת ערך שדה מהנתונים
+// פונקציה לקבלת ערך שדה מהנתונים - מטפלת גם בשדות רגילים וגם ב-custom_data
 export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
   if (!field) return '—';
   
@@ -228,7 +228,7 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
       return bankLabels[value] || value || '—';
     }
     
-    if (field.id === 'created_date' && value) {
+    if ((field.id === 'created_date' || field.id === 'updated_date') && value) {
       const date = new Date(value);
       const israelTime = new Date(date.getTime() + (2 * 60 * 60 * 1000));
       return israelTime.toLocaleDateString('he-IL');
@@ -240,6 +240,22 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
     
     if (field.id === 'red_flags' && Array.isArray(value)) {
       return value.length > 0 ? value.join(', ') : '—';
+    }
+    
+    if (field.id === 'linked_borrowers' && Array.isArray(value)) {
+      return value.length > 0 ? `${value.length} לווים` : '—';
+    }
+    
+    if (field.id === 'is_archived') {
+      return value ? 'כן' : 'לא';
+    }
+    
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    
+    if (typeof value === 'boolean') {
+      return value ? 'כן' : 'לא';
     }
     
     // בדוק ב-custom_data אם לא נמצא
@@ -257,7 +273,20 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
     }
     
     if (field.id === 'type') {
-      return value || '—';
+      const typeLabels = {
+        'לווה': 'לווה',
+        'ערב': 'ערב',
+        'איש קשר': 'איש קשר'
+      };
+      return typeLabels[value] || value || '—';
+    }
+    
+    if (field.id === 'is_archived') {
+      return value ? 'כן' : 'לא';
+    }
+    
+    if (typeof value === 'boolean') {
+      return value ? 'כן' : 'לא';
     }
     
     return value || '—';
