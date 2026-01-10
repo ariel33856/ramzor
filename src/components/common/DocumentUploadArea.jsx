@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Loader2, X, File } from 'lucide-react';
+import { Upload, Loader2, X, File, CheckCircle2, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 
@@ -159,6 +159,23 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                     <p className="text-xs text-gray-500">{file.size} MB</p>
                   </div>
                 </a>
+                <div className="flex items-center gap-2 ml-2">
+                  {aiDetectionStatus[file.id] === 'detecting' && (
+                    <span className="flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                      <Loader2 className="w-3 h-3 animate-spin" /> בדיקה...
+                    </span>
+                  )}
+                  {aiDetectionStatus[file.id] === 'detected' && (
+                    <span className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                      <CheckCircle2 className="w-3 h-3" /> בנאדם זוהה
+                    </span>
+                  )}
+                  {aiDetectionStatus[file.id] === 'not-detected' && (
+                    <span className="flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                      <AlertCircle className="w-3 h-3" /> לא זוהה בנאדם
+                    </span>
+                  )}
+                </div>
                 <Button
                   variant="ghost"
                   size="icon"
