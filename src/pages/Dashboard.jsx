@@ -381,13 +381,6 @@ export default function Dashboard() {
                                     </div>
                                   );
                                 }}
-                                    <GripVertical className="w-5 h-5 text-gray-400" />
-                                    <span className="flex-1 font-medium text-gray-900">
-                                      {field?.label || fieldId}
-                                    </span>
-                                    <span className="text-xs text-gray-500">#{index + 1}</span>
-                                  </div>
-                                )}
                               </Draggable>
                             );
                           })}
