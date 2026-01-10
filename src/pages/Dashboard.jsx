@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [columnMenuOpen, setColumnMenuOpen] = useState(null);
   const [columnFilters, setColumnFilters] = useState({});
   const [filterDialogOpen, setFilterDialogOpen] = useState(null);
+  const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -113,6 +114,17 @@ export default function Dashboard() {
       }
     });
     return Array.from(values).sort();
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(selectedFields);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    
+    setSelectedFields(items);
+    localStorage.setItem('dashboardSelectedFields', JSON.stringify(items));
   };
 
   // Fetch all persons to extract custom fields from their custom_data
@@ -270,44 +282,105 @@ export default function Dashboard() {
                 selectedFields={selectedFields}
                 onFieldToggle={handleFieldToggle}
               />
+
+              <Button
+                variant="outline"
+                onClick={() => setReorderDialogOpen(true)}
+              >
+                <GripVertical className="w-5 h-5 ml-2" />
+                סדר עמודות
+              </Button>
               </div>
               </div>
               </div>
 
               {/* Filter Dialog */}
               <Dialog open={!!filterDialogOpen} onOpenChange={(open) => !open && setFilterDialogOpen(null)}>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle>
-                    סנן לפי {allAvailableFields.find(f => f.id === filterDialogOpen)?.label}
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {filterDialogOpen && getUniqueValuesForField(filterDialogOpen).map(value => (
-                    <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                      <Checkbox
-                        checked={columnFilters[filterDialogOpen]?.includes(value) || false}
-                        onCheckedChange={() => toggleColumnFilter(filterDialogOpen, value)}
-                      />
-                      <label className="flex-1 cursor-pointer text-sm">
-                        {value}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2 justify-end mt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => clearColumnFilter(filterDialogOpen)}
-                  >
-                    <FilterX className="w-4 h-4 ml-2" />
-                    נקה סינון
-                  </Button>
-                  <Button onClick={() => setFilterDialogOpen(null)}>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>
+                      סנן לפי {allAvailableFields.find(f => f.id === filterDialogOpen)?.label}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filterDialogOpen && getUniqueValuesForField(filterDialogOpen).map(value => (
+                      <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                        <Checkbox
+                          checked={columnFilters[filterDialogOpen]?.includes(value) || false}
+                          onCheckedChange={() => toggleColumnFilter(filterDialogOpen, value)}
+                        />
+                        <label className="flex-1 cursor-pointer text-sm">
+                          {value}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2 justify-end mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => clearColumnFilter(filterDialogOpen)}
+                    >
+                      <FilterX className="w-4 h-4 ml-2" />
+                      נקה סינון
+                    </Button>
+                    <Button onClick={() => setFilterDialogOpen(null)}>
+                      סגור
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Reorder Dialog */}
+              <Dialog open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>סדר עמודות</DialogTitle>
+                  </DialogHeader>
+                  <div className="text-sm text-gray-600 mb-4">גרור את השדות כדי לשנות את הסדר</div>
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="fields">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="space-y-2 max-h-96 overflow-y-auto"
+                        >
+                          {selectedFields.map((fieldId, index) => {
+                            const field = allAvailableFields.find(f => f.id === fieldId);
+                            return (
+                              <Draggable key={fieldId} draggableId={fieldId} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className={`
+                                      flex items-center gap-3 p-3 rounded-lg border-2 transition-all
+                                      ${snapshot.isDragging 
+                                        ? 'bg-blue-50 border-blue-300 shadow-lg' 
+                                        : 'bg-white border-gray-200 hover:border-gray-300'
+                                      }
+                                    `}
+                                  >
+                                    <GripVertical className="w-5 h-5 text-gray-400" />
+                                    <span className="flex-1 font-medium text-gray-900">
+                                      {field?.label || fieldId}
+                                    </span>
+                                    <span className="text-xs text-gray-500">#{index + 1}</span>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                  <Button onClick={() => setReorderDialogOpen(false)} className="w-full mt-4">
                     סגור
                   </Button>
-                </div>
-              </DialogContent>
+                </DialogContent>
               </Dialog>
 
             <div className="flex-1 overflow-hidden p-1">
