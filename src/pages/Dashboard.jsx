@@ -317,7 +317,8 @@ export default function Dashboard() {
                                         ...provided.draggableProps.style,
                                         transform: snapshot.isDragging && provided.draggableProps.style?.transform
                                           ? `${provided.draggableProps.style.transform} translateY(-100px) translateX(-30px)`
-                                          : provided.draggableProps.style?.transform
+                                          : provided.draggableProps.style?.transform,
+                                        transition: snapshot.isDragging ? 'none' : provided.draggableProps.style?.transition
                                       }}
                                       className={`
                                         flex items-center gap-2 p-2 rounded-lg border-2 transition-all
