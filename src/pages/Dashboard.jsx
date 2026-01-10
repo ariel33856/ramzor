@@ -316,7 +316,7 @@ export default function Dashboard() {
                                       style={{
                                         ...provided.draggableProps.style,
                                         transform: snapshot.isDragging && provided.draggableProps.style?.transform
-                                          ? `${provided.draggableProps.style.transform} translateY(-100px) translateX(-10px)`
+                                          ? `${provided.draggableProps.style.transform} translateY(-100px) translateX(-30px)`
                                           : provided.draggableProps.style?.transform
                                       }}
                                       className={`
