@@ -377,41 +377,7 @@ export default function Dashboard() {
               </div>
               </div>
 
-              {/* Filter Dialog */}
-              <Dialog open={!!filterDialogOpen} onOpenChange={(open) => !open && setFilterDialogOpen(null)}>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>
-                      סנן לפי {allAvailableFields.find(f => f.id === filterDialogOpen)?.label}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {filterDialogOpen && getUniqueValuesForField(filterDialogOpen).map(value => (
-                      <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                        <Checkbox
-                          checked={columnFilters[filterDialogOpen]?.includes(value) || false}
-                          onCheckedChange={() => toggleColumnFilter(filterDialogOpen, value)}
-                        />
-                        <label className="flex-1 cursor-pointer text-sm">
-                          {value}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-2 justify-end mt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => clearColumnFilter(filterDialogOpen)}
-                    >
-                      <FilterX className="w-4 h-4 ml-2" />
-                      נקה סינון
-                    </Button>
-                    <Button onClick={() => setFilterDialogOpen(null)}>
-                      סגור
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+
 
 
 
@@ -495,17 +461,48 @@ export default function Dashboard() {
                       </div>
                     </PopoverContent>
                   </Popover>
-                  <button
-                    onClick={() => setFilterDialogOpen(fieldId)}
-                    className="relative hover:text-blue-600 transition-colors"
-                  >
-                    <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
-                    {columnFilters[fieldId]?.length > 0 && (
-                      <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
-                        {columnFilters[fieldId].length}
-                      </span>
-                    )}
-                  </button>
+                  <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
+                    <PopoverTrigger asChild>
+                      <button className="relative hover:text-blue-600 transition-colors">
+                        <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
+                        {columnFilters[fieldId]?.length > 0 && (
+                          <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
+                            {columnFilters[fieldId].length}
+                          </span>
+                        )}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80" align="start">
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-sm">
+                          סנן לפי {field?.label || fieldId}
+                        </h4>
+                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                          {getUniqueValuesForField(fieldId).map(value => (
+                            <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                              <Checkbox
+                                checked={columnFilters[fieldId]?.includes(value) || false}
+                                onCheckedChange={() => toggleColumnFilter(fieldId, value)}
+                              />
+                              <label className="flex-1 cursor-pointer text-sm">
+                                {value}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 justify-end pt-2 border-t">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => clearColumnFilter(fieldId)}
+                          >
+                            <FilterX className="w-4 h-4 ml-2" />
+                            נקה
+                          </Button>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                     <div
                       className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
