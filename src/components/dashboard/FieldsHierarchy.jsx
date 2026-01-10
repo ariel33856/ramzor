@@ -40,15 +40,23 @@ export const tabComponents = {
       fields: [
         { id: 'first_name', label: 'שם פרטי', source: 'person', visible: false },
         { id: 'last_name', label: 'שם משפחה', source: 'person', visible: false },
-        { id: 'phone', label: 'תאריך לידה', source: 'person', visible: false },
-        { id: 'id_number', label: 'תעודת זהות', source: 'person', visible: false },
-        { id: 'email', label: 'תאריך הנפקת ת.ז.', source: 'person', visible: false },
-        { id: 'notes', label: 'תוקף ת.ז.', source: 'person', visible: false },
+        { id: 'id_number', label: 'מס\' תעודת זהות', source: 'person', visible: false },
+        { id: 'phone', label: 'טלפון', source: 'person', visible: false },
+        { id: 'email', label: 'אימייל', source: 'person', visible: false },
+        { id: 'notes', label: 'הערות', source: 'person', visible: false },
         { id: 'address', label: 'כתובת', source: 'person', visible: false },
         { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
         { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false },
-        { id: 'num_siblings', label: 'מספר אחים', source: 'person_custom', visible: false },
-        { id: 'spouse_id', label: 'בן/בת זוג', source: 'person_custom', visible: false }
+        { id: 'birth_date', label: 'תאריך לידה', source: 'person_custom', visible: false },
+        { id: 'id_issue_date', label: 'תאריך הנפקת ת.ז.', source: 'person_custom', visible: false },
+        { id: 'id_expiry_date', label: 'תוקף ת.ז.', source: 'person_custom', visible: false },
+        { id: 'gender', label: 'מין', source: 'person_custom', visible: false },
+        { id: 'marital_status', label: 'סטטוס משפחתי', source: 'person_custom', visible: false },
+        { id: 'num_siblings', label: 'מס\' אחים (מהאב ומהאם יחד)', source: 'person_custom', visible: false },
+        { id: 'spouse_id', label: 'בן/בת זוג', source: 'person_custom', visible: false },
+        { id: 'children_birth_dates', label: 'גילאי הילדים', source: 'person_custom', visible: false },
+        { id: 'num_children', label: 'מס\' ילדים', source: 'person_custom', visible: false },
+        { id: 'num_children_under_18', label: 'מס\' ילדים מתחת גיל 18', source: 'person_custom', visible: false }
       ]
     }
   ],

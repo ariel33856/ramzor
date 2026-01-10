@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
 
 const validateIsraeliID = (id) => {
   // הוסף 0 בהתחלה אם יש 8 ספרות
@@ -33,6 +34,12 @@ const validateIsraeliID = (id) => {
 
 export default function PersonDetailsView({ personId }) {
   const queryClient = useQueryClient();
+  
+  // קבל את השדות מההיררכיה
+  const personFields = tabComponents.personal[0].fields.reduce((acc, field) => {
+    acc[field.id] = field.label;
+    return acc;
+  }, {});
   const [customFields, setCustomFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -658,7 +665,7 @@ export default function PersonDetailsView({ personId }) {
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.birth_date}</Label>
           <Input
             placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
@@ -683,7 +690,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מס' תעודת זהות</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.id_number}</Label>
           <div className="flex flex-col gap-1 flex-1">
             <Input
               value={basicData.id_number}
@@ -710,7 +717,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">תאריך הנפקת ת.ז.</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.id_issue_date}</Label>
           <Input
             placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
@@ -735,7 +742,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">תוקף ת.ז.</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.id_expiry_date}</Label>
           <Input
             placeholder="DDMMYY או DDMMYYYY"
             maxLength={10}
@@ -760,7 +767,7 @@ export default function PersonDetailsView({ personId }) {
           />
         </div>
         <div className="flex items-center gap-2 col-span-2">
-          <Label className="text-sm whitespace-nowrap">כתובת</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.address}</Label>
           <Input
             value={basicData.address || ''}
             onChange={(e) => handleBasicDataChange('address', e.target.value)}
@@ -770,7 +777,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Label className="text-sm whitespace-nowrap">מין</Label>
+            <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
             <Select value={gender} onValueChange={setGender}>
               <SelectTrigger className="w-[70px] [&>span]:pr-4">
                 <SelectValue placeholder="בחר"/>
@@ -782,7 +789,7 @@ export default function PersonDetailsView({ personId }) {
             </Select>
           </div>
           <div className="flex items-center gap-2">
-            <Label className="text-sm whitespace-nowrap">סטטוס משפחתי</Label>
+            <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
             <Select value={maritalStatus} onValueChange={setMaritalStatus}>
               <SelectTrigger className="w-20">
                 <SelectValue placeholder="בחר"/>
@@ -822,7 +829,7 @@ export default function PersonDetailsView({ personId }) {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Label className="text-sm whitespace-nowrap">גילאי הילדים:</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}:</Label>
           {[...childrenDates]
             .sort((a, b) => {
               if (a.length !== 10 || b.length !== 10) return 0;
@@ -924,7 +931,7 @@ export default function PersonDetailsView({ personId }) {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">מס' ילדים</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
           <Input 
             type="number"
             value={manualNumChildren}
@@ -944,7 +951,7 @@ export default function PersonDetailsView({ personId }) {
             }`}
             style={{ MozAppearance: 'textfield' }}
           />
-          <Label className="text-sm whitespace-nowrap">מס' ילדים מתחת גיל 18</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.num_children_under_18}</Label>
           <Input 
             type="number"
             value={manualNumChildrenUnder18}
@@ -997,7 +1004,7 @@ export default function PersonDetailsView({ personId }) {
             }`}
             style={{ MozAppearance: 'textfield' }}
           />
-          <Label className="text-sm whitespace-nowrap">מס' אחים (מהאב ומהאם יחד)</Label>
+          <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
           <Input 
             type="number" 
             value={numSiblings}
