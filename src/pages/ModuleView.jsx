@@ -18,7 +18,12 @@ export default function ModuleView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [filterUser, setFilterUser] = useState('all');
+  const [filterUser, setFilterUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('globalFilterUser') || 'all';
+    }
+    return 'all';
+  });
 
   const defaultVisibleColumns = {
     client_name: true,
@@ -85,6 +90,14 @@ export default function ModuleView() {
       console.error('Failed to save preferences', e);
     }
   };
+
+  React.useEffect(() => {
+    const handleGlobalFilterChange = (e) => {
+      setFilterUser(e.detail.filterUser);
+    };
+    window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+    return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+  }, []);
 
   const handleColumnToggle = (key, checked) => {
     const newColumns = { ...visibleColumns, [key]: checked };
@@ -188,21 +201,7 @@ export default function ModuleView() {
               />
             </div>
 
-            {user?.role === 'admin' && (
-              <Select value={filterUser} onValueChange={setFilterUser}>
-                <SelectTrigger className="w-full md:w-48 border-orange-200 bg-orange-50 text-orange-900">
-                  <SelectValue placeholder="סנן לפי משתמש" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">כל המשתמשים</SelectItem>
-                  {usersList.map(u => (
-                    <SelectItem key={u.id} value={u.email}>
-                      {u.first_name || u.email} {u.last_name || ''}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full md:w-48">

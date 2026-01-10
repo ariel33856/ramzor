@@ -92,13 +92,11 @@ export default function ArchiveAccounts() {
     return matchesSearch;
   });
 
-  // Expose state to window for Layout to access
+  // Expose searchTerm to window for Layout to access
   React.useEffect(() => {
     window.archiveAccountsSearchTerm = searchTerm;
     window.setArchiveAccountsSearchTerm = setSearchTerm;
-    window.archiveAccountsFilterUser = filterUser;
-    window.setArchiveAccountsFilterUser = setFilterUser;
-  }, [searchTerm, filterUser]);
+  }, [searchTerm]);
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">

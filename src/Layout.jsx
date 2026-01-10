@@ -40,6 +40,7 @@ export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [globalFilterUser, setGlobalFilterUser] = useState('all');
   const queryClient = useQueryClient();
 
   // Get case ID from URL if on case-related pages
@@ -206,6 +207,17 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    const saved = localStorage.getItem('globalFilterUser');
+    if (saved) setGlobalFilterUser(saved);
+  }, []);
+
+  const handleGlobalFilterChange = (value) => {
+    setGlobalFilterUser(value);
+    localStorage.setItem('globalFilterUser', value);
+    window.dispatchEvent(new CustomEvent('globalFilterUserChanged', { detail: { filterUser: value } }));
+  };
+
   const handleLogout = () => {
     base44.auth.logout();
   };
@@ -364,28 +376,6 @@ export default function Layout({ children, currentPageName }) {
                           איש קשר חדש
                         </Button>
                       </Link>
-                      {user?.role === 'admin' && (
-                        <Select
-                          value={typeof window !== 'undefined' ? window.archiveAccountsFilterUser || 'all' : 'all'}
-                          onValueChange={(value) => {
-                            if (typeof window !== 'undefined' && window.setArchiveAccountsFilterUser) {
-                              window.setArchiveAccountsFilterUser(value);
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="w-40 h-10 border-orange-200 bg-orange-50 text-orange-900">
-                            <SelectValue placeholder="סנן לפי משתמש" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">כל המשתמשים</SelectItem>
-                            {usersList.map(u => (
-                              <SelectItem key={u.id} value={u.email}>
-                                {u.first_name || u.email} {u.last_name || ''}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
                       <div className="relative w-64">
                         <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <Input
@@ -662,6 +652,21 @@ export default function Layout({ children, currentPageName }) {
                   <Home className="w-5 h-5 text-gray-500" />
                   </Button>
                   </Link>
+                  {user?.role === 'admin' && (
+                    <Select value={globalFilterUser} onValueChange={handleGlobalFilterChange}>
+                      <SelectTrigger className="w-40 h-10 border-orange-200 bg-orange-50 text-orange-900">
+                        <SelectValue placeholder="סנן לפי משתמש" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">כל המשתמשים</SelectItem>
+                        {usersList.map(u => (
+                          <SelectItem key={u.id} value={u.email}>
+                            {u.first_name || u.email} {u.last_name || ''}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                   <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                   <Button variant="ghost">
