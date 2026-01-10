@@ -38,37 +38,46 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
   const handleFiles = async (files) => {
     setIsUploading(true);
+    setError(null);
     try {
       for (const file of Array.from(files)) {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        const fileId = Date.now() + Math.random();
-        const newFile = {
-          id: fileId,
-          name: file.name,
-          url: file_url,
-          size: (file.size / 1024 / 1024).toFixed(2),
-          type: file.type
-        };
-        setUploadedFiles(prev => [...prev, newFile]);
-        
-        if (onDocumentUpload) {
-          onDocumentUpload(newFile);
-        }
-        
-        // Run AI detection in background if it's an image
-        if (file.type.startsWith('image/')) {
-          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            runHumanDetection(file_url, e.target.result, fileId);
+        try {
+          console.log('Uploading file:', file.name);
+          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+          console.log('File uploaded:', file_url);
+          const fileId = Date.now() + Math.random();
+          const newFile = {
+            id: fileId,
+            name: file.name,
+            url: file_url,
+            size: (file.size / 1024 / 1024).toFixed(2),
+            type: file.type
           };
-          reader.readAsDataURL(file);
-        } else {
-          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
+          setUploadedFiles(prev => [...prev, newFile]);
+          
+          if (onDocumentUpload) {
+            onDocumentUpload(newFile);
+          }
+          
+          // Run AI detection in background if it's an image
+          if (file.type.startsWith('image/')) {
+            setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              runHumanDetection(file_url, e.target.result, fileId);
+            };
+            reader.readAsDataURL(file);
+          } else {
+            setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
+          }
+        } catch (fileError) {
+          console.error('Error uploading file:', file.name, fileError);
+          setError(`שגיאה בהעלאת קובץ: ${file.name}`);
         }
       }
     } catch (error) {
       console.error('Upload error:', error);
+      setError('שגיאה בהעלאת הקבצים');
     } finally {
       setIsUploading(false);
     }
