@@ -110,7 +110,38 @@ export default function Dashboard() {
     if (!field) return [];
     
     const values = new Set();
-    cases.forEach(caseData => {
+    // Filter cases based on existing filters (excluding current field)
+    const relevantCases = cases.filter(c => {
+      try {
+        const linkedPersons = caseToPersonMap[c.id] || [];
+        const linkedPerson = linkedPersons[0];
+
+        const matchesSearch = !searchTerm || 
+          linkedPerson?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          linkedPerson?.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          linkedPerson?.id_number?.includes(searchTerm) ||
+          linkedPerson?.phone?.includes(searchTerm) ||
+          c.account_number?.toString().includes(searchTerm);
+        const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+        const matchesUrgency = urgencyFilter === 'all' || c.urgency === urgencyFilter;
+        
+        // Check column filters excluding the current field
+        const matchesColumnFilters = Object.entries(columnFilters).every(([filterFieldId, filterValues]) => {
+          if (filterFieldId === fieldId) return true; // Skip current field
+          if (filterValues.length === 0) return true;
+          const filterField = allAvailableFields.find(f => f.id === filterFieldId);
+          if (!filterField) return true;
+          const value = getFieldValue(filterField, c, linkedPerson, allPersons);
+          return filterValues.includes(value);
+        });
+        
+        return matchesSearch && matchesStatus && matchesUrgency && matchesColumnFilters;
+      } catch (e) {
+        return false;
+      }
+    });
+
+    relevantCases.forEach(caseData => {
       const linkedPersons = caseToPersonMap[caseData.id] || [];
       const linkedPerson = linkedPersons[0];
       const value = getFieldValue(field, caseData, linkedPerson, allPersons);
