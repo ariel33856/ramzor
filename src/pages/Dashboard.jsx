@@ -208,7 +208,7 @@ export default function Dashboard() {
     items.splice(result.destination.index, 0, reorderedItem);
     
     setSelectedFields(items);
-    localStorage.setItem('dashboardSelectedFields', JSON.stringify(items));
+    savePreferences({ selectedFields: items });
   };
 
   const handleColumnResize = (fieldId, startX, startWidth) => {
@@ -217,7 +217,6 @@ export default function Dashboard() {
       const newWidth = Math.max(80, startWidth + diff);
       setColumnWidths(prev => {
         const updated = { ...prev, [fieldId]: newWidth };
-        localStorage.setItem('dashboardColumnWidths', JSON.stringify(updated));
         return updated;
       });
     };
@@ -232,6 +231,16 @@ export default function Dashboard() {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+
+  // Add effect to save column widths when they change, but debounced
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (user && Object.keys(columnWidths).length > 0) {
+        savePreferences({ columnWidths });
+      }
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [columnWidths]);
 
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
