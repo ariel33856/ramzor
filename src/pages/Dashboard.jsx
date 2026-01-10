@@ -35,6 +35,11 @@ export default function Dashboard() {
   const [columnFilters, setColumnFilters] = useState({});
   const [filterDialogOpen, setFilterDialogOpen] = useState(null);
   const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
+  const [columnWidths, setColumnWidths] = useState(() => {
+    const saved = localStorage.getItem('dashboardColumnWidths');
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [resizingColumn, setResizingColumn] = useState(null);
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -125,6 +130,28 @@ export default function Dashboard() {
     
     setSelectedFields(items);
     localStorage.setItem('dashboardSelectedFields', JSON.stringify(items));
+  };
+
+  const handleColumnResize = (fieldId, startX, startWidth) => {
+    const handleMouseMove = (e) => {
+      const diff = startX - e.clientX; // RTL - reverse direction
+      const newWidth = Math.max(80, startWidth + diff);
+      setColumnWidths(prev => {
+        const updated = { ...prev, [fieldId]: newWidth };
+        localStorage.setItem('dashboardColumnWidths', JSON.stringify(updated));
+        return updated;
+      });
+    };
+
+    const handleMouseUp = () => {
+      setResizingColumn(null);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    setResizingColumn(fieldId);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   // Fetch all persons to extract custom fields from their custom_data
@@ -431,8 +458,13 @@ export default function Dashboard() {
         <tr className="border-b-2 border-gray-200">
           {selectedFields.map((fieldId, index) => {
             const field = allAvailableFields.find(f => f.id === fieldId);
+            const width = columnWidths[fieldId];
             return (
-              <th key={fieldId} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+              <th 
+                key={fieldId} 
+                className="px-6 py-4 text-right text-sm font-semibold text-gray-700 relative"
+                style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
+              >
                 <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
                   <PopoverTrigger asChild>
                     <button className="hover:text-blue-600 transition-colors cursor-pointer">
@@ -481,12 +513,24 @@ export default function Dashboard() {
                         )}
                       </Button>
                     </div>
-                  </PopoverContent>
-                </Popover>
-              </th>
-            );
-          })}
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
+                    </PopoverContent>
+                    </Popover>
+                    {index < selectedFields.length - 1 && (
+                    <div
+                    className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
+                      resizingColumn === fieldId ? 'bg-blue-500' : 'bg-transparent hover:bg-blue-300'
+                    }`}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      const th = e.currentTarget.parentElement;
+                      handleColumnResize(fieldId, e.clientX, th.offsetWidth);
+                    }}
+                    />
+                    )}
+                    </th>
+                    );
+                    })}
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
         </tr>
       </thead>
 
@@ -506,11 +550,13 @@ export default function Dashboard() {
                     {selectedFields.map(fieldId => {
                       const field = allAvailableFields.find(f => f.id === fieldId);
                       const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
+                      const width = columnWidths[fieldId];
 
                       return (
                         <td 
                           key={fieldId} 
                           className="px-6 py-4 cursor-pointer"
+                          style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
                           onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                         >
                           {fieldId === 'account_number' ? (
