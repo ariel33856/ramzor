@@ -332,7 +332,7 @@ export default function Dashboard() {
 
               {/* Reorder Dialog */}
               <Dialog open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
-                <DialogContent className="max-w-md overflow-visible">
+                <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>סדר עמודות</DialogTitle>
                   </DialogHeader>
@@ -344,43 +344,31 @@ export default function Dashboard() {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           className="space-y-2 max-h-96 overflow-y-auto"
-                          style={{ position: 'relative', zIndex: 1 }}
                         >
                           {selectedFields.map((fieldId, index) => {
                             const field = allAvailableFields.find(f => f.id === fieldId);
                             return (
                               <Draggable key={fieldId} draggableId={fieldId} index={index}>
-                                {(provided, snapshot) => {
-                                  const style = provided.draggableProps.style;
-                                  const transform = style?.transform;
-
-                                  return (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      style={{
-                                        ...style,
-                                        position: snapshot.isDragging ? 'fixed' : 'relative',
-                                        zIndex: snapshot.isDragging ? 9999 : 'auto',
-                                        transform: snapshot.isDragging ? transform : undefined,
-                                      }}
-                                      className={`
-                                        flex items-center gap-3 p-3 rounded-lg border-2 transition-all
-                                        ${snapshot.isDragging 
-                                          ? 'bg-blue-50 border-blue-300 shadow-2xl scale-105' 
-                                          : 'bg-white border-gray-200 hover:border-gray-300'
-                                        }
-                                      `}
-                                    >
-                                      <GripVertical className="w-5 h-5 text-gray-400" />
-                                      <span className="flex-1 font-medium text-gray-900">
-                                        {field?.label || fieldId}
-                                      </span>
-                                      <span className="text-xs text-gray-500">#{index + 1}</span>
-                                    </div>
-                                  );
-                                }}
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className={`
+                                      flex items-center gap-3 p-3 rounded-lg border-2 transition-all
+                                      ${snapshot.isDragging 
+                                        ? 'bg-blue-50 border-blue-300 shadow-lg' 
+                                        : 'bg-white border-gray-200 hover:border-gray-300'
+                                      }
+                                    `}
+                                  >
+                                    <GripVertical className="w-5 h-5 text-gray-400" />
+                                    <span className="flex-1 font-medium text-gray-900">
+                                      {field?.label || fieldId}
+                                    </span>
+                                    <span className="text-xs text-gray-500">#{index + 1}</span>
+                                  </div>
+                                )}
                               </Draggable>
                             );
                           })}
