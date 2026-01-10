@@ -676,21 +676,25 @@ export default function PersonDetailsView({ personId }) {
             onPreviewChange={setDocumentPreview}
           />
         </div>
-        {documentPreview && (
-          <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50 relative">
-            <button
-              onClick={() => setDocumentPreview(null)}
-              className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors"
-            >
-              ✕
-            </button>
-            <img 
-              src={documentPreview} 
-              alt="Preview" 
-              className="w-full h-auto rounded object-contain max-h-64"
-            />
-          </div>
-        )}
+        <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50 relative flex items-center justify-center min-h-64">
+          {documentPreview ? (
+            <>
+              <button
+                onClick={() => setDocumentPreview(null)}
+                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors"
+              >
+                ✕
+              </button>
+              <img 
+                src={documentPreview} 
+                alt="Preview" 
+                className="w-full h-auto rounded object-contain max-h-64"
+              />
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">תמונת הלקוח</p>
+          )}
+        </div>
       </div>
 
       {/* Basic Info */}
