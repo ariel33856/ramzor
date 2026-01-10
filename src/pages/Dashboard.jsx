@@ -320,10 +320,10 @@ export default function Dashboard() {
                                           : provided.draggableProps.style?.transform
                                       }}
                                       className={`
-                                        flex items-center gap-2 p-2 rounded-lg border-2 transition-all
+                                        flex items-center gap-2 p-2 rounded-lg border-2
                                         ${snapshot.isDragging 
                                           ? 'bg-blue-50 border-blue-300 shadow-lg' 
-                                          : 'bg-white border-gray-200 hover:border-gray-300'
+                                          : 'bg-white border-gray-200 hover:border-gray-300 transition-all'
                                         }
                                       `}
                                     >
