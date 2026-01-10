@@ -137,69 +137,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
       setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
     }
   };
-            
-            try {
-              const result = await base44.integrations.Core.InvokeLLM({
-                prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON: {\"has_human\": true/false, \"x\": 0-100, \"y\": 0-100, \"width\": 0-100, \"height\": 0-100} כאשר הערכים הם אחוזים מגודל התמונה. אם אין בנאדם, החזר {\"has_human\": false}",
-                file_urls: [file_url],
-                response_json_schema: {
-                  type: "object",
-                  properties: {
-                    has_human: { type: "boolean" },
-                    x: { type: "number" },
-                    y: { type: "number" },
-                    width: { type: "number" },
-                    height: { type: "number" }
-                  }
-                }
-              });
-              
-              const hasHuman = result?.has_human === true;
-              setAiDetectionStatus(prev => ({ 
-                ...prev, 
-                [fileId]: hasHuman ? 'detected' : 'not-detected' 
-              }));
-              
-              if (hasHuman && onPreviewChange && result?.x !== undefined) {
-                // Crop the image to show only the human figure
-                const img = new Image();
-                img.onload = () => {
-                  const canvas = document.createElement('canvas');
-                  const ctx = canvas.getContext('2d');
-                  
-                  const x = (result.x / 100) * img.width;
-                  const y = (result.y / 100) * img.height;
-                  const width = (result.width / 100) * img.width;
-                  const height = (result.height / 100) * img.height;
-                  
-                  canvas.width = width;
-                  canvas.height = height;
-                  
-                  ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-                  const croppedImage = canvas.toDataURL();
-                  
-                  onPreviewChange(croppedImage);
-                };
-                img.src = base64Image;
-              } else if (hasHuman && onPreviewChange) {
-                onPreviewChange(base64Image);
-              }
-            } catch (error) {
-              console.error('AI detection error:', error);
-              setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
-            }
-          };
-          reader.readAsDataURL(file);
-        } else {
-          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
-        }
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
+
 
   const removeFile = (fileId) => {
     setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
