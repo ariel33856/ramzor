@@ -328,20 +328,20 @@ export default function PersonDetailsView({ personId }) {
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">שם פרטי</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
             <Input
               value={basicData.first_name}
               onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-              placeholder="שם פרטי"
+              placeholder={personFields.first_name}
               className="text-xl font-bold w-40"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">שם משפחה</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
             <Input
               value={basicData.last_name}
               onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-              placeholder="שם משפחה"
+              placeholder={personFields.last_name}
               className="text-xl font-bold w-40"
             />
           </div>
