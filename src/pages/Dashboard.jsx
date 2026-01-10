@@ -549,18 +549,17 @@ export default function Dashboard() {
                         {/* Range Filter */}
                         <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                           <p className="text-xs font-medium text-gray-700">סינון לפי טווח</p>
-                          <div className="flex gap-2 items-center">
-                            <Input
-                              placeholder="עד..."
-                              value={rangeFilters[fieldId]?.to || ''}
-                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
-                              className="h-8 text-sm"
-                            />
-                            <span className="text-gray-500">-</span>
+                          <div className="flex flex-col gap-2">
                             <Input
                               placeholder="מ..."
                               value={rangeFilters[fieldId]?.from || ''}
                               onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
+                              className="h-8 text-sm"
+                            />
+                            <Input
+                              placeholder="עד..."
+                              value={rangeFilters[fieldId]?.to || ''}
+                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
                               className="h-8 text-sm"
                             />
                           </div>
