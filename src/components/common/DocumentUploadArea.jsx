@@ -7,6 +7,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [aiDetectionStatus, setAiDetectionStatus] = useState({});
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -39,14 +40,16 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     try {
       for (const file of Array.from(files)) {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const fileId = Date.now() + Math.random();
         const newFile = {
-          id: Date.now() + Math.random(),
+          id: fileId,
           name: file.name,
           url: file_url,
           size: (file.size / 1024 / 1024).toFixed(2),
           type: file.type
         };
         setUploadedFiles(prev => [...prev, newFile]);
+        setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
         
         // Check for human figures if it's an image
         if (file.type.startsWith('image/')) {
@@ -60,17 +63,24 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                 file_urls: [file_url]
               });
               
+              const hasHuman = result && result.toLowerCase().includes('כן');
+              setAiDetectionStatus(prev => ({ 
+                ...prev, 
+                [fileId]: hasHuman ? 'detected' : 'not-detected' 
+              }));
+              
               // Display preview only if human figure detected
-              if (result && result.toLowerCase().includes('כן')) {
-                if (onPreviewChange) {
-                  onPreviewChange(base64Image);
-                }
+              if (hasHuman && onPreviewChange) {
+                onPreviewChange(base64Image);
               }
             } catch (error) {
               console.error('AI detection error:', error);
+              setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
             }
           };
           reader.readAsDataURL(file);
+        } else {
+          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
         }
         
         if (onDocumentUpload) {
