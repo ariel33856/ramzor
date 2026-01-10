@@ -8,6 +8,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [aiDetectionStatus, setAiDetectionStatus] = useState({});
+  const [error, setError] = useState(null);
 
   const handleDrag = (e) => {
     e.preventDefault();
