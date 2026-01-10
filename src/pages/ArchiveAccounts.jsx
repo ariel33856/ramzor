@@ -12,13 +12,11 @@ import { createPageUrl } from '@/utils';
 export default function ArchiveAccounts() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
-  const [user, setUser] = useState(null);
   const [filterUser, setFilterUser] = useState('all');
 
-  // Load user
-  useQuery({
+  const { data: user } = useQuery({
     queryKey: ['me'],
-    queryFn: () => base44.auth.me().then(setUser),
+    queryFn: () => base44.auth.me(),
     staleTime: 60000
   });
 

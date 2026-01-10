@@ -27,20 +27,19 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [user, setUser] = useState(null);
   const [filterUser, setFilterUser] = useState('all');
   
   // Load user data including preferences
-  useQuery({
+  const { data: user } = useQuery({
     queryKey: ['me'],
-    queryFn: () => base44.auth.me().then(u => {
-      setUser(u);
+    queryFn: async () => {
+      const u = await base44.auth.me();
       if (u.dashboard_preferences) {
         if (u.dashboard_preferences.selectedFields) setSelectedFields(u.dashboard_preferences.selectedFields);
         if (u.dashboard_preferences.columnWidths) setColumnWidths(u.dashboard_preferences.columnWidths);
       }
       return u;
-    }),
+    },
     staleTime: 60000
   });
 

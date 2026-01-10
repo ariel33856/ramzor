@@ -22,25 +22,23 @@ export default function AccountsArchive() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [user, setUser] = useState(null);
   const [filterUser, setFilterUser] = useState('all');
 
   const [columnOrder, setColumnOrder] = useState(borrowerFields);
 
   // Load user and preferences
-  useQuery({
+  const { data: user } = useQuery({
     queryKey: ['me'],
-    queryFn: () => base44.auth.me().then(u => {
-      setUser(u);
+    queryFn: async () => {
+      const u = await base44.auth.me();
       if (u.dashboard_preferences?.archive_accounts_columns) {
         setColumnOrder(u.dashboard_preferences.archive_accounts_columns);
       } else {
-        // Fallback to localStorage if exists (migration path) or default
         const saved = localStorage.getItem('accountsArchiveColumns');
         if (saved) setColumnOrder(JSON.parse(saved));
       }
       return u;
-    }),
+    },
     staleTime: 60000
   });
 

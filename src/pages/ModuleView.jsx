@@ -18,7 +18,6 @@ export default function ModuleView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [user, setUser] = useState(null);
   const [filterUser, setFilterUser] = useState('all');
 
   const defaultVisibleColumns = {
@@ -46,15 +45,15 @@ export default function ModuleView() {
   const [visibleColumns, setVisibleColumns] = useState(defaultVisibleColumns);
 
   // Load user and preferences
-  useQuery({
+  const { data: user } = useQuery({
     queryKey: ['me'],
-    queryFn: () => base44.auth.me().then(u => {
-      setUser(u);
+    queryFn: async () => {
+      const u = await base44.auth.me();
       if (u.dashboard_preferences?.module_view_columns?.[moduleId]) {
         setVisibleColumns(u.dashboard_preferences.module_view_columns[moduleId]);
       }
       return u;
-    }),
+    },
     staleTime: 60000
   });
 
