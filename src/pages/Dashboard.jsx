@@ -473,28 +473,7 @@ export default function Dashboard() {
                   </PopoverTrigger>
                   <PopoverContent className="w-40 p-2" align="start">
                     <div className="space-y-1">
-                      {index > 0 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => moveColumnEarlier(fieldId)}
-                        >
-                          <ArrowUp className="w-4 h-4 ml-2" />
-                          מקם מוקדם יותר
-                        </Button>
-                      )}
-                      {index < selectedFields.length - 1 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => moveColumnLater(fieldId)}
-                        >
-                          <ArrowDown className="w-4 h-4 ml-2" />
-                          מקם מאוחר יותר
-                        </Button>
-                      )}
+
                       <Button
                         variant="ghost"
                         size="sm"
