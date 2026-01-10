@@ -49,10 +49,14 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           type: file.type
         };
         setUploadedFiles(prev => [...prev, newFile]);
-        setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
         
-        // Check for human figures if it's an image
+        if (onDocumentUpload) {
+          onDocumentUpload(newFile);
+        }
+        
+        // Run AI detection in background if it's an image
         if (file.type.startsWith('image/')) {
+          setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
           const reader = new FileReader();
           reader.onload = async (e) => {
             const base64Image = e.target.result;
@@ -76,7 +80,6 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                 [fileId]: hasHuman ? 'detected' : 'not-detected' 
               }));
               
-              // Display preview only if human figure detected
               if (hasHuman && onPreviewChange) {
                 onPreviewChange(base64Image);
               }
@@ -88,10 +91,6 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           reader.readAsDataURL(file);
         } else {
           setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
-        }
-        
-        if (onDocumentUpload) {
-          onDocumentUpload(newFile);
         }
       }
     } catch (error) {
