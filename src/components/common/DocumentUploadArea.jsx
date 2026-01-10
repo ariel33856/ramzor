@@ -86,7 +86,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: "בדוק בעיון את התמונה. האם יש בה דמות אנושית אמיתית (אדם/בני אדם)? ענה רק בודק בעיון וודא שזו דמות אנושית בפועל ולא אובייקט, בעל חיים, או דיוקן. אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק: {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} אם אין דמות אנושית, החזר בדיוק {\"has_human\": false}",
+        prompt: "בדוק בעיון את התמונה. האם יש בה דמות אנושית אמיתית (אדם/בני אדם)? ענה רק בודק בעיון וודא שזו דמות אנושית בפועל ולא אובייקט, בעל חיים, או דיוקן. אם כן, תן קואורדינטות בפורמט JSON של מלבן (bounding box) שמכסה את כל הדמות האנושית כחלק שלם - וודא שכל הגוף כולל הראש, הידיים, הרגליים וכל החלקים מכוסים בחלוטין ללא חיתוך של שום חלק: {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>}. אם אין דמות אנושית, החזר בדיוק {\"has_human\": false}",
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
