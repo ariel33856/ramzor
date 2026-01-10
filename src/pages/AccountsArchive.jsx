@@ -59,7 +59,7 @@ export default function AccountsArchive() {
 
     try {
       await base44.auth.updateMe({ dashboard_preferences: newPrefs });
-      setUser({ ...user, dashboard_preferences: newPrefs });
+      queryClient.setQueryData(['me'], (old) => ({ ...old, dashboard_preferences: newPrefs }));
     } catch (e) {
       console.error('Failed to save preferences', e);
     }
