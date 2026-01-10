@@ -247,8 +247,8 @@ export default function Dashboard() {
 <div className="bg-white rounded-xl shadow-sm border border-gray-100">
   <div className="overflow-x-auto max-h-[100vh]">
     <table className="w-full">
-      <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
-        <DragDropContext onDragEnd={handleDragEnd}>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
           <Droppable droppableId="columns" direction="horizontal">
             {(provided) => (
               <tr 
@@ -266,11 +266,12 @@ export default function Dashboard() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           className={`px-6 py-4 text-right text-sm font-semibold text-gray-700 ${
-                            snapshot.isDragging ? 'bg-blue-100 shadow-lg' : ''
+                            snapshot.isDragging ? 'bg-blue-200 shadow-2xl opacity-90 rounded-lg scale-105' : ''
                           }`}
                           style={{
                             ...provided.draggableProps.style,
-                            cursor: 'grab'
+                            cursor: snapshot.isDragging ? 'grabbing' : 'grab',
+                            position: snapshot.isDragging ? 'fixed' : 'static'
                           }}
                         >
                           <div className="flex items-center gap-2 justify-end">
@@ -287,8 +288,8 @@ export default function Dashboard() {
               </tr>
             )}
           </Droppable>
-        </DragDropContext>
-      </thead>
+        </thead>
+      </DragDropContext>
 
       <tbody>
         {filteredCases.map((caseData, index) => {
