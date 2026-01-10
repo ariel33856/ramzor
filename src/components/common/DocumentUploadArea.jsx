@@ -210,6 +210,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                     </div>
                   </a>
                   <div className="mt-1 ml-6">
+                    {file.type.startsWith('image/') && !aiDetectionStatus[file.id] && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                        <Loader2 className="w-3 h-3 animate-spin" /> בדיקת תמונה...
+                      </span>
+                    )}
                     {aiDetectionStatus[file.id] === 'detecting' && (
                       <span className="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
                         <Loader2 className="w-3 h-3 animate-spin" /> בדיקה...
@@ -223,6 +228,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                     {aiDetectionStatus[file.id] === 'not-detected' && (
                       <span className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                         <AlertCircle className="w-3 h-3" /> לא זוהה בנאדם
+                      </span>
+                    )}
+                    {aiDetectionStatus[file.id] === 'error' && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                        <AlertCircle className="w-3 h-3" /> שגיאה בבדיקה
                       </span>
                     )}
                   </div>
