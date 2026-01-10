@@ -64,7 +64,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
               // Run AI detection in background if it's an image
               if (file.type.startsWith('image/')) {
                 setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
-                detectHuman(file_url, base64Image, fileId);
+                runHumanDetection(file_url, base64Image, fileId);
               } else {
                 setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-image' }));
               }
