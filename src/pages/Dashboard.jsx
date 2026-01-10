@@ -517,7 +517,7 @@ export default function Dashboard() {
                     </Popover>
                     <div
                       className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-300'
+                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-200'
                       }`}
                       onMouseDown={(e) => {
                         e.preventDefault();
@@ -543,7 +543,7 @@ export default function Dashboard() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.02 }}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="border-b-2 border-gray-300 hover:bg-gray-50 transition-colors"
                     >
                     {selectedFields.map(fieldId => {
                       const field = allAvailableFields.find(f => f.id === fieldId);
@@ -564,7 +564,7 @@ export default function Dashboard() {
                           ) : (
                             <span className="text-gray-600">{value}</span>
                           )}
-                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-300 pointer-events-none" />
+                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-200 pointer-events-none" />
                         </td>
                       );
                     })}
