@@ -4,7 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
-  Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive
+  Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive,
+  ArrowUp, ArrowDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,7 @@ export default function Dashboard() {
     const saved = localStorage.getItem('dashboardSelectedFields');
     return saved ? JSON.parse(saved) : ['account_number', 'first_name', 'last_name'];
   });
+  const [columnMenuOpen, setColumnMenuOpen] = useState(null);
 
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
@@ -46,6 +48,30 @@ export default function Dashboard() {
       localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
       return newFields;
     });
+  };
+
+  const moveColumnEarlier = (fieldId) => {
+    setSelectedFields(prev => {
+      const index = prev.indexOf(fieldId);
+      if (index <= 0) return prev;
+      const newFields = [...prev];
+      [newFields[index - 1], newFields[index]] = [newFields[index], newFields[index - 1]];
+      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
+      return newFields;
+    });
+    setColumnMenuOpen(null);
+  };
+
+  const moveColumnLater = (fieldId) => {
+    setSelectedFields(prev => {
+      const index = prev.indexOf(fieldId);
+      if (index === -1 || index >= prev.length - 1) return prev;
+      const newFields = [...prev];
+      [newFields[index], newFields[index + 1]] = [newFields[index + 1], newFields[index]];
+      localStorage.setItem('dashboardSelectedFields', JSON.stringify(newFields));
+      return newFields;
+    });
+    setColumnMenuOpen(null);
   };
 
   // Fetch all persons to extract custom fields from their custom_data
@@ -238,11 +264,43 @@ export default function Dashboard() {
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
         <tr className="border-b-2 border-gray-200">
-          {selectedFields.map(fieldId => {
+          {selectedFields.map((fieldId, index) => {
             const field = allAvailableFields.find(f => f.id === fieldId);
             return (
               <th key={fieldId} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-                {field?.label || fieldId}
+                <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
+                  <PopoverTrigger asChild>
+                    <button className="hover:text-blue-600 transition-colors cursor-pointer">
+                      {field?.label || fieldId}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 p-2" align="start">
+                    <div className="space-y-1">
+                      {index > 0 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={() => moveColumnEarlier(fieldId)}
+                        >
+                          <ArrowUp className="w-4 h-4 ml-2" />
+                          מקם מוקדם יותר
+                        </Button>
+                      )}
+                      {index < selectedFields.length - 1 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start"
+                          onClick={() => moveColumnLater(fieldId)}
+                        >
+                          <ArrowDown className="w-4 h-4 ml-2" />
+                          מקם מאוחר יותר
+                        </Button>
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </th>
             );
           })}
