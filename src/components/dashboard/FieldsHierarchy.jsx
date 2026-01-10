@@ -2,7 +2,6 @@
 // מבוסס על המבנה מ-CaseDetails
 
 import { tabs } from '@/components/CaseTabs';
-import { personFields } from '@/components/case/personFields';
 
 // הקבוצות הראשיות (כמו ב-CaseDetails)
 export const mainGroups = [
@@ -42,7 +41,8 @@ export const tabComponents = {
         { id: 'first_name', label: 'שם פרטי', source: 'person', visible: false },
         { id: 'last_name', label: 'שם משפחה', source: 'person', visible: false },
         { id: 'id_number', label: 'תעודת זהות', source: 'person', visible: false },
-        { id: 'type', label: 'סוג', source: 'person', visible: false }
+        { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
+        { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false }
       ]
     }
   ],
@@ -73,7 +73,7 @@ export const tabComponents = {
       fields: [
         { id: 'client_name', label: 'שם לקוח', source: 'case', visible: false },
         { id: 'last_name', label: 'שם משפחה', source: 'case', visible: false },
-        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
+        { id: 'progress_percentage', label: 'אחוז התקדמות', source: 'case', visible: false }
       ]
     }
   ],
@@ -118,9 +118,9 @@ export const tabComponents = {
       id: 'client_profile',
       label: 'פרופיל לקוח',
       fields: [
-        { id: 'client_id', label: 'תעודת זהות', source: 'case', visible: false },
-        { id: 'client_phone', label: 'טלפון', source: 'case', visible: false },
-        { id: 'client_email', label: 'אימייל', source: 'case', visible: false }
+        { id: 'client_id', label: 'תעודת זהות לקוח', source: 'case', visible: false },
+        { id: 'client_phone', label: 'טלפון לקוח', source: 'case', visible: false },
+        { id: 'client_email', label: 'אימייל לקוח', source: 'case', visible: false }
       ]
     }
   ],
@@ -132,7 +132,12 @@ export const tabComponents = {
         { id: 'account_number', label: 'מספר חשבון', source: 'case', visible: true },
         { id: 'target_bank', label: 'בנק יעד', source: 'case', visible: false },
         { id: 'created_date', label: 'תאריך פתיחה', source: 'case', visible: false },
-        { id: 'module_id', label: 'מודול', source: 'case', visible: false }
+        { id: 'updated_date', label: 'תאריך עדכון', source: 'case', visible: false },
+        { id: 'created_by', label: 'נוצר על ידי', source: 'case', visible: false },
+        { id: 'module_id', label: 'מזהה מודול', source: 'case', visible: false },
+        { id: 'person_id', label: 'מזהה איש קשר', source: 'case', visible: false },
+        { id: 'linked_borrowers', label: 'לווים משויכים', source: 'case', visible: false },
+        { id: 'is_archived', label: 'בארכיון', source: 'case', visible: false }
       ]
     }
   ],
@@ -142,7 +147,7 @@ export const tabComponents = {
       label: 'תהליך עבודה',
       fields: [
         { id: 'status', label: 'סטטוס', source: 'case', visible: false },
-        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
+        { id: 'progress_percentage', label: 'אחוז התקדמות', source: 'case', visible: false }
       ]
     }
   ],
@@ -153,6 +158,68 @@ export const tabComponents = {
       fields: [
         { id: 'red_flags', label: 'דגלים אדומים', source: 'case', visible: false }
       ]
+    }
+  ],
+  calendar: [
+    {
+      id: 'calendar_info',
+      label: 'מידע יומן',
+      fields: [
+        { id: 'created_date', label: 'תאריך יצירה', source: 'case', visible: false }
+      ]
+    }
+  ],
+  tracking: [
+    {
+      id: 'tracking_info',
+      label: 'מעקב',
+      fields: [
+        { id: 'updated_date', label: 'עדכון אחרון', source: 'case', visible: false }
+      ]
+    }
+  ],
+  documents: [
+    {
+      id: 'documents_info',
+      label: 'מסמכים',
+      fields: []
+    }
+  ],
+  dashboards: [
+    {
+      id: 'dashboard_info',
+      label: 'דשבורד',
+      fields: [
+        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
+      ]
+    }
+  ],
+  calculator: [
+    {
+      id: 'calculator_info',
+      label: 'מחשבון',
+      fields: []
+    }
+  ],
+  payments: [
+    {
+      id: 'payments_info',
+      label: 'תשלומים',
+      fields: []
+    }
+  ],
+  insurance: [
+    {
+      id: 'insurance_info',
+      label: 'ביטוחים',
+      fields: []
+    }
+  ],
+  products: [
+    {
+      id: 'products_info',
+      label: 'מוצרים',
+      fields: []
     }
   ]
 };
