@@ -551,16 +551,16 @@ export default function Dashboard() {
                           <p className="text-xs font-medium text-gray-700">סינון לפי טווח</p>
                           <div className="flex gap-2 items-center">
                             <Input
-                              placeholder="מ..."
-                              value={rangeFilters[fieldId]?.from || ''}
-                              onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
+                              placeholder="עד..."
+                              value={rangeFilters[fieldId]?.to || ''}
+                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
                               className="h-8 text-sm"
                             />
                             <span className="text-gray-500">-</span>
                             <Input
-                              placeholder="עד..."
-                              value={rangeFilters[fieldId]?.to || ''}
-                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
+                              placeholder="מ..."
+                              value={rangeFilters[fieldId]?.from || ''}
+                              onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
                               className="h-8 text-sm"
                             />
                           </div>
