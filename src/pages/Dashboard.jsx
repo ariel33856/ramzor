@@ -540,7 +540,7 @@ export default function Dashboard() {
                         )}
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-80" align="start" sideOffset={-40}>
+                    <PopoverContent className="w-80" align="start">
                       <div className="space-y-3">
                         <h4 className="font-semibold text-sm">
                           סנן לפי {field?.label || fieldId}
