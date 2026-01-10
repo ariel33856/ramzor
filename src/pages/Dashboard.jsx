@@ -506,7 +506,7 @@ export default function Dashboard() {
                         {field?.label || fieldId}
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-40 p-2 mr-[50px]" align="start">
+                    <PopoverContent className="w-40 p-2 mr-[100px]" align="start">
                       <div className="space-y-1">
 
                         <Button
