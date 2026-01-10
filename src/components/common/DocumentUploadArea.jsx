@@ -87,7 +87,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     try {
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות בפורמט JSON שמכסות את הדמות כולה בדיוק (לא לחתוך את הדמות עצמה): {\"has_human\": true, \"x\": <starting x percent>, \"y\": <starting y percent>, \"width\": <width percent>, \"height\": <height percent>} אם אין בנאדם, החזר {\"has_human\": false}",
-        file_urls: [file_url],
+        file_urls: [base64Image],
         response_json_schema: {
           type: "object",
           properties: {
