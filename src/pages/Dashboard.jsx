@@ -31,6 +31,17 @@ export default function Dashboard() {
     return saved ? JSON.parse(saved) : ['account_number', 'first_name', 'last_name'];
   });
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(selectedFields);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    
+    setSelectedFields(items);
+    localStorage.setItem('dashboardSelectedFields', JSON.stringify(items));
+  };
+
   const archiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
     onSuccess: () => {
@@ -237,17 +248,46 @@ export default function Dashboard() {
   <div className="overflow-x-auto max-h-[100vh]">
     <table className="w-full">
       <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
-        <tr className="border-b-2 border-gray-200">
-          {selectedFields.map(fieldId => {
-            const field = allAvailableFields.find(f => f.id === fieldId);
-            return (
-              <th key={fieldId} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-                {field?.label || fieldId}
-              </th>
-            );
-          })}
-          <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
-        </tr>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="columns" direction="horizontal">
+            {(provided) => (
+              <tr 
+                className="border-b-2 border-gray-200"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {selectedFields.map((fieldId, index) => {
+                  const field = allAvailableFields.find(f => f.id === fieldId);
+                  return (
+                    <Draggable key={fieldId} draggableId={fieldId} index={index}>
+                      {(provided, snapshot) => (
+                        <th 
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`px-6 py-4 text-right text-sm font-semibold text-gray-700 ${
+                            snapshot.isDragging ? 'bg-blue-100 shadow-lg' : ''
+                          }`}
+                          style={{
+                            ...provided.draggableProps.style,
+                            cursor: 'grab'
+                          }}
+                        >
+                          <div className="flex items-center gap-2 justify-end">
+                            <span>{field?.label || fieldId}</span>
+                            <GripVertical className="w-4 h-4 text-gray-400" />
+                          </div>
+                        </th>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
+              </tr>
+            )}
+          </Droppable>
+        </DragDropContext>
       </thead>
 
       <tbody>
