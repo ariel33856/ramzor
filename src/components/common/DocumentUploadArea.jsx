@@ -3,11 +3,10 @@ import { Upload, Loader2, X, File } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 
-export default function DocumentUploadArea({ onDocumentUpload, showPreview = false }) {
+export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }) {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [preview, setPreview] = useState(null);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -52,7 +51,11 @@ export default function DocumentUploadArea({ onDocumentUpload, showPreview = fal
         // Set preview if it's an image
         if (file.type.startsWith('image/')) {
           const reader = new FileReader();
-          reader.onload = (e) => setPreview(e.target.result);
+          reader.onload = (e) => {
+            if (onPreviewChange) {
+              onPreviewChange(e.target.result);
+            }
+          };
           reader.readAsDataURL(file);
         }
         
@@ -72,16 +75,7 @@ export default function DocumentUploadArea({ onDocumentUpload, showPreview = fal
   };
 
   return (
-    <div className="w-full space-y-4">
-      {showPreview && preview && (
-        <div className="border-2 border-blue-200 rounded-lg p-2 bg-blue-50">
-          <img 
-            src={preview} 
-            alt="Preview" 
-            className="w-full h-auto rounded object-contain max-h-64"
-          />
-        </div>
-      )}
+    <div className="w-full">
       <label
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}

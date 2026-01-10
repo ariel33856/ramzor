@@ -81,6 +81,7 @@ export default function PersonDetailsView({ personId }) {
   const [showChildrenWarning, setShowChildrenWarning] = useState(false);
   const [maritalStatus, setMaritalStatus] = useState('married');
   const [idError, setIdError] = useState('');
+  const [documentPreview, setDocumentPreview] = useState(null);
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
@@ -672,9 +673,18 @@ export default function PersonDetailsView({ personId }) {
             onDocumentUpload={(file) => {
               console.log('Document uploaded:', file);
             }}
-            showPreview={true}
+            onPreviewChange={setDocumentPreview}
           />
         </div>
+        {documentPreview && (
+          <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50">
+            <img 
+              src={documentPreview} 
+              alt="Preview" 
+              className="w-full h-auto rounded object-contain max-h-64"
+            />
+          </div>
+        )}
       </div>
 
       {/* Basic Info */}
