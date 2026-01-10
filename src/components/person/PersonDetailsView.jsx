@@ -581,44 +581,44 @@ export default function PersonDetailsView({ personId }) {
                       </Button>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label>שם פרטי</Label>
+                          <Label>{personFields.first_name}</Label>
                           <Input
                             value={newSpouseData.first_name}
                             onChange={(e) => setNewSpouseData({...newSpouseData, first_name: e.target.value})}
-                            placeholder="שם פרטי"
+                            placeholder={personFields.first_name}
                           />
                         </div>
                         <div>
-                          <Label>שם משפחה</Label>
+                          <Label>{personFields.last_name}</Label>
                           <Input
                             value={newSpouseData.last_name}
                             onChange={(e) => setNewSpouseData({...newSpouseData, last_name: e.target.value})}
-                            placeholder="שם משפחה"
+                            placeholder={personFields.last_name}
                           />
                         </div>
                         <div>
-                          <Label>תעודת זהות</Label>
+                          <Label>{personFields.id_number}</Label>
                           <Input
                             value={newSpouseData.id_number}
                             onChange={(e) => setNewSpouseData({...newSpouseData, id_number: e.target.value})}
-                            placeholder="תעודת זהות"
+                            placeholder={personFields.id_number}
                           />
                         </div>
                         <div>
-                          <Label>טלפון</Label>
+                          <Label>{personFields.phone}</Label>
                           <Input
                             value={newSpouseData.phone}
                             onChange={(e) => setNewSpouseData({...newSpouseData, phone: e.target.value})}
-                            placeholder="טלפון"
+                            placeholder={personFields.phone}
                           />
                         </div>
                         <div className="col-span-2">
-                          <Label>אימייל</Label>
+                          <Label>{personFields.email}</Label>
                           <Input
                             type="email"
                             value={newSpouseData.email}
                             onChange={(e) => setNewSpouseData({...newSpouseData, email: e.target.value})}
-                            placeholder="אימייל"
+                            placeholder={personFields.email}
                           />
                         </div>
                       </div>
