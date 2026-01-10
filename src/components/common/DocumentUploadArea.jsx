@@ -147,34 +147,36 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
                 key={file.id}
                 className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg"
               >
-                <a
-                  href={file.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 flex-1 hover:text-blue-600"
-                >
-                  <File className="w-4 h-4 text-blue-600" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
-                    <p className="text-xs text-gray-500">{file.size} MB</p>
+                <div className="flex-1">
+                  <a
+                    href={file.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-blue-600"
+                  >
+                    <File className="w-4 h-4 text-blue-600" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 truncate">{file.name}</p>
+                      <p className="text-xs text-gray-500">{file.size} MB</p>
+                    </div>
+                  </a>
+                  <div className="mt-1 ml-6">
+                    {aiDetectionStatus[file.id] === 'detecting' && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                        <Loader2 className="w-3 h-3 animate-spin" /> בדיקה...
+                      </span>
+                    )}
+                    {aiDetectionStatus[file.id] === 'detected' && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                        <CheckCircle2 className="w-3 h-3" /> בנאדם זוהה
+                      </span>
+                    )}
+                    {aiDetectionStatus[file.id] === 'not-detected' && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                        <AlertCircle className="w-3 h-3" /> לא זוהה בנאדם
+                      </span>
+                    )}
                   </div>
-                </a>
-                <div className="flex items-center gap-2 ml-2">
-                  {aiDetectionStatus[file.id] === 'detecting' && (
-                    <span className="flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
-                      <Loader2 className="w-3 h-3 animate-spin" /> בדיקה...
-                    </span>
-                  )}
-                  {aiDetectionStatus[file.id] === 'detected' && (
-                    <span className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                      <CheckCircle2 className="w-3 h-3" /> בנאדם זוהה
-                    </span>
-                  )}
-                  {aiDetectionStatus[file.id] === 'not-detected' && (
-                    <span className="flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
-                      <AlertCircle className="w-3 h-3" /> לא זוהה בנאדם
-                    </span>
-                  )}
                 </div>
                 <Button
                   variant="ghost"
