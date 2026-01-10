@@ -120,10 +120,10 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
       } else if (hasHuman && onPreviewChange) {
         onPreviewChange(base64Image);
       }
-    } catch (error) {
-      console.error('AI detection error:', error);
-      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
-    }
+      } catch (error) {
+        console.error('AI detection error:', error);
+        setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+      }
     })();
   };
 
