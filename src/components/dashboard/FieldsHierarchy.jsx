@@ -40,9 +40,14 @@ export const tabComponents = {
       fields: [
         { id: 'first_name', label: 'שם פרטי', source: 'person', visible: false },
         { id: 'last_name', label: 'שם משפחה', source: 'person', visible: false },
+        { id: 'phone', label: 'תאריך לידה', source: 'person', visible: false },
         { id: 'id_number', label: 'תעודת זהות', source: 'person', visible: false },
+        { id: 'email', label: 'תאריך הנפקת ת.ז.', source: 'person', visible: false },
+        { id: 'notes', label: 'תוקף ת.ז.', source: 'person', visible: false },
         { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
-        { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false }
+        { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false },
+        { id: 'num_siblings', label: 'מספר אחים', source: 'person_custom', visible: false },
+        { id: 'spouse_id', label: 'בן/בת זוג', source: 'person_custom', visible: false }
       ]
     }
   ],
@@ -50,11 +55,7 @@ export const tabComponents = {
     {
       id: 'contact_info',
       label: 'פרטי התקשרות',
-      fields: [
-        { id: 'phone', label: 'טלפון', source: 'person', visible: false },
-        { id: 'email', label: 'אימייל', source: 'person', visible: false },
-        { id: 'notes', label: 'הערות', source: 'person', visible: false }
-      ]
+      fields: []
     }
   ],
   contacts: [
@@ -331,9 +332,7 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
   } else if (field.source === 'person') {
     if (!linkedPerson) return '—';
     
-    // בדוק קודם ב-custom_data
-    const customValue = linkedPerson.custom_data?.[field.id];
-    const value = customValue || linkedPerson[field.id];
+    const value = linkedPerson[field.id];
     
     if (field.id === 'linked_accounts' && Array.isArray(value)) {
       return value.length > 0 ? `${value.length} חשבונות` : '—';
@@ -354,6 +353,17 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
     
     if (typeof value === 'boolean') {
       return value ? 'כן' : 'לא';
+    }
+    
+    return value || '—';
+  } else if (field.source === 'person_custom') {
+    if (!linkedPerson) return '—';
+    
+    const value = linkedPerson.custom_data?.[field.id];
+    
+    if (field.id === 'spouse_id' && value) {
+      const spouse = allPersons?.find(p => p.id === value);
+      return spouse ? `${spouse.first_name} ${spouse.last_name}` : '—';
     }
     
     return value || '—';
