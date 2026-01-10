@@ -313,6 +313,12 @@ export default function Dashboard() {
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
+                                      style={{
+                                        ...provided.draggableProps.style,
+                                        transform: snapshot.isDragging && provided.draggableProps.style?.transform
+                                          ? `${provided.draggableProps.style.transform} translateY(-50px)`
+                                          : provided.draggableProps.style?.transform
+                                      }}
                                       className={`
                                         flex items-center gap-2 p-2 rounded-lg border-2 transition-all
                                         ${snapshot.isDragging 
