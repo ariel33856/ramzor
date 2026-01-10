@@ -11,6 +11,7 @@ import {
   Database, Bot, Calendar, MessageSquare, Layers, ArrowRight, Link as LinkIcon, UserPlus, User, Trash2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -115,6 +116,13 @@ export default function Layout({ children, currentPageName }) {
     retry: 1,
     staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false
+  });
+
+  const { data: usersList = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+    enabled: user?.role === 'admin',
+    staleTime: 5 * 60 * 1000
   });
 
   const { data: allCases = [] } = useQuery({
@@ -356,6 +364,28 @@ export default function Layout({ children, currentPageName }) {
                           איש קשר חדש
                         </Button>
                       </Link>
+                      {user?.role === 'admin' && (
+                        <Select
+                          value={typeof window !== 'undefined' ? window.archiveAccountsFilterUser || 'all' : 'all'}
+                          onValueChange={(value) => {
+                            if (typeof window !== 'undefined' && window.setArchiveAccountsFilterUser) {
+                              window.setArchiveAccountsFilterUser(value);
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="w-40 h-10 border-orange-200 bg-orange-50 text-orange-900">
+                            <SelectValue placeholder="סנן לפי משתמש" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">כל המשתמשים</SelectItem>
+                            {usersList.map(u => (
+                              <SelectItem key={u.id} value={u.email}>
+                                {u.first_name || u.email} {u.last_name || ''}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                       <div className="relative w-64">
                         <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <Input

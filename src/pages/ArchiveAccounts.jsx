@@ -92,31 +92,16 @@ export default function ArchiveAccounts() {
     return matchesSearch;
   });
 
-  // Expose searchTerm to window for Layout to access
+  // Expose state to window for Layout to access
   React.useEffect(() => {
     window.archiveAccountsSearchTerm = searchTerm;
     window.setArchiveAccountsSearchTerm = setSearchTerm;
-  }, [searchTerm]);
+    window.archiveAccountsFilterUser = filterUser;
+    window.setArchiveAccountsFilterUser = setFilterUser;
+  }, [searchTerm, filterUser]);
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
-      {user?.role === 'admin' && (
-        <div className="bg-white p-2 border-b flex justify-end px-4">
-          <Select value={filterUser} onValueChange={setFilterUser}>
-            <SelectTrigger className="w-full md:w-64 border-orange-200 bg-orange-50 text-orange-900">
-              <SelectValue placeholder="סנן לפי משתמש" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">כל המשתמשים</SelectItem>
-              {usersList.map(u => (
-                <SelectItem key={u.id} value={u.email}>
-                  {u.first_name || u.email} {u.last_name || ''}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
       <div className="flex-1 overflow-hidden p-1">
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
