@@ -22,10 +22,51 @@ export default function AccountsArchive() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [columnOrder, setColumnOrder] = useState(() => {
-    const saved = localStorage.getItem('accountsArchiveColumns');
-    return saved ? JSON.parse(saved) : borrowerFields;
+  const [user, setUser] = useState(null);
+  const [filterUser, setFilterUser] = useState('all');
+
+  const [columnOrder, setColumnOrder] = useState(borrowerFields);
+
+  // Load user and preferences
+  useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me().then(u => {
+      setUser(u);
+      if (u.dashboard_preferences?.archive_accounts_columns) {
+        setColumnOrder(u.dashboard_preferences.archive_accounts_columns);
+      } else {
+        // Fallback to localStorage if exists (migration path) or default
+        const saved = localStorage.getItem('accountsArchiveColumns');
+        if (saved) setColumnOrder(JSON.parse(saved));
+      }
+      return u;
+    }),
+    staleTime: 60000
   });
+
+  // Get users for admin filter
+  const { data: usersList = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+    enabled: user?.role === 'admin',
+    staleTime: 5 * 60 * 1000
+  });
+
+  const savePreferences = async (newColumns) => {
+    if (!user) return;
+    const newPrefs = {
+      ...user.dashboard_preferences,
+      archive_accounts_columns: newColumns
+    };
+
+    try {
+      await base44.auth.updateMe({ dashboard_preferences: newPrefs });
+      setUser({ ...user, dashboard_preferences: newPrefs });
+    } catch (e) {
+      console.error('Failed to save preferences', e);
+    }
+  };
+
   const [newFieldDialog, setNewFieldDialog] = useState(false);
   const [newField, setNewField] = useState({ id: '', label: '' });
 
@@ -51,14 +92,14 @@ export default function AccountsArchive() {
           }
         });
         
-        if (hasChanges) {
-          localStorage.setItem('accountsArchiveColumns', JSON.stringify(updatedColumns));
+        if (hasChanges && user) {
+          savePreferences(updatedColumns);
           return updatedColumns;
         }
         return currentColumns;
       });
     }
-  }, [customFieldsData]);
+  }, [customFieldsData, user]);
 
   const unarchiveMutation = useMutation({
     mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: false }),
@@ -68,8 +109,20 @@ export default function AccountsArchive() {
   });
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['accounts-archive'],
-    queryFn: () => base44.entities.MortgageCase.list('-updated_date')
+    queryKey: ['accounts-archive', user?.role, user?.email, filterUser],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      if (user.role === 'admin') {
+        if (filterUser !== 'all') {
+          return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-updated_date');
+        }
+        return base44.entities.MortgageCase.list('-updated_date');
+      }
+      
+      return base44.entities.MortgageCase.filter({ created_by: user.email }, '-updated_date');
+    },
+    enabled: !!user
   });
 
   // Filter only archived accounts without module_id
@@ -104,7 +157,7 @@ export default function AccountsArchive() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setColumnOrder(items);
-    localStorage.setItem('accountsArchiveColumns', JSON.stringify(items));
+    savePreferences(items);
   };
 
   const toggleColumnVisibility = (columnId) => {
@@ -112,14 +165,14 @@ export default function AccountsArchive() {
       col.id === columnId ? { ...col, visible: !col.visible } : col
     );
     setColumnOrder(updated);
-    localStorage.setItem('accountsArchiveColumns', JSON.stringify(updated));
+    savePreferences(updated);
   };
 
   const addNewField = () => {
     if (newField.id && newField.label) {
       const updated = [...columnOrder, { ...newField, visible: true }];
       setColumnOrder(updated);
-      localStorage.setItem('accountsArchiveColumns', JSON.stringify(updated));
+      savePreferences(updated);
       setNewField({ id: '', label: '' });
       setNewFieldDialog(false);
     }
@@ -154,6 +207,22 @@ export default function AccountsArchive() {
                 className="pr-10"
               />
             </div>
+
+            {user?.role === 'admin' && (
+              <Select value={filterUser} onValueChange={setFilterUser}>
+                <SelectTrigger className="w-full md:w-48 border-orange-200 bg-orange-50 text-orange-900">
+                  <SelectValue placeholder="סנן לפי משתמש" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל המשתמשים</SelectItem>
+                  {usersList.map(u => (
+                    <SelectItem key={u.id} value={u.email}>
+                      {u.first_name || u.email} {u.last_name || ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full md:w-48">

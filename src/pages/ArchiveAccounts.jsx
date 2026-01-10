@@ -11,6 +11,23 @@ import { createPageUrl } from '@/utils';
 export default function ArchiveAccounts() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
+  const [filterUser, setFilterUser] = useState('all');
+
+  // Load user
+  useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me().then(setUser),
+    staleTime: 60000
+  });
+
+  // Get users for admin filter
+  const { data: usersList = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+    enabled: user?.role === 'admin',
+    staleTime: 5 * 60 * 1000
+  });
 
   const archiveMutation = useMutation({
     mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: true }),
@@ -20,8 +37,20 @@ export default function ArchiveAccounts() {
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts'],
-    queryFn: () => base44.entities.Person.list('-created_date')
+    queryKey: ['contacts', user?.role, user?.email, filterUser],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      if (user.role === 'admin') {
+        if (filterUser !== 'all') {
+          return base44.entities.Person.filter({ created_by: filterUser }, '-created_date');
+        }
+        return base44.entities.Person.list('-created_date');
+      }
+      
+      return base44.entities.Person.filter({ created_by: user.email }, '-created_date');
+    },
+    enabled: !!user
   });
 
   const contacts = allPeople.filter(p => p.type === 'איש קשר' && !p.is_archived);
@@ -72,6 +101,23 @@ export default function ArchiveAccounts() {
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+      {user?.role === 'admin' && (
+        <div className="bg-white p-2 border-b flex justify-end px-4">
+          <Select value={filterUser} onValueChange={setFilterUser}>
+            <SelectTrigger className="w-full md:w-64 border-orange-200 bg-orange-50 text-orange-900">
+              <SelectValue placeholder="סנן לפי משתמש" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">כל המשתמשים</SelectItem>
+              {usersList.map(u => (
+                <SelectItem key={u.id} value={u.email}>
+                  {u.first_name || u.email} {u.last_name || ''}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div className="flex-1 overflow-hidden p-1">
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">

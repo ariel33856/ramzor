@@ -18,7 +18,10 @@ export default function ModuleView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
-  const [visibleColumns, setVisibleColumns] = useState({
+  const [user, setUser] = useState(null);
+  const [filterUser, setFilterUser] = useState('all');
+
+  const defaultVisibleColumns = {
     client_name: true,
     client_id: false,
     client_phone: false,
@@ -38,7 +41,57 @@ export default function ModuleView() {
     dti_ratio: false,
     income_per_capita: false,
     notes: false
+  };
+
+  const [visibleColumns, setVisibleColumns] = useState(defaultVisibleColumns);
+
+  // Load user and preferences
+  useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me().then(u => {
+      setUser(u);
+      if (u.dashboard_preferences?.module_view_columns?.[moduleId]) {
+        setVisibleColumns(u.dashboard_preferences.module_view_columns[moduleId]);
+      }
+      return u;
+    }),
+    staleTime: 60000
   });
+
+  // Get users for admin filter
+  const { data: usersList = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+    enabled: user?.role === 'admin',
+    staleTime: 5 * 60 * 1000
+  });
+
+  const savePreferences = async (newColumns) => {
+    if (!user) return;
+    const currentPrefs = user.dashboard_preferences || {};
+    const modulePrefs = currentPrefs.module_view_columns || {};
+    
+    const newPrefs = {
+      ...currentPrefs,
+      module_view_columns: {
+        ...modulePrefs,
+        [moduleId]: newColumns
+      }
+    };
+
+    try {
+      await base44.auth.updateMe({ dashboard_preferences: newPrefs });
+      setUser({ ...user, dashboard_preferences: newPrefs });
+    } catch (e) {
+      console.error('Failed to save preferences', e);
+    }
+  };
+
+  const handleColumnToggle = (key, checked) => {
+    const newColumns = { ...visibleColumns, [key]: checked };
+    setVisibleColumns(newColumns);
+    savePreferences(newColumns);
+  };
 
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
@@ -47,9 +100,22 @@ export default function ModuleView() {
   });
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['module-cases', moduleId],
-    queryFn: () => base44.entities.MortgageCase.filter({ module_id: moduleId }, '-created_date'),
-    enabled: !!moduleId
+    queryKey: ['module-cases', moduleId, user?.role, user?.email, filterUser],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      const baseFilter = { module_id: moduleId };
+      
+      if (user.role === 'admin') {
+        if (filterUser !== 'all') {
+          return base44.entities.MortgageCase.filter({ ...baseFilter, created_by: filterUser }, '-created_date');
+        }
+        return base44.entities.MortgageCase.filter(baseFilter, '-created_date');
+      }
+      
+      return base44.entities.MortgageCase.filter({ ...baseFilter, created_by: user.email }, '-created_date');
+    },
+    enabled: !!moduleId && !!user
   });
 
   const statusLabels = {
@@ -122,6 +188,22 @@ export default function ModuleView() {
                 className="pr-10"
               />
             </div>
+
+            {user?.role === 'admin' && (
+              <Select value={filterUser} onValueChange={setFilterUser}>
+                <SelectTrigger className="w-full md:w-48 border-orange-200 bg-orange-50 text-orange-900">
+                  <SelectValue placeholder="סנן לפי משתמש" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל המשתמשים</SelectItem>
+                  {usersList.map(u => (
+                    <SelectItem key={u.id} value={u.email}>
+                      {u.first_name || u.email} {u.last_name || ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full md:w-48">
@@ -160,7 +242,7 @@ export default function ModuleView() {
                     <div key={key} className="flex items-center gap-2">
                       <Checkbox
                         checked={visibleColumns[key]}
-                        onCheckedChange={(checked) => setVisibleColumns({...visibleColumns, [key]: checked})}
+                        onCheckedChange={(checked) => handleColumnToggle(key, checked)}
                       />
                       <label className="text-sm cursor-pointer">{key}</label>
                     </div>
