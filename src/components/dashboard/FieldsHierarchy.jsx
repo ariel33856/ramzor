@@ -44,6 +44,7 @@ export const tabComponents = {
         { id: 'id_number', label: 'תעודת זהות', source: 'person', visible: false },
         { id: 'email', label: 'תאריך הנפקת ת.ז.', source: 'person', visible: false },
         { id: 'notes', label: 'תוקף ת.ז.', source: 'person', visible: false },
+        { id: 'address', label: 'כתובת', source: 'person', visible: false },
         { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
         { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false },
         { id: 'num_siblings', label: 'מספר אחים', source: 'person_custom', visible: false },
