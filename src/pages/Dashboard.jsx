@@ -517,7 +517,7 @@ export default function Dashboard() {
                     </Popover>
                     <div
                       className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-transparent hover:bg-blue-300'
+                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-300'
                       }`}
                       onMouseDown={(e) => {
                         e.preventDefault();
