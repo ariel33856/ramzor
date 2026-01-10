@@ -59,11 +59,18 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
             
             try {
               const result = await base44.integrations.Core.InvokeLLM({
-                prompt: "בדוק אם יש דמות אנושית או פנים בתמונה הזו. תשובה בקצרה: כן או לא",
-                file_urls: [file_url]
+                prompt: "בדוק את התמונה בעיון. האם יש בה דמות אנושית, פנים של אדם, או כל חלק גוף אנושי (ראש, פנים, כתפיים וכו')? הגב בפורמט JSON: {\"has_human\": true/false, \"confidence\": \"high\"/\"medium\"/\"low\"}",
+                file_urls: [file_url],
+                response_json_schema: {
+                  type: "object",
+                  properties: {
+                    has_human: { type: "boolean" },
+                    confidence: { type: "string", enum: ["high", "medium", "low"] }
+                  }
+                }
               });
               
-              const hasHuman = result && result.toLowerCase().includes('כן');
+              const hasHuman = result?.has_human === true;
               setAiDetectionStatus(prev => ({ 
                 ...prev, 
                 [fileId]: hasHuman ? 'detected' : 'not-detected' 
