@@ -12,7 +12,12 @@ import { createPageUrl } from '@/utils';
 export default function ArchiveAccounts() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterUser, setFilterUser] = useState('all');
+  const [filterUser, setFilterUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('globalFilterUser') || 'all';
+    }
+    return 'all';
+  });
 
   const { data: user } = useQuery({
     queryKey: ['me'],
@@ -97,6 +102,14 @@ export default function ArchiveAccounts() {
     window.archiveAccountsSearchTerm = searchTerm;
     window.setArchiveAccountsSearchTerm = setSearchTerm;
   }, [searchTerm]);
+
+  React.useEffect(() => {
+    const handleGlobalFilterChange = (e) => {
+      setFilterUser(e.detail.filterUser);
+    };
+    window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+    return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+  }, []);
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
