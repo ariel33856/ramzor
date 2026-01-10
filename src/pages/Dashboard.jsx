@@ -354,17 +354,11 @@ export default function Dashboard() {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    style={{
-                                      ...provided.draggableProps.style,
-                                      transform: snapshot.isDragging 
-                                        ? provided.draggableProps.style?.transform 
-                                        : 'none'
-                                    }}
                                     className={`
                                       flex items-center gap-3 p-3 rounded-lg border-2 transition-all
                                       ${snapshot.isDragging 
-                                        ? 'bg-blue-50 border-blue-300 shadow-lg cursor-grabbing' 
-                                        : 'bg-white border-gray-200 hover:border-gray-300 cursor-grab'
+                                        ? 'bg-blue-50 border-blue-300 shadow-lg' 
+                                        : 'bg-white border-gray-200 hover:border-gray-300'
                                       }
                                     `}
                                   >
