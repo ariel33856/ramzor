@@ -666,6 +666,98 @@ export default function PersonDetailsView({ personId }) {
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
+      {/* Document Upload Area */}
+      <div className="mb-6 flex gap-4">
+        <div className="w-64">
+          <DocumentUploadArea 
+            onDocumentUpload={(file) => {
+              console.log('Document uploaded:', file);
+            }}
+            onPreviewChange={setDocumentPreview}
+            onDataExtracted={(data) => {
+              console.log('🔍 Extracted data from ID:', data);
+              
+              // Prepare updates object
+              const updates = {};
+              
+              if (data.first_name) {
+                updates.first_name = data.first_name;
+                console.log('✅ First name:', data.first_name);
+              }
+              
+              if (data.last_name) {
+                updates.last_name = data.last_name;
+                console.log('✅ Last name:', data.last_name);
+              }
+              
+              if (data.id_number) {
+                // Ensure 9 digits with leading zero if needed
+                const idNumber = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                updates.id_number = idNumber;
+                console.log('✅ ID number:', idNumber);
+                setIdError(''); // Clear any previous error
+              }
+              
+              if (data.address) {
+                updates.address = data.address;
+                console.log('✅ Address:', data.address);
+              }
+              
+              if (data.birth_date) {
+                updates.phone = data.birth_date;
+                console.log('✅ Birth date:', data.birth_date);
+              }
+              
+              if (data.id_issue_date) {
+                updates.email = data.id_issue_date;
+                console.log('✅ ID issue date:', data.id_issue_date);
+              }
+              
+              if (data.id_expiry_date) {
+                updates.notes = data.id_expiry_date;
+                console.log('✅ ID expiry date:', data.id_expiry_date);
+              }
+              
+              if (data.gender) {
+                setGender(data.gender);
+                console.log('✅ Gender:', data.gender);
+              }
+              
+              console.log('📝 Updating fields:', updates);
+              
+              // Update state immediately
+              setBasicData(prev => {
+                const newData = { ...prev, ...updates };
+                console.log('🔄 New state:', newData);
+                return newData;
+              });
+              
+              // Save to database
+              updatePersonMutation.mutate(updates);
+            }}
+          />
+        </div>
+        <div className="w-48 border-2 border-blue-200 rounded-lg bg-blue-50 relative flex items-center justify-center min-h-32">
+          {documentPreview ? (
+            <>
+              <button
+                onClick={() => setDocumentPreview(null)}
+                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors z-10"
+              >
+                ✕
+              </button>
+              <img 
+                src={documentPreview} 
+                alt="Preview" 
+                className="w-full h-full rounded object-contain p-2"
+              />
+            </>
+          ) : (
+            <p className="text-gray-400 text-sm">תעודת זהות</p>
+          )}
+        </div>
+      </div>
+
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
