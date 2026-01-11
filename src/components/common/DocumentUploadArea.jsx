@@ -86,7 +86,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
       const result = await base44.integrations.Core.InvokeLLM({
-                prompt: "בדוק את התמונה. האם יש בה דמות אנושית? אם כן, תן קואורדינטות של מלבן הכי קטן האפשרי שמכסה את כל הגוף (מהראש ועד הרגליים). תן בפורמט JSON בדיוק כזה: {\"has_human\": true, \"x\": 15, \"y\": 10, \"width\": 50, \"height\": 70} כאשר x,y הם אחוזים מהפינה השמאלית העליונה. אם אין אדם, החזר: {\"has_human\": false}",
+                prompt: "Analyze this image and detect ONLY the person's face and shoulders area. Return the bounding box coordinates as percentages (0-100) relative to the image dimensions. The coordinates must represent x (left edge %), y (top edge %), width (%), and height (%) of the smallest rectangle that contains the face and shoulders only. Be precise and consistent - analyze the same image the same way every time. Return JSON format: {\"has_human\": true, \"x\": 15, \"y\": 10, \"width\": 25, \"height\": 30}. If no person detected, return: {\"has_human\": false}",
                 file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -114,34 +114,34 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          // Convert AI percentages to actual pixels using natural dimensions
+          // Map AI percentages to actual pixel coordinates using natural dimensions
           const actualWidth = img.naturalWidth || img.width;
           const actualHeight = img.naturalHeight || img.height;
           
-          const aiX = (result.x / 100) * actualWidth;
-          const aiY = (result.y / 100) * actualHeight;
-          const aiWidth = (result.width / 100) * actualWidth;
-          const aiHeight = (result.height / 100) * actualHeight;
+          const detectedX = (result.x / 100) * actualWidth;
+          const detectedY = (result.y / 100) * actualHeight;
+          const detectedWidth = (result.width / 100) * actualWidth;
+          const detectedHeight = (result.height / 100) * actualHeight;
 
-          // Calculate center point of detected character
-          const centerX = aiX + aiWidth / 2;
-          const centerY = aiY + aiHeight / 2;
+          // Calculate center point of detected face/shoulders area
+          const centerX = detectedX + detectedWidth / 2;
+          const centerY = detectedY + detectedHeight / 2;
 
-          // Determine square size based on largest dimension (to fit entire character)
-          const padding = 40; // pixels
-          const squareSize = Math.max(aiWidth, aiHeight) + padding;
+          // Determine square size: larger dimension + 20% padding for professional look
+          const largerDimension = Math.max(detectedWidth, detectedHeight);
+          const squareSize = largerDimension * 1.2;
 
-          // Calculate square starting position (centered around character)
+          // Calculate square crop position (centered around detected area)
           let cropX = centerX - squareSize / 2;
           let cropY = centerY - squareSize / 2;
 
-          // Handle edges: shift square back into frame if it exceeds boundaries
+          // Boundary clamping: shift crop window back into frame if needed
           if (cropX < 0) cropX = 0;
           if (cropY < 0) cropY = 0;
           if (cropX + squareSize > actualWidth) cropX = actualWidth - squareSize;
           if (cropY + squareSize > actualHeight) cropY = actualHeight - squareSize;
 
-          // Ensure valid dimensions
+          // Final validation to ensure crop stays within image bounds
           const finalSquareSize = Math.min(squareSize, actualWidth, actualHeight);
           const finalCropX = Math.max(0, Math.min(cropX, actualWidth - finalSquareSize));
           const finalCropY = Math.max(0, Math.min(cropY, actualHeight - finalSquareSize));
@@ -150,6 +150,7 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
             canvas.width = finalSquareSize;
             canvas.height = finalSquareSize;
 
+            // Render the centered square crop
             ctx.drawImage(img, finalCropX, finalCropY, finalSquareSize, finalSquareSize, 0, 0, finalSquareSize, finalSquareSize);
             const croppedImage = canvas.toDataURL();
             onPreviewChange(croppedImage);
