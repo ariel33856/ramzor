@@ -85,9 +85,29 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
+      // 1. Strict Object Detection for ID Cards / Portraits
       const result = await base44.integrations.Core.InvokeLLM({
-                prompt: "Analyze this image and detect ONLY the person's face and shoulders area. Return the bounding box coordinates as percentages (0-100) relative to the image dimensions. The coordinates must represent x (left edge %), y (top edge %), width (%), and height (%) of the smallest rectangle that contains the face and shoulders only. Be precise and consistent - analyze the same image the same way every time. Return JSON format: {\"has_human\": true, \"x\": 15, \"y\": 10, \"width\": 25, \"height\": 30}. If no person detected, return: {\"has_human\": false}",
-                file_urls: [file_url],
+        prompt: `
+          Analyze this image, which is likely an ID card, passport, or document.
+          Locate the main human portrait (face and shoulders).
+          Return the bounding box coordinates as STRICT PERCENTAGES (0-100) relative to the full image dimensions.
+          
+          Required Output JSON:
+          {
+            "has_human": true,
+            "x": number,      // Left edge % (0-100)
+            "y": number,      // Top edge % (0-100)
+            "width": number,  // Width % (0-100)
+            "height": number  // Height % (0-100)
+          }
+
+          Rules:
+          1. Focus ONLY on the face and immediate shoulder area.
+          2. Ignore the rest of the ID card or background.
+          3. If multiple faces, pick the largest/central one (the ID photo).
+          4. If no face is found, return {"has_human": false}.
+        `,
+        file_urls: [file_url],
         response_json_schema: {
           type: "object",
           properties: {
@@ -96,75 +116,105 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
             y: { type: "number" },
             width: { type: "number" },
             height: { type: "number" }
-          }
+          },
+          required: ["has_human"]
         }
       });
 
-      console.log('Detection result:', result);
-      
+      console.log('AI Detection Result:', result);
+
       const hasHuman = result?.has_human === true;
-      setAiDetectionStatus(prev => ({ 
-        ...prev, 
-        [fileId]: hasHuman ? 'detected' : 'not-detected' 
+      setAiDetectionStatus(prev => ({
+        ...prev,
+        [fileId]: hasHuman ? 'detected' : 'not-detected'
       }));
 
-      if (hasHuman && onPreviewChange && result?.x !== undefined && result?.y !== undefined && result?.width !== undefined && result?.height !== undefined) {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
+      // Validate coordinates existence
+      if (hasHuman && onPreviewChange && 
+          typeof result.x === 'number' && 
+          typeof result.y === 'number' && 
+          typeof result.width === 'number' && 
+          typeof result.height === 'number') {
 
-          // Map AI percentages to actual pixel coordinates using natural dimensions
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // Good practice, though usually base64
+        
+        img.onload = () => {
+          // 2. Coordinate Normalization
           const actualWidth = img.naturalWidth || img.width;
           const actualHeight = img.naturalHeight || img.height;
+
+          // Convert % to pixels
+          const boxX = (result.x / 100) * actualWidth;
+          const boxY = (result.y / 100) * actualHeight;
+          const boxW = (result.width / 100) * actualWidth;
+          const boxH = (result.height / 100) * actualHeight;
+
+          // 3. Fixed Square Logic (Center + Padding)
+          const centerX = boxX + (boxW / 2);
+          const centerY = boxY + (boxH / 2);
+
+          // Square size: largest dimension + 20% padding
+          const maxDim = Math.max(boxW, boxH);
+          const squareSize = maxDim * 1.2;
           
-          const detectedX = (result.x / 100) * actualWidth;
-          const detectedY = (result.y / 100) * actualHeight;
-          const detectedWidth = (result.width / 100) * actualWidth;
-          const detectedHeight = (result.height / 100) * actualHeight;
+          // Initial top-left for the square (centered)
+          let cropX = centerX - (squareSize / 2);
+          let cropY = centerY - (squareSize / 2);
 
-          // Calculate center point of detected face/shoulders area
-          const centerX = detectedX + detectedWidth / 2;
-          const centerY = detectedY + detectedHeight / 2;
+          // 4. Boundary Clamping (Shift, Don't Shrink if possible)
+          // Shift horizontally
+          if (cropX < 0) {
+            cropX = 0;
+          } else if (cropX + squareSize > actualWidth) {
+            cropX = actualWidth - squareSize;
+          }
+          
+          // Shift vertically
+          if (cropY < 0) {
+            cropY = 0;
+          } else if (cropY + squareSize > actualHeight) {
+            cropY = actualHeight - squareSize;
+          }
 
-          // Determine square size: larger dimension + 20% padding for professional look
-          const largerDimension = Math.max(detectedWidth, detectedHeight);
-          const squareSize = largerDimension * 1.2;
-
-          // Calculate square crop position (centered around detected area)
-          let cropX = centerX - squareSize / 2;
-          let cropY = centerY - squareSize / 2;
-
-          // Boundary clamping: shift crop window back into frame if needed
-          if (cropX < 0) cropX = 0;
-          if (cropY < 0) cropY = 0;
-          if (cropX + squareSize > actualWidth) cropX = actualWidth - squareSize;
-          if (cropY + squareSize > actualHeight) cropY = actualHeight - squareSize;
-
-          // Final validation to ensure crop stays within image bounds
+          // 5. Final Safety: Ensure we don't go out of bounds (if square > image)
+          // This technically shrinks if the image is too small for the requested padding,
+          // but guarantees no empty space.
           const finalSquareSize = Math.min(squareSize, actualWidth, actualHeight);
+          
+          // Re-clamp in case size changed
           const finalCropX = Math.max(0, Math.min(cropX, actualWidth - finalSquareSize));
           const finalCropY = Math.max(0, Math.min(cropY, actualHeight - finalSquareSize));
 
-          if (finalSquareSize > 0) {
-            canvas.width = finalSquareSize;
-            canvas.height = finalSquareSize;
+          // 6. Rendering
+          const canvas = document.createElement('canvas');
+          canvas.width = finalSquareSize;
+          canvas.height = finalSquareSize;
+          const ctx = canvas.getContext('2d');
 
-            // Render the centered square crop
-            ctx.drawImage(img, finalCropX, finalCropY, finalSquareSize, finalSquareSize, 0, 0, finalSquareSize, finalSquareSize);
-            const croppedImage = canvas.toDataURL();
-            onPreviewChange(croppedImage);
-          } else {
-            onPreviewChange(base64Image);
-          }
+          // Draw the cropped portion
+          ctx.drawImage(
+            img,
+            finalCropX, finalCropY,       // Source x, y
+            finalSquareSize, finalSquareSize, // Source width, height
+            0, 0,                         // Dest x, y
+            finalSquareSize, finalSquareSize  // Dest width, height
+          );
+
+          const croppedImage = canvas.toDataURL('image/jpeg', 0.95);
+          onPreviewChange(croppedImage);
         };
+
         img.src = base64Image;
       } else if (hasHuman && onPreviewChange) {
+        // Fallback if coordinates missing
         onPreviewChange(base64Image);
       }
     } catch (error) {
       console.error('AI detection error:', error);
-      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'not-detected' }));
+      setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'error' }));
+      // Optional: fallback to original image on error?
+      // onPreviewChange(base64Image); 
     }
   };
 
