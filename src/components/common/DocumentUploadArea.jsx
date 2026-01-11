@@ -54,17 +54,23 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
             type: file.type
           };
           setUploadedFiles(prev => [...prev, newFile]);
-          
+
           if (onDocumentUpload) {
             onDocumentUpload(newFile);
           }
-          
+
           // Run AI detection in background if it's an image
           if (file.type.startsWith('image/')) {
             setAiDetectionStatus(prev => ({ ...prev, [fileId]: 'detecting' }));
             const reader = new FileReader();
             reader.onload = (e) => {
-              runHumanDetection(file_url, e.target.result, fileId);
+              const base64Image = e.target.result;
+              // Show preview immediately
+              if (onPreviewChange) {
+                onPreviewChange(base64Image);
+              }
+              // Then run AI detection
+              runHumanDetection(file_url, base64Image, fileId);
             };
             reader.readAsDataURL(file);
           } else {
