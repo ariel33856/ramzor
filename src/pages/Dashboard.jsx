@@ -22,6 +22,7 @@ import { personFields } from '../components/case/personFields';
 import FieldsSelector from '../components/dashboard/FieldsSelector';
 import { getAllFields, getFieldValue } from '../components/dashboard/FieldsHierarchy';
 import DocumentUploadArea from '../components/common/DocumentUploadArea';
+import SimpleFileUpload from '../components/common/SimpleFileUpload';
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
@@ -395,37 +396,12 @@ export default function Dashboard() {
   <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
     {/* Document Upload Section */}
     <div className="flex-shrink-0 bg-white p-4 border-b border-gray-200">
-      <div className="mx-auto px-2 md:px-3 flex gap-4">
-        <div className="w-64">
-          <DocumentUploadArea 
-            onDocumentUpload={(file) => {
-              console.log('Document uploaded:', file);
-            }}
-            onPreviewChange={(preview) => {
-              console.log('Preview changed, length:', preview?.length);
-              setDocumentPreview(preview);
-            }}
-          />
-        </div>
-        <div className="w-48 h-32 border-2 border-blue-200 rounded-lg bg-blue-50 relative flex items-center justify-center">
-          {documentPreview ? (
-            <>
-              <button
-                onClick={() => setDocumentPreview(null)}
-                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors z-10"
-              >
-                ✕
-              </button>
-              <img 
-                src={documentPreview} 
-                alt="Preview" 
-                className="w-full h-full rounded object-contain"
-              />
-            </>
-          ) : (
-            <p className="text-gray-400 text-sm">תעודת זהות</p>
-          )}
-        </div>
+      <div className="mx-auto px-2 md:px-3">
+        <SimpleFileUpload 
+          onFileUpload={(file) => {
+            console.log('File uploaded:', file);
+          }}
+        />
       </div>
     </div>
 
