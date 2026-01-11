@@ -114,22 +114,43 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const padding = 20; // הוסף מרווח כדי לוודא שלא נחתוך
-          const x = Math.max(0, (result.x / 100) * img.width - padding);
-          const y = Math.max(0, (result.y / 100) * img.height - padding);
-          const width = ((result.width / 100) * img.width) + (padding * 2);
-          const height = ((result.height / 100) * img.height) + (padding * 2);
+          // Convert AI percentages to actual pixels using natural dimensions
+          const actualWidth = img.naturalWidth || img.width;
+          const actualHeight = img.naturalHeight || img.height;
+          
+          const aiX = (result.x / 100) * actualWidth;
+          const aiY = (result.y / 100) * actualHeight;
+          const aiWidth = (result.width / 100) * actualWidth;
+          const aiHeight = (result.height / 100) * actualHeight;
 
-          // וודא שלא יוצאים מגבולות התמונה
-          const cropWidth = Math.min(width, img.width - x);
-          const cropHeight = Math.min(height, img.height - y);
-          const squareSize = Math.min(cropWidth, cropHeight);
+          // Calculate center point of detected character
+          const centerX = aiX + aiWidth / 2;
+          const centerY = aiY + aiHeight / 2;
 
-          if (x >= 0 && y >= 0 && squareSize > 0) {
-            canvas.width = squareSize;
-            canvas.height = squareSize;
+          // Determine square size based on largest dimension (to fit entire character)
+          const padding = 40; // pixels
+          const squareSize = Math.max(aiWidth, aiHeight) + padding;
 
-            ctx.drawImage(img, x, y, squareSize, squareSize, 0, 0, squareSize, squareSize);
+          // Calculate square starting position (centered around character)
+          let cropX = centerX - squareSize / 2;
+          let cropY = centerY - squareSize / 2;
+
+          // Handle edges: shift square back into frame if it exceeds boundaries
+          if (cropX < 0) cropX = 0;
+          if (cropY < 0) cropY = 0;
+          if (cropX + squareSize > actualWidth) cropX = actualWidth - squareSize;
+          if (cropY + squareSize > actualHeight) cropY = actualHeight - squareSize;
+
+          // Ensure valid dimensions
+          const finalSquareSize = Math.min(squareSize, actualWidth, actualHeight);
+          const finalCropX = Math.max(0, Math.min(cropX, actualWidth - finalSquareSize));
+          const finalCropY = Math.max(0, Math.min(cropY, actualHeight - finalSquareSize));
+
+          if (finalSquareSize > 0) {
+            canvas.width = finalSquareSize;
+            canvas.height = finalSquareSize;
+
+            ctx.drawImage(img, finalCropX, finalCropY, finalSquareSize, finalSquareSize, 0, 0, finalSquareSize, finalSquareSize);
             const croppedImage = canvas.toDataURL();
             onPreviewChange(croppedImage);
           } else {
