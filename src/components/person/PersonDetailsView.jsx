@@ -675,26 +675,62 @@ export default function PersonDetailsView({ personId }) {
             }}
             onPreviewChange={setDocumentPreview}
             onDataExtracted={(data) => {
-              console.log('Extracted data:', data);
-              // Auto-fill fields from extracted data
+              console.log('🔍 Extracted data from ID:', data);
+              
+              // Prepare updates object
               const updates = {};
-              if (data.first_name) updates.first_name = data.first_name;
-              if (data.last_name) updates.last_name = data.last_name;
-              if (data.id_number) updates.id_number = data.id_number;
-              if (data.address) updates.address = data.address;
               
-              // Handle dates that are stored in different fields
-              if (data.birth_date) updates.phone = data.birth_date;
-              if (data.id_issue_date) updates.email = data.id_issue_date;
-              if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+              if (data.first_name) {
+                updates.first_name = data.first_name;
+                console.log('✅ First name:', data.first_name);
+              }
               
-              // Update state
-              setBasicData(prev => ({ ...prev, ...updates }));
+              if (data.last_name) {
+                updates.last_name = data.last_name;
+                console.log('✅ Last name:', data.last_name);
+              }
               
-              // Handle gender
+              if (data.id_number) {
+                // Ensure 9 digits with leading zero if needed
+                const idNumber = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                updates.id_number = idNumber;
+                console.log('✅ ID number:', idNumber);
+                setIdError(''); // Clear any previous error
+              }
+              
+              if (data.address) {
+                updates.address = data.address;
+                console.log('✅ Address:', data.address);
+              }
+              
+              if (data.birth_date) {
+                updates.phone = data.birth_date;
+                console.log('✅ Birth date:', data.birth_date);
+              }
+              
+              if (data.id_issue_date) {
+                updates.email = data.id_issue_date;
+                console.log('✅ ID issue date:', data.id_issue_date);
+              }
+              
+              if (data.id_expiry_date) {
+                updates.notes = data.id_expiry_date;
+                console.log('✅ ID expiry date:', data.id_expiry_date);
+              }
+              
               if (data.gender) {
                 setGender(data.gender);
+                console.log('✅ Gender:', data.gender);
               }
+              
+              console.log('📝 Updating fields:', updates);
+              
+              // Update state immediately
+              setBasicData(prev => {
+                const newData = { ...prev, ...updates };
+                console.log('🔄 New state:', newData);
+                return newData;
+              });
               
               // Save to database
               updatePersonMutation.mutate(updates);
