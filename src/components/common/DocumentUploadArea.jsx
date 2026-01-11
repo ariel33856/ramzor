@@ -85,9 +85,9 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
 
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
-      // Extract data from ID card first
+      // Extract data from ID card first and wait for it
       if (onDataExtracted) {
-        extractIDData(file_url);
+        await extractIDData(file_url);
       }
 
       // 1. Strict Object Detection for ID Cards / Portraits
