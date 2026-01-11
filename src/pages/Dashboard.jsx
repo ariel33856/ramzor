@@ -404,7 +404,7 @@ export default function Dashboard() {
             onPreviewChange={setDocumentPreview}
           />
         </div>
-        <div className="w-48 border-2 border-blue-200 rounded-lg bg-blue-50 relative flex items-center justify-center">
+        <div className="w-48 h-32 border-2 border-blue-200 rounded-lg bg-blue-50 relative flex items-center justify-center">
           {documentPreview ? (
             <>
               <button
@@ -416,7 +416,7 @@ export default function Dashboard() {
               <img 
                 src={documentPreview} 
                 alt="Preview" 
-                className="w-full h-full rounded object-contain p-2"
+                className="w-full h-full rounded object-contain"
               />
             </>
           ) : (
