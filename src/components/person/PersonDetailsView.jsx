@@ -674,6 +674,31 @@ export default function PersonDetailsView({ personId }) {
               console.log('Document uploaded:', file);
             }}
             onPreviewChange={setDocumentPreview}
+            onDataExtracted={(data) => {
+              console.log('Extracted data:', data);
+              // Auto-fill fields from extracted data
+              const updates = {};
+              if (data.first_name) updates.first_name = data.first_name;
+              if (data.last_name) updates.last_name = data.last_name;
+              if (data.id_number) updates.id_number = data.id_number;
+              if (data.address) updates.address = data.address;
+              
+              // Handle dates that are stored in different fields
+              if (data.birth_date) updates.phone = data.birth_date;
+              if (data.id_issue_date) updates.email = data.id_issue_date;
+              if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+              
+              // Update state
+              setBasicData(prev => ({ ...prev, ...updates }));
+              
+              // Handle gender
+              if (data.gender) {
+                setGender(data.gender);
+              }
+              
+              // Save to database
+              updatePersonMutation.mutate(updates);
+            }}
           />
         </div>
         <div className="w-1/4 border-2 border-blue-200 rounded-lg p-3 bg-blue-50 relative flex items-center justify-center min-h-64">

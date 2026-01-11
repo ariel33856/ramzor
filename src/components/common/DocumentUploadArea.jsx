@@ -3,7 +3,7 @@ import { Upload, Loader2, X, File, CheckCircle2, AlertCircle } from 'lucide-reac
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 
-export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }) {
+export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, onDataExtracted }) {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -85,6 +85,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
 
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
+      // Extract data from ID card first
+      if (onDataExtracted) {
+        extractIDData(file_url);
+      }
+
       // 1. Strict Object Detection for ID Cards / Portraits
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `
@@ -218,8 +223,56 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange }
     }
   };
 
+  const extractIDData = async (file_url) => {
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `
+          Extract all information from this Israeli ID card (תעודת זהות).
+          Return the data in the following JSON format.
+          If a field is not visible or readable, return null for that field.
+          
+          Important: 
+          - All dates should be in DD-MM-YYYY format
+          - ID number should be exactly 9 digits (add leading zero if needed)
+          - Gender should be "male" or "female"
+          - For address, extract the full address if visible
+          
+          Return JSON:
+          {
+            "first_name": string or null,
+            "last_name": string or null,
+            "id_number": string (9 digits) or null,
+            "birth_date": string (DD-MM-YYYY) or null,
+            "id_issue_date": string (DD-MM-YYYY) or null,
+            "id_expiry_date": string (DD-MM-YYYY) or null,
+            "address": string or null,
+            "gender": "male" or "female" or null
+          }
+        `,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            first_name: { type: ["string", "null"] },
+            last_name: { type: ["string", "null"] },
+            id_number: { type: ["string", "null"] },
+            birth_date: { type: ["string", "null"] },
+            id_issue_date: { type: ["string", "null"] },
+            id_expiry_date: { type: ["string", "null"] },
+            address: { type: ["string", "null"] },
+            gender: { type: ["string", "null"] }
+          }
+        }
+      });
 
-
+      console.log('Extracted ID Data:', result);
+      if (onDataExtracted) {
+        onDataExtracted(result);
+      }
+    } catch (error) {
+      console.error('ID data extraction error:', error);
+    }
+  };
 
   const removeFile = (fileId) => {
     setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
