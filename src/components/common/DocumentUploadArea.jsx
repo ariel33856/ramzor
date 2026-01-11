@@ -65,12 +65,17 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
             const reader = new FileReader();
             reader.onload = (e) => {
               const base64Image = e.target.result;
+              console.log('Image loaded, base64 length:', base64Image?.length);
               // Show preview immediately
               if (onPreviewChange) {
+                console.log('Calling onPreviewChange with image');
                 onPreviewChange(base64Image);
               }
               // Then run AI detection
               runHumanDetection(file_url, base64Image, fileId);
+            };
+            reader.onerror = (error) => {
+              console.error('FileReader error:', error);
             };
             reader.readAsDataURL(file);
           } else {
