@@ -34,7 +34,7 @@ const validateIsraeliID = (id) => {
   return sum % 10 === 0;
 };
 
-export default function PersonDetailsView({ personId }) {
+export default function PersonDetailsView({ personId, createAccount, isArchive, moduleId }) {
   const queryClient = useQueryClient();
   
   // קבל את השדות מההיררכיה
@@ -189,6 +189,64 @@ export default function PersonDetailsView({ personId }) {
     }
   });
 
+  const saveAndCreateAccountMutation = useMutation({
+    mutationFn: async () => {
+      // Create person
+      const newPerson = await base44.entities.Person.create({
+        first_name: basicData.first_name,
+        last_name: basicData.last_name,
+        id_number: basicData.id_number,
+        phone: basicData.phone,
+        email: basicData.email,
+        notes: basicData.notes,
+        residential_city: basicData.residential_city,
+        address: basicData.address,
+        type: 'איש קשר',
+        is_archived: false
+      });
+
+      // Get max account number
+      const maxAccountNumber = allAccounts.length > 0 
+        ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
+        : 72515;
+
+      // Create account
+      const caseData = {
+        client_name: '',
+        status: 'new',
+        urgency: 'medium',
+        progress_percentage: 0,
+        is_archived: isArchive || false,
+        module_id: moduleId || null
+      };
+
+      if (!moduleId) {
+        caseData.account_number = maxAccountNumber + 1;
+      }
+
+      const newAccount = await base44.entities.MortgageCase.create(caseData);
+
+      // Link person to account
+      await base44.entities.Person.update(newPerson.id, {
+        linked_accounts: [newAccount.id]
+      });
+
+      // Create audit log
+      await base44.entities.AuditLog.create({
+        case_id: newAccount.id,
+        action_type: 'status_change',
+        actor: 'user',
+        description: `חשבון חדש נפתח`,
+        severity: 'info'
+      });
+
+      return newAccount;
+    },
+    onSuccess: (newAccount) => {
+      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}&new=true&accountNumber=${newAccount.account_number}`;
+    }
+  });
+
   const handleAddField = () => {
     if (newFieldName.trim()) {
       const fieldId = `custom_${Date.now()}`;
@@ -315,6 +373,100 @@ export default function PersonDetailsView({ personId }) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  // If createAccount mode and no person, show new contact form
+  if (createAccount && !personId) {
+    return (
+      <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+        <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
+          <Button
+            onClick={() => saveAndCreateAccountMutation.mutate()}
+            disabled={saveAndCreateAccountMutation.isPending || !basicData.first_name || !basicData.last_name}
+            className="w-full h-20 text-2xl font-bold bg-white text-green-600 hover:bg-gray-50 hover:scale-105 transition-all shadow-lg"
+          >
+            {saveAndCreateAccountMutation.isPending ? (
+              <Loader2 className="w-8 h-8 animate-spin" />
+            ) : (
+              '✓ שמור איש קשר וצור עבורו חשבון'
+            )}
+          </Button>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6">
+            <IDUploader 
+              onDataExtracted={(data) => {
+                if (!data) return;
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.phone = data.birth_date;
+                if (data.id_issue_date) updates.email = data.id_issue_date;
+                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>שם פרטי *</Label>
+              <Input
+                value={basicData.first_name}
+                onChange={(e) => setBasicData({ ...basicData, first_name: e.target.value })}
+                placeholder="שם פרטי"
+              />
+            </div>
+            <div>
+              <Label>שם משפחה *</Label>
+              <Input
+                value={basicData.last_name}
+                onChange={(e) => setBasicData({ ...basicData, last_name: e.target.value })}
+                placeholder="שם משפחה"
+              />
+            </div>
+            <div>
+              <Label>תעודת זהות</Label>
+              <Input
+                value={basicData.id_number}
+                onChange={(e) => setBasicData({ ...basicData, id_number: e.target.value })}
+                placeholder="תעודת זהות"
+              />
+            </div>
+            <div>
+              <Label>טלפון</Label>
+              <Input
+                value={basicData.phone}
+                onChange={(e) => setBasicData({ ...basicData, phone: e.target.value })}
+                placeholder="טלפון"
+              />
+            </div>
+            <div>
+              <Label>אימייל</Label>
+              <Input
+                value={basicData.email}
+                onChange={(e) => setBasicData({ ...basicData, email: e.target.value })}
+                placeholder="אימייל"
+              />
+            </div>
+            <div>
+              <Label>כתובת</Label>
+              <Input
+                value={basicData.address}
+                onChange={(e) => setBasicData({ ...basicData, address: e.target.value })}
+                placeholder="כתובת"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
