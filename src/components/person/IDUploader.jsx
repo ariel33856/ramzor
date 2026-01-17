@@ -164,14 +164,13 @@ export default function IDUploader({ onDataExtracted, initialData }) {
   };
 
   React.useEffect(() => {
-    if (initialData?.file_url && !preview) {
+    if (initialData?.file_url && !fileUrl) {
       setFileUrl(initialData.file_url);
-      setPreview(initialData.file_url);
       setExtractedData(initialData);
       setDetectionResult('both');
       setFileType(initialData.file_url.endsWith('.pdf') ? 'application/pdf' : 'image/*');
     }
-  }, [initialData?.file_url, preview]);
+  }, [initialData?.file_url]);
 
   const downloadAsPDF = async (previewUrl, fileTypeParam) => {
     if (fileTypeParam === 'application/pdf') {
@@ -211,9 +210,9 @@ export default function IDUploader({ onDataExtracted, initialData }) {
           className={`border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative cursor-pointer overflow-visible ${preview ? 'h-[300px]' : 'min-h-[300px]'}`}
           onClick={() => !preview && fileInputRef.current?.click()}
         >
-          {preview ? (
-            <>
-              <AlertDialog>
+          {preview && !fileUrl ? (
+              <>
+                <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
                     className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-50"
@@ -271,7 +270,19 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 <img src={preview} alt="ID Preview" className="w-full h-full object-cover rounded-xl" />
               )}
             </>
-          ) : (
+            ) : fileUrl && !preview ? (
+            <>
+              {fileType === 'application/pdf' ? (
+                <iframe 
+                  src={fileUrl} 
+                  className="w-full h-full rounded-xl"
+                  title="Extracted Document Preview"
+                />
+              ) : (
+                <img src={fileUrl} alt="Extracted Document" className="w-full h-full object-cover rounded-xl" />
+              )}
+            </>
+            ) : (
             <>
               <input
                 ref={fileInputRef}
@@ -293,7 +304,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 <p className="text-xs text-gray-500">תמונה או PDF</p>
               </div>
             </>
-          )}
+            )}
         </div>
 
         {/* Upload Section 2 - Conditional */}
