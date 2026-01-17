@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted }) {
+export default function IDUploader({ onDataExtracted, initialData }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [extractedData, setExtractedData] = useState(null);
+  const [extractedData, setExtractedData] = useState(initialData || null);
   const [fileType, setFileType] = useState(null);
   const [error, setError] = useState(null);
   const [detectionResult, setDetectionResult] = useState(null);
