@@ -141,42 +141,40 @@ export default function IDUploader({ onDataExtracted }) {
       </div>
 
       {/* Extracted Data Display */}
-      {extractedData && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
-          <div>
-            <Label className="text-xs text-gray-600">שם פרטי</Label>
-            <Input value={extractedData.first_name || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">שם משפחה</Label>
-            <Input value={extractedData.last_name || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">ת.ז</Label>
-            <Input value={extractedData.id_number || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תאריך לידה</Label>
-            <Input value={extractedData.birth_date || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
-            <Input value={extractedData.id_issue_date || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תוקף</Label>
-            <Input value={extractedData.id_expiry_date || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">מין</Label>
-            <Input value={extractedData.gender === 'male' ? 'זכר' : extractedData.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
-          </div>
-          <div className="md:col-span-1">
-            <Label className="text-xs text-gray-600">כתובת</Label>
-            <Input value={extractedData.address || ''} readOnly className="bg-white" />
-          </div>
+      <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
+        <div>
+          <Label className="text-xs text-gray-600">שם פרטי</Label>
+          <Input value={extractedData?.first_name || ''} readOnly className="bg-white" />
         </div>
-      )}
+        <div>
+          <Label className="text-xs text-gray-600">שם משפחה</Label>
+          <Input value={extractedData?.last_name || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">ת.ז</Label>
+          <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">תאריך לידה</Label>
+          <Input value={extractedData?.birth_date || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
+          <Input value={extractedData?.id_issue_date || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">תוקף</Label>
+          <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">מין</Label>
+          <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
+        </div>
+        <div className="md:col-span-1">
+          <Label className="text-xs text-gray-600">כתובת</Label>
+          <Input value={extractedData?.address || ''} readOnly className="bg-white" />
+        </div>
+      </div>
     </div>
   );
 }
