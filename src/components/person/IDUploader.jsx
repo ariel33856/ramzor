@@ -10,20 +10,27 @@ export default function IDUploader({ onDataExtracted }) {
   const [preview, setPreview] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
   const [fileType, setFileType] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    console.log('📤 Starting upload:', file.name, file.type);
+    setError(null);
     setUploading(true);
     setFileType(file.type);
     setPreview(URL.createObjectURL(file));
 
     try {
-      // Upload file
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      console.log('⬆️ Uploading file...');
+      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      console.log('✅ Upload result:', uploadResult);
+      
+      const file_url = uploadResult.file_url;
+      console.log('🔗 File URL:', file_url);
 
-      // Extract data using AI
+      console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע מתעודת זהות ישראלית. החזר JSON בלבד עם השדות הבאים:
 - first_name (שם פרטי)
@@ -56,7 +63,8 @@ export default function IDUploader({ onDataExtracted }) {
       setExtractedData(result);
       onDataExtracted?.(result);
     } catch (error) {
-      console.error('Error extracting ID data:', error);
+      console.error('❌ Error:', error);
+      setError(error.message || 'שגיאה בעיבוד הקובץ');
     } finally {
       setUploading(false);
     }
@@ -70,6 +78,12 @@ export default function IDUploader({ onDataExtracted }) {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-700 text-sm">
+          {error}
+        </div>
+      )}
+      
       <div className="grid grid-cols-2 gap-4">
         {/* Upload Section */}
         <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors">
@@ -81,7 +95,7 @@ export default function IDUploader({ onDataExtracted }) {
             id="id-upload"
             disabled={uploading}
           />
-          <label htmlFor="id-upload" className="cursor-pointer">
+          <label htmlFor="id-upload" className={uploading ? 'cursor-wait' : 'cursor-pointer'}>
             <div className="flex flex-col items-center gap-3">
               {uploading ? (
                 <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
@@ -91,6 +105,7 @@ export default function IDUploader({ onDataExtracted }) {
               <p className="text-sm font-medium text-gray-700 text-center">
                 {uploading ? 'מעלה ומחלץ מידע...' : 'לחץ להעלאת תעודת זהות'}
               </p>
+              <p className="text-xs text-gray-500">תמונה או PDF</p>
             </div>
           </label>
         </div>
