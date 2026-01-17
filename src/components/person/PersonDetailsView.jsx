@@ -415,6 +415,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 value={basicData.phone}
                 onChange={(e) => setBasicData({ ...basicData, phone: e.target.value })}
                 placeholder="טלפון"
+                className={!basicData.phone ? 'border-red-500 bg-red-50' : ''}
               />
             </div>
             <div>
@@ -453,21 +454,21 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name} *</Label>
             <Input
               value={basicData.first_name}
               onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
               placeholder={personFields.first_name}
-              className="text-xl font-bold w-40"
+              className={`text-xl font-bold w-40 ${!basicData.first_name ? 'border-red-500 bg-red-50' : ''}`}
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name} *</Label>
             <Input
               value={basicData.last_name}
               onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
               placeholder={personFields.last_name}
-              className="text-xl font-bold w-40"
+              className={`text-xl font-bold w-40 ${!basicData.last_name ? 'border-red-500 bg-red-50' : ''}`}
             />
           </div>
         </div>
