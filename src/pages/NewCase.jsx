@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import IDUploader from '@/components/person/IDUploader';
 
 export default function NewCase() {
   const navigate = useNavigate();
@@ -241,6 +242,19 @@ export default function NewCase() {
                 </>
               ) : (
                 <>
+                  <IDUploader 
+                    onDataExtracted={(data) => {
+                      setNewBorrowerData({
+                        ...newBorrowerData,
+                        client_name: data.first_name || newBorrowerData.client_name,
+                        last_name: data.last_name || newBorrowerData.last_name,
+                        client_id: data.id_number || newBorrowerData.client_id,
+                        client_phone: newBorrowerData.client_phone,
+                        client_email: newBorrowerData.client_email
+                      });
+                    }}
+                  />
+                  
                   <div className="space-y-4">
                     <div>
                       <Label>שם פרטי *</Label>
