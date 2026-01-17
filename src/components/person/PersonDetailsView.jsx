@@ -376,7 +376,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
           <Button
             onClick={() => saveAndCreateAccountMutation.mutate()}
-            disabled={saveAndCreateAccountMutation.isPending || !basicData.first_name || !basicData.last_name}
+            disabled={saveAndCreateAccountMutation.isPending || !basicData.first_name || !basicData.last_name || !basicData.phone}
             className="w-full h-20 text-2xl font-bold bg-white text-green-600 hover:bg-gray-50 hover:scale-105 transition-all shadow-lg"
           >
             {saveAndCreateAccountMutation.isPending ? (
@@ -410,7 +410,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>טלפון</Label>
+              <Label>טלפון *</Label>
               <Input
                 value={basicData.phone}
                 onChange={(e) => setBasicData({ ...basicData, phone: e.target.value })}
