@@ -136,10 +136,10 @@ export default function IDUploader({ onDataExtracted }) {
       const mergedData = { ...extractedData, ...result };
       setExtractedData(mergedData);
       setDetectionResult('both');
-      onDataExtracted?.(mergedData);
-      
+
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
+      setTimeout(() => handleExtractedData(mergedData), 500);
     } catch (error) {
       console.error('❌ Error:', error);
       setError(error.message || 'שגיאה בעיבוד הקובץ השני');
