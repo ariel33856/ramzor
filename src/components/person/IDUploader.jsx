@@ -86,7 +86,7 @@ export default function IDUploader({ onDataExtracted }) {
       
       <div className="grid grid-cols-2 gap-4">
         {/* Upload Section */}
-        <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors relative">
+        <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px]">
           {preview ? (
             <>
               <Button
@@ -97,14 +97,13 @@ export default function IDUploader({ onDataExtracted }) {
                 <X className="w-4 h-4" />
               </Button>
               {fileType === 'application/pdf' ? (
-                <div className="flex flex-col items-center justify-center h-full gap-2">
-                  <svg className="w-16 h-16 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
-                  </svg>
-                  <p className="text-sm font-medium text-gray-700">PDF הועלה</p>
-                </div>
+                <iframe 
+                  src={preview} 
+                  className="w-full h-full min-h-[280px] rounded"
+                  title="PDF Preview"
+                />
               ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full object-contain rounded" />
+                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded" />
               )}
             </>
           ) : (
