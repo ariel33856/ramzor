@@ -212,7 +212,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             is_archived: false,
             custom_data: {
               gender: gender,
-              extracted_children_dates: childrenDates.filter(d => d.length === 10)
+              extracted_children_dates: childrenDates.filter(d => d.length === 10),
+              file_url: basicData.file_url
             }
             });
 
