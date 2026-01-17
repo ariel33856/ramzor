@@ -789,24 +789,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         </div>
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">{personFields.residential_city}</Label>
-          <Input
-            value={basicData.residential_city || ''}
-            onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
-            placeholder={personFields.residential_city}
-            className="flex-1"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">{personFields.address}</Label>
-          <Input
-            value={basicData.address || ''}
-            onChange={(e) => handleBasicDataChange('address', e.target.value)}
-            placeholder="כתובת מלאה"
-            className="flex-1"
-          />
-        </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
