@@ -792,7 +792,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 children_birth_dates: childrenDates.filter(d => d.length === 10),
                 birth_date: basicData.birth_date,
                 id_issue_date: basicData.id_issue_date,
-                id_expiry_date: basicData.id_expiry_date
+                id_expiry_date: basicData.id_expiry_date,
+                file_url: basicData.file_url
               }}
               onDataExtracted={(data) => {
                 if (!data) return;
