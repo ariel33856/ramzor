@@ -404,7 +404,12 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
 
   return (
     <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
-      {createAccount && !personId && (
+      {createAccount && !personId && saveAndCreateAccountMutation.isSuccess && (
+        <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl text-center">
+          <p className="text-white text-lg font-bold">✓ איש קשר והחשבון שמורים בהצלחה!</p>
+        </div>
+      )}
+      {createAccount && !personId && !saveAndCreateAccountMutation.isSuccess && (
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
           <Button
             onClick={() => saveAndCreateAccountMutation.mutate()}
