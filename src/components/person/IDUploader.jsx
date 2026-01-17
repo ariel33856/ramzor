@@ -198,7 +198,7 @@ export default function IDUploader({ onDataExtracted }) {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
-                    className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-10"
+                    className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-50"
                     size="icon"
                   >
                     <X className="w-4 h-4" />
@@ -292,7 +292,7 @@ export default function IDUploader({ onDataExtracted }) {
                     setPreview2(null);
                     setFileType2(null);
                   }}
-                  className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-10"
+                  className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-50"
                   size="icon"
                 >
                   <X className="w-4 h-4" />
