@@ -12,6 +12,7 @@ export default function IDUploader({ onDataExtracted }) {
   const [extractedData, setExtractedData] = useState(null);
   const [fileType, setFileType] = useState(null);
   const [error, setError] = useState(null);
+  const fileInputRef = React.useRef(null);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -141,26 +142,24 @@ export default function IDUploader({ onDataExtracted }) {
           ) : (
             <>
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*,.pdf"
                 onChange={handleFileUpload}
                 className="hidden"
-                id="id-upload"
                 disabled={uploading}
               />
-              <label htmlFor="id-upload" className={uploading ? 'cursor-wait' : 'cursor-pointer'}>
-                <div className="flex flex-col items-center gap-3">
-                  {uploading ? (
-                    <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
-                  ) : (
-                    <Upload className="w-12 h-12 text-blue-600" />
-                  )}
-                  <p className="text-sm font-medium text-gray-700 text-center">
-                    {uploading ? 'מעלה ומחלץ מידע...' : 'לחץ להעלאת תעודת זהות'}
-                  </p>
-                  <p className="text-xs text-gray-500">תמונה או PDF</p>
-                </div>
-              </label>
+              <div className="flex flex-col items-center justify-center h-full gap-3">
+                {uploading ? (
+                  <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+                ) : (
+                  <Upload className="w-12 h-12 text-blue-600" />
+                )}
+                <p className="text-sm font-medium text-gray-700 text-center">
+                  {uploading ? 'מעלה ומחלץ מידע...' : 'לחץ להעלאת תעודת זהות'}
+                </p>
+                <p className="text-xs text-gray-500">תמונה או PDF</p>
+              </div>
             </>
           )}
         </div>
