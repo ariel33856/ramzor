@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, Loader2, X } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function IDUploader({ onDataExtracted }) {
   const [uploading, setUploading] = useState(false);
@@ -70,7 +71,12 @@ export default function IDUploader({ onDataExtracted }) {
     }
   };
 
-  const clearData = () => {
+  const clearFileOnly = () => {
+    setPreview(null);
+    setFileType(null);
+  };
+
+  const clearAll = () => {
     setPreview(null);
     setExtractedData(null);
     setFileType(null);
@@ -89,13 +95,36 @@ export default function IDUploader({ onDataExtracted }) {
         <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px]">
           {preview ? (
             <>
-              <Button
-                onClick={clearData}
-                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-10"
-                size="icon"
-              >
-                <X className="w-4 h-4" />
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-10"
+                    size="icon"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-center">ברצונך להסיר גם את הנתונים מהשדות?</AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex justify-center gap-3">
+                    <AlertDialogAction 
+                      onClick={clearAll}
+                      className="bg-red-500 hover:bg-red-600 px-6"
+                    >
+                      כן
+                    </AlertDialogAction>
+                    <AlertDialogAction 
+                      onClick={clearFileOnly}
+                      className="bg-orange-500 hover:bg-orange-600 px-6"
+                    >
+                      לא, מחק את הקובץ אך אל תמחק את הנתונים
+                    </AlertDialogAction>
+                    <AlertDialogCancel className="px-6">ביטול</AlertDialogCancel>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               {fileType === 'application/pdf' ? (
                 <iframe 
                   src={preview} 
