@@ -42,19 +42,20 @@ export default function IDUploader({ onDataExtracted }) {
       console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `נתח את המסמך וחלץ מידע:
-1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
-2. החזר JSON עם:
-- document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
-- first_name (שם פרטי - מהתעודה או הספח)
-- last_name (שם משפחה - מהתעודה או הספח)
-- id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
-- birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
-- id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
-- id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
-- gender (male או female - מהספח)
-- address (כתובת מלאה - מהספח)
+      1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
+      2. החזר JSON עם:
+      - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+      - first_name (שם פרטי - מהתעודה או הספח)
+      - last_name (שם משפחה - מהתעודה או הספח)
+      - id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
+      - birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
+      - id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
+      - id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
+      - gender (male או female - מהספח)
+      - address (כתובת מלאה - מהספח)
+      - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח, אם קיימים)
 
-אם שדה לא נמצא, השאר אותו ריק.`,
+      אם שדה לא נמצא, השאר אותו ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -67,7 +68,8 @@ export default function IDUploader({ onDataExtracted }) {
             id_issue_date: { type: "string" },
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
-            address: { type: "string" }
+            address: { type: "string" },
+            children_birth_dates: { type: "array", items: { type: "string" } }
           }
         }
       });
