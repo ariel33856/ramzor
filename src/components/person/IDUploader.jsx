@@ -243,28 +243,15 @@ export default function IDUploader({ onDataExtracted }) {
                 </div>
               )}
               
-              <div className="relative w-full h-full">
-                {fileType === 'application/pdf' ? (
-                  <iframe 
-                    src={preview} 
-                    className="w-full h-full min-h-[280px] rounded"
-                    title="PDF Preview"
-                  />
-                ) : (
-                  <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded" />
-                )}
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadAsPDF(preview, fileType);
-                  }}
-                  className="absolute bottom-2 left-2 bg-blue-600 hover:bg-blue-700 rounded-full w-9 h-9 p-0"
-                  size="icon"
-                  title="הורד כ-PDF"
-                >
-                  <Download className="w-4 h-4" />
-                </Button>
-              </div>
+              {fileType === 'application/pdf' ? (
+                <iframe 
+                  src={preview} 
+                  className="w-full h-full min-h-[280px] rounded"
+                  title="PDF Preview"
+                />
+              ) : (
+                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded" />
+              )}
             </>
           ) : (
             <>
@@ -320,28 +307,15 @@ export default function IDUploader({ onDataExtracted }) {
                   </div>
                 )}
                 
-                <div className="relative w-full h-full">
-                  {fileType2 === 'application/pdf' ? (
-                    <iframe 
-                      src={preview2} 
-                      className="w-full h-full min-h-[280px] rounded"
-                      title="PDF Preview 2"
-                    />
-                  ) : (
-                    <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded" />
-                  )}
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      downloadAsPDF(preview2, fileType2);
-                    }}
-                    className="absolute bottom-2 left-2 bg-orange-600 hover:bg-orange-700 rounded-full w-9 h-9 p-0"
-                    size="icon"
-                    title="הורד כ-PDF"
-                  >
-                    <Download className="w-4 h-4" />
-                  </Button>
-                </div>
+                {fileType2 === 'application/pdf' ? (
+                  <iframe 
+                    src={preview2} 
+                    className="w-full h-full min-h-[280px] rounded"
+                    title="PDF Preview 2"
+                  />
+                ) : (
+                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded" />
+                )}
               </>
             ) : (
               <>
