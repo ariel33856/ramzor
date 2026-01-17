@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Upload, Loader2, X } from 'lucide-react';
+import { Upload, Loader2, X, Download } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import jsPDF from 'jspdf';
 
 export default function IDUploader({ onDataExtracted }) {
   const [uploading, setUploading] = useState(false);
@@ -154,6 +155,30 @@ export default function IDUploader({ onDataExtracted }) {
     setDetectionResult(null);
   };
 
+  const downloadAsPDF = async (previewUrl, fileTypeParam) => {
+    if (fileTypeParam === 'application/pdf') {
+      // אם זה כבר PDF, פשוט להוריד אותו
+      const link = document.createElement('a');
+      link.href = previewUrl;
+      link.download = 'document.pdf';
+      link.click();
+    } else {
+      // אם זה תמונה, להמיר ל-PDF
+      const img = new Image();
+      img.src = previewUrl;
+      await new Promise((resolve) => { img.onload = resolve; });
+      
+      const pdf = new jsPDF({
+        orientation: img.width > img.height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [img.width, img.height]
+      });
+      
+      pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
+      pdf.save('document.pdf');
+    }
+  };
+
   return (
     <div className="space-y-4">
       {error && (
@@ -218,15 +243,28 @@ export default function IDUploader({ onDataExtracted }) {
                 </div>
               )}
               
-              {fileType === 'application/pdf' ? (
-                <iframe 
-                  src={preview} 
-                  className="w-full h-full min-h-[280px] rounded"
-                  title="PDF Preview"
-                />
-              ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded" />
-              )}
+              <div className="relative w-full h-full">
+                {fileType === 'application/pdf' ? (
+                  <iframe 
+                    src={preview} 
+                    className="w-full h-full min-h-[280px] rounded"
+                    title="PDF Preview"
+                  />
+                ) : (
+                  <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded" />
+                )}
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadAsPDF(preview, fileType);
+                  }}
+                  className="absolute bottom-2 left-2 bg-blue-600 hover:bg-blue-700 rounded-full w-9 h-9 p-0"
+                  size="icon"
+                  title="הורד כ-PDF"
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+              </div>
             </>
           ) : (
             <>
@@ -282,15 +320,28 @@ export default function IDUploader({ onDataExtracted }) {
                   </div>
                 )}
                 
-                {fileType2 === 'application/pdf' ? (
-                  <iframe 
-                    src={preview2} 
-                    className="w-full h-full min-h-[280px] rounded"
-                    title="PDF Preview 2"
-                  />
-                ) : (
-                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded" />
-                )}
+                <div className="relative w-full h-full">
+                  {fileType2 === 'application/pdf' ? (
+                    <iframe 
+                      src={preview2} 
+                      className="w-full h-full min-h-[280px] rounded"
+                      title="PDF Preview 2"
+                    />
+                  ) : (
+                    <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded" />
+                  )}
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      downloadAsPDF(preview2, fileType2);
+                    }}
+                    className="absolute bottom-2 left-2 bg-orange-600 hover:bg-orange-700 rounded-full w-9 h-9 p-0"
+                    size="icon"
+                    title="הורד כ-PDF"
+                  >
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
               </>
             ) : (
               <>
