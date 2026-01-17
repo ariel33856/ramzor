@@ -1169,47 +1169,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       )}
       </div>
 
-      {/* New Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Collapsible Header */}
-        <button
-          onClick={() => setIsCollapsed1_5(!isCollapsed1_5)}
-          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
-        >
-          {isCollapsed1_5 ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          )}
-          <h2 className="text-lg font-bold text-gray-900">כרטיסיה חדשה</h2>
-        </button>
-
-        {/* Content */}
-        {!isCollapsed1_5 && (
-          <div className="p-6">
-            <IDUploader 
-              onDataExtracted={(data) => {
-                if (!data) return;
-                
-                const updates = {};
-                if (data.first_name) updates.first_name = data.first_name;
-                if (data.last_name) updates.last_name = data.last_name;
-                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                if (data.address) updates.address = data.address;
-                if (data.birth_date) updates.phone = data.birth_date;
-                if (data.id_issue_date) updates.email = data.id_issue_date;
-                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
-                
-                setBasicData(prev => ({ ...prev, ...updates }));
-                if (data.gender) setGender(data.gender);
-                
-                updatePersonMutation.mutate(updates);
-              }}
-            />
-          </div>
-        )}
-      </div>
-
       {/* Second Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Collapsible Header */}
