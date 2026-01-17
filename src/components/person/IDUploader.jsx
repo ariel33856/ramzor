@@ -18,6 +18,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
   const [fileType2, setFileType2] = useState(null);
   const [uploading2, setUploading2] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+  const [fileUrl, setFileUrl] = useState(null);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
 
@@ -77,7 +78,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setExtractedData(result);
-      onDataExtracted?.(result);
+      setFileUrl(file_url);
+      onDataExtracted?.({ ...result, file_url });
       
       if (result.document_type === 'both') {
         setShowMessage(true);
@@ -133,7 +135,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       const mergedData = { ...extractedData, ...result };
       setExtractedData(mergedData);
       setDetectionResult('both');
-      onDataExtracted?.(mergedData);
+      setFileUrl(file_url);
+      onDataExtracted?.({ ...mergedData, file_url });
       
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
@@ -157,6 +160,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     setFileType(null);
     setFileType2(null);
     setDetectionResult(null);
+    setFileUrl(null);
   };
 
   const downloadAsPDF = async (previewUrl, fileTypeParam) => {
