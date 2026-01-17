@@ -366,10 +366,7 @@ export default function IDUploader({ onDataExtracted }) {
           <Label className="text-xs text-gray-600">תוקף</Label>
           <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
         </div>
-        <div>
-          <Label className="text-xs text-gray-600">מין</Label>
-          <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
-        </div>
+
         <div className="md:col-span-1">
           <Label className="text-xs text-gray-600">כתובת</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />
