@@ -373,7 +373,7 @@ export default function NewCase() {
                 />
               </div>
               <div>
-                <Label>שם משפחה *</Label>
+                <Label>שם משפחה</Label>
                 <Input
                   value={newBorrowerData.last_name}
                   onChange={(e) => setNewBorrowerData({...newBorrowerData, last_name: e.target.value})}
