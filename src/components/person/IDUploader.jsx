@@ -16,6 +16,7 @@ export default function IDUploader({ onDataExtracted }) {
   const [preview2, setPreview2] = useState(null);
   const [fileType2, setFileType2] = useState(null);
   const [uploading2, setUploading2] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
 
@@ -74,6 +75,11 @@ export default function IDUploader({ onDataExtracted }) {
       setDetectionResult(result.document_type);
       setExtractedData(result);
       onDataExtracted?.(result);
+      
+      if (result.document_type === 'both') {
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 2000);
+      }
     } catch (error) {
       console.error('❌ Error:', error);
       setError(error.message || 'שגיאה בעיבוד הקובץ');
@@ -123,6 +129,9 @@ export default function IDUploader({ onDataExtracted }) {
       setExtractedData(mergedData);
       setDetectionResult('both');
       onDataExtracted?.(mergedData);
+      
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 2000);
     } catch (error) {
       console.error('❌ Error:', error);
       setError(error.message || 'שגיאה בעיבוד הקובץ השני');
@@ -197,6 +206,14 @@ export default function IDUploader({ onDataExtracted }) {
                   <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
                     <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
                     <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                  </div>
+                </div>
+              )}
+              
+              {showMessage && detectionResult === 'both' && (
+                <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
+                  <div className="bg-green-500 rounded-lg p-4 flex items-center gap-2">
+                    <p className="text-sm font-bold text-white">✓ זוהתה תעודת זהות וספח</p>
                   </div>
                 </div>
               )}
@@ -298,14 +315,9 @@ export default function IDUploader({ onDataExtracted }) {
         )}
       </div>
 
-      {/* Detection Result Message */}
-      {detectionResult && (
-        <div className={`p-3 rounded-lg text-sm font-medium text-center ${
-          detectionResult === 'both' 
-            ? 'bg-green-100 text-green-800 border-2 border-green-300' 
-            : 'bg-orange-100 text-orange-800 border-2 border-orange-300'
-        }`}>
-          {detectionResult === 'both' && '✓ זוהתה תעודת זהות וספח'}
+      {/* Detection Result Message - Only for incomplete uploads */}
+      {detectionResult && detectionResult !== 'both' && (
+        <div className="p-3 rounded-lg text-sm font-medium text-center bg-orange-100 text-orange-800 border-2 border-orange-300">
           {detectionResult === 'id_card' && '⚠ זוהתה תעודת זהות - נא להשלים ספח'}
           {detectionResult === 'appendix' && '⚠ זוהה ספח - נא להשלים תעודת זהות'}
         </div>
