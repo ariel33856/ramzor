@@ -369,10 +369,25 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     }
   }, [gender]);
 
-  // If createAccount mode and no person, show new contact form
-  if (createAccount && !personId) {
+  if (isLoading) {
     return (
-      <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (!person && !createAccount) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">איש קשר לא נמצא</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+      {createAccount && !personId && (
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
           <Button
             onClick={() => saveAndCreateAccountMutation.mutate()}
@@ -386,67 +401,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             )}
           </Button>
         </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6">
-            <IDUploader 
-              onDataExtracted={(data) => {
-                if (!data) return;
-                const updates = {};
-                if (data.first_name) updates.first_name = data.first_name;
-                if (data.last_name) updates.last_name = data.last_name;
-                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                if (data.address) updates.address = data.address;
-                setBasicData(prev => ({ ...prev, ...updates }));
-                if (data.gender) setGender(data.gender);
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>טלפון *</Label>
-              <Input
-                value={basicData.phone}
-                onChange={(e) => setBasicData({ ...basicData, phone: e.target.value })}
-                placeholder="טלפון"
-                className={!basicData.phone ? 'border-red-500 bg-red-50' : ''}
-              />
-            </div>
-            <div>
-              <Label>אימייל</Label>
-              <Input
-                value={basicData.email}
-                onChange={(e) => setBasicData({ ...basicData, email: e.target.value })}
-                placeholder="אימייל"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
-  if (!person) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">איש קשר לא נמצא</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+      )}
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
@@ -454,7 +409,10 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name} *</Label>
             <Input
               value={basicData.first_name}
-              onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+              onChange={(e) => {
+                setBasicData({ ...basicData, first_name: e.target.value });
+                if (personId) handleBasicDataChange('first_name', e.target.value);
+              }}
               placeholder={personFields.first_name}
               className={`text-xl font-bold w-40 ${!basicData.first_name ? 'border-red-500 bg-red-50' : ''}`}
             />
@@ -463,7 +421,10 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name} *</Label>
             <Input
               value={basicData.last_name}
-              onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+              onChange={(e) => {
+                setBasicData({ ...basicData, last_name: e.target.value });
+                if (personId) handleBasicDataChange('last_name', e.target.value);
+              }}
               placeholder={personFields.last_name}
               className={`text-xl font-bold w-40 ${!basicData.last_name ? 'border-red-500 bg-red-50' : ''}`}
             />
@@ -785,6 +746,47 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
+        {createAccount && !personId && (
+          <div className="mb-6">
+            <IDUploader 
+              onDataExtracted={(data) => {
+                if (!data) return;
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+              }}
+            />
+          </div>
+        )}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <Label>טלפון *</Label>
+            <Input
+              value={basicData.phone}
+              onChange={(e) => {
+                setBasicData({ ...basicData, phone: e.target.value });
+                if (personId) handleBasicDataChange('phone', e.target.value);
+              }}
+              placeholder="טלפון"
+              className={!basicData.phone ? 'border-red-500 bg-red-50' : ''}
+            />
+          </div>
+          <div>
+            <Label>אימייל</Label>
+            <Input
+              value={basicData.email}
+              onChange={(e) => {
+                setBasicData({ ...basicData, email: e.target.value });
+                if (personId) handleBasicDataChange('email', e.target.value);
+              }}
+              placeholder="אימייל"
+            />
+          </div>
+        </div>
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
