@@ -106,7 +106,7 @@ export default function IDUploader({ onDataExtracted }) {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="text-center">ברצונך להסיר גם את הנתונים מהשדות?</AlertDialogTitle>
+                    <AlertDialogTitle className="text-center">?ברצונך להסיר גם את הנתונים מהשדות</AlertDialogTitle>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="flex justify-center gap-3">
                     <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-6">ביטול</AlertDialogCancel>
