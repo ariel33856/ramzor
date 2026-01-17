@@ -369,14 +369,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     }
   }, [gender]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
   // If createAccount mode and no person, show new contact form
   if (createAccount && !personId) {
     return (
@@ -467,6 +459,14 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
   }
