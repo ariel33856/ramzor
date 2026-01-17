@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
-import DocumentUploadArea from '@/components/common/DocumentUploadArea';
+
 
 const validateIsraeliID = (id) => {
   // הוסף 0 בהתחלה אם יש 8 ספרות
@@ -666,108 +666,6 @@ export default function PersonDetailsView({ personId }) {
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
-      {/* Document Upload Area */}
-      <div className="mb-6 flex gap-4">
-        <div className="w-64">
-          <DocumentUploadArea 
-            onDocumentUpload={(file) => {
-              console.log('Document uploaded:', file);
-            }}
-            onPreviewChange={setDocumentPreview}
-            onDataExtracted={(data) => {
-              console.log('🔍 נתונים שחולצו מתעודת הזהות:', data);
-              
-              if (!data) {
-                console.error('❌ לא התקבלו נתונים');
-                return;
-              }
-              
-              // Update basic data state immediately
-              setBasicData(prev => {
-                const updated = { ...prev };
-                
-                if (data.first_name) {
-                  updated.first_name = data.first_name;
-                  console.log('✅ שם פרטי:', data.first_name);
-                }
-                
-                if (data.last_name) {
-                  updated.last_name = data.last_name;
-                  console.log('✅ שם משפחה:', data.last_name);
-                }
-                
-                if (data.id_number) {
-                  const idNumber = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                  updated.id_number = idNumber;
-                  console.log('✅ ת.ז:', idNumber);
-                  setIdError('');
-                }
-                
-                if (data.address) {
-                  updated.address = data.address;
-                  console.log('✅ כתובת:', data.address);
-                }
-                
-                if (data.birth_date) {
-                  updated.phone = data.birth_date;
-                  console.log('✅ תאריך לידה:', data.birth_date, '-> שדה phone');
-                }
-                
-                if (data.id_issue_date) {
-                  updated.email = data.id_issue_date;
-                  console.log('✅ תאריך הנפקה:', data.id_issue_date, '-> שדה email');
-                }
-                
-                if (data.id_expiry_date) {
-                  updated.notes = data.id_expiry_date;
-                  console.log('✅ תוקף:', data.id_expiry_date, '-> שדה notes');
-                }
-                
-                console.log('🔄 State חדש:', updated);
-                return updated;
-              });
-              
-              if (data.gender) {
-                setGender(data.gender);
-                console.log('✅ מין:', data.gender);
-              }
-              
-              // Prepare database update
-              const dbUpdates = {};
-              if (data.first_name) dbUpdates.first_name = data.first_name;
-              if (data.last_name) dbUpdates.last_name = data.last_name;
-              if (data.id_number) dbUpdates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-              if (data.address) dbUpdates.address = data.address;
-              if (data.birth_date) dbUpdates.phone = data.birth_date;
-              if (data.id_issue_date) dbUpdates.email = data.id_issue_date;
-              if (data.id_expiry_date) dbUpdates.notes = data.id_expiry_date;
-              
-              console.log('💾 שומר לדאטאבייס:', dbUpdates);
-              updatePersonMutation.mutate(dbUpdates);
-            }}
-          />
-        </div>
-        <div className="w-48 border-2 border-blue-200 rounded-lg bg-blue-50 relative flex items-center justify-center min-h-32">
-          {documentPreview ? (
-            <>
-              <button
-                onClick={() => setDocumentPreview(null)}
-                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold transition-colors z-10"
-              >
-                ✕
-              </button>
-              <img 
-                src={documentPreview} 
-                alt="Preview" 
-                className="w-full h-full rounded object-contain p-2"
-              />
-            </>
-          ) : (
-            <p className="text-gray-400 text-sm">תעודת זהות</p>
-          )}
-        </div>
-      </div>
-
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
