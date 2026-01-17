@@ -71,8 +71,11 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
                 console.log('Calling onPreviewChange with image');
                 onPreviewChange(base64Image);
               }
-              // Then run AI detection
-              runHumanDetection(file_url, base64Image, fileId);
+              // Extract ID data and then run human detection
+              extractIDData(file_url).then(() => {
+                // After data extraction, run human detection
+                runHumanDetection(file_url, base64Image, fileId);
+              });
             };
             reader.onerror = (error) => {
               console.error('FileReader error:', error);
@@ -96,11 +99,6 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
 
   const runHumanDetection = async (file_url, base64Image, fileId) => {
     try {
-      // Extract data from ID card first and wait for it
-      if (onDataExtracted) {
-        await extractIDData(file_url);
-      }
-
       // 1. Strict Object Detection for ID Cards / Portraits
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `
@@ -236,14 +234,16 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
 
   const extractIDData = async (file_url) => {
     try {
+      console.log('🔍 Starting ID data extraction from:', file_url);
+      
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `
           Extract all information from this Israeli ID card (תעודת זהות).
           Return the data in the following JSON format.
           If a field is not visible or readable, return null for that field.
           
-          Important: 
-          - All dates should be in DD-MM-YYYY format
+          CRITICAL FORMATTING:
+          - All dates MUST be in DD-MM-YYYY format (for example: 15-03-1990)
           - ID number should be exactly 9 digits (add leading zero if needed)
           - Gender should be "male" or "female"
           - For address, extract the full address if visible
@@ -253,9 +253,9 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
             "first_name": string or null,
             "last_name": string or null,
             "id_number": string (9 digits) or null,
-            "birth_date": string (DD-MM-YYYY) or null,
-            "id_issue_date": string (DD-MM-YYYY) or null,
-            "id_expiry_date": string (DD-MM-YYYY) or null,
+            "birth_date": string (DD-MM-YYYY format) or null,
+            "id_issue_date": string (DD-MM-YYYY format) or null,
+            "id_expiry_date": string (DD-MM-YYYY format) or null,
             "address": string or null,
             "gender": "male" or "female" or null
           }
@@ -276,12 +276,14 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
         }
       });
 
-      console.log('Extracted ID Data:', result);
+      console.log('✅ Extracted ID Data:', result);
+      
       if (onDataExtracted) {
+        console.log('📤 Sending data to parent component');
         onDataExtracted(result);
       }
     } catch (error) {
-      console.error('ID data extraction error:', error);
+      console.error('❌ ID data extraction error:', error);
     }
   };
 
