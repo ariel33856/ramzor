@@ -81,7 +81,7 @@ export default function PersonDetailsView({ personId }) {
   const [showChildrenWarning, setShowChildrenWarning] = useState(false);
   const [maritalStatus, setMaritalStatus] = useState('married');
   const [idError, setIdError] = useState('');
-  const [documentPreview, setDocumentPreview] = useState(null);
+
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],

@@ -21,8 +21,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { personFields } from '../components/case/personFields';
 import FieldsSelector from '../components/dashboard/FieldsSelector';
 import { getAllFields, getFieldValue } from '../components/dashboard/FieldsHierarchy';
-import DocumentUploadArea from '../components/common/DocumentUploadArea';
-import SimpleFileUpload from '../components/common/SimpleFileUpload';
+
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
@@ -66,7 +65,7 @@ export default function Dashboard() {
   const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
   const [columnWidths, setColumnWidths] = useState({});
   const [resizingColumn, setResizingColumn] = useState(null);
-  const [documentPreview, setDocumentPreview] = useState(null);
+
 
   // Function to save preferences
   const savePreferences = async (updates) => {
@@ -394,17 +393,6 @@ export default function Dashboard() {
 
   return (
   <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
-    {/* Document Upload Section */}
-    <div className="flex-shrink-0 bg-white p-4 border-b border-gray-200">
-      <div className="mx-auto px-2 md:px-3">
-        <SimpleFileUpload 
-          onFileUpload={(file) => {
-            console.log('File uploaded:', file);
-          }}
-        />
-      </div>
-    </div>
-
     {/* Filters */}
     <div className="flex-shrink-0 z-50 bg-white p-4 shadow-sm border-b border-gray-100">
         <div className="mx-auto px-2 md:px-3">
