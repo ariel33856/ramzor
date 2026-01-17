@@ -753,6 +753,14 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         {(createAccount || personId) && (
           <div className="mb-6">
             <IDUploader 
+              initialData={{
+                first_name: basicData.first_name,
+                last_name: basicData.last_name,
+                id_number: basicData.id_number,
+                address: basicData.address,
+                gender: gender,
+                children_birth_dates: childrenDates.filter(d => d.length === 10)
+              }}
               onDataExtracted={(data) => {
                 if (!data) return;
                 const updates = {};
