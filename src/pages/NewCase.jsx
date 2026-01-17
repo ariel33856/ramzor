@@ -199,7 +199,13 @@ export default function NewCase() {
               {!showNewBorrowerForm ? (
                 <>
                   <Button
-                    onClick={() => setShowNewBorrowerForm(true)}
+                    onClick={() => {
+                      const params = new URLSearchParams();
+                      params.set('createAccount', 'true');
+                      if (isArchive) params.set('archive', 'true');
+                      if (moduleId) params.set('moduleId', moduleId);
+                      navigate(createPageUrl('PersonDetails') + '?' + params.toString());
+                    }}
                     className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
                     <Plus className="w-5 h-5 ml-2" />
