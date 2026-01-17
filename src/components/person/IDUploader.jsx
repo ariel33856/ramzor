@@ -129,6 +129,16 @@ export default function IDUploader({ onDataExtracted }) {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
+              
+              {uploading && (
+                <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
+                  <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
+                    <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                    <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                  </div>
+                </div>
+              )}
+              
               {fileType === 'application/pdf' ? (
                 <iframe 
                   src={preview} 
