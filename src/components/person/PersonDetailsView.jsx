@@ -675,65 +675,75 @@ export default function PersonDetailsView({ personId }) {
             }}
             onPreviewChange={setDocumentPreview}
             onDataExtracted={(data) => {
-              console.log('🔍 Extracted data from ID:', data);
+              console.log('🔍 נתונים שחולצו מתעודת הזהות:', data);
               
-              // Prepare updates object
-              const updates = {};
-              
-              if (data.first_name) {
-                updates.first_name = data.first_name;
-                console.log('✅ First name:', data.first_name);
+              if (!data) {
+                console.error('❌ לא התקבלו נתונים');
+                return;
               }
               
-              if (data.last_name) {
-                updates.last_name = data.last_name;
-                console.log('✅ Last name:', data.last_name);
-              }
-              
-              if (data.id_number) {
-                // Ensure 9 digits with leading zero if needed
-                const idNumber = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                updates.id_number = idNumber;
-                console.log('✅ ID number:', idNumber);
-                setIdError(''); // Clear any previous error
-              }
-              
-              if (data.address) {
-                updates.address = data.address;
-                console.log('✅ Address:', data.address);
-              }
-              
-              if (data.birth_date) {
-                updates.phone = data.birth_date;
-                console.log('✅ Birth date:', data.birth_date);
-              }
-              
-              if (data.id_issue_date) {
-                updates.email = data.id_issue_date;
-                console.log('✅ ID issue date:', data.id_issue_date);
-              }
-              
-              if (data.id_expiry_date) {
-                updates.notes = data.id_expiry_date;
-                console.log('✅ ID expiry date:', data.id_expiry_date);
-              }
+              // Update basic data state immediately
+              setBasicData(prev => {
+                const updated = { ...prev };
+                
+                if (data.first_name) {
+                  updated.first_name = data.first_name;
+                  console.log('✅ שם פרטי:', data.first_name);
+                }
+                
+                if (data.last_name) {
+                  updated.last_name = data.last_name;
+                  console.log('✅ שם משפחה:', data.last_name);
+                }
+                
+                if (data.id_number) {
+                  const idNumber = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                  updated.id_number = idNumber;
+                  console.log('✅ ת.ז:', idNumber);
+                  setIdError('');
+                }
+                
+                if (data.address) {
+                  updated.address = data.address;
+                  console.log('✅ כתובת:', data.address);
+                }
+                
+                if (data.birth_date) {
+                  updated.phone = data.birth_date;
+                  console.log('✅ תאריך לידה:', data.birth_date, '-> שדה phone');
+                }
+                
+                if (data.id_issue_date) {
+                  updated.email = data.id_issue_date;
+                  console.log('✅ תאריך הנפקה:', data.id_issue_date, '-> שדה email');
+                }
+                
+                if (data.id_expiry_date) {
+                  updated.notes = data.id_expiry_date;
+                  console.log('✅ תוקף:', data.id_expiry_date, '-> שדה notes');
+                }
+                
+                console.log('🔄 State חדש:', updated);
+                return updated;
+              });
               
               if (data.gender) {
                 setGender(data.gender);
-                console.log('✅ Gender:', data.gender);
+                console.log('✅ מין:', data.gender);
               }
               
-              console.log('📝 Updating fields:', updates);
+              // Prepare database update
+              const dbUpdates = {};
+              if (data.first_name) dbUpdates.first_name = data.first_name;
+              if (data.last_name) dbUpdates.last_name = data.last_name;
+              if (data.id_number) dbUpdates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+              if (data.address) dbUpdates.address = data.address;
+              if (data.birth_date) dbUpdates.phone = data.birth_date;
+              if (data.id_issue_date) dbUpdates.email = data.id_issue_date;
+              if (data.id_expiry_date) dbUpdates.notes = data.id_expiry_date;
               
-              // Update state immediately
-              setBasicData(prev => {
-                const newData = { ...prev, ...updates };
-                console.log('🔄 New state:', newData);
-                return newData;
-              });
-              
-              // Save to database
-              updatePersonMutation.mutate(updates);
+              console.log('💾 שומר לדאטאבייס:', dbUpdates);
+              updatePersonMutation.mutate(dbUpdates);
             }}
           />
         </div>
