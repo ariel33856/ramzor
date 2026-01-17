@@ -349,38 +349,14 @@ export default function IDUploader({ onDataExtracted }) {
       )}
 
       {/* Extracted Data Display */}
-      <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
+      <div className={`grid grid-cols-2 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
-          <Label className="text-xs text-gray-600">שם פרטי</Label>
-          <Input value={extractedData?.first_name || ''} readOnly className="bg-white" />
+          <Label className="text-xs text-gray-600">שם פרטי *</Label>
+          <Input value={extractedData?.first_name || ''} readOnly className={`bg-white ${!extractedData?.first_name ? 'border-red-500 bg-red-50' : ''}`} />
         </div>
         <div>
-          <Label className="text-xs text-gray-600">שם משפחה</Label>
-          <Input value={extractedData?.last_name || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">ת.ז</Label>
-          <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">תאריך לידה</Label>
-          <Input value={extractedData?.birth_date || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
-          <Input value={extractedData?.id_issue_date || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">תוקף</Label>
-          <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">מין</Label>
-          <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
-        </div>
-        <div className="md:col-span-1">
-          <Label className="text-xs text-gray-600">כתובת</Label>
-          <Input value={extractedData?.address || ''} readOnly className="bg-white" />
+          <Label className="text-xs text-gray-600">שם משפחה *</Label>
+          <Input value={extractedData?.last_name || ''} readOnly className={`bg-white ${!extractedData?.last_name ? 'border-red-500 bg-red-50' : ''}`} />
         </div>
       </div>
     </div>
