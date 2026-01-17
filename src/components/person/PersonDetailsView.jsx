@@ -339,23 +339,35 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       }
       
       if (person.custom_data) {
-        const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
-          id: `custom_${index}`,
-          name,
-          value
-        }));
-        setCustomFields(fields);
-        
-        // Load spouse_id from custom_data
-        if (person.custom_data.spouse_id) {
-          setSpouseId(person.custom_data.spouse_id);
-        }
-        
-        // Load num_siblings from custom_data
-        if (person.custom_data.num_siblings) {
-          setNumSiblings(person.custom_data.num_siblings);
-        }
-      }
+              const fields = Object.entries(person.custom_data)
+                .filter(([name]) => !['spouse_id', 'num_siblings', 'gender', 'extracted_children_dates'].includes(name))
+                .map(([name, value], index) => ({
+                  id: `custom_${index}`,
+                  name,
+                  value
+                }));
+              setCustomFields(fields);
+
+              // Load spouse_id from custom_data
+              if (person.custom_data.spouse_id) {
+                setSpouseId(person.custom_data.spouse_id);
+              }
+
+              // Load num_siblings from custom_data
+              if (person.custom_data.num_siblings) {
+                setNumSiblings(person.custom_data.num_siblings);
+              }
+
+              // Load extracted children dates
+              if (person.custom_data.extracted_children_dates && Array.isArray(person.custom_data.extracted_children_dates)) {
+                setChildrenDates([...person.custom_data.extracted_children_dates, '']);
+              }
+
+              // Load gender from custom_data
+              if (person.custom_data.gender) {
+                setGender(person.custom_data.gender);
+              }
+            }
     }
   }, [person]);
 
