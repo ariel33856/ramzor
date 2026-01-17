@@ -37,13 +37,13 @@ import ModuleArchive from './pages/ModuleArchive';
 import ModuleCaseDetails from './pages/ModuleCaseDetails';
 import ModuleView from './pages/ModuleView';
 import ModulesManager from './pages/ModulesManager';
-import NewCase from './pages/NewCase';
 import NewContact from './pages/NewContact';
 import Notifications from './pages/Notifications';
-import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
+import NewCase from './pages/NewCase';
+import PersonDetails from './pages/PersonDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -87,13 +87,13 @@ export const PAGES = {
     "ModuleCaseDetails": ModuleCaseDetails,
     "ModuleView": ModuleView,
     "ModulesManager": ModulesManager,
-    "NewCase": NewCase,
     "NewContact": NewContact,
     "Notifications": Notifications,
-    "PersonDetails": PersonDetails,
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
+    "NewCase": NewCase,
+    "PersonDetails": PersonDetails,
 }
 
 export const pagesConfig = {

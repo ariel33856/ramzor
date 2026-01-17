@@ -26,6 +26,7 @@ export default function NewCase() {
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showNewBorrowerForm, setShowNewBorrowerForm] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedBorrower, setSelectedBorrower] = useState(null);
   const [newBorrowerData, setNewBorrowerData] = useState({
     client_name: '',
@@ -158,6 +159,15 @@ export default function NewCase() {
     });
 
     setSaving(false);
+    setShowCreateDialog(false);
+    setNewBorrowerData({
+      client_name: '',
+      last_name: '',
+      client_id: '',
+      client_phone: '',
+      client_email: ''
+    });
+    
     if (moduleId) {
       navigate(createPageUrl(`ModuleView?moduleId=${moduleId}`));
     } else if (isArchive) {
@@ -200,11 +210,14 @@ export default function NewCase() {
                 <>
                   <Button
                     onClick={() => {
-                      const params = new URLSearchParams();
-                      params.set('createAccount', 'true');
-                      if (isArchive) params.set('archive', 'true');
-                      if (moduleId) params.set('moduleId', moduleId);
-                      navigate(createPageUrl('PersonDetails') + '?' + params.toString());
+                      setShowCreateDialog(true);
+                      setNewBorrowerData({
+                        client_name: '',
+                        last_name: '',
+                        client_id: '',
+                        client_phone: '',
+                        client_email: ''
+                      });
                     }}
                     className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
@@ -342,6 +355,61 @@ export default function NewCase() {
             </div>
           </div>
         </motion.div>
+
+        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+          <DialogContent className="w-full max-w-md">
+            <DialogHeader>
+              <DialogTitle>יצירת איש קשר חדש</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>שם פרטי *</Label>
+                <Input
+                  value={newBorrowerData.client_name}
+                  onChange={(e) => setNewBorrowerData({...newBorrowerData, client_name: e.target.value})}
+                  placeholder="שם פרטי"
+                  className="mt-1"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <Label>שם משפחה *</Label>
+                <Input
+                  value={newBorrowerData.last_name}
+                  onChange={(e) => setNewBorrowerData({...newBorrowerData, last_name: e.target.value})}
+                  placeholder="שם משפחה"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label>טלפון</Label>
+                <Input
+                  value={newBorrowerData.client_phone}
+                  onChange={(e) => setNewBorrowerData({...newBorrowerData, client_phone: e.target.value})}
+                  placeholder="טלפון"
+                  className="mt-1"
+                />
+              </div>
+              <Button
+                onClick={handleCreateNewPerson}
+                disabled={saving || !newBorrowerData.client_name.trim() || !newBorrowerData.last_name.trim()}
+                className="w-full h-12 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+                    יוצר...
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-5 h-5 ml-2" />
+                    שמור איש קשר וצור חשבון
+                  </>
+                )}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
