@@ -276,7 +276,7 @@ export default function NewCase() {
                   
                   <div className="space-y-4">
                     <div>
-                      <Label>שם פרטי *</Label>
+                      <Label>שם פרטי</Label>
                       <Input
                         value={newBorrowerData.client_name}
                         onChange={(e) => setNewBorrowerData({...newBorrowerData, client_name: e.target.value})}
@@ -363,7 +363,7 @@ export default function NewCase() {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label>שם פרטי *</Label>
+                <Label>שם פרטי</Label>
                 <Input
                   value={newBorrowerData.client_name}
                   onChange={(e) => setNewBorrowerData({...newBorrowerData, client_name: e.target.value})}
