@@ -750,7 +750,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
-        {createAccount && !personId && (
+        {(createAccount || personId) && (
           <div className="mb-6">
             <IDUploader 
               onDataExtracted={(data) => {
