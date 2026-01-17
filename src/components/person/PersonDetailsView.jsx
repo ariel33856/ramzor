@@ -13,6 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
+import IDUploader from './IDUploader';
 
 
 const validateIsraeliID = (id) => {
@@ -1066,7 +1067,25 @@ export default function PersonDetailsView({ personId }) {
         {/* Content */}
         {!isCollapsed1_5 && (
           <div className="p-6">
-            <p className="text-gray-600">תוכן הכרטיסיה...</p>
+            <IDUploader 
+              onDataExtracted={(data) => {
+                if (!data) return;
+                
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.phone = data.birth_date;
+                if (data.id_issue_date) updates.email = data.id_issue_date;
+                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+                
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+                
+                updatePersonMutation.mutate(updates);
+              }}
+            />
           </div>
         )}
       </div>
