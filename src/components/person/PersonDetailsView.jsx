@@ -190,62 +190,67 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
   });
 
   const saveAndCreateAccountMutation = useMutation({
-    mutationFn: async () => {
-      // Create person
-      const newPerson = await base44.entities.Person.create({
-        first_name: basicData.first_name,
-        last_name: basicData.last_name,
-        id_number: basicData.id_number,
-        phone: basicData.phone,
-        email: basicData.email,
-        notes: basicData.notes,
-        residential_city: basicData.residential_city,
-        address: basicData.address,
-        type: 'איש קשר',
-        is_archived: false
+        mutationFn: async () => {
+          // Create person with extracted data
+          const newPerson = await base44.entities.Person.create({
+            first_name: basicData.first_name,
+            last_name: basicData.last_name,
+            id_number: basicData.id_number,
+            phone: basicData.phone,
+            email: basicData.email,
+            notes: basicData.notes,
+            residential_city: basicData.residential_city,
+            address: basicData.address,
+            type: 'איש קשר',
+            is_archived: false,
+            custom_data: {
+              gender: gender,
+              extracted_children_dates: childrenDates.filter(d => d.length === 10)
+            }
+          });
+
+          // Get max account number
+          const maxAccountNumber = allAccounts.length > 0 
+            ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
+            : 72515;
+
+          // Create account
+          const caseData = {
+            client_name: '',
+            status: 'new',
+            urgency: 'medium',
+            progress_percentage: 0,
+            is_archived: isArchive || false,
+            module_id: moduleId || null
+          };
+
+          if (!moduleId) {
+            caseData.account_number = maxAccountNumber + 1;
+          }
+
+          const newAccount = await base44.entities.MortgageCase.create(caseData);
+
+          // Link person to account
+          await base44.entities.Person.update(newPerson.id, {
+            linked_accounts: [newAccount.id]
+          });
+
+          // Create audit log
+          await base44.entities.AuditLog.create({
+            case_id: newAccount.id,
+            action_type: 'status_change',
+            actor: 'user',
+            description: `חשבון חדש נפתח`,
+            severity: 'info'
+          });
+
+          return { newPerson, newAccount };
+        },
+        onSuccess: (data) => {
+          queryClient.invalidateQueries({ queryKey: ['person', data.newPerson.id] });
+          queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
+        }
       });
-
-      // Get max account number
-      const maxAccountNumber = allAccounts.length > 0 
-        ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
-        : 72515;
-
-      // Create account
-      const caseData = {
-        client_name: '',
-        status: 'new',
-        urgency: 'medium',
-        progress_percentage: 0,
-        is_archived: isArchive || false,
-        module_id: moduleId || null
-      };
-
-      if (!moduleId) {
-        caseData.account_number = maxAccountNumber + 1;
-      }
-
-      const newAccount = await base44.entities.MortgageCase.create(caseData);
-
-      // Link person to account
-      await base44.entities.Person.update(newPerson.id, {
-        linked_accounts: [newAccount.id]
-      });
-
-      // Create audit log
-      await base44.entities.AuditLog.create({
-        case_id: newAccount.id,
-        action_type: 'status_change',
-        actor: 'user',
-        description: `חשבון חדש נפתח`,
-        severity: 'info'
-      });
-
-      return newAccount;
-    },
-    onSuccess: (newAccount) => {
-      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}&new=true&accountNumber=${newAccount.account_number}`;
-    }
-  });
 
   const handleAddField = () => {
     if (newFieldName.trim()) {
