@@ -109,19 +109,19 @@ export default function IDUploader({ onDataExtracted }) {
                     <AlertDialogTitle className="text-center">ברצונך להסיר גם את הנתונים מהשדות?</AlertDialogTitle>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="flex justify-center gap-3">
-                    <AlertDialogAction 
-                      onClick={clearAll}
-                      className="bg-red-500 hover:bg-red-600 px-6"
-                    >
-                      כן
-                    </AlertDialogAction>
+                    <AlertDialogCancel className="bg-green-500 hover:bg-green-600 text-white px-6">ביטול</AlertDialogCancel>
                     <AlertDialogAction 
                       onClick={clearFileOnly}
                       className="bg-orange-500 hover:bg-orange-600 px-6"
                     >
                       לא, מחק את הקובץ אך אל תמחק את הנתונים
                     </AlertDialogAction>
-                    <AlertDialogCancel className="px-6">ביטול</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={clearAll}
+                      className="bg-red-500 hover:bg-red-600 px-6"
+                    >
+                      כן
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
