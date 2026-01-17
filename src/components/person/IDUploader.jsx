@@ -12,7 +12,12 @@ export default function IDUploader({ onDataExtracted }) {
   const [extractedData, setExtractedData] = useState(null);
   const [fileType, setFileType] = useState(null);
   const [error, setError] = useState(null);
+  const [detectionResult, setDetectionResult] = useState(null);
+  const [preview2, setPreview2] = useState(null);
+  const [fileType2, setFileType2] = useState(null);
+  const [uploading2, setUploading2] = useState(false);
   const fileInputRef = React.useRef(null);
+  const fileInputRef2 = React.useRef(null);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -34,21 +39,25 @@ export default function IDUploader({ onDataExtracted }) {
 
       console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `חלץ מידע מתעודת זהות ישראלית. החזר JSON בלבד עם השדות הבאים:
-- first_name (שם פרטי)
-- last_name (שם משפחה)
-- id_number (מספר ת.ז - 9 ספרות)
-- birth_date (תאריך לידה בפורמט DD-MM-YYYY)
-- id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY)
-- id_expiry_date (תוקף בפורמט DD-MM-YYYY)
-- gender (male או female)
-- address (כתובת מלאה)
+        prompt: `נתח את המסמך וחלץ מידע:
+1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
+2. החזר JSON עם:
+- document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+- first_name (שם פרטי - מהתעודה או הספח)
+- last_name (שם משפחה - מהתעודה או הספח)
+- id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
+- birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
+- id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
+- id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
+- gender (male או female - מהספח)
+- address (כתובת מלאה - מהספח)
 
 אם שדה לא נמצא, השאר אותו ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
           properties: {
+            document_type: { type: "string" },
             first_name: { type: "string" },
             last_name: { type: "string" },
             id_number: { type: "string" },
@@ -62,6 +71,7 @@ export default function IDUploader({ onDataExtracted }) {
       });
 
       console.log('✅ AI Result:', result);
+      setDetectionResult(result.document_type);
       setExtractedData(result);
       onDataExtracted?.(result);
     } catch (error) {
@@ -72,6 +82,55 @@ export default function IDUploader({ onDataExtracted }) {
     }
   };
 
+  const handleFileUpload2 = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    console.log('📤 Starting second upload:', file.name);
+    setUploading2(true);
+    setFileType2(file.type);
+    setPreview2(URL.createObjectURL(file));
+
+    try {
+      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      const file_url = uploadResult.file_url;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
+- document_type: "id_card" או "appendix" או "both"
+- first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
+
+אם שדה לא נמצא, השאר אותו ריק.`,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            document_type: { type: "string" },
+            first_name: { type: "string" },
+            last_name: { type: "string" },
+            id_number: { type: "string" },
+            birth_date: { type: "string" },
+            id_issue_date: { type: "string" },
+            id_expiry_date: { type: "string" },
+            gender: { type: "string" },
+            address: { type: "string" }
+          }
+        }
+      });
+
+      // Merge data
+      const mergedData = { ...extractedData, ...result };
+      setExtractedData(mergedData);
+      setDetectionResult('both');
+      onDataExtracted?.(mergedData);
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setError(error.message || 'שגיאה בעיבוד הקובץ השני');
+    } finally {
+      setUploading2(false);
+    }
+  };
+
   const clearFileOnly = () => {
     setPreview(null);
     setFileType(null);
@@ -79,8 +138,11 @@ export default function IDUploader({ onDataExtracted }) {
 
   const clearAll = () => {
     setPreview(null);
+    setPreview2(null);
     setExtractedData(null);
     setFileType(null);
+    setFileType2(null);
+    setDetectionResult(null);
   };
 
   return (
@@ -92,7 +154,7 @@ export default function IDUploader({ onDataExtracted }) {
       )}
       
       <div className="grid grid-cols-2 gap-4">
-        {/* Upload Section */}
+        {/* Upload Section 1 */}
         <div 
           className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px] cursor-pointer"
           onClick={() => !preview && fileInputRef.current?.click()}
@@ -174,9 +236,80 @@ export default function IDUploader({ onDataExtracted }) {
           )}
         </div>
 
-        {/* Empty placeholder */}
-        <div></div>
+        {/* Upload Section 2 - Conditional */}
+        {detectionResult && detectionResult !== 'both' && (
+          <div 
+            className="border-2 border-dashed border-orange-300 rounded-xl p-6 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer"
+            onClick={() => !preview2 && fileInputRef2.current?.click()}
+          >
+            {preview2 ? (
+              <>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreview2(null);
+                    setFileType2(null);
+                  }}
+                  className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-10"
+                  size="icon"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+                
+                {uploading2 && (
+                  <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
+                    <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
+                      <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
+                      <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {fileType2 === 'application/pdf' ? (
+                  <iframe 
+                    src={preview2} 
+                    className="w-full h-full min-h-[280px] rounded"
+                    title="PDF Preview 2"
+                  />
+                ) : (
+                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded" />
+                )}
+              </>
+            ) : (
+              <>
+                <input
+                  ref={fileInputRef2}
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleFileUpload2}
+                  className="hidden"
+                  disabled={uploading2}
+                />
+                <div className="flex flex-col items-center justify-center h-full gap-3">
+                  <Upload className="w-12 h-12 text-orange-600" />
+                  <p className="text-sm font-medium text-gray-700 text-center">
+                    {detectionResult === 'id_card' ? 'העלה ספח' : 'העלה תעודת זהות'}
+                  </p>
+                  <p className="text-xs text-gray-500">תמונה או PDF</p>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Detection Result Message */}
+      {detectionResult && (
+        <div className={`p-3 rounded-lg text-sm font-medium text-center ${
+          detectionResult === 'both' 
+            ? 'bg-green-100 text-green-800 border-2 border-green-300' 
+            : 'bg-orange-100 text-orange-800 border-2 border-orange-300'
+        }`}>
+          {detectionResult === 'both' && '✓ זוהתה תעודת זהות וספח'}
+          {detectionResult === 'id_card' && '⚠ זוהתה תעודת זהות - נא להשלים ספח'}
+          {detectionResult === 'appendix' && '⚠ זוהה ספח - נא להשלים תעודת זהות'}
+        </div>
+      )}
 
       {/* Extracted Data Display */}
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
