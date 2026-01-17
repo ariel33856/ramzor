@@ -32,7 +32,10 @@ export default function NewCase() {
     last_name: '',
     client_id: '',
     client_phone: '',
-    client_email: ''
+    client_email: '',
+    address: '',
+    gender: 'male',
+    children_birth_dates: []
   });
   
   const urlParams = new URLSearchParams(window.location.search);
