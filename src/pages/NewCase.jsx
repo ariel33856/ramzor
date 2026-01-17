@@ -108,14 +108,19 @@ export default function NewCase() {
     
     setSaving(true);
 
-    // Create new person in Person entity
+    // Create new person in Person entity with all extracted data
     const newPerson = await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
       phone: newBorrowerData.client_phone || '',
       email: newBorrowerData.client_email || '',
-      type: 'איש קשר'
+      address: newBorrowerData.address || '',
+      type: 'איש קשר',
+      custom_data: {
+        gender: newBorrowerData.gender || 'male',
+        extracted_children_dates: newBorrowerData.children_birth_dates || []
+      }
     });
 
     // Create new MortgageCase
