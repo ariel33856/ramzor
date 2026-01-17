@@ -71,11 +71,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     email: '',
     notes: '',
     residential_city: '',
-    address: '',
-    birth_date: '',
-    id_issue_date: '',
-    id_expiry_date: '',
-    file_url: ''
+    address: ''
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
@@ -194,72 +190,62 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
   });
 
   const saveAndCreateAccountMutation = useMutation({
-        mutationFn: async () => {
-          // Create person with extracted data
-          const newPerson = await base44.entities.Person.create({
-            first_name: basicData.first_name,
-            last_name: basicData.last_name,
-            id_number: basicData.id_number,
-            phone: basicData.phone,
-            email: basicData.email,
-            notes: basicData.notes,
-            residential_city: basicData.residential_city,
-            address: basicData.address,
-            birth_date: basicData.birth_date,
-            id_issue_date: basicData.id_issue_date,
-            id_expiry_date: basicData.id_expiry_date,
-            type: 'איש קשר',
-            is_archived: false,
-            custom_data: {
-              gender: gender,
-              extracted_children_dates: childrenDates.filter(d => d.length === 10),
-              file_url: basicData.file_url
-            }
-            });
-
-            // Get max account number
-            const maxAccountNumber = allAccounts.length > 0 
-            ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
-            : 72515;
-
-            // Create account
-            const caseData = {
-            client_name: basicData.first_name + ' ' + basicData.last_name,
-            status: 'new',
-            urgency: 'medium',
-            progress_percentage: 0,
-            is_archived: isArchive || false,
-            module_id: moduleId || null
-          };
-
-          if (!moduleId) {
-            caseData.account_number = maxAccountNumber + 1;
-          }
-
-          const newAccount = await base44.entities.MortgageCase.create(caseData);
-
-          // Link person to account
-          await base44.entities.Person.update(newPerson.id, {
-            linked_accounts: [newAccount.id]
-          });
-
-          // Create audit log
-          await base44.entities.AuditLog.create({
-            case_id: newAccount.id,
-            action_type: 'status_change',
-            actor: 'user',
-            description: `חשבון חדש נפתח`,
-            severity: 'info'
-          });
-
-          return { newPerson, newAccount };
-          },
-          onSuccess: (data) => {
-          queryClient.invalidateQueries({ queryKey: ['person', data.newPerson.id] });
-          queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
-          window.location.href = createPageUrl('CaseDetails') + `?id=${data.newAccount.id}&initialTab=CasePersonal`;
-          }
+    mutationFn: async () => {
+      // Create person
+      const newPerson = await base44.entities.Person.create({
+        first_name: basicData.first_name,
+        last_name: basicData.last_name,
+        id_number: basicData.id_number,
+        phone: basicData.phone,
+        email: basicData.email,
+        notes: basicData.notes,
+        residential_city: basicData.residential_city,
+        address: basicData.address,
+        type: 'איש קשר',
+        is_archived: false
       });
+
+      // Get max account number
+      const maxAccountNumber = allAccounts.length > 0 
+        ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
+        : 72515;
+
+      // Create account
+      const caseData = {
+        client_name: '',
+        status: 'new',
+        urgency: 'medium',
+        progress_percentage: 0,
+        is_archived: isArchive || false,
+        module_id: moduleId || null
+      };
+
+      if (!moduleId) {
+        caseData.account_number = maxAccountNumber + 1;
+      }
+
+      const newAccount = await base44.entities.MortgageCase.create(caseData);
+
+      // Link person to account
+      await base44.entities.Person.update(newPerson.id, {
+        linked_accounts: [newAccount.id]
+      });
+
+      // Create audit log
+      await base44.entities.AuditLog.create({
+        case_id: newAccount.id,
+        action_type: 'status_change',
+        actor: 'user',
+        description: `חשבון חדש נפתח`,
+        severity: 'info'
+      });
+
+      return newAccount;
+    },
+    onSuccess: (newAccount) => {
+      window.location.href = createPageUrl('CaseDetails') + `?id=${newAccount.id}&new=true&accountNumber=${newAccount.account_number}`;
+    }
+  });
 
   const handleAddField = () => {
     if (newFieldName.trim()) {
@@ -345,11 +331,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         email: person.email || '',
         notes: person.notes || '',
         residential_city: person.residential_city || '',
-        address: person.address || '',
-        birth_date: person.birth_date || '',
-        id_issue_date: person.id_issue_date || '',
-        id_expiry_date: person.id_expiry_date || '',
-        file_url: person.custom_data?.file_url || ''
+        address: person.address || ''
       });
       
       if (person.linked_accounts) {
@@ -357,35 +339,23 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       }
       
       if (person.custom_data) {
-              const fields = Object.entries(person.custom_data)
-                .filter(([name]) => !['spouse_id', 'num_siblings', 'gender', 'extracted_children_dates', 'file_url'].includes(name))
-                .map(([name, value], index) => ({
-                  id: `custom_${index}`,
-                  name,
-                  value
-                }));
-              setCustomFields(fields);
-
-              // Load spouse_id from custom_data
-              if (person.custom_data.spouse_id) {
-                setSpouseId(person.custom_data.spouse_id);
-              }
-
-              // Load num_siblings from custom_data
-              if (person.custom_data.num_siblings) {
-                setNumSiblings(person.custom_data.num_siblings);
-              }
-
-              // Load extracted children dates
-              if (person.custom_data.extracted_children_dates && Array.isArray(person.custom_data.extracted_children_dates)) {
-                setChildrenDates([...person.custom_data.extracted_children_dates, '']);
-              }
-
-              // Load gender from custom_data
-              if (person.custom_data.gender) {
-                setGender(person.custom_data.gender);
-              }
-            }
+        const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
+          id: `custom_${index}`,
+          name,
+          value
+        }));
+        setCustomFields(fields);
+        
+        // Load spouse_id from custom_data
+        if (person.custom_data.spouse_id) {
+          setSpouseId(person.custom_data.spouse_id);
+        }
+        
+        // Load num_siblings from custom_data
+        if (person.custom_data.num_siblings) {
+          setNumSiblings(person.custom_data.num_siblings);
+        }
+      }
     }
   }, [person]);
 
@@ -407,21 +377,14 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     );
   }
 
-  if (!person && !createAccount) {
+  // If createAccount mode and no person, show new contact form
+  if (createAccount && !personId) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">איש קשר לא נמצא</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
-      {createAccount && !personId && (
+      <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
           <Button
             onClick={() => saveAndCreateAccountMutation.mutate()}
-            disabled={saveAndCreateAccountMutation.isPending || !basicData.first_name || !basicData.last_name || !basicData.phone}
+            disabled={saveAndCreateAccountMutation.isPending || !basicData.first_name || !basicData.last_name}
             className="w-full h-20 text-2xl font-bold bg-white text-green-600 hover:bg-gray-50 hover:scale-105 transition-all shadow-lg"
           >
             {saveAndCreateAccountMutation.isPending ? (
@@ -431,32 +394,112 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             )}
           </Button>
         </div>
-      )}
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6">
+            <IDUploader 
+              onDataExtracted={(data) => {
+                if (!data) return;
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.phone = data.birth_date;
+                if (data.id_issue_date) updates.email = data.id_issue_date;
+                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>שם פרטי *</Label>
+              <Input
+                value={basicData.first_name}
+                onChange={(e) => setBasicData({ ...basicData, first_name: e.target.value })}
+                placeholder="שם פרטי"
+              />
+            </div>
+            <div>
+              <Label>שם משפחה *</Label>
+              <Input
+                value={basicData.last_name}
+                onChange={(e) => setBasicData({ ...basicData, last_name: e.target.value })}
+                placeholder="שם משפחה"
+              />
+            </div>
+            <div>
+              <Label>תעודת זהות</Label>
+              <Input
+                value={basicData.id_number}
+                onChange={(e) => setBasicData({ ...basicData, id_number: e.target.value })}
+                placeholder="תעודת זהות"
+              />
+            </div>
+            <div>
+              <Label>טלפון</Label>
+              <Input
+                value={basicData.phone}
+                onChange={(e) => setBasicData({ ...basicData, phone: e.target.value })}
+                placeholder="טלפון"
+              />
+            </div>
+            <div>
+              <Label>אימייל</Label>
+              <Input
+                value={basicData.email}
+                onChange={(e) => setBasicData({ ...basicData, email: e.target.value })}
+                placeholder="אימייל"
+              />
+            </div>
+            <div>
+              <Label>כתובת</Label>
+              <Input
+                value={basicData.address}
+                onChange={(e) => setBasicData({ ...basicData, address: e.target.value })}
+                placeholder="כתובת"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!person) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">איש קשר לא נמצא</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name} *</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
             <Input
               value={basicData.first_name}
-              onChange={(e) => {
-                setBasicData({ ...basicData, first_name: e.target.value });
-                if (personId) handleBasicDataChange('first_name', e.target.value);
-              }}
+              onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
               placeholder={personFields.first_name}
-              className={`text-xl font-bold w-40 ${!basicData.first_name ? 'border-red-500 bg-red-50' : ''}`}
+              className="text-xl font-bold w-40"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name} *</Label>
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
             <Input
               value={basicData.last_name}
-              onChange={(e) => {
-                setBasicData({ ...basicData, last_name: e.target.value });
-                if (personId) handleBasicDataChange('last_name', e.target.value);
-              }}
+              onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
               placeholder={personFields.last_name}
-              className={`text-xl font-bold w-40 ${!basicData.last_name ? 'border-red-500 bg-red-50' : ''}`}
+              className="text-xl font-bold w-40"
             />
           </div>
         </div>
@@ -714,12 +757,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                           <Label>{personFields.id_number}</Label>
                           <Input
                             value={newSpouseData.id_number}
-                            onChange={(e) => {
-                              const digits = e.target.value.replace(/\D/g, '').slice(0, 9);
-                              setNewSpouseData({...newSpouseData, id_number: digits});
-                            }}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, id_number: e.target.value})}
                             placeholder={personFields.id_number}
-                            maxLength="9"
                           />
                         </div>
                         <div>
@@ -780,90 +819,128 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       {/* Content */}
       {!isCollapsed && (
         <div className="p-6">
-        {(createAccount || personId) && (
-          <div className="mb-6">
-            <IDUploader 
-              initialData={{
-                first_name: basicData.first_name,
-                last_name: basicData.last_name,
-                id_number: basicData.id_number,
-                address: basicData.address,
-                gender: gender,
-                children_birth_dates: childrenDates.filter(d => d.length === 10),
-                birth_date: basicData.birth_date,
-                id_issue_date: basicData.id_issue_date,
-                id_expiry_date: basicData.id_expiry_date,
-                file_url: basicData.file_url
-              }}
-              onDataExtracted={(data) => {
-                if (!data) return;
-                const updates = {};
-                if (data.first_name) updates.first_name = data.first_name;
-                if (data.last_name) updates.last_name = data.last_name;
-                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                if (data.address) updates.address = data.address;
-                if (data.birth_date) updates.birth_date = data.birth_date;
-                if (data.id_issue_date) updates.id_issue_date = data.id_issue_date;
-                if (data.id_expiry_date) updates.id_expiry_date = data.id_expiry_date;
-                if (data.file_url) updates.file_url = data.file_url;
-                setBasicData(prev => ({ ...prev, ...updates }));
-                if (data.gender) setGender(data.gender);
-                if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
-                  setChildrenDates(prev => [...data.children_birth_dates, ...prev.filter(d => d.length === 10), '']);
-                }
-              }}
-            />
-          </div>
-        )}
-        <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${basicData.id_number ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
-          <div>
-            <Label className="text-xs text-gray-600">ת.ז</Label>
-            <Input value={basicData.id_number || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תאריך לידה</Label>
-            <Input value={basicData.birth_date || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
-            <Input value={basicData.id_issue_date || ''} readOnly className="bg-white" />
-          </div>
-          <div>
-            <Label className="text-xs text-gray-600">תוקף</Label>
-            <Input value={basicData.id_expiry_date || ''} readOnly className="bg-white" />
-          </div>
-          <div className="md:col-span-1">
-            <Label className="text-xs text-gray-600">כתובת</Label>
-            <Input value={basicData.address || ''} readOnly className="bg-white" />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <Label>טלפון *</Label>
-            <Input
-              value={basicData.phone}
-              onChange={(e) => {
-                setBasicData({ ...basicData, phone: e.target.value });
-                if (personId) handleBasicDataChange('phone', e.target.value);
-              }}
-              placeholder="טלפון"
-              className={!basicData.phone ? 'border-red-500 bg-red-50' : ''}
-            />
-          </div>
-          <div>
-            <Label>אימייל</Label>
-            <Input
-              value={basicData.email}
-              onChange={(e) => {
-                setBasicData({ ...basicData, email: e.target.value });
-                if (personId) handleBasicDataChange('email', e.target.value);
-              }}
-              placeholder="אימייל"
-            />
-          </div>
-        </div>
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.birth_date}</Label>
+          <Input
+            placeholder="DDMMYY או DDMMYYYY"
+            maxLength={10}
+            value={basicData.phone}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.phone.replace(/\D/g, '').length;
+
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('phone', formattedValue);
+            }}
+            className="text-center"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.id_number}</Label>
+          <div className="flex flex-col gap-1 flex-1">
+            <Input
+              value={basicData.id_number}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 9) {
+                  handleBasicDataChange('id_number', value);
+                  if (value.length === 9 || value.length === 8) {
+                    if (!validateIsraeliID(value)) {
+                      setIdError('מספר תעודת זהות לא תקין');
+                    } else {
+                      setIdError('');
+                    }
+                  } else {
+                    setIdError('');
+                  }
+                }
+              }}
+              maxLength={9}
+              placeholder="9 ספרות"
+              className={idError ? 'border-red-500' : ''}
+            />
+            {idError && <span className="text-xs text-red-600">{idError}</span>}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.id_issue_date}</Label>
+          <Input
+            placeholder="DDMMYY או DDMMYYYY"
+            maxLength={10}
+            value={basicData.email}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.email.replace(/\D/g, '').length;
+
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('email', formattedValue);
+            }}
+            className="text-center"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.id_expiry_date}</Label>
+          <Input
+            placeholder="DDMMYY או DDMMYYYY"
+            maxLength={10}
+            value={basicData.notes}
+            onChange={(e) => {
+              let value = e.target.value.replace(/\D/g, '');
+              const currentLength = basicData.notes.replace(/\D/g, '').length;
+
+              // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
+              if (value.length === 6 && value.length >= currentLength) {
+                const yearPart = parseInt(value.slice(4, 6));
+                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                value = value.slice(0, 4) + fullYear;
+              }
+
+              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+              const formattedValue = value.slice(0, 10);
+              handleBasicDataChange('notes', formattedValue);
+            }}
+            className="text-center"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.residential_city}</Label>
+          <Input
+            value={basicData.residential_city || ''}
+            onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
+            placeholder={personFields.residential_city}
+            className="flex-1"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.address}</Label>
+          <Input
+            value={basicData.address || ''}
+            onChange={(e) => handleBasicDataChange('address', e.target.value)}
+            placeholder="כתובת מלאה"
+            className="flex-1"
+          />
+        </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
@@ -1122,6 +1199,47 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
 
         </div>
       )}
+      </div>
+
+      {/* New Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Collapsible Header */}
+        <button
+          onClick={() => setIsCollapsed1_5(!isCollapsed1_5)}
+          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
+        >
+          {isCollapsed1_5 ? (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          )}
+          <h2 className="text-lg font-bold text-gray-900">כרטיסיה חדשה</h2>
+        </button>
+
+        {/* Content */}
+        {!isCollapsed1_5 && (
+          <div className="p-6">
+            <IDUploader 
+              onDataExtracted={(data) => {
+                if (!data) return;
+                
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.phone = data.birth_date;
+                if (data.id_issue_date) updates.email = data.id_issue_date;
+                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+                
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+                
+                updatePersonMutation.mutate(updates);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Second Card */}

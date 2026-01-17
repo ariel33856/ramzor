@@ -32,10 +32,7 @@ export default function NewCase() {
     last_name: '',
     client_id: '',
     client_phone: '',
-    client_email: '',
-    address: '',
-    gender: 'male',
-    children_birth_dates: []
+    client_email: ''
   });
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -111,19 +108,14 @@ export default function NewCase() {
     
     setSaving(true);
 
-    // Create new person in Person entity with all extracted data
+    // Create new person in Person entity
     const newPerson = await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
       phone: newBorrowerData.client_phone || '',
       email: newBorrowerData.client_email || '',
-      address: newBorrowerData.address || '',
-      type: 'איש קשר',
-      custom_data: {
-        gender: newBorrowerData.gender || 'male',
-        extracted_children_dates: newBorrowerData.children_birth_dates || []
-      }
+      type: 'איש קשר'
     });
 
     // Create new MortgageCase
@@ -257,14 +249,6 @@ export default function NewCase() {
               ) : (
                 <>
                   <IDUploader 
-                    initialData={{
-                      first_name: newBorrowerData.client_name,
-                      last_name: newBorrowerData.last_name,
-                      id_number: newBorrowerData.client_id,
-                      address: newBorrowerData.address,
-                      gender: newBorrowerData.gender,
-                      children_birth_dates: newBorrowerData.children_birth_dates || []
-                    }}
                     onDataExtracted={(data) => {
                       setNewBorrowerData({
                         ...newBorrowerData,
@@ -272,10 +256,7 @@ export default function NewCase() {
                         last_name: data.last_name || newBorrowerData.last_name,
                         client_id: data.id_number || newBorrowerData.client_id,
                         client_phone: newBorrowerData.client_phone,
-                        client_email: newBorrowerData.client_email,
-                        address: data.address || newBorrowerData.address,
-                        gender: data.gender || newBorrowerData.gender,
-                        children_birth_dates: data.children_birth_dates || newBorrowerData.children_birth_dates
+                        client_email: newBorrowerData.client_email
                       });
                     }}
                   />
