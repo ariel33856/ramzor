@@ -9,12 +9,14 @@ export default function IDUploader({ onDataExtracted }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
+  const [fileType, setFileType] = useState(null);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    setFileType(file.type);
     setPreview(URL.createObjectURL(file));
 
     try {
@@ -62,6 +64,7 @@ export default function IDUploader({ onDataExtracted }) {
   const clearData = () => {
     setPreview(null);
     setExtractedData(null);
+    setFileType(null);
   };
 
   return (
@@ -71,7 +74,7 @@ export default function IDUploader({ onDataExtracted }) {
         <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors">
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,.pdf"
             onChange={handleFileUpload}
             className="hidden"
             id="id-upload"
@@ -102,7 +105,16 @@ export default function IDUploader({ onDataExtracted }) {
               >
                 <X className="w-4 h-4" />
               </Button>
-              <img src={preview} alt="ID Preview" className="w-full h-full object-contain rounded" />
+              {fileType === 'application/pdf' ? (
+                <div className="flex flex-col items-center justify-center h-full gap-2">
+                  <svg className="w-16 h-16 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z"/>
+                  </svg>
+                  <p className="text-sm font-medium text-gray-700">PDF הועלה</p>
+                </div>
+              ) : (
+                <img src={preview} alt="ID Preview" className="w-full h-full object-contain rounded" />
+              )}
             </>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-400 text-sm">
