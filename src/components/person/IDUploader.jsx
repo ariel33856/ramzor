@@ -36,7 +36,7 @@ export default function IDUploader({ onDataExtracted }) {
 - address (כתובת מלאה)
 
 אם שדה לא נמצא, השאר אותו ריק.`,
-        file_urls: file_url,
+        file_urls: [file_url],
         response_json_schema: {
           type: "object",
           properties: {
@@ -52,6 +52,7 @@ export default function IDUploader({ onDataExtracted }) {
         }
       });
 
+      console.log('✅ AI Result:', result);
       setExtractedData(result);
       onDataExtracted?.(result);
     } catch (error) {
