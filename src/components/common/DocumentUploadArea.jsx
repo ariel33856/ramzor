@@ -65,20 +65,13 @@ export default function DocumentUploadArea({ onDocumentUpload, onPreviewChange, 
             const reader = new FileReader();
             reader.onload = (e) => {
               const base64Image = e.target.result;
-              console.log('Image loaded, base64 length:', base64Image?.length);
               // Show preview immediately
               if (onPreviewChange) {
-                console.log('Calling onPreviewChange with image');
                 onPreviewChange(base64Image);
               }
-              // Extract ID data and then run human detection
-              extractIDData(file_url).then(() => {
-                // After data extraction, run human detection
-                runHumanDetection(file_url, base64Image, fileId);
-              });
-            };
-            reader.onerror = (error) => {
-              console.error('FileReader error:', error);
+              // Extract data and run detection in parallel
+              extractIDData(file_url);
+              runHumanDetection(file_url, base64Image, fileId);
             };
             reader.readAsDataURL(file);
           } else {
