@@ -77,9 +77,12 @@ export default function IDUploader({ onDataExtracted }) {
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setExtractedData(result);
-      onDataExtracted?.(result);
       
       if (result.document_type === 'both') {
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 2000);
+        setTimeout(() => handleExtractedData(result), 500);
+      } else {
         setShowMessage(true);
         setTimeout(() => setShowMessage(false), 2000);
       }
