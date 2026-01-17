@@ -77,12 +77,9 @@ export default function IDUploader({ onDataExtracted }) {
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setExtractedData(result);
+      onDataExtracted?.(result);
       
       if (result.document_type === 'both') {
-        setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 2000);
-        setTimeout(() => handleExtractedData(result), 500);
-      } else {
         setShowMessage(true);
         setTimeout(() => setShowMessage(false), 2000);
       }
@@ -136,10 +133,10 @@ export default function IDUploader({ onDataExtracted }) {
       const mergedData = { ...extractedData, ...result };
       setExtractedData(mergedData);
       setDetectionResult('both');
-
+      onDataExtracted?.(mergedData);
+      
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
-      setTimeout(() => handleExtractedData(mergedData), 500);
     } catch (error) {
       console.error('❌ Error:', error);
       setError(error.message || 'שגיאה בעיבוד הקובץ השני');
@@ -184,14 +181,6 @@ export default function IDUploader({ onDataExtracted }) {
       pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
       pdf.save('document.pdf');
     }
-  };
-
-  const handleExtractedData = (data) => {
-    onDataExtracted?.(data);
-    // Clear extracted data after 500ms to give parent time to process
-    setTimeout(() => {
-      clearAll();
-    }, 500);
   };
 
   return (
