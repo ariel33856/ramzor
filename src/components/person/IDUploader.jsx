@@ -163,6 +163,16 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     setFileUrl(null);
   };
 
+  React.useEffect(() => {
+    if (initialData?.file_url && !preview) {
+      setFileUrl(initialData.file_url);
+      setPreview(initialData.file_url);
+      setExtractedData(initialData);
+      setDetectionResult('both');
+      setFileType(initialData.file_url.endsWith('.pdf') ? 'application/pdf' : 'image/*');
+    }
+  }, [initialData?.file_url, preview]);
+
   const downloadAsPDF = async (previewUrl, fileTypeParam) => {
     if (fileTypeParam === 'application/pdf') {
       // אם זה כבר PDF, פשוט להוריד אותו
