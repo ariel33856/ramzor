@@ -86,32 +86,7 @@ export default function IDUploader({ onDataExtracted }) {
       
       <div className="grid grid-cols-2 gap-4">
         {/* Upload Section */}
-        <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors">
-          <input
-            type="file"
-            accept="image/*,.pdf"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="id-upload"
-            disabled={uploading}
-          />
-          <label htmlFor="id-upload" className={uploading ? 'cursor-wait' : 'cursor-pointer'}>
-            <div className="flex flex-col items-center gap-3">
-              {uploading ? (
-                <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
-              ) : (
-                <Upload className="w-12 h-12 text-blue-600" />
-              )}
-              <p className="text-sm font-medium text-gray-700 text-center">
-                {uploading ? 'מעלה ומחלץ מידע...' : 'לחץ להעלאת תעודת זהות'}
-              </p>
-              <p className="text-xs text-gray-500">תמונה או PDF</p>
-            </div>
-          </label>
-        </div>
-
-        {/* Preview Section */}
-        <div className="border-2 border-gray-300 rounded-xl p-4 bg-gray-50 relative">
+        <div className="border-2 border-dashed border-blue-300 rounded-xl p-6 bg-blue-50/50 hover:bg-blue-50 transition-colors relative">
           {preview ? (
             <>
               <Button
@@ -133,11 +108,34 @@ export default function IDUploader({ onDataExtracted }) {
               )}
             </>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-400 text-sm">
-              תצוגה מקדימה
-            </div>
+            <>
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                onChange={handleFileUpload}
+                className="hidden"
+                id="id-upload"
+                disabled={uploading}
+              />
+              <label htmlFor="id-upload" className={uploading ? 'cursor-wait' : 'cursor-pointer'}>
+                <div className="flex flex-col items-center gap-3">
+                  {uploading ? (
+                    <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+                  ) : (
+                    <Upload className="w-12 h-12 text-blue-600" />
+                  )}
+                  <p className="text-sm font-medium text-gray-700 text-center">
+                    {uploading ? 'מעלה ומחלץ מידע...' : 'לחץ להעלאת תעודת זהות'}
+                  </p>
+                  <p className="text-xs text-gray-500">תמונה או PDF</p>
+                </div>
+              </label>
+            </>
           )}
         </div>
+
+        {/* Empty placeholder */}
+        <div></div>
       </div>
 
       {/* Extracted Data Display */}
