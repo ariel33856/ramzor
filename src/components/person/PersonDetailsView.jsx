@@ -71,7 +71,10 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     email: '',
     notes: '',
     residential_city: '',
-    address: ''
+    address: '',
+    birth_date: '',
+    id_issue_date: '',
+    id_expiry_date: ''
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
@@ -201,22 +204,25 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             notes: basicData.notes,
             residential_city: basicData.residential_city,
             address: basicData.address,
+            birth_date: basicData.birth_date,
+            id_issue_date: basicData.id_issue_date,
+            id_expiry_date: basicData.id_expiry_date,
             type: 'איש קשר',
             is_archived: false,
             custom_data: {
               gender: gender,
               extracted_children_dates: childrenDates.filter(d => d.length === 10)
             }
-          });
+            });
 
-          // Get max account number
-          const maxAccountNumber = allAccounts.length > 0 
+            // Get max account number
+            const maxAccountNumber = allAccounts.length > 0 
             ? Math.max(...allAccounts.map(acc => acc.account_number || 0))
             : 72515;
 
-          // Create account
-          const caseData = {
-            client_name: '',
+            // Create account
+            const caseData = {
+            client_name: basicData.first_name + ' ' + basicData.last_name,
             status: 'new',
             urgency: 'medium',
             progress_percentage: 0,
@@ -245,11 +251,12 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
           });
 
           return { newPerson, newAccount };
-        },
-        onSuccess: (data) => {
+          },
+          onSuccess: (data) => {
           queryClient.invalidateQueries({ queryKey: ['person', data.newPerson.id] });
           queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
-        }
+          window.location.href = createPageUrl('CaseDetails') + `?id=${data.newAccount.id}&initialTab=CasePersonal`;
+          }
       });
 
   const handleAddField = () => {
@@ -336,7 +343,10 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         email: person.email || '',
         notes: person.notes || '',
         residential_city: person.residential_city || '',
-        address: person.address || ''
+        address: person.address || '',
+        birth_date: person.birth_date || '',
+        id_issue_date: person.id_issue_date || '',
+        id_expiry_date: person.id_expiry_date || ''
       });
       
       if (person.linked_accounts) {
@@ -404,12 +414,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
 
   return (
     <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
-      {createAccount && !personId && saveAndCreateAccountMutation.isSuccess && (
-        <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl text-center">
-          <p className="text-white text-lg font-bold">✓ איש קשר והחשבון שמורים בהצלחה!</p>
-        </div>
-      )}
-      {createAccount && !personId && !saveAndCreateAccountMutation.isSuccess && (
+      {createAccount && !personId && (
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-xl">
           <Button
             onClick={() => saveAndCreateAccountMutation.mutate()}
@@ -781,7 +786,10 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 id_number: basicData.id_number,
                 address: basicData.address,
                 gender: gender,
-                children_birth_dates: childrenDates.filter(d => d.length === 10)
+                children_birth_dates: childrenDates.filter(d => d.length === 10),
+                birth_date: basicData.birth_date,
+                id_issue_date: basicData.id_issue_date,
+                id_expiry_date: basicData.id_expiry_date
               }}
               onDataExtracted={(data) => {
                 if (!data) return;
@@ -790,6 +798,9 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 if (data.last_name) updates.last_name = data.last_name;
                 if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
                 if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.birth_date = data.birth_date;
+                if (data.id_issue_date) updates.id_issue_date = data.id_issue_date;
+                if (data.id_expiry_date) updates.id_expiry_date = data.id_expiry_date;
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
                 if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
