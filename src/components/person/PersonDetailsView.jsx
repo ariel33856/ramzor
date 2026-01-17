@@ -74,7 +74,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     address: '',
     birth_date: '',
     id_issue_date: '',
-    id_expiry_date: ''
+    id_expiry_date: '',
+    file_url: ''
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
@@ -346,7 +347,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         address: person.address || '',
         birth_date: person.birth_date || '',
         id_issue_date: person.id_issue_date || '',
-        id_expiry_date: person.id_expiry_date || ''
+        id_expiry_date: person.id_expiry_date || '',
+        file_url: person.custom_data?.file_url || ''
       });
       
       if (person.linked_accounts) {
@@ -801,6 +803,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 if (data.birth_date) updates.birth_date = data.birth_date;
                 if (data.id_issue_date) updates.id_issue_date = data.id_issue_date;
                 if (data.id_expiry_date) updates.id_expiry_date = data.id_expiry_date;
+                if (data.file_url) updates.file_url = data.file_url;
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
                 if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
@@ -808,6 +811,20 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 }
               }}
             />
+          </div>
+        )}
+        {basicData.file_url && (
+          <div className="mb-4 border-2 border-blue-200 rounded-lg p-4 bg-blue-50">
+            <Label className="text-xs text-gray-600 mb-2 block">קובץ מחולץ:</Label>
+            {basicData.file_url.endsWith('.pdf') || basicData.file_url.includes('pdf') ? (
+              <iframe 
+                src={basicData.file_url} 
+                className="w-full h-64 rounded-lg"
+                title="Extracted Document"
+              />
+            ) : (
+              <img src={basicData.file_url} alt="Extracted Document" className="w-full max-h-64 object-cover rounded-lg" />
+            )}
           </div>
         )}
         <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${basicData.id_number ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
