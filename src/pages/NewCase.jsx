@@ -254,6 +254,14 @@ export default function NewCase() {
               ) : (
                 <>
                   <IDUploader 
+                    initialData={{
+                      first_name: newBorrowerData.client_name,
+                      last_name: newBorrowerData.last_name,
+                      id_number: newBorrowerData.client_id,
+                      address: newBorrowerData.address,
+                      gender: newBorrowerData.gender,
+                      children_birth_dates: newBorrowerData.children_birth_dates || []
+                    }}
                     onDataExtracted={(data) => {
                       setNewBorrowerData({
                         ...newBorrowerData,
@@ -261,7 +269,10 @@ export default function NewCase() {
                         last_name: data.last_name || newBorrowerData.last_name,
                         client_id: data.id_number || newBorrowerData.client_id,
                         client_phone: newBorrowerData.client_phone,
-                        client_email: newBorrowerData.client_email
+                        client_email: newBorrowerData.client_email,
+                        address: data.address || newBorrowerData.address,
+                        gender: data.gender || newBorrowerData.gender,
+                        children_birth_dates: data.children_birth_dates || newBorrowerData.children_birth_dates
                       });
                     }}
                   />
