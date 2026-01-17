@@ -684,8 +684,12 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                           <Label>{personFields.id_number}</Label>
                           <Input
                             value={newSpouseData.id_number}
-                            onChange={(e) => setNewSpouseData({...newSpouseData, id_number: e.target.value})}
+                            onChange={(e) => {
+                              const digits = e.target.value.replace(/\D/g, '').slice(0, 9);
+                              setNewSpouseData({...newSpouseData, id_number: digits});
+                            }}
                             placeholder={personFields.id_number}
+                            maxLength="9"
                           />
                         </div>
                         <div>
