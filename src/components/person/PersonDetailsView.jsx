@@ -358,7 +358,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
       
       if (person.custom_data) {
               const fields = Object.entries(person.custom_data)
-                .filter(([name]) => !['spouse_id', 'num_siblings', 'gender', 'extracted_children_dates'].includes(name))
+                .filter(([name]) => !['spouse_id', 'num_siblings', 'gender', 'extracted_children_dates', 'file_url'].includes(name))
                 .map(([name, value], index) => ({
                   id: `custom_${index}`,
                   name,
