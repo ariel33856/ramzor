@@ -758,6 +758,9 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 if (data.address) updates.address = data.address;
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
+                if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
+                  setChildrenDates(prev => [...data.children_birth_dates, ...prev.filter(d => d.length === 10), '']);
+                }
               }}
             />
           </div>
