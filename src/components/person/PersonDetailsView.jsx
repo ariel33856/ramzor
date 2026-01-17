@@ -410,30 +410,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>שם פרטי *</Label>
-              <Input
-                value={basicData.first_name}
-                onChange={(e) => setBasicData({ ...basicData, first_name: e.target.value })}
-                placeholder="שם פרטי"
-              />
-            </div>
-            <div>
-              <Label>שם משפחה *</Label>
-              <Input
-                value={basicData.last_name}
-                onChange={(e) => setBasicData({ ...basicData, last_name: e.target.value })}
-                placeholder="שם משפחה"
-              />
-            </div>
-            <div>
-              <Label>תעודת זהות</Label>
-              <Input
-                value={basicData.id_number}
-                onChange={(e) => setBasicData({ ...basicData, id_number: e.target.value })}
-                placeholder="תעודת זהות"
-              />
-            </div>
-            <div>
               <Label>טלפון</Label>
               <Input
                 value={basicData.phone}
@@ -447,14 +423,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 value={basicData.email}
                 onChange={(e) => setBasicData({ ...basicData, email: e.target.value })}
                 placeholder="אימייל"
-              />
-            </div>
-            <div>
-              <Label>כתובת</Label>
-              <Input
-                value={basicData.address}
-                onChange={(e) => setBasicData({ ...basicData, address: e.target.value })}
-                placeholder="כתובת"
               />
             </div>
           </div>
