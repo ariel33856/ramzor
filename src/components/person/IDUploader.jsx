@@ -194,7 +194,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       <div className="grid grid-cols-2 gap-4 overflow-visible">
         {/* Upload Section 1 */}
         <div 
-          className="border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+          className={`border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative cursor-pointer overflow-visible ${preview ? 'h-[300px]' : 'min-h-[300px]'}`}
           onClick={() => !preview && fileInputRef.current?.click()}
         >
           {preview ? (
@@ -250,11 +250,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
               {fileType === 'application/pdf' ? (
                 <iframe 
                   src={preview} 
-                  className="w-full h-full min-h-[280px]"
+                  className="w-full h-full rounded-xl"
                   title="PDF Preview"
                 />
               ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-cover" />
+                <img src={preview} alt="ID Preview" className="w-full h-full object-cover rounded-xl" />
               )}
             </>
           ) : (
@@ -285,7 +285,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
         {/* Upload Section 2 - Conditional */}
         {detectionResult && detectionResult !== 'both' && (
           <div 
-            className="border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+            className={`border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative cursor-pointer overflow-visible ${preview2 ? 'h-[300px]' : 'min-h-[300px]'}`}
             onClick={() => !preview2 && fileInputRef2.current?.click()}
           >
             {preview2 ? (
@@ -314,11 +314,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 {fileType2 === 'application/pdf' ? (
                   <iframe 
                     src={preview2} 
-                    className="w-full h-full min-h-[280px]"
+                    className="w-full h-full rounded-xl"
                     title="PDF Preview 2"
                   />
                 ) : (
-                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-cover" />
+                  <img src={preview2} alt="Second Document" className="w-full h-full object-cover rounded-xl" />
                 )}
               </>
             ) : (
