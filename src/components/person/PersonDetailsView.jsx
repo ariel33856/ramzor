@@ -810,6 +810,28 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             />
           </div>
         )}
+        <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${basicData.id_number ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
+          <div>
+            <Label className="text-xs text-gray-600">ת.ז</Label>
+            <Input value={basicData.id_number || ''} readOnly className="bg-white" />
+          </div>
+          <div>
+            <Label className="text-xs text-gray-600">תאריך לידה</Label>
+            <Input value={basicData.birth_date || ''} readOnly className="bg-white" />
+          </div>
+          <div>
+            <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
+            <Input value={basicData.id_issue_date || ''} readOnly className="bg-white" />
+          </div>
+          <div>
+            <Label className="text-xs text-gray-600">תוקף</Label>
+            <Input value={basicData.id_expiry_date || ''} readOnly className="bg-white" />
+          </div>
+          <div className="md:col-span-1">
+            <Label className="text-xs text-gray-600">כתובת</Label>
+            <Input value={basicData.address || ''} readOnly className="bg-white" />
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
             <Label>טלפון *</Label>
