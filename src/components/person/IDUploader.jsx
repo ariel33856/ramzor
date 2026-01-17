@@ -183,6 +183,14 @@ export default function IDUploader({ onDataExtracted }) {
     }
   };
 
+  const handleExtractedData = (data) => {
+    onDataExtracted?.(data);
+    // Clear extracted data after 500ms to give parent time to process
+    setTimeout(() => {
+      clearAll();
+    }, 500);
+  };
+
   return (
     <div className="space-y-4">
       {error && (
