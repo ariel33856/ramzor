@@ -723,15 +723,14 @@ export default function Dashboard() {
                     <td className="px-6 py-4">
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
                           archiveMutation.mutate(caseData.id);
                         }}
                         className="text-gray-500 hover:text-orange-600 hover:bg-orange-50"
                       >
-                        <Archive className="w-4 h-4 ml-2" />
-                        ארכב
+                        <Archive className="w-4 h-4" />
                       </Button>
                     </td>
                   </motion.tr>
