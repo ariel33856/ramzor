@@ -381,6 +381,21 @@ export default function IDUploader({ onDataExtracted, initialData }) {
           <Input value={extractedData?.birth_date || ''} readOnly className="bg-white" />
         </div>
         <div>
+          <Label className="text-xs text-gray-600">גיל</Label>
+          <Input value={(() => {
+            if (!extractedData?.birth_date || extractedData.birth_date.length !== 10) return '';
+            const [day, month, year] = extractedData.birth_date.split('-').map(Number);
+            const birthDate = new Date(year, month - 1, day);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              age--;
+            }
+            return age.toString();
+          })()} readOnly className="bg-white" />
+        </div>
+        <div>
           <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
           <Input value={extractedData?.id_issue_date || ''} readOnly className="bg-white" />
         </div>
@@ -392,7 +407,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
           <Label className="text-xs text-gray-600">מין</Label>
           <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
         </div>
-        <div className="md:col-span-1">
+        <div className="md:col-span-2">
           <Label className="text-xs text-gray-600">כתובת</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />
         </div>
