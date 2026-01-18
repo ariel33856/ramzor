@@ -54,19 +54,21 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `נתח את המסמך וחלץ מידע:
-1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
-2. החזר JSON עם:
-- document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
-- first_name (שם פרטי - מהתעודה או הספח)
-- last_name (שם משפחה - מהתעודה או הספח)
-- id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
-- birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
-- id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
-- id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
-- gender (male או female - מהספח)
-- address (כתובת מלאה - מהספח)
+      1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
+      2. החזר JSON עם:
+      - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+      - first_name (שם פרטי - מהתעודה או הספח)
+      - last_name (שם משפחה - מהתעודה או הספח)
+      - id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
+      - birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
+      - id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
+      - id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
+      - gender (male או female - מהספח)
+      - address (כתובת מלאה - מהספח)
+      - num_children (מספר הילדים - מהספח)
+      - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
 
-אם שדה לא נמצא, השאר אותו ריק.`,
+      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -79,7 +81,12 @@ export default function IDUploader({ onDataExtracted, initialData }) {
             id_issue_date: { type: "string" },
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
-            address: { type: "string" }
+            address: { type: "string" },
+            num_children: { type: "number" },
+            children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            }
           }
         }
       });
@@ -123,10 +130,12 @@ export default function IDUploader({ onDataExtracted, initialData }) {
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
-- document_type: "id_card" או "appendix" או "both"
-- first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
+      - document_type: "id_card" או "appendix" או "both"
+      - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
+      - num_children (מספר הילדים - מהספח)
+      - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
 
-אם שדה לא נמצא, השאר אותו ריק.`,
+      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -139,7 +148,12 @@ export default function IDUploader({ onDataExtracted, initialData }) {
             id_issue_date: { type: "string" },
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
-            address: { type: "string" }
+            address: { type: "string" },
+            num_children: { type: "number" },
+            children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            }
           }
         }
       });

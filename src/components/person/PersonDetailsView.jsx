@@ -801,6 +801,14 @@ export default function PersonDetailsView({ personId }) {
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
                 
+                // Update children data
+                if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
+                  setChildrenDates([...data.children_birth_dates, '']);
+                }
+                if (data.num_children) {
+                  setManualNumChildren(String(data.num_children));
+                }
+                
                 const customData = { ...(person?.custom_data || {}), id_upload_data: data };
                 updatePersonMutation.mutate({ ...updates, custom_data: customData });
               }}
