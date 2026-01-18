@@ -195,6 +195,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
   const saveAndCreateAccountMutation = useMutation({
         mutationFn: async () => {
           // Create person with extracted data
+          const validChildrenDates = childrenDates.filter(d => d && d.length === 10);
           const newPerson = await base44.entities.Person.create({
             first_name: basicData.first_name,
             last_name: basicData.last_name,
@@ -211,7 +212,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
             is_archived: false,
             custom_data: {
               gender: gender,
-              extracted_children_dates: childrenDates.filter(d => d.length === 10)
+              extracted_children_dates: validChildrenDates
             }
             });
 
