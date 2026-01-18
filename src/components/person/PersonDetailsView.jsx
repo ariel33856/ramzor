@@ -741,196 +741,7 @@ export default function PersonDetailsView({ personId }) {
             </Select>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}:</Label>
-          {[...childrenDates]
-            .sort((a, b) => {
-              if (a.length !== 10 || b.length !== 10) return 0;
-              const [dayA, monthA, yearA] = a.split('-').map(Number);
-              const [dayB, monthB, yearB] = b.split('-').map(Number);
-              const dateA = new Date(yearA, monthA - 1, dayA);
-              const dateB = new Date(yearB, monthB - 1, dayB);
-              return dateB - dateA; // תאריך חדש יותר = גיל צעיר יותר = יופיע ראשון
-            })
-            .map((date, index) => (
-            <Popover key={index}>
-              <PopoverTrigger asChild>
-                <div className="w-auto min-w-[24px] h-8 cursor-pointer flex items-center justify-center border rounded-md bg-white hover:bg-gray-50">
-                  {(() => {
-                    if (date.length !== 10) return '';
-                    const [day, month, year] = date.split('-').map(Number);
-                    const birthDate = new Date(year, month - 1, day);
-                    const today = new Date();
 
-                    let years = today.getFullYear() - birthDate.getFullYear();
-                    let months = today.getMonth() - birthDate.getMonth();
-                    let days = today.getDate() - birthDate.getDate();
-
-                    if (days < 0) {
-                      months--;
-                      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-                      days += prevMonth.getDate();
-                    }
-
-                    if (months < 0) {
-                      years--;
-                      months += 12;
-                    }
-
-                    const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
-
-                    return (
-                      <span className="px-1">
-                        <span className="text-base font-semibold">{years}</span>
-                        <span className="text-xs text-gray-600">.{decimal}</span>
-                      </span>
-                    );
-                  })()}
-                </div>
-              </PopoverTrigger>
-              <PopoverContent align="center" style={{ width: '161px' }}>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
-                  <Input 
-                    placeholder="DDMMYY או DDMMYYYY"
-                    className="w-full"
-                    maxLength={10}
-                    value={date}
-                    onChange={(e) => {
-                      setDateError('');
-                      let value = e.target.value.replace(/\D/g, '');
-                      const currentLength = date.replace(/\D/g, '').length;
-
-                      // אם הוזנו 6 ספרות בדיוק והמשתמש לא מוחק - השלם את השנה
-                      if (value.length === 6 && value.length >= currentLength) {
-                        const yearPart = parseInt(value.slice(4, 6));
-                        const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
-                        value = value.slice(0, 4) + fullYear;
-                      }
-
-                      if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
-                      if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
-                      const formattedValue = value.slice(0, 10);
-
-                      // Validate date if complete
-                      if (formattedValue.length === 10) {
-                        const [day, month, year] = formattedValue.split('-').map(Number);
-                        if (month < 1 || month > 12) {
-                          setDateError('נא להזין תאריך חוקי');
-                          return;
-                        }
-                        const daysInMonth = new Date(year, month, 0).getDate();
-                        if (day < 1 || day > daysInMonth) {
-                          setDateError('נא להזין תאריך חוקי');
-                          return;
-                        }
-                      }
-
-                      const newDates = [...childrenDates];
-                      newDates[index] = formattedValue;
-                      setChildrenDates(newDates);
-
-                      if (formattedValue.length === 10 && index === childrenDates.length - 1) {
-                        setChildrenDates([...newDates, '']);
-                      }
-                    }}
-                  />
-                  {dateError && (
-                    <p className="text-sm text-red-600">{dateError}</p>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
-          <Input 
-            type="number"
-            value={manualNumChildren}
-            onChange={(e) => {
-              setManualNumChildren(e.target.value);
-              const actualCount = childrenDates.filter(d => d.length === 10).length;
-              if (e.target.value && parseInt(e.target.value) !== actualCount) {
-                setShowChildrenWarning(true);
-                setTimeout(() => setShowChildrenWarning(false), 3000);
-              }
-            }}
-            placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
-            className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-              manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
-                ? 'border-red-500 bg-red-50'
-                : ''
-            }`}
-            style={{ MozAppearance: 'textfield' }}
-          />
-          <Label className="text-sm whitespace-nowrap">{personFields.num_children_under_18}</Label>
-          <Input 
-            type="number"
-            value={manualNumChildrenUnder18}
-            onChange={(e) => {
-              setManualNumChildrenUnder18(e.target.value);
-              const actualCount = childrenDates.filter(d => {
-                if (d.length !== 10) return false;
-                const [day, month, year] = d.split('-').map(Number);
-                const birthDate = new Date(year, month - 1, day);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                  age--;
-                }
-                return age < 18;
-              }).length;
-              if (e.target.value && parseInt(e.target.value) !== actualCount) {
-                setShowChildrenWarning(true);
-                setTimeout(() => setShowChildrenWarning(false), 3000);
-              }
-            }}
-            placeholder={childrenDates.filter(d => {
-              if (d.length !== 10) return false;
-              const [day, month, year] = d.split('-').map(Number);
-              const birthDate = new Date(year, month - 1, day);
-              const today = new Date();
-              let age = today.getFullYear() - birthDate.getFullYear();
-              const monthDiff = today.getMonth() - birthDate.getMonth();
-              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-              }
-              return age < 18;
-            }).length.toString()}
-            className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-              manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
-                if (d.length !== 10) return false;
-                const [day, month, year] = d.split('-').map(Number);
-                const birthDate = new Date(year, month - 1, day);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                  age--;
-                }
-                return age < 18;
-              }).length
-                ? 'border-red-500 bg-red-50'
-                : ''
-            }`}
-            style={{ MozAppearance: 'textfield' }}
-          />
-          <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
-          <Input 
-            type="number" 
-            value={numSiblings}
-            onChange={(e) => {
-              const value = e.target.value;
-              setNumSiblings(value);
-              updatePersonMutation.mutate({ 
-                custom_data: { ...(person?.custom_data || {}), num_siblings: value }
-              });
-            }}
-            className="w-12 text-center h-8" 
-          />
-        </div>
         <div></div>
         <div></div>
 
@@ -967,7 +778,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Content */}
         {!isCollapsed3 && (
-          <div className="p-6">
+          <div className="p-6 space-y-6">
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               onDataExtracted={(data) => {
@@ -994,6 +805,205 @@ export default function PersonDetailsView({ personId }) {
                 updatePersonMutation.mutate({ ...updates, custom_data: customData });
               }}
             />
+
+            {/* Children Data Section */}
+            <div className="border-t pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}:</Label>
+                  {[...childrenDates]
+                    .sort((a, b) => {
+                      if (a.length !== 10 || b.length !== 10) return 0;
+                      const [dayA, monthA, yearA] = a.split('-').map(Number);
+                      const [dayB, monthB, yearB] = b.split('-').map(Number);
+                      const dateA = new Date(yearA, monthA - 1, dayA);
+                      const dateB = new Date(yearB, monthB - 1, dayB);
+                      return dateB - dateA;
+                    })
+                    .map((date, index) => (
+                    <Popover key={index}>
+                      <PopoverTrigger asChild>
+                        <div className="w-auto min-w-[24px] h-8 cursor-pointer flex items-center justify-center border rounded-md bg-white hover:bg-gray-50">
+                          {(() => {
+                            if (date.length !== 10) return '';
+                            const [day, month, year] = date.split('-').map(Number);
+                            const birthDate = new Date(year, month - 1, day);
+                            const today = new Date();
+
+                            let years = today.getFullYear() - birthDate.getFullYear();
+                            let months = today.getMonth() - birthDate.getMonth();
+                            let days = today.getDate() - birthDate.getDate();
+
+                            if (days < 0) {
+                              months--;
+                              const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                              days += prevMonth.getDate();
+                            }
+
+                            if (months < 0) {
+                              years--;
+                              months += 12;
+                            }
+
+                            const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+
+                            return (
+                              <span className="px-1">
+                                <span className="text-base font-semibold">{years}</span>
+                                <span className="text-xs text-gray-600">.{decimal}</span>
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent align="center" style={{ width: '161px' }}>
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-center block">הזן תאריך לידה</Label>
+                          <Input 
+                            placeholder="DDMMYY או DDMMYYYY"
+                            className="w-full"
+                            maxLength={10}
+                            value={date}
+                            onChange={(e) => {
+                              setDateError('');
+                              let value = e.target.value.replace(/\D/g, '');
+                              const currentLength = date.replace(/\D/g, '').length;
+
+                              if (value.length === 6 && value.length >= currentLength) {
+                                const yearPart = parseInt(value.slice(4, 6));
+                                const fullYear = yearPart >= 27 ? '19' + value.slice(4, 6) : '20' + value.slice(4, 6);
+                                value = value.slice(0, 4) + fullYear;
+                              }
+
+                              if (value.length >= 2) value = value.slice(0, 2) + '-' + value.slice(2);
+                              if (value.length >= 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                              const formattedValue = value.slice(0, 10);
+
+                              if (formattedValue.length === 10) {
+                                const [day, month, year] = formattedValue.split('-').map(Number);
+                                if (month < 1 || month > 12) {
+                                  setDateError('נא להזין תאריך חוקי');
+                                  return;
+                                }
+                                const daysInMonth = new Date(year, month, 0).getDate();
+                                if (day < 1 || day > daysInMonth) {
+                                  setDateError('נא להזין תאריך חוקי');
+                                  return;
+                                }
+                              }
+
+                              const newDates = [...childrenDates];
+                              newDates[index] = formattedValue;
+                              setChildrenDates(newDates);
+
+                              if (formattedValue.length === 10 && index === childrenDates.length - 1) {
+                                setChildrenDates([...newDates, '']);
+                              }
+                            }}
+                          />
+                          {dateError && (
+                            <p className="text-sm text-red-600">{dateError}</p>
+                          )}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
+                  <Input 
+                    type="number"
+                    value={manualNumChildren}
+                    onChange={(e) => {
+                      setManualNumChildren(e.target.value);
+                      const actualCount = childrenDates.filter(d => d.length === 10).length;
+                      if (e.target.value && parseInt(e.target.value) !== actualCount) {
+                        setShowChildrenWarning(true);
+                        setTimeout(() => setShowChildrenWarning(false), 3000);
+                      }
+                    }}
+                    placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
+                    className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                      manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
+                        ? 'border-red-500 bg-red-50'
+                        : ''
+                    }`}
+                    style={{ MozAppearance: 'textfield' }}
+                  />
+                  <Label className="text-sm whitespace-nowrap">{personFields.num_children_under_18}</Label>
+                  <Input 
+                    type="number"
+                    value={manualNumChildrenUnder18}
+                    onChange={(e) => {
+                      setManualNumChildrenUnder18(e.target.value);
+                      const actualCount = childrenDates.filter(d => {
+                        if (d.length !== 10) return false;
+                        const [day, month, year] = d.split('-').map(Number);
+                        const birthDate = new Date(year, month - 1, day);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                          age--;
+                        }
+                        return age < 18;
+                      }).length;
+                      if (e.target.value && parseInt(e.target.value) !== actualCount) {
+                        setShowChildrenWarning(true);
+                        setTimeout(() => setShowChildrenWarning(false), 3000);
+                      }
+                    }}
+                    placeholder={childrenDates.filter(d => {
+                      if (d.length !== 10) return false;
+                      const [day, month, year] = d.split('-').map(Number);
+                      const birthDate = new Date(year, month - 1, day);
+                      const today = new Date();
+                      let age = today.getFullYear() - birthDate.getFullYear();
+                      const monthDiff = today.getMonth() - birthDate.getMonth();
+                      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                      }
+                      return age < 18;
+                    }).length.toString()}
+                    className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                      manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
+                        if (d.length !== 10) return false;
+                        const [day, month, year] = d.split('-').map(Number);
+                        const birthDate = new Date(year, month - 1, day);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                          age--;
+                        }
+                        return age < 18;
+                      }).length
+                        ? 'border-red-500 bg-red-50'
+                        : ''
+                    }`}
+                    style={{ MozAppearance: 'textfield' }}
+                  />
+                  <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
+                  <Input 
+                    type="number" 
+                    value={numSiblings}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNumSiblings(value);
+                      updatePersonMutation.mutate({ 
+                        custom_data: { ...(person?.custom_data || {}), num_siblings: value }
+                      });
+                    }}
+                    className="w-12 text-center h-8" 
+                  />
+                </div>
+              </div>
+              {showChildrenWarning && (
+                <div className="text-red-600 text-sm font-medium text-center mt-2">
+                  נא למלא תאריכי לידה של הילדים
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
