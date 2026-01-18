@@ -676,7 +676,7 @@ export default function PersonDetailsView({ personId }) {
           ) : (
             <ChevronUp className="w-5 h-5 text-gray-500" />
           )}
-          <h2 className="text-lg font-bold text-gray-900">העלאת תעודת זהות</h2>
+          <h2 className="text-lg font-bold text-gray-900">תעודת זהות</h2>
         </button>
 
         {/* Content */}
