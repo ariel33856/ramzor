@@ -440,18 +440,19 @@ export default function Dashboard() {
 
 
 
-              <FieldsSelector 
-                selectedFields={selectedFields}
-                onFieldToggle={handleFieldToggle}
-              />
+              <div className="flex gap-2 order-last">
+                <FieldsSelector 
+                  selectedFields={selectedFields}
+                  onFieldToggle={handleFieldToggle}
+                />
 
-              <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">
-                    <GripVertical className="w-5 h-5 ml-2" />
-                    סדר עמודות
-                  </Button>
-                </PopoverTrigger>
+                <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline">
+                      <GripVertical className="w-5 h-5 ml-2" />
+                      סדר עמודות
+                    </Button>
+                  </PopoverTrigger>
                 <PopoverContent className="w-80" align="start">
                   <div className="space-y-3">
                     <div>
