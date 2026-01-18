@@ -365,6 +365,24 @@ export default function PersonDetailsView({ personId }) {
               className="text-xl font-bold w-40"
             />
           </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
+            <Input
+              value={basicData.phone}
+              onChange={(e) => handleBasicDataChange('phone', e.target.value)}
+              placeholder={personFields.phone}
+              className="text-xl font-bold w-40"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
+            <Input
+              value={basicData.email}
+              onChange={(e) => handleBasicDataChange('email', e.target.value)}
+              placeholder={personFields.email}
+              className="text-xl font-bold w-40"
+            />
+          </div>
         </div>
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
