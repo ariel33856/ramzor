@@ -77,7 +77,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setExtractedData(result);
-      onDataExtracted?.(result);
+      
+      // Call callback immediately with the data
+      if (onDataExtracted) {
+        onDataExtracted(result);
+      }
       
       if (result.document_type === 'both') {
         setShowMessage(true);
@@ -133,7 +137,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       const mergedData = { ...extractedData, ...result };
       setExtractedData(mergedData);
       setDetectionResult('both');
-      onDataExtracted?.(mergedData);
+      
+      // Call callback immediately with merged data
+      if (onDataExtracted) {
+        onDataExtracted(mergedData);
+      }
       
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
