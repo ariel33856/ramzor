@@ -810,47 +810,45 @@ export default function PersonDetailsView({ personId }) {
 
             {/* Children Data Section */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
-                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
-                  <SelectTrigger className="w-20">
-                    <SelectValue placeholder="בחר"/>
-                  </SelectTrigger>
-                  <SelectContent className="min-w-[5rem]">
-                    {gender === 'female' ? (
-                      <>
-                        <SelectItem value="married" className="justify-center text-center">נשואה</SelectItem>
-                        <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
-                        <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
-                        <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
-                        <SelectItem value="separated" className="justify-center text-center">פרודה</SelectItem>
-                        <SelectItem value="common_law" className="justify-center">
-                          <div className="flex flex-col items-center leading-tight text-center">
-                            <span>ידועה</span>
-                            <span>בציבור</span>
-                          </div>
-                        </SelectItem>
-                      </>
-                    ) : (
-                      <>
-                        <SelectItem value="married" className="justify-center text-center">נשוי</SelectItem>
-                        <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
-                        <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
-                        <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
-                        <SelectItem value="separated" className="justify-center text-center">פרוד</SelectItem>
-                        <SelectItem value="common_law" className="justify-center">
-                          <div className="flex flex-col items-center leading-tight text-center">
-                            <span>ידוע</span>
-                            <span>בציבור</span>
-                          </div>
-                        </SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 flex-wrap">
+                  <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
+                  <Select value={maritalStatus} onValueChange={setMaritalStatus}>
+                    <SelectTrigger className="w-20">
+                      <SelectValue placeholder="בחר"/>
+                    </SelectTrigger>
+                    <SelectContent className="min-w-[5rem]">
+                      {gender === 'female' ? (
+                        <>
+                          <SelectItem value="married" className="justify-center text-center">נשואה</SelectItem>
+                          <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
+                          <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
+                          <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
+                          <SelectItem value="separated" className="justify-center text-center">פרודה</SelectItem>
+                          <SelectItem value="common_law" className="justify-center">
+                            <div className="flex flex-col items-center leading-tight text-center">
+                              <span>ידועה</span>
+                              <span>בציבור</span>
+                            </div>
+                          </SelectItem>
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem value="married" className="justify-center text-center">נשוי</SelectItem>
+                          <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
+                          <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
+                          <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
+                          <SelectItem value="separated" className="justify-center text-center">פרוד</SelectItem>
+                          <SelectItem value="common_law" className="justify-center">
+                            <div className="flex flex-col items-center leading-tight text-center">
+                              <span>ידוע</span>
+                              <span>בציבור</span>
+                            </div>
+                          </SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
                   <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}:</Label>
                   {[...childrenDates]
                     .sort((a, b) => {
