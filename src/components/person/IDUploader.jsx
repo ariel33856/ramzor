@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Upload, Loader2, X, Download } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted, initialData }) {
+export default function IDUploader({ onDataExtracted, initialData, gender, setGender }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
   const [extractedData, setExtractedData] = useState(initialData || null);
@@ -405,7 +406,15 @@ export default function IDUploader({ onDataExtracted, initialData }) {
         </div>
         <div>
           <Label className="text-xs text-gray-600">מין</Label>
-          <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
+          <Select value={gender} onValueChange={setGender}>
+            <SelectTrigger className="h-9 bg-white">
+              <SelectValue placeholder="בחר"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">זכר</SelectItem>
+              <SelectItem value="female">נקבה</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="md:col-span-2">
           <Label className="text-xs text-gray-600">כתובת</Label>

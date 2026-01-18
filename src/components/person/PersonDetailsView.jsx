@@ -804,20 +804,10 @@ export default function PersonDetailsView({ personId }) {
         {/* Content */}
         {!isCollapsed3 && (
           <div className="p-6 space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
-              <Select value={gender} onValueChange={setGender}>
-                <SelectTrigger className="w-[70px] [&>span]:pr-4">
-                  <SelectValue placeholder="בחר"/>
-                </SelectTrigger>
-                <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
-                  <SelectItem value="male">זכר</SelectItem>
-                  <SelectItem value="female">נקבה</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
+              gender={gender}
+              setGender={setGender}
               onDataExtracted={(data) => {
                 if (!data) {
                   const customData = { ...(person?.custom_data || {}) };
