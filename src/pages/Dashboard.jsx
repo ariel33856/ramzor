@@ -415,7 +415,7 @@ export default function Dashboard() {
   return (
   <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
     {/* Filters */}
-    <div className="flex-shrink-0 z-50 bg-white p-4 shadow-sm border-b border-gray-100">
+    <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
 
