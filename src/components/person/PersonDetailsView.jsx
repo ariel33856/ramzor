@@ -1063,13 +1063,38 @@ export default function PersonDetailsView({ personId }) {
           ) : (
             <ChevronUp className="w-5 h-5 text-gray-500" />
           )}
-          <h2 className="text-lg font-bold text-gray-900">כרטיסיה נוספת</h2>
+          <h2 className="text-lg font-bold text-gray-900">תעודת זהות</h2>
         </button>
 
         {/* Content */}
         {!isCollapsed2 && (
           <div className="p-6">
-            <p className="text-gray-600">תוכן הכרטיסיה השנייה...</p>
+            <IDUploader 
+              initialData={person?.custom_data?.id_upload_data}
+              onDataExtracted={(data) => {
+                if (!data) {
+                  const customData = { ...(person?.custom_data || {}) };
+                  delete customData.id_upload_data;
+                  updatePersonMutation.mutate({ custom_data: customData });
+                  return;
+                }
+                
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                if (data.address) updates.address = data.address;
+                if (data.birth_date) updates.phone = data.birth_date;
+                if (data.id_issue_date) updates.email = data.id_issue_date;
+                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
+                
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) setGender(data.gender);
+                
+                const customData = { ...(person?.custom_data || {}), id_upload_data: data };
+                updatePersonMutation.mutate({ ...updates, custom_data: customData });
+              }}
+            />
           </div>
         )}
       </div>
