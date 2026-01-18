@@ -34,7 +34,7 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2 mr-auto">
+        <Button variant="outline" className="gap-2">
           <ChevronDown className="w-4 h-4" />
           בחר שדות להצגה
         </Button>
