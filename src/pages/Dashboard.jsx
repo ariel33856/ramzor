@@ -720,7 +720,7 @@ export default function Dashboard() {
                         </td>
                       );
                     })}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 flex items-center justify-center">
                       <Button
                         variant="ghost"
                         size="icon"
