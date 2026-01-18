@@ -205,6 +205,40 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     onDataExtracted?.(null);
   };
 
+  const downloadAsPDF = async (fileUrl, fileType, fileName = 'document.pdf') => {
+    try {
+      if (fileType?.includes('pdf')) {
+        // If it's already a PDF, just download it
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = fileName;
+        link.click();
+      } else {
+        // If it's an image, convert to PDF
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = fileUrl;
+        
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+
+        const pdf = new jsPDF({
+          orientation: img.width > img.height ? 'landscape' : 'portrait',
+          unit: 'px',
+          format: [img.width, img.height]
+        });
+
+        pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
+        pdf.save(fileName);
+      }
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      setError('שגיאה בהורדת הקובץ');
+    }
+  };
+
 
 
   return (
@@ -253,6 +287,17 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
+              
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadAsPDF(preview, fileType, 'תעודת-זהות.pdf');
+                }}
+                className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                size="icon"
+              >
+                <Download className="w-4 h-4" />
+              </Button>
               
               {uploading && (
                 <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
@@ -319,6 +364,17 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   size="icon"
                 >
                   <X className="w-4 h-4" />
+                </Button>
+                
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadAsPDF(preview2, fileType2, 'ספח-תעודת-זהות.pdf');
+                  }}
+                  className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                  size="icon"
+                >
+                  <Download className="w-4 h-4" />
                 </Button>
                 
                 {uploading2 && (
