@@ -298,6 +298,14 @@ export default function PersonDetailsView({ personId }) {
         if (person.custom_data.num_siblings) {
           setNumSiblings(person.custom_data.num_siblings);
         }
+        
+        // Load children data from custom_data
+        if (person.custom_data.children_birth_dates && Array.isArray(person.custom_data.children_birth_dates)) {
+          setChildrenDates([...person.custom_data.children_birth_dates, '']);
+        }
+        if (person.custom_data.num_children) {
+          setManualNumChildren(String(person.custom_data.num_children));
+        }
       }
     }
   }, [person]);
@@ -904,6 +912,16 @@ export default function PersonDetailsView({ personId }) {
                               newDates[index] = formattedValue;
                               setChildrenDates(newDates);
 
+                              // Save to database
+                              const validDates = newDates.filter(d => d.length === 10);
+                              updatePersonMutation.mutate({ 
+                                custom_data: { 
+                                  ...(person?.custom_data || {}), 
+                                  children_birth_dates: validDates,
+                                  num_children: validDates.length
+                                }
+                              });
+
                               if (formattedValue.length === 10 && index === childrenDates.length - 1) {
                                 setChildrenDates([...newDates, '']);
                               }
@@ -929,6 +947,13 @@ export default function PersonDetailsView({ personId }) {
                         setShowChildrenWarning(true);
                         setTimeout(() => setShowChildrenWarning(false), 3000);
                       }
+                      // Save to database
+                      updatePersonMutation.mutate({ 
+                        custom_data: { 
+                          ...(person?.custom_data || {}), 
+                          num_children: parseInt(e.target.value) || 0
+                        }
+                      });
                     }}
                     placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
                     className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
