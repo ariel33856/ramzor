@@ -530,17 +530,17 @@ export default function Dashboard() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
-                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
-                    <th className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-2 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-2 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    <th className="px-6 py-2 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
                   </tr>
                 </thead>
                 <tbody>
                   {[1, 2, 3, 4, 5].map(i => (
-                    <tr key={i} className="border-b border-gray-100">
-                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
-                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
-                      <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                    <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}>
+                      <td className="px-6 py-2"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-2"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      <td className="px-6 py-2"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
                     </tr>
                   ))}
                 </tbody>
