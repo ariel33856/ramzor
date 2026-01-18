@@ -31,6 +31,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     if (initialData?.file_url_2) {
       setPreview2(initialData.file_url_2 + '#toolbar=0');
     }
+    if (initialData?.gender && setGender) {
+      setGender(initialData.gender);
+    }
   }, [initialData]);
 
   const handleFileUpload = async (e) => {
@@ -398,7 +401,12 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         </div>
         <div>
           <Label className="text-xs text-gray-600">מין</Label>
-          <Select value={gender} onValueChange={setGender}>
+          <Select value={gender} onValueChange={(value) => {
+            setGender(value);
+            const updatedData = { ...extractedData, gender: value };
+            setExtractedData(updatedData);
+            onDataExtracted?.(updatedData);
+          }}>
             <SelectTrigger className="h-9 bg-white">
               <SelectValue placeholder="בחר"/>
             </SelectTrigger>
