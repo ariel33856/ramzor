@@ -705,7 +705,7 @@ export default function Dashboard() {
                       return (
                         <td 
                           key={fieldId} 
-                          className="px-6 py-4 cursor-pointer relative"
+                          className="px-6 py-2 cursor-pointer relative"
                           style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
                           onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                         >
