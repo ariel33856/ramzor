@@ -834,7 +834,7 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Children Data Section */}
-            <div className="border-t pt-6">
+            <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}:</Label>
