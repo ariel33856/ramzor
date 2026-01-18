@@ -29,7 +29,6 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     setError(null);
     setUploading(true);
     setFileType(file.type);
-    setPreview(URL.createObjectURL(file));
 
     try {
       console.log('⬆️ Uploading file...');
@@ -102,7 +101,6 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     console.log('📤 Starting second upload:', file.name);
     setUploading2(true);
     setFileType2(file.type);
-    setPreview2(URL.createObjectURL(file));
 
     try {
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
