@@ -9,17 +9,28 @@ import jsPDF from 'jspdf';
 
 export default function IDUploader({ onDataExtracted, initialData }) {
   const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(initialData?.file_url_1 || null);
+  const [preview, setPreview] = useState(null);
   const [extractedData, setExtractedData] = useState(initialData || null);
   const [fileType, setFileType] = useState(initialData?.file_type_1 || null);
   const [error, setError] = useState(null);
   const [detectionResult, setDetectionResult] = useState(initialData?.document_type || null);
-  const [preview2, setPreview2] = useState(initialData?.file_url_2 || null);
+  const [preview2, setPreview2] = useState(null);
   const [fileType2, setFileType2] = useState(initialData?.file_type_2 || null);
   const [uploading2, setUploading2] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+  const [localFile, setLocalFile] = useState(null);
+  const [localFile2, setLocalFile2] = useState(null);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
+
+  React.useEffect(() => {
+    if (initialData?.file_url_1) {
+      setPreview(initialData.file_url_1 + '#toolbar=0');
+    }
+    if (initialData?.file_url_2) {
+      setPreview2(initialData.file_url_2 + '#toolbar=0');
+    }
+  }, [initialData]);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -29,6 +40,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     setError(null);
     setUploading(true);
     setFileType(file.type);
+    setLocalFile(file);
+    setPreview(URL.createObjectURL(file));
 
     try {
       console.log('⬆️ Uploading file...');
@@ -73,7 +86,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
 
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
-      setPreview(file_url);
+      setPreview(file_url + '#toolbar=0');
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
@@ -101,6 +114,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     console.log('📤 Starting second upload:', file.name);
     setUploading2(true);
     setFileType2(file.type);
+    setLocalFile2(file);
+    setPreview2(URL.createObjectURL(file));
 
     try {
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
@@ -130,7 +145,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       });
 
       // Merge data
-      setPreview2(file_url);
+      setPreview2(file_url + '#toolbar=0');
       const mergedData = { 
         ...extractedData, 
         ...result, 
@@ -239,10 +254,10 @@ export default function IDUploader({ onDataExtracted, initialData }) {
               )}
               
               {fileType === 'application/pdf' ? (
-                <iframe 
+                <embed 
                   src={preview} 
+                  type="application/pdf"
                   className="w-full h-full min-h-[280px] rounded-xl"
-                  title="PDF Preview"
                 />
               ) : (
                 <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
@@ -303,10 +318,10 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 )}
                 
                 {fileType2 === 'application/pdf' ? (
-                  <iframe 
+                  <embed 
                     src={preview2} 
+                    type="application/pdf"
                     className="w-full h-full min-h-[280px] rounded-xl"
-                    title="PDF Preview 2"
                   />
                 ) : (
                   <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
