@@ -802,9 +802,27 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 if (data.id_issue_date) updates.id_issue_date = data.id_issue_date;
                 if (data.id_expiry_date) updates.id_expiry_date = data.id_expiry_date;
                 setBasicData(prev => ({ ...prev, ...updates }));
+                
+                const newGender = data.gender || gender;
                 if (data.gender) setGender(data.gender);
+                
+                let newChildrenDates = childrenDates;
                 if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
-                  setChildrenDates(prev => [...data.children_birth_dates, ...prev.filter(d => d.length === 10), '']);
+                  newChildrenDates = [...data.children_birth_dates, ...childrenDates.filter(d => d.length === 10), ''];
+                  setChildrenDates(newChildrenDates);
+                }
+
+                // שמירה אוטומטית אם זה איש קשר קיים
+                if (personId) {
+                  const customDataUpdates = {
+                    ...(person?.custom_data || {}),
+                    gender: newGender,
+                    extracted_children_dates: newChildrenDates.filter(d => d.length === 10)
+                  };
+                  updatePersonMutation.mutate({
+                    ...updates,
+                    custom_data: customDataUpdates
+                  });
                 }
               }}
             />
