@@ -438,34 +438,7 @@ export default function Dashboard() {
             
 
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="סטטוס" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">כל הסטטוסים</SelectItem>
-                <SelectItem value="new">חדש</SelectItem>
-                <SelectItem value="documents_pending">ממתין למסמכים</SelectItem>
-                <SelectItem value="documents_review">בבדיקה</SelectItem>
-                <SelectItem value="financial_analysis">ניתוח פיננסי</SelectItem>
-                <SelectItem value="bank_submission">הוגש לבנק</SelectItem>
-                <SelectItem value="approved">אושר</SelectItem>
-                <SelectItem value="rejected">נדחה</SelectItem>
-              </SelectContent>
-            </Select>
 
-            <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="דחיפות" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">כל הדחיפויות</SelectItem>
-                <SelectItem value="low">נמוכה</SelectItem>
-                <SelectItem value="medium">בינונית</SelectItem>
-                <SelectItem value="high">גבוהה</SelectItem>
-                <SelectItem value="critical">קריטית</SelectItem>
-              </SelectContent>
-              </Select>
 
               <FieldsSelector 
                 selectedFields={selectedFields}
