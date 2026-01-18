@@ -263,11 +263,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
               {fileType === 'application/pdf' ? (
                 <iframe 
                   src={preview} 
-                  className="w-full h-full min-h-[280px]"
+                  className="w-full h-full min-h-[280px] rounded-xl"
                   title="PDF Preview"
                 />
               ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-cover" />
+                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
               )}
             </>
           ) : (
@@ -327,11 +327,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 {fileType2 === 'application/pdf' ? (
                   <iframe 
                     src={preview2} 
-                    className="w-full h-full min-h-[280px]"
+                    className="w-full h-full min-h-[280px] rounded-xl"
                     title="PDF Preview 2"
                   />
                 ) : (
-                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-cover" />
+                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
                 )}
               </>
             ) : (
