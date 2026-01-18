@@ -685,6 +685,34 @@ export default function PersonDetailsView({ personId }) {
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 pb-6">
         <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
+          <Input
+            value={basicData.phone || ''}
+            onChange={(e) => handleBasicDataChange('phone', e.target.value)}
+            placeholder="DD-MM-YYYY"
+            className="flex-1"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">גיל</Label>
+          <Input
+            value={(() => {
+              if (!basicData.phone || basicData.phone.length !== 10) return '';
+              const [day, month, year] = basicData.phone.split('-').map(Number);
+              const birthDate = new Date(year, month - 1, day);
+              const today = new Date();
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+              }
+              return age.toString();
+            })()}
+            readOnly
+            className="flex-1 bg-gray-50"
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <Label className="text-sm whitespace-nowrap">{personFields.residential_city}</Label>
           <Input
             value={basicData.residential_city || ''}
