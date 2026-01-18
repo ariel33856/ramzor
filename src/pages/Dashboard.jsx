@@ -440,10 +440,19 @@ export default function Dashboard() {
 
 
 
+              <div className="ml-auto flex gap-2">
               <FieldsSelector 
                 selectedFields={selectedFields}
                 onFieldToggle={handleFieldToggle}
               />
+
+              <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <GripVertical className="w-5 h-5 ml-2" />
+                    סדר עמודות
+                  </Button>
+                </PopoverTrigger>
 
               <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
                 <PopoverTrigger asChild>
