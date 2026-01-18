@@ -680,7 +680,7 @@ export default function Dashboard() {
                     </th>
                     );
                     })}
-                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
+                    <th className="px-6 py-2 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
         </tr>
       </thead>
 
