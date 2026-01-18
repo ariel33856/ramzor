@@ -635,10 +635,34 @@ export default function Dashboard() {
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-80" align="center">
-                            <div className="space-y-3">
-                        <h4 className="font-semibold text-sm">
-                          סנן לפי {field?.label || fieldId}
-                        </h4>
+                             <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                          <h4 className="font-semibold text-sm">
+                            סנן לפי {field?.label || fieldId}
+                          </h4>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => {
+                                setSortField(fieldId);
+                                setSortDirection('asc');
+                              }}
+                              className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                              title="מהקטן לגדול"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSortField(fieldId);
+                                setSortDirection('desc');
+                              }}
+                              className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                              title="מהגדול לקטן"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                         
                         {/* Range Filter */}
                         <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
