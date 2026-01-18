@@ -121,11 +121,23 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
     linkedAccounts.includes(acc.id)
   );
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const updatePersonMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.update(personId, data),
+    mutationFn: (data) => {
+      console.log('💾 Saving person data:', data);
+      setIsSaving(true);
+      return base44.entities.Person.update(personId, data);
+    },
     onSuccess: () => {
+      console.log('✅ Person data saved successfully');
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+      setIsSaving(false);
+    },
+    onError: (error) => {
+      console.error('❌ Error saving person data:', error);
+      setIsSaving(false);
     }
   });
 
@@ -447,6 +459,14 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
           </Button>
         </div>
       )}
+      {/* Saving Indicator */}
+      {isSaving && (
+        <div className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span className="font-medium">שומר...</span>
+        </div>
+      )}
+
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex gap-4 items-center">
@@ -838,6 +858,7 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                     gender: newGender,
                     extracted_children_dates: newChildrenDates.filter(d => d.length === 10)
                   };
+                  console.log('🔄 Triggering save after ID upload...');
                   updatePersonMutation.mutate({
                     ...updates,
                     custom_data: customDataUpdates
