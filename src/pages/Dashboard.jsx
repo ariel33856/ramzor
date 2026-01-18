@@ -447,7 +447,7 @@ export default function Dashboard() {
 
               <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">
+                  <Button variant="outline" className="ml-auto">
                     <GripVertical className="w-5 h-5 ml-2" />
                     סדר עמודות
                   </Button>
