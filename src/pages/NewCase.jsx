@@ -262,15 +262,6 @@ export default function NewCase() {
                       />
                     </div>
                     <div>
-                      <Label>תעודת זהות</Label>
-                      <Input
-                        value={newBorrowerData.client_id}
-                        onChange={(e) => setNewBorrowerData({...newBorrowerData, client_id: e.target.value})}
-                        placeholder="תעודת זהות"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
                       <Label>טלפון</Label>
                       <Input
                         value={newBorrowerData.client_phone}
