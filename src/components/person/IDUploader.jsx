@@ -26,10 +26,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
   React.useEffect(() => {
     if (initialData?.file_url_1) {
-      setPreview(initialData.file_url_1 + '#toolbar=0');
+      setPreview(initialData.file_url_1);
     }
     if (initialData?.file_url_2) {
-      setPreview2(initialData.file_url_2 + '#toolbar=0');
+      setPreview2(initialData.file_url_2);
     }
     if (initialData?.gender && setGender) {
       setGender(initialData.gender);
@@ -97,7 +97,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
-      setPreview(file_url + '#toolbar=0');
+      setPreview(file_url);
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
@@ -163,7 +163,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       });
 
       // Merge data
-      setPreview2(file_url + '#toolbar=0');
+      setPreview2(file_url);
       const mergedData = { 
         ...extractedData, 
         ...result, 
@@ -272,7 +272,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
               )}
               
               <iframe 
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview.replace('#toolbar=0', ''))}&embedded=true`}
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
                 className="w-full h-full min-h-[280px] rounded-xl"
               />
             </>
@@ -331,7 +331,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 )}
                 
                 <iframe 
-                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2.replace('#toolbar=0', ''))}&embedded=true`}
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
                   className="w-full h-full min-h-[280px] rounded-xl"
                 />
               </>
