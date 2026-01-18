@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Upload, Loader2, X, Download } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -288,16 +289,23 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 </AlertDialogContent>
               </AlertDialog>
               
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  downloadAsPDF(preview, fileType, 'תעודת-זהות.pdf');
-                }}
-                className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
-                size="icon"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadAsPDF(preview, fileType, 'תעודת-זהות.pdf');
+                      }}
+                      className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                      size="icon"
+                    >
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>הורד כקובץ PDF</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               
               {uploading && (
                 <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
@@ -366,16 +374,23 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   <X className="w-4 h-4" />
                 </Button>
                 
-                <Button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    downloadAsPDF(preview2, fileType2, 'ספח-תעודת-זהות.pdf');
-                  }}
-                  className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
-                  size="icon"
-                >
-                  <Download className="w-4 h-4" />
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadAsPDF(preview2, fileType2, 'ספח-תעודת-זהות.pdf');
+                        }}
+                        className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                        size="icon"
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>הורד כקובץ PDF</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 
                 {uploading2 && (
                   <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
