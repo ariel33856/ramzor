@@ -508,7 +508,7 @@ export default function Dashboard() {
                     </DragDropContext>
                   </div>
                 </PopoverContent>
-              </Popover>
+                </Popover>
               </div>
               </div>
               </div>
