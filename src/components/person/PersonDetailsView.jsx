@@ -346,42 +346,46 @@ export default function PersonDetailsView({ personId }) {
     <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
-        <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
-            <Input
-              value={basicData.first_name}
-              onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-              placeholder={personFields.first_name}
-              className="text-xl font-bold w-40"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
+              <Input
+                value={basicData.first_name}
+                onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                placeholder={personFields.first_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
+              <Input
+                value={basicData.last_name}
+                onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                placeholder={personFields.last_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
-            <Input
-              value={basicData.last_name}
-              onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-              placeholder={personFields.last_name}
-              className="text-xl font-bold w-40"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
-            <Input
-              value={basicData.phone}
-              onChange={(e) => handleBasicDataChange('phone', e.target.value)}
-              placeholder={personFields.phone}
-              className="text-xl font-bold w-40"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
-            <Input
-              value={basicData.email}
-              onChange={(e) => handleBasicDataChange('email', e.target.value)}
-              placeholder={personFields.email}
-              className="text-xl font-bold w-40"
-            />
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
+              <Input
+                value={basicData.phone}
+                onChange={(e) => handleBasicDataChange('phone', e.target.value)}
+                placeholder={personFields.phone}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
+              <Input
+                value={basicData.email}
+                onChange={(e) => handleBasicDataChange('email', e.target.value)}
+                placeholder={personFields.email}
+                className="text-xl font-bold w-40"
+              />
+            </div>
           </div>
         </div>
         <div className="mr-auto flex items-center gap-2">
