@@ -29,6 +29,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     setError(null);
     setUploading(true);
     setFileType(file.type);
+    setPreview(URL.createObjectURL(file));
 
     try {
       console.log('⬆️ Uploading file...');
@@ -101,6 +102,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     console.log('📤 Starting second upload:', file.name);
     setUploading2(true);
     setFileType2(file.type);
+    setPreview2(URL.createObjectURL(file));
 
     try {
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
@@ -172,29 +174,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
     onDataExtracted?.(null);
   };
 
-  const downloadAsPDF = async (previewUrl, fileTypeParam) => {
-    if (fileTypeParam === 'application/pdf') {
-      // אם זה כבר PDF, פשוט להוריד אותו
-      const link = document.createElement('a');
-      link.href = previewUrl;
-      link.download = 'document.pdf';
-      link.click();
-    } else {
-      // אם זה תמונה, להמיר ל-PDF
-      const img = new Image();
-      img.src = previewUrl;
-      await new Promise((resolve) => { img.onload = resolve; });
-      
-      const pdf = new jsPDF({
-        orientation: img.width > img.height ? 'landscape' : 'portrait',
-        unit: 'px',
-        format: [img.width, img.height]
-      });
-      
-      pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
-      pdf.save('document.pdf');
-    }
-  };
+
 
   return (
     <div className="space-y-4">
