@@ -413,12 +413,11 @@ export default function Dashboard() {
   };
 
   return (
-  <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
-    {/* Filters */}
-    <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
+    <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+      {/* Filters */}
+      <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
-
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
                 <Plus className="w-5 h-5 ml-2" />
@@ -435,12 +434,8 @@ export default function Dashboard() {
                 className="pr-10 bg-white text-gray-900"
               />
             </div>
-            
 
-
-
-
-              <div className="ml-auto flex gap-2">
+            <div className="ml-auto flex gap-2">
               <FieldsSelector 
                 selectedFields={selectedFields}
                 onFieldToggle={handleFieldToggle}
@@ -515,11 +510,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-
-
-
-
-            <div className="flex-1 overflow-hidden p-1">
+      <div className="flex-1 overflow-hidden p-1">
         {/* Cases Content */}
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
@@ -555,215 +546,213 @@ export default function Dashboard() {
             <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
           </motion.div>
         ) : (
-<div className="bg-white rounded-xl shadow-sm border border-gray-100">
-  <div className="overflow-x-auto max-h-[100vh]">
-    <table className="w-full">
-      <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
-        <tr className="border-b-2 border-gray-200">
-          {selectedFields.map((fieldId, index) => {
-            const field = allAvailableFields.find(f => f.id === fieldId);
-            const width = columnWidths[fieldId];
-            return (
-              <th 
-                key={fieldId} 
-                className="px-6 py-2 text-right text-sm font-semibold text-gray-700 relative"
-                style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
-              >
-                <div className="flex items-center gap-2">
-                  <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
-                    <PopoverTrigger asChild>
-                      <button className="hover:text-blue-600 transition-colors cursor-pointer">
-                        {field?.label || fieldId}
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-40 p-2" align="center">
-                      <div className="space-y-1">
-
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => {
-                            setFilterDialogOpen(fieldId);
-                            setColumnMenuOpen(null);
-                          }}
-                        >
-                          <Filter className="w-4 h-4 ml-2" />
-                          סנן
-                          {columnFilters[fieldId]?.length > 0 && (
-                            <span className="mr-1 px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
-                              {columnFilters[fieldId].length}
-                            </span>
-                          )}
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
-                    <PopoverTrigger asChild>
-                      <button className="relative hover:text-blue-600 transition-colors">
-                        <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
-                        {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
-                          <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
-                            {columnFilters[fieldId]?.length || '↔'}
-                          </span>
-                        )}
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80" align="center">
-                             <div className="space-y-3">
-                        <div className="flex items-center justify-between gap-2 mb-3">
-                          <h4 className="font-semibold text-sm">
-                            סנן לפי {field?.label || fieldId}
-                          </h4>
-                          <div className="flex gap-1">
-                            <button
-                              onClick={() => {
-                                setSortField(fieldId);
-                                setSortDirection('asc');
-                              }}
-                              className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                              title="מהקטן לגדול"
-                            >
-                              <ArrowUp className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSortField(fieldId);
-                                setSortDirection('desc');
-                              }}
-                              className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                              title="מהגדול לקטן"
-                            >
-                              <ArrowDown className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                        
-                        {/* Range Filter */}
-                        <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                          <p className="text-xs font-medium text-gray-700">סינון לפי טווח</p>
-                          <div className="flex flex-col gap-2">
-                            <Input
-                              placeholder="מ..."
-                              value={rangeFilters[fieldId]?.from || ''}
-                              onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
-                              className="h-8 text-sm"
-                            />
-                            <Input
-                              placeholder="עד..."
-                              value={rangeFilters[fieldId]?.to || ''}
-                              onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Checkbox Filter */}
-                        <div className="space-y-2 max-h-60 overflow-y-auto">
-                          <p className="text-xs font-medium text-gray-700">או בחר ערכים ספציפיים:</p>
-                          {getUniqueValuesForField(fieldId).map(value => (
-                            <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                              <Checkbox
-                                checked={columnFilters[fieldId]?.includes(value) || false}
-                                onCheckedChange={() => toggleColumnFilter(fieldId, value)}
-                              />
-                              <label className="flex-1 cursor-pointer text-sm">
-                                {value}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex gap-2 justify-end pt-2 border-t">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => clearColumnFilter(fieldId)}
-                          >
-                            <FilterX className="w-4 h-4 ml-2" />
-                            נקה
-                          </Button>
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                    <div
-                      className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                        resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-100'
-                      }`}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        const th = e.currentTarget.parentElement;
-                        handleColumnResize(fieldId, e.clientX, th.offsetWidth);
-                      }}
-                    />
-                    </th>
-                    );
-                    })}
-                    <th className="px-6 py-2 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {filteredCases.map((caseData, index) => {
-          const linkedPersons = caseToPersonMap[caseData.id] || [];
-          const linkedPerson = linkedPersons[0];
-
-                  return (
-                  <motion.tr
-                    key={caseData.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.02 }}
-                    className={`border-b border-gray-100 hover:bg-opacity-75 transition-colors ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}
-                    >
-                    {selectedFields.map(fieldId => {
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[100vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <tr className="border-b-2 border-gray-200">
+                    {selectedFields.map((fieldId, index) => {
                       const field = allAvailableFields.find(f => f.id === fieldId);
-                      const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
                       const width = columnWidths[fieldId];
-
                       return (
-                        <td 
+                        <th 
                           key={fieldId} 
-                          className="px-6 py-2 cursor-pointer relative"
+                          className="px-6 py-2 text-right text-sm font-semibold text-gray-700 relative"
                           style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
-                          onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                         >
-                          {fieldId === 'account_number' ? (
-                            <div className="font-semibold text-blue-600">{value}</div>
-                          ) : fieldId === 'first_name' ? (
-                            <div className="font-semibold text-gray-900">{value}</div>
-                          ) : (
-                            <span className="text-gray-600">{value}</span>
-                          )}
-                          <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 pointer-events-none" />
-                        </td>
+                          <div className="flex items-center gap-2">
+                            <Popover open={columnMenuOpen === fieldId} onOpenChange={(open) => setColumnMenuOpen(open ? fieldId : null)}>
+                              <PopoverTrigger asChild>
+                                <button className="hover:text-blue-600 transition-colors cursor-pointer">
+                                  {field?.label || fieldId}
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-40 p-2" align="center">
+                                <div className="space-y-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="w-full justify-start"
+                                    onClick={() => {
+                                      setFilterDialogOpen(fieldId);
+                                      setColumnMenuOpen(null);
+                                    }}
+                                  >
+                                    <Filter className="w-4 h-4 ml-2" />
+                                    סנן
+                                    {columnFilters[fieldId]?.length > 0 && (
+                                      <span className="mr-1 px-1.5 py-0.5 bg-blue-500 text-white text-xs rounded-full">
+                                        {columnFilters[fieldId].length}
+                                      </span>
+                                    )}
+                                  </Button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                            <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
+                              <PopoverTrigger asChild>
+                                <button className="relative hover:text-blue-600 transition-colors">
+                                  <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
+                                  {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
+                                    <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
+                                      {columnFilters[fieldId]?.length || '↔'}
+                                    </span>
+                                  )}
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80" align="center">
+                                <div className="space-y-3">
+                                  <div className="flex items-center justify-between gap-2 mb-3">
+                                    <h4 className="font-semibold text-sm">
+                                      סנן לפי {field?.label || fieldId}
+                                    </h4>
+                                    <div className="flex gap-1">
+                                      <button
+                                        onClick={() => {
+                                          setSortField(fieldId);
+                                          setSortDirection('asc');
+                                        }}
+                                        className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                        title="מהקטן לגדול"
+                                      >
+                                        <ArrowUp className="w-4 h-4" />
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          setSortField(fieldId);
+                                          setSortDirection('desc');
+                                        }}
+                                        className={`p-1.5 rounded transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                        title="מהגדול לקטן"
+                                      >
+                                        <ArrowDown className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Range Filter */}
+                                  <div className="space-y-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                    <p className="text-xs font-medium text-gray-700">סינון לפי טווח</p>
+                                    <div className="flex flex-col gap-2">
+                                      <Input
+                                        placeholder="מ..."
+                                        value={rangeFilters[fieldId]?.from || ''}
+                                        onChange={(e) => setRangeFilter(fieldId, e.target.value, rangeFilters[fieldId]?.to || '')}
+                                        className="h-8 text-sm"
+                                      />
+                                      <Input
+                                        placeholder="עד..."
+                                        value={rangeFilters[fieldId]?.to || ''}
+                                        onChange={(e) => setRangeFilter(fieldId, rangeFilters[fieldId]?.from || '', e.target.value)}
+                                        className="h-8 text-sm"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  {/* Checkbox Filter */}
+                                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                                    <p className="text-xs font-medium text-gray-700">או בחר ערכים ספציפיים:</p>
+                                    {getUniqueValuesForField(fieldId).map(value => (
+                                      <div key={value} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
+                                        <Checkbox
+                                          checked={columnFilters[fieldId]?.includes(value) || false}
+                                          onCheckedChange={() => toggleColumnFilter(fieldId, value)}
+                                        />
+                                        <label className="flex-1 cursor-pointer text-sm">
+                                          {value}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <div className="flex gap-2 justify-end pt-2 border-t">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => clearColumnFilter(fieldId)}
+                                    >
+                                      <FilterX className="w-4 h-4 ml-2" />
+                                      נקה
+                                    </Button>
+                                  </div>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <div
+                            className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
+                              resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-100'
+                            }`}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              const th = e.currentTarget.parentElement;
+                              handleColumnResize(fieldId, e.clientX, th.offsetWidth);
+                            }}
+                          />
+                        </th>
                       );
                     })}
-                    <td className="px-6 py-2 flex items-center justify-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          archiveMutation.mutate(caseData.id);
-                        }}
-                        className="text-gray-500 hover:text-orange-600 hover:bg-orange-50"
+                    <th className="px-6 py-2 text-right text-sm font-semibold text-gray-700">העבר לארכיון</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredCases.map((caseData, index) => {
+                    const linkedPersons = caseToPersonMap[caseData.id] || [];
+                    const linkedPerson = linkedPersons[0];
+
+                    return (
+                      <motion.tr
+                        key={caseData.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.02 }}
+                        className={`border-b border-gray-100 hover:bg-opacity-75 transition-colors ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}
                       >
-                        <Archive className="w-4 h-4" />
-                      </Button>
-                    </td>
-                  </motion.tr>
-                  );
+                        {selectedFields.map(fieldId => {
+                          const field = allAvailableFields.find(f => f.id === fieldId);
+                          const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
+                          const width = columnWidths[fieldId];
+
+                          return (
+                            <td 
+                              key={fieldId} 
+                              className="px-6 py-2 cursor-pointer relative"
+                              style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
+                              onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                            >
+                              {fieldId === 'account_number' ? (
+                                <div className="font-semibold text-blue-600">{value}</div>
+                              ) : fieldId === 'first_name' ? (
+                                <div className="font-semibold text-gray-900">{value}</div>
+                              ) : (
+                                <span className="text-gray-600">{value}</span>
+                              )}
+                              <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 pointer-events-none" />
+                            </td>
+                          );
+                        })}
+                        <td className="px-6 py-2 flex items-center justify-center">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              archiveMutation.mutate(caseData.id);
+                            }}
+                            className="text-gray-500 hover:text-orange-600 hover:bg-orange-50"
+                          >
+                            <Archive className="w-4 h-4" />
+                          </Button>
+                        </td>
+                      </motion.tr>
+                    );
                   })}
-                  </tbody>
-            </table>
+                </tbody>
+              </table>
             </div>
-            </div>
-            )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
-    );
-  }
+  );
+}
