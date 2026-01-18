@@ -336,7 +336,7 @@ export default function Dashboard() {
   // Filter only non-archived cases without module_id (main accounts module)
   const cases = allCases.filter(c => !c.is_archived && !c.module_id);
 
-  const filteredCases = cases.filter(c => {
+  let filteredCases = cases.filter(c => {
     try {
       const linkedPersons = caseToPersonMap[c.id] || [];
       const linkedPerson = linkedPersons[0];
@@ -385,6 +385,25 @@ export default function Dashboard() {
       return false;
     }
   });
+
+  // Apply sorting
+  if (sortField) {
+    filteredCases = [...filteredCases].sort((a, b) => {
+      const linkedPersonsA = caseToPersonMap[a.id] || [];
+      const linkedPersonsB = caseToPersonMap[b.id] || [];
+      const linkedPersonA = linkedPersonsA[0];
+      const linkedPersonB = linkedPersonsB[0];
+      
+      const field = allAvailableFields.find(f => f.id === sortField);
+      if (!field) return 0;
+      
+      const valueA = getFieldValue(field, a, linkedPersonA, allPersons);
+      const valueB = getFieldValue(field, b, linkedPersonB, allPersons);
+      
+      const comparison = String(valueA).localeCompare(String(valueB), 'he');
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }
 
   const stats = {
     total: cases.length,
