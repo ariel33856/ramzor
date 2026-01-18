@@ -7,15 +7,15 @@ import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted }) {
+export default function IDUploader({ onDataExtracted, initialData }) {
   const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(null);
-  const [extractedData, setExtractedData] = useState(null);
-  const [fileType, setFileType] = useState(null);
+  const [preview, setPreview] = useState(initialData?.file_url_1 || null);
+  const [extractedData, setExtractedData] = useState(initialData || null);
+  const [fileType, setFileType] = useState(initialData?.file_type_1 || null);
   const [error, setError] = useState(null);
-  const [detectionResult, setDetectionResult] = useState(null);
-  const [preview2, setPreview2] = useState(null);
-  const [fileType2, setFileType2] = useState(null);
+  const [detectionResult, setDetectionResult] = useState(initialData?.document_type || null);
+  const [preview2, setPreview2] = useState(initialData?.file_url_2 || null);
+  const [fileType2, setFileType2] = useState(initialData?.file_type_2 || null);
   const [uploading2, setUploading2] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const fileInputRef = React.useRef(null);
@@ -29,7 +29,6 @@ export default function IDUploader({ onDataExtracted }) {
     setError(null);
     setUploading(true);
     setFileType(file.type);
-    setPreview(URL.createObjectURL(file));
 
     try {
       console.log('⬆️ Uploading file...');
@@ -74,8 +73,14 @@ export default function IDUploader({ onDataExtracted }) {
 
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
-      setExtractedData(result);
-      onDataExtracted?.(result);
+      setPreview(file_url);
+      const dataWithFiles = { 
+        ...result, 
+        file_url_1: file_url, 
+        file_type_1: file.type 
+      };
+      setExtractedData(dataWithFiles);
+      onDataExtracted?.(dataWithFiles);
       
       if (result.document_type === 'both') {
         setShowMessage(true);
@@ -96,7 +101,6 @@ export default function IDUploader({ onDataExtracted }) {
     console.log('📤 Starting second upload:', file.name);
     setUploading2(true);
     setFileType2(file.type);
-    setPreview2(URL.createObjectURL(file));
 
     try {
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
@@ -126,7 +130,14 @@ export default function IDUploader({ onDataExtracted }) {
       });
 
       // Merge data
-      const mergedData = { ...extractedData, ...result };
+      setPreview2(file_url);
+      const mergedData = { 
+        ...extractedData, 
+        ...result, 
+        file_url_2: file_url, 
+        file_type_2: file.type,
+        document_type: 'both'
+      };
       setExtractedData(mergedData);
       setDetectionResult('both');
       onDataExtracted?.(mergedData);
@@ -144,6 +155,11 @@ export default function IDUploader({ onDataExtracted }) {
   const clearFileOnly = () => {
     setPreview(null);
     setFileType(null);
+    const updatedData = { ...extractedData };
+    delete updatedData.file_url_1;
+    delete updatedData.file_type_1;
+    setExtractedData(updatedData);
+    onDataExtracted?.(updatedData);
   };
 
   const clearAll = () => {
@@ -153,6 +169,7 @@ export default function IDUploader({ onDataExtracted }) {
     setFileType(null);
     setFileType2(null);
     setDetectionResult(null);
+    onDataExtracted?.(null);
   };
 
   const downloadAsPDF = async (previewUrl, fileTypeParam) => {
