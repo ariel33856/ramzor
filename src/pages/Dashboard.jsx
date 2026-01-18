@@ -65,6 +65,8 @@ export default function Dashboard() {
   const [reorderDialogOpen, setReorderDialogOpen] = useState(false);
   const [columnWidths, setColumnWidths] = useState({});
   const [resizingColumn, setResizingColumn] = useState(null);
+  const [sortField, setSortField] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc');
 
 
   // Function to save preferences
