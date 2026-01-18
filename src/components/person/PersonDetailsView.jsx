@@ -722,8 +722,6 @@ export default function PersonDetailsView({ personId }) {
                 if (data.last_name) updates.last_name = data.last_name;
                 if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
                 if (data.address) updates.address = data.address;
-                if (data.id_issue_date) updates.email = data.id_issue_date;
-                if (data.id_expiry_date) updates.notes = data.id_expiry_date;
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
