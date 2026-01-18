@@ -190,7 +190,7 @@ export default function NewCase() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">חשבון חדש</h1>
-                <p className="text-gray-500">הזן שם לקוח ליצירת חשבון</p>
+                <p className="text-gray-500">צור אישר קשר כדי לפתוח עבורו חשבון או בחר מהרשימה</p>
               </div>
             </div>
 
