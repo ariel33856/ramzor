@@ -268,14 +268,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 </div>
               )}
               
-              {fileType === 'application/pdf' ? (
-                <iframe 
-                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview.replace('#toolbar=0', ''))}&embedded=true`}
-                  className="w-full h-full min-h-[280px] rounded-xl"
-                />
-              ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
-              )}
+              <iframe 
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview.replace('#toolbar=0', ''))}&embedded=true`}
+                className="w-full h-full min-h-[280px] rounded-xl"
+              />
             </>
           ) : (
             <>
@@ -331,14 +327,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </div>
                 )}
                 
-                {fileType2 === 'application/pdf' ? (
-                  <iframe 
-                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2.replace('#toolbar=0', ''))}&embedded=true`}
-                    className="w-full h-full min-h-[280px] rounded-xl"
-                  />
-                ) : (
-                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-contain rounded-xl" />
-                )}
+                <iframe 
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2.replace('#toolbar=0', ''))}&embedded=true`}
+                  className="w-full h-full min-h-[280px] rounded-xl"
+                />
               </>
             ) : (
               <>
