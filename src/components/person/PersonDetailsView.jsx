@@ -730,63 +730,46 @@ export default function PersonDetailsView({ personId }) {
             className="flex-1"
           />
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
-            <Select value={gender} onValueChange={setGender}>
-              <SelectTrigger className="w-[70px] [&>span]:pr-4">
-                <SelectValue placeholder="בחר"/>
-              </SelectTrigger>
-              <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
-                <SelectItem value="male">זכר</SelectItem>
-                <SelectItem value="female">נקבה</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
-            <Select value={maritalStatus} onValueChange={setMaritalStatus}>
-              <SelectTrigger className="w-20">
-                <SelectValue placeholder="בחר"/>
-              </SelectTrigger>
-              <SelectContent className="min-w-[5rem]">
-                {gender === 'female' ? (
-                  <>
-                    <SelectItem value="married" className="justify-center text-center">נשואה</SelectItem>
-                    <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
-                    <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
-                    <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
-                    <SelectItem value="separated" className="justify-center text-center">פרודה</SelectItem>
-                    <SelectItem value="common_law" className="justify-center">
-                      <div className="flex flex-col items-center leading-tight text-center">
-                        <span>ידועה</span>
-                        <span>בציבור</span>
-                      </div>
-                    </SelectItem>
-                  </>
-                ) : (
-                  <>
-                    <SelectItem value="married" className="justify-center text-center">נשוי</SelectItem>
-                    <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
-                    <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
-                    <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
-                    <SelectItem value="separated" className="justify-center text-center">פרוד</SelectItem>
-                    <SelectItem value="common_law" className="justify-center">
-                      <div className="flex flex-col items-center leading-tight text-center">
-                        <span>ידוע</span>
-                        <span>בציבור</span>
-                      </div>
-                    </SelectItem>
-                  </>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
+          <Select value={maritalStatus} onValueChange={setMaritalStatus}>
+            <SelectTrigger className="w-20">
+              <SelectValue placeholder="בחר"/>
+            </SelectTrigger>
+            <SelectContent className="min-w-[5rem]">
+              {gender === 'female' ? (
+                <>
+                  <SelectItem value="married" className="justify-center text-center">נשואה</SelectItem>
+                  <SelectItem value="single" className="justify-center text-center">רווקה</SelectItem>
+                  <SelectItem value="divorced" className="justify-center text-center">גרושה</SelectItem>
+                  <SelectItem value="widowed" className="justify-center text-center">אלמנה</SelectItem>
+                  <SelectItem value="separated" className="justify-center text-center">פרודה</SelectItem>
+                  <SelectItem value="common_law" className="justify-center">
+                    <div className="flex flex-col items-center leading-tight text-center">
+                      <span>ידועה</span>
+                      <span>בציבור</span>
+                    </div>
+                  </SelectItem>
+                </>
+              ) : (
+                <>
+                  <SelectItem value="married" className="justify-center text-center">נשוי</SelectItem>
+                  <SelectItem value="single" className="justify-center text-center">רווק</SelectItem>
+                  <SelectItem value="divorced" className="justify-center text-center">גרוש</SelectItem>
+                  <SelectItem value="widowed" className="justify-center text-center">אלמן</SelectItem>
+                  <SelectItem value="separated" className="justify-center text-center">פרוד</SelectItem>
+                  <SelectItem value="common_law" className="justify-center">
+                    <div className="flex flex-col items-center leading-tight text-center">
+                      <span>ידוע</span>
+                      <span>בציבור</span>
+                    </div>
+                  </SelectItem>
+                </>
+              )}
+            </SelectContent>
+          </Select>
         </div>
-
         <div></div>
-        <div></div>
-
         <div></div>
         <div></div>
       </div>
@@ -821,6 +804,18 @@ export default function PersonDetailsView({ personId }) {
         {/* Content */}
         {!isCollapsed3 && (
           <div className="p-6 space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Label className="text-sm whitespace-nowrap">{personFields.gender}</Label>
+              <Select value={gender} onValueChange={setGender}>
+                <SelectTrigger className="w-[70px] [&>span]:pr-4">
+                  <SelectValue placeholder="בחר"/>
+                </SelectTrigger>
+                <SelectContent className="min-w-0" style={{ width: 'var(--radix-select-trigger-width)' }}>
+                  <SelectItem value="male">זכר</SelectItem>
+                  <SelectItem value="female">נקבה</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               onDataExtracted={(data) => {
