@@ -569,7 +569,7 @@ export default function Dashboard() {
             return (
               <th 
                 key={fieldId} 
-                className="px-6 py-4 text-right text-sm font-semibold text-gray-700 relative"
+                className="px-6 py-2 text-right text-sm font-semibold text-gray-700 relative"
                 style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
               >
                 <div className="flex items-center gap-2">
