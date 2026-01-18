@@ -436,6 +436,105 @@ export default function Dashboard() {
               />
             </div>
             
+
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="סטטוס" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">כל הסטטוסים</SelectItem>
+                <SelectItem value="new">חדש</SelectItem>
+                <SelectItem value="documents_pending">ממתין למסמכים</SelectItem>
+                <SelectItem value="documents_review">בבדיקה</SelectItem>
+                <SelectItem value="financial_analysis">ניתוח פיננסי</SelectItem>
+                <SelectItem value="bank_submission">הוגש לבנק</SelectItem>
+                <SelectItem value="approved">אושר</SelectItem>
+                <SelectItem value="rejected">נדחה</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="דחיפות" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">כל הדחיפויות</SelectItem>
+                <SelectItem value="low">נמוכה</SelectItem>
+                <SelectItem value="medium">בינונית</SelectItem>
+                <SelectItem value="high">גבוהה</SelectItem>
+                <SelectItem value="critical">קריטית</SelectItem>
+              </SelectContent>
+              </Select>
+
+              <FieldsSelector 
+                selectedFields={selectedFields}
+                onFieldToggle={handleFieldToggle}
+              />
+
+              <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <GripVertical className="w-5 h-5 ml-2" />
+                    סדר עמודות
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="start">
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-semibold text-sm mb-1">סדר עמודות</h4>
+                      <p className="text-xs text-gray-600">גרור את השדות כדי לשנות את הסדר</p>
+                    </div>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                      <Droppable droppableId="fields">
+                        {(provided) => (
+                          <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                            className="space-y-2 max-h-80 overflow-y-auto"
+                          >
+                            {selectedFields.map((fieldId, index) => {
+                              const field = allAvailableFields.find(f => f.id === fieldId);
+                              return (
+                                <Draggable key={fieldId} draggableId={fieldId} index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      style={{
+                                        ...provided.draggableProps.style,
+                                        transform: snapshot.isDragging && provided.draggableProps.style?.transform
+                                          ? `${provided.draggableProps.style.transform} translateY(-100px) translateX(-30px)`
+                                          : provided.draggableProps.style?.transform,
+                                        transition: snapshot.isDragging ? provided.draggableProps.style?.transition : 'none'
+                                      }}
+                                      className={`
+                                        flex items-center gap-2 p-2 rounded-lg border-2
+                                        ${snapshot.isDragging 
+                                          ? 'bg-blue-50 border-blue-300 shadow-lg' 
+                                          : 'bg-white border-gray-200 hover:border-gray-300 transition-all'
+                                        }
+                                      `}
+                                    >
+                                      <GripVertical className="w-4 h-4 text-gray-400" />
+                                      <span className="flex-1 text-sm font-medium text-gray-900">
+                                        {field?.label || fieldId}
+                                      </span>
+                                      <span className="text-xs text-gray-500">#{index + 1}</span>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              );
+                            })}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
+                  </div>
+                </PopoverContent>
+              </Popover>
               </div>
               </div>
               </div>
