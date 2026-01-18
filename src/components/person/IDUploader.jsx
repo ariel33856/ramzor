@@ -359,14 +359,6 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       {/* Extracted Data Display */}
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
-          <Label className="text-xs text-gray-600">שם פרטי</Label>
-          <Input value={extractedData?.first_name || ''} readOnly className="bg-white" />
-        </div>
-        <div>
-          <Label className="text-xs text-gray-600">שם משפחה</Label>
-          <Input value={extractedData?.last_name || ''} readOnly className="bg-white" />
-        </div>
-        <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
         </div>
