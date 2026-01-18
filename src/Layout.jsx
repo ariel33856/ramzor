@@ -669,9 +669,9 @@ export default function Layout({ children, currentPageName }) {
                   )}
                   <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                  <Button variant="ghost">
+                  <Button className="bg-gradient-to-r from-indigo-800 to-blue-800 hover:from-indigo-600 hover:to-blue-600 text-white font-semibold shadow-lg transition-all">
                     ניהול
-                    <ChevronDown className="w-4 h-4 mr-2 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 mr-2" />
                   </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-auto min-w-[160px] p-2 space-y-4 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
