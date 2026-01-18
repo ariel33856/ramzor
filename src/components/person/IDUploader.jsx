@@ -268,9 +268,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
               )}
               
               {fileType === 'application/pdf' ? (
-                <embed 
-                  src={preview}
-                  type="application/pdf"
+                <iframe 
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview.replace('#toolbar=0', ''))}&embedded=true`}
                   className="w-full h-full min-h-[280px] rounded-xl"
                 />
               ) : (
@@ -332,9 +331,8 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 )}
                 
                 {fileType2 === 'application/pdf' ? (
-                  <embed 
-                    src={preview2}
-                    type="application/pdf"
+                  <iframe 
+                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2.replace('#toolbar=0', ''))}&embedded=true`}
                     className="w-full h-full min-h-[280px] rounded-xl"
                   />
                 ) : (
