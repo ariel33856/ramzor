@@ -1052,29 +1052,6 @@ export default function PersonDetailsView({ personId }) {
 
 
 
-      {/* Second Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Collapsible Header */}
-        <button
-          onClick={() => setIsCollapsed2(!isCollapsed2)}
-          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
-        >
-          {isCollapsed2 ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          )}
-          <h2 className="text-lg font-bold text-gray-900">כרטיסיה נוספת</h2>
-        </button>
-
-        {/* Content */}
-        {!isCollapsed2 && (
-          <div className="p-6">
-            <p className="text-gray-600">תוכן הכרטיסיה השנייה...</p>
-          </div>
-        )}
-      </div>
-
       {/* ID Upload Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Collapsible Header */}
