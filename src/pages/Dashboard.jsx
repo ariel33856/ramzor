@@ -756,11 +756,11 @@ export default function Dashboard() {
                   );
                   })}
                   </tbody>
-                   </table>
-                   </div>
-                   </div>
-                   )}
-                   </div>
+                  </table>
+                  </div>
+                  </div>
+                  )}
+                  </div>
                   </div>
                   </div>
                   </div>
