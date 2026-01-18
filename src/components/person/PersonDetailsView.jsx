@@ -299,11 +299,17 @@ export default function PersonDetailsView({ personId }) {
           setNumSiblings(person.custom_data.num_siblings);
         }
         
-        // Load children data from custom_data
-        if (person.custom_data.children_birth_dates && Array.isArray(person.custom_data.children_birth_dates)) {
+        // Load children data from id_upload_data first, then fallback to custom_data
+        const idUploadData = person.custom_data.id_upload_data;
+        if (idUploadData?.children_birth_dates && Array.isArray(idUploadData.children_birth_dates)) {
+          setChildrenDates([...idUploadData.children_birth_dates, '']);
+        } else if (person.custom_data.children_birth_dates && Array.isArray(person.custom_data.children_birth_dates)) {
           setChildrenDates([...person.custom_data.children_birth_dates, '']);
         }
-        if (person.custom_data.num_children) {
+        
+        if (idUploadData?.num_children) {
+          setManualNumChildren(String(idUploadData.num_children));
+        } else if (person.custom_data.num_children) {
           setManualNumChildren(String(person.custom_data.num_children));
         }
       }
@@ -914,9 +920,15 @@ export default function PersonDetailsView({ personId }) {
 
                               // Save to database
                               const validDates = newDates.filter(d => d.length === 10);
+                              const updatedIdData = {
+                                ...(person?.custom_data?.id_upload_data || {}),
+                                children_birth_dates: validDates,
+                                num_children: validDates.length
+                              };
                               updatePersonMutation.mutate({ 
                                 custom_data: { 
-                                  ...(person?.custom_data || {}), 
+                                  ...(person?.custom_data || {}),
+                                  id_upload_data: updatedIdData,
                                   children_birth_dates: validDates,
                                   num_children: validDates.length
                                 }
@@ -948,10 +960,18 @@ export default function PersonDetailsView({ personId }) {
                         setTimeout(() => setShowChildrenWarning(false), 3000);
                       }
                       // Save to database
+                      const validDates = childrenDates.filter(d => d.length === 10);
+                      const updatedIdData = {
+                        ...(person?.custom_data?.id_upload_data || {}),
+                        num_children: parseInt(e.target.value) || 0,
+                        children_birth_dates: validDates
+                      };
                       updatePersonMutation.mutate({ 
                         custom_data: { 
-                          ...(person?.custom_data || {}), 
-                          num_children: parseInt(e.target.value) || 0
+                          ...(person?.custom_data || {}),
+                          id_upload_data: updatedIdData,
+                          num_children: parseInt(e.target.value) || 0,
+                          children_birth_dates: validDates
                         }
                       });
                     }}
