@@ -440,6 +440,7 @@ export default function Dashboard() {
 
 
 
+              <div className="ml-auto flex gap-2">
               <FieldsSelector 
                 selectedFields={selectedFields}
                 onFieldToggle={handleFieldToggle}
@@ -452,6 +453,7 @@ export default function Dashboard() {
                     סדר עמודות
                   </Button>
                 </PopoverTrigger>
+
                 <PopoverContent className="w-80" align="start">
                   <div className="space-y-3">
                     <div>
@@ -508,6 +510,7 @@ export default function Dashboard() {
                   </div>
                 </PopoverContent>
               </Popover>
+              </div>
               </div>
               </div>
               </div>
@@ -759,6 +762,7 @@ export default function Dashboard() {
             </div>
             </div>
             )}
+            </div>
             </div>
             </div>
             );
