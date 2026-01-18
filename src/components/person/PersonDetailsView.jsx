@@ -1068,8 +1068,15 @@ export default function PersonDetailsView({ personId }) {
         {!isCollapsed1_5 && (
           <div className="p-6">
             <IDUploader 
+              initialData={person?.custom_data?.id_upload_data}
               onDataExtracted={(data) => {
-                if (!data) return;
+                if (!data) {
+                  // Clear the data from custom_data
+                  const customData = { ...(person?.custom_data || {}) };
+                  delete customData.id_upload_data;
+                  updatePersonMutation.mutate({ custom_data: customData });
+                  return;
+                }
                 
                 const updates = {};
                 if (data.first_name) updates.first_name = data.first_name;
@@ -1083,7 +1090,9 @@ export default function PersonDetailsView({ personId }) {
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
                 
-                updatePersonMutation.mutate(updates);
+                // Save file data to custom_data
+                const customData = { ...(person?.custom_data || {}), id_upload_data: data };
+                updatePersonMutation.mutate({ ...updates, custom_data: customData });
               }}
             />
           </div>
