@@ -256,6 +256,8 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
           onSuccess: (data) => {
           queryClient.invalidateQueries({ queryKey: ['person', data.newPerson.id] });
           queryClient.invalidateQueries({ queryKey: ['all-accounts'] });
+          // מחיקת הנתונים השמורים
+          localStorage.removeItem('temp_person_data');
           window.location.href = createPageUrl('CaseDetails') + `?id=${data.newAccount.id}&initialTab=CasePersonal`;
           }
       });
@@ -335,6 +337,21 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
   );
 
   React.useEffect(() => {
+    // טעינת נתונים מ-localStorage אם זה createAccount
+    if (createAccount && !personId) {
+      const savedData = localStorage.getItem('temp_person_data');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          setBasicData(prev => ({ ...prev, ...parsed }));
+          if (parsed.gender) setGender(parsed.gender);
+          if (parsed.children_dates) setChildrenDates([...parsed.children_dates, '']);
+        } catch (e) {
+          console.error('Failed to parse saved data:', e);
+        }
+      }
+    }
+
     if (person) {
       setBasicData({
         first_name: person.first_name || '',
@@ -802,7 +819,6 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                 if (data.birth_date) updates.birth_date = data.birth_date;
                 if (data.id_issue_date) updates.id_issue_date = data.id_issue_date;
                 if (data.id_expiry_date) updates.id_expiry_date = data.id_expiry_date;
-                setBasicData(prev => ({ ...prev, ...updates }));
                 
                 const newGender = data.gender || gender;
                 if (data.gender) setGender(data.gender);
@@ -813,7 +829,9 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                   setChildrenDates(newChildrenDates);
                 }
 
-                // שמירה אוטומטית אם זה איש קשר קיים
+                setBasicData(prev => ({ ...prev, ...updates }));
+
+                // שמירה אוטומטית
                 if (personId) {
                   const customDataUpdates = {
                     ...(person?.custom_data || {}),
@@ -824,6 +842,14 @@ export default function PersonDetailsView({ personId, createAccount, isArchive, 
                     ...updates,
                     custom_data: customDataUpdates
                   });
+                } else if (createAccount) {
+                  // שמירה ב-localStorage במצב יצירת חשבון
+                  const dataToSave = {
+                    ...updates,
+                    gender: newGender,
+                    children_dates: newChildrenDates.filter(d => d.length === 10)
+                  };
+                  localStorage.setItem('temp_person_data', JSON.stringify(dataToSave));
                 }
               }}
             />
