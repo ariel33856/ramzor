@@ -799,6 +799,11 @@ export default function PersonDetailsView({ personId }) {
                 if (!data) {
                   const customData = { ...(person?.custom_data || {}) };
                   delete customData.id_upload_data;
+                  delete customData.children_birth_dates;
+                  delete customData.num_children;
+                  setChildrenDates(['']);
+                  setManualNumChildren('');
+                  setManualNumChildrenUnder18('');
                   updatePersonMutation.mutate({ custom_data: customData });
                   return;
                 }
