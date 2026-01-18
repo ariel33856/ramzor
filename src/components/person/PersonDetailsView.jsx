@@ -289,17 +289,17 @@ export default function PersonDetailsView({ personId }) {
           value
         }));
         setCustomFields(fields);
-        
+
         // Load spouse_id from custom_data
         if (person.custom_data.spouse_id) {
           setSpouseId(person.custom_data.spouse_id);
         }
-        
+
         // Load num_siblings from custom_data
         if (person.custom_data.num_siblings) {
           setNumSiblings(person.custom_data.num_siblings);
         }
-        
+
         // Load children data from id_upload_data first, then fallback to custom_data
         const idUploadData = person.custom_data.id_upload_data;
         if (idUploadData?.children_birth_dates && Array.isArray(idUploadData.children_birth_dates)) {
@@ -307,15 +307,20 @@ export default function PersonDetailsView({ personId }) {
         } else if (person.custom_data.children_birth_dates && Array.isArray(person.custom_data.children_birth_dates)) {
           setChildrenDates([...person.custom_data.children_birth_dates, '']);
         }
-        
+
         if (idUploadData?.num_children) {
           setManualNumChildren(String(idUploadData.num_children));
         } else if (person.custom_data.num_children) {
           setManualNumChildren(String(person.custom_data.num_children));
         }
+
+        // Load additional phones from custom_data
+        if (person.custom_data.additional_phones && Array.isArray(person.custom_data.additional_phones)) {
+          setAdditionalPhones(person.custom_data.additional_phones);
+        }
       }
-    }
-  }, [person]);
+      }
+      }, [person]);
 
   React.useEffect(() => {
     if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
