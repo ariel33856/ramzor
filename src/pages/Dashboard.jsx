@@ -426,13 +426,13 @@ export default function Dashboard() {
               </Button>
             </Link>
 
-            <div className="flex-1 relative">
+            <div className="flex-1 relative max-w-xs">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 placeholder="חיפוש לפי שם או ת.ז..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10"
+                className="pr-10 bg-white text-gray-900"
               />
             </div>
             
