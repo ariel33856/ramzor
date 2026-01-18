@@ -695,7 +695,7 @@ export default function Dashboard() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.02 }}
-                    className="border-b-2 border-gray-300 hover:bg-gray-50 transition-colors"
+                    className={`border-b border-gray-100 hover:bg-opacity-75 transition-colors ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}
                     >
                     {selectedFields.map(fieldId => {
                       const field = allAvailableFields.find(f => f.id === fieldId);
