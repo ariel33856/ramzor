@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted, initialData }) {
+export default function IDUploader({ onDataExtracted }) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [extractedData, setExtractedData] = useState(initialData || null);
+  const [extractedData, setExtractedData] = useState(null);
   const [fileType, setFileType] = useState(null);
   const [error, setError] = useState(null);
   const [detectionResult, setDetectionResult] = useState(null);
@@ -42,20 +42,19 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `נתח את המסמך וחלץ מידע:
-      1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
-      2. החזר JSON עם:
-      - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
-      - first_name (שם פרטי - מהתעודה או הספח)
-      - last_name (שם משפחה - מהתעודה או הספח)
-      - id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
-      - birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
-      - id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
-      - id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
-      - gender (male או female - מהספח)
-      - address (כתובת מלאה - מהספח)
-      - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח, אם קיימים)
+1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
+2. החזר JSON עם:
+- document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+- first_name (שם פרטי - מהתעודה או הספח)
+- last_name (שם משפחה - מהתעודה או הספח)
+- id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
+- birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
+- id_issue_date (תאריך הנפקה בפורמט DD-MM-YYYY - מהתעודה)
+- id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
+- gender (male או female - מהספח)
+- address (כתובת מלאה - מהספח)
 
-      אם שדה לא נמצא, השאר אותו ריק.`,
+אם שדה לא נמצא, השאר אותו ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -68,8 +67,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
             id_issue_date: { type: "string" },
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
-            address: { type: "string" },
-            children_birth_dates: { type: "array", items: { type: "string" } }
+            address: { type: "string" }
           }
         }
       });
@@ -77,11 +75,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setExtractedData(result);
-      
-      // Call callback immediately with the data
-      if (onDataExtracted) {
-        onDataExtracted(result);
-      }
+      onDataExtracted?.(result);
       
       if (result.document_type === 'both') {
         setShowMessage(true);
@@ -110,11 +104,10 @@ export default function IDUploader({ onDataExtracted, initialData }) {
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
-      - document_type: "id_card" או "appendix" או "both"
-      - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
-      - children_birth_dates (מערך של תאריכי לידה בפורמט DD-MM-YYYY)
+- document_type: "id_card" או "appendix" או "both"
+- first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
 
-      אם שדה לא נמצא, השאר אותו ריק.`,
+אם שדה לא נמצא, השאר אותו ריק.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -127,8 +120,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
             id_issue_date: { type: "string" },
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
-            address: { type: "string" },
-            children_birth_dates: { type: "array", items: { type: "string" } }
+            address: { type: "string" }
           }
         }
       });
@@ -137,11 +129,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       const mergedData = { ...extractedData, ...result };
       setExtractedData(mergedData);
       setDetectionResult('both');
-      
-      // Call callback immediately with merged data
-      if (onDataExtracted) {
-        onDataExtracted(mergedData);
-      }
+      onDataExtracted?.(mergedData);
       
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
@@ -202,7 +190,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       <div className="grid grid-cols-2 gap-4 overflow-visible">
         {/* Upload Section 1 */}
         <div 
-          className={`border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative cursor-pointer overflow-visible ${preview ? 'h-[300px]' : 'min-h-[300px]'}`}
+          className="border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
           onClick={() => !preview && fileInputRef.current?.click()}
         >
           {preview ? (
@@ -258,11 +246,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
               {fileType === 'application/pdf' ? (
                 <iframe 
                   src={preview} 
-                  className="w-full h-full rounded-xl"
+                  className="w-full h-full min-h-[280px]"
                   title="PDF Preview"
                 />
               ) : (
-                <img src={preview} alt="ID Preview" className="w-full h-full object-cover rounded-xl" />
+                <img src={preview} alt="ID Preview" className="w-full h-full min-h-[280px] object-cover" />
               )}
             </>
           ) : (
@@ -293,7 +281,7 @@ export default function IDUploader({ onDataExtracted, initialData }) {
         {/* Upload Section 2 - Conditional */}
         {detectionResult && detectionResult !== 'both' && (
           <div 
-            className={`border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative cursor-pointer overflow-visible ${preview2 ? 'h-[300px]' : 'min-h-[300px]'}`}
+            className="border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
             onClick={() => !preview2 && fileInputRef2.current?.click()}
           >
             {preview2 ? (
@@ -322,11 +310,11 @@ export default function IDUploader({ onDataExtracted, initialData }) {
                 {fileType2 === 'application/pdf' ? (
                   <iframe 
                     src={preview2} 
-                    className="w-full h-full rounded-xl"
+                    className="w-full h-full min-h-[280px]"
                     title="PDF Preview 2"
                   />
                 ) : (
-                  <img src={preview2} alt="Second Document" className="w-full h-full object-cover rounded-xl" />
+                  <img src={preview2} alt="Second Document" className="w-full h-full min-h-[280px] object-cover" />
                 )}
               </>
             ) : (
@@ -363,6 +351,14 @@ export default function IDUploader({ onDataExtracted, initialData }) {
       {/* Extracted Data Display */}
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
+          <Label className="text-xs text-gray-600">שם פרטי</Label>
+          <Input value={extractedData?.first_name || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">שם משפחה</Label>
+          <Input value={extractedData?.last_name || ''} readOnly className="bg-white" />
+        </div>
+        <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
         </div>
@@ -378,7 +374,10 @@ export default function IDUploader({ onDataExtracted, initialData }) {
           <Label className="text-xs text-gray-600">תוקף</Label>
           <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
         </div>
-
+        <div>
+          <Label className="text-xs text-gray-600">מין</Label>
+          <Input value={extractedData?.gender === 'male' ? 'זכר' : extractedData?.gender === 'female' ? 'נקבה' : ''} readOnly className="bg-white" />
+        </div>
         <div className="md:col-span-1">
           <Label className="text-xs text-gray-600">כתובת</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />

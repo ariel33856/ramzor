@@ -19,7 +19,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import IDUploader from '@/components/person/IDUploader';
 
 export default function NewCase() {
   const navigate = useNavigate();
@@ -32,10 +31,7 @@ export default function NewCase() {
     last_name: '',
     client_id: '',
     client_phone: '',
-    client_email: '',
-    address: '',
-    gender: 'male',
-    children_birth_dates: []
+    client_email: ''
   });
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -111,19 +107,14 @@ export default function NewCase() {
     
     setSaving(true);
 
-    // Create new person in Person entity with all extracted data
+    // Create new person in Person entity
     const newPerson = await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
       phone: newBorrowerData.client_phone || '',
       email: newBorrowerData.client_email || '',
-      address: newBorrowerData.address || '',
-      type: 'איש קשר',
-      custom_data: {
-        gender: newBorrowerData.gender || 'male',
-        extracted_children_dates: newBorrowerData.children_birth_dates || []
-      }
+      type: 'איש קשר'
     });
 
     // Create new MortgageCase
@@ -207,13 +198,7 @@ export default function NewCase() {
               {!showNewBorrowerForm ? (
                 <>
                   <Button
-                    onClick={() => {
-                      const params = new URLSearchParams();
-                      params.set('createAccount', 'true');
-                      if (isArchive) params.set('archive', 'true');
-                      if (moduleId) params.set('moduleId', moduleId);
-                      navigate(createPageUrl('PersonDetails') + '?' + params.toString());
-                    }}
+                    onClick={() => setShowNewBorrowerForm(true)}
                     className="w-full h-12 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
                     <Plus className="w-5 h-5 ml-2" />
@@ -256,30 +241,6 @@ export default function NewCase() {
                 </>
               ) : (
                 <>
-                  <IDUploader 
-                    initialData={{
-                      first_name: newBorrowerData.client_name,
-                      last_name: newBorrowerData.last_name,
-                      id_number: newBorrowerData.client_id,
-                      address: newBorrowerData.address,
-                      gender: newBorrowerData.gender,
-                      children_birth_dates: newBorrowerData.children_birth_dates || []
-                    }}
-                    onDataExtracted={(data) => {
-                      setNewBorrowerData({
-                        ...newBorrowerData,
-                        client_name: data.first_name || newBorrowerData.client_name,
-                        last_name: data.last_name || newBorrowerData.last_name,
-                        client_id: data.id_number || newBorrowerData.client_id,
-                        client_phone: newBorrowerData.client_phone,
-                        client_email: newBorrowerData.client_email,
-                        address: data.address || newBorrowerData.address,
-                        gender: data.gender || newBorrowerData.gender,
-                        children_birth_dates: data.children_birth_dates || newBorrowerData.children_birth_dates
-                      });
-                    }}
-                  />
-                  
                   <div className="space-y-4">
                     <div>
                       <Label>שם פרטי *</Label>
