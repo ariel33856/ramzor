@@ -83,6 +83,7 @@ export default function PersonDetailsView({ personId }) {
   const [showChildrenWarning, setShowChildrenWarning] = useState(false);
   const [maritalStatus, setMaritalStatus] = useState('married');
   const [idError, setIdError] = useState('');
+  const [additionalPhones, setAdditionalPhones] = useState([]);
 
 
   const { data: person, isLoading } = useQuery({
@@ -367,7 +368,7 @@ export default function PersonDetailsView({ personId }) {
               />
             </div>
           </div>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center flex-wrap">
             <div className="flex items-center gap-2">
               <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
               <Input
@@ -376,7 +377,53 @@ export default function PersonDetailsView({ personId }) {
                 placeholder={personFields.phone}
                 className="text-xl font-bold w-40"
               />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => {
+                  const newPhones = [...additionalPhones, ''];
+                  setAdditionalPhones(newPhones);
+                  updatePersonMutation.mutate({
+                    custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
+                  });
+                }}
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
+            {additionalPhones.map((phone, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Label className="text-sm font-medium whitespace-nowrap">טלפון {index + 2}</Label>
+                <Input
+                  value={phone}
+                  onChange={(e) => {
+                    const newPhones = [...additionalPhones];
+                    newPhones[index] = e.target.value;
+                    setAdditionalPhones(newPhones);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
+                    });
+                  }}
+                  placeholder="טלפון נוסף"
+                  className="text-xl font-bold w-40"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-red-500 hover:text-red-600"
+                  onClick={() => {
+                    const newPhones = additionalPhones.filter((_, i) => i !== index);
+                    setAdditionalPhones(newPhones);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
+                    });
+                  }}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
             <div className="flex items-center gap-2">
               <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
               <Input
