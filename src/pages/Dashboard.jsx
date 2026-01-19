@@ -589,6 +589,26 @@ export default function Dashboard() {
                                 </div>
                               </PopoverContent>
                             </Popover>
+                            <button
+                              onClick={() => {
+                                setSortField(fieldId);
+                                setSortDirection(sortField === fieldId && sortDirection === 'asc' ? 'desc' : 'asc');
+                              }}
+                              className={`p-1 rounded transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                              title="מיין מהתחלה לסוף"
+                            >
+                              <ArrowUp className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSortField(fieldId);
+                                setSortDirection('desc');
+                              }}
+                              className={`p-1 rounded transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                              title="מיין מסוף להתחלה"
+                            >
+                              <ArrowDown className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} />
+                            </button>
                             <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
                               <PopoverTrigger asChild>
                                 <button className="relative hover:text-blue-600 transition-colors">
