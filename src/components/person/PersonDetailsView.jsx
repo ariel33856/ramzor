@@ -1005,7 +1005,7 @@ export default function PersonDetailsView({ personId }) {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-14 h-8 justify-center text-center font-normal text-xs ${
+                        className={`w-10 h-8 justify-center text-center font-normal text-xs ${
                           !date ? 'text-gray-400' : ''
                         }`}
                       >
@@ -1034,7 +1034,7 @@ export default function PersonDetailsView({ personId }) {
                             
                             return (
                               <span>
-                                <span className="text-base">{years}</span>
+                                <span className="text-sm">{years}</span>
                                 <span className="text-xs">.{decimal}</span>
                               </span>
                             );
