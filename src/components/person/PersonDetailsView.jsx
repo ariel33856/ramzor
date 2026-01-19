@@ -813,7 +813,7 @@ export default function PersonDetailsView({ personId }) {
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
                   readOnly 
-                  className="bg-white w-20 h-8"
+                  className="bg-white w-24 h-8"
                 />
                 <Label className="text-sm whitespace-nowrap">גיל</Label>
                 <div className="flex h-8 w-10 rounded-md border border-input bg-white px-1 py-1 items-center text-xs">
