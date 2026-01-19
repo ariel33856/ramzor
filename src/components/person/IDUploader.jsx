@@ -452,7 +452,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       )}
 
       {/* Extracted Data Display */}
-      <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
+      <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
