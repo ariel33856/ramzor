@@ -426,7 +426,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </div>
                 </div>
               )}
-              
+
               {showMessage && detectionResult === 'both' && (
                 <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
                   <div className="bg-green-500 rounded-lg p-4 flex items-center gap-2">
@@ -434,12 +434,20 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </div>
                 </div>
               )}
-              
-              <iframe 
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
-                className="w-full h-full min-h-[280px] rounded-xl"
-                frameBorder="0"
-              />
+
+              {fileType?.includes('pdf') ? (
+                <iframe 
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
+                  className="w-full h-full min-h-[280px] rounded-xl"
+                  frameBorder="0"
+                />
+              ) : (
+                <img 
+                  src={preview} 
+                  alt="תעודת זהות" 
+                  className="w-full h-full object-contain rounded-xl"
+                />
+              )}
             </>
           ) : (
             <>
