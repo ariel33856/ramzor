@@ -467,7 +467,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         </div>
 
         {/* Upload Section 2 & 3 - For appendix or back side */}
-        {detectionResult && detectionResult !== 'both' && (
+        {detectionResult && detectionResult !== 'both' && idType !== 'ביומטרית' && (
           <>
             {/* Section 2 - Appendix or Back Side */}
             <div 
