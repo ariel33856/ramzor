@@ -591,22 +591,17 @@ export default function Dashboard() {
                             </Popover>
                             <button
                               onClick={() => {
-                                setSortField(fieldId);
-                                setSortDirection(sortField === fieldId && sortDirection === 'asc' ? 'desc' : 'asc');
+                                if (sortField === fieldId) {
+                                  setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
+                                } else {
+                                  setSortField(fieldId);
+                                  setSortDirection('desc');
+                                }
                               }}
-                              className={`p-1 rounded transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-                              title="מיין מהתחלה לסוף"
+                              className={`p-1 rounded transition-colors flex items-center gap-0.5 ${sortField === fieldId ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                              title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
                             >
                               <ArrowUp className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} />
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSortField(fieldId);
-                                setSortDirection('desc');
-                              }}
-                              className={`p-1 rounded transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-                              title="מיין מסוף להתחלה"
-                            >
                               <ArrowDown className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} />
                             </button>
                             <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
