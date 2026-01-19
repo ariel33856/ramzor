@@ -620,6 +620,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             )}
             </>
             )}
+            </div>
 
             {/* Detection Result Message - Only for incomplete uploads */}
       {detectionResult && detectionResult !== 'both' && (
