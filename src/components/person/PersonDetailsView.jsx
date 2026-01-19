@@ -1251,51 +1251,51 @@ export default function PersonDetailsView({ personId }) {
               </div>
 
               {/* Income Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Collapsible Header */}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
-        >
-          {isCollapsed ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          )}
-          <h2 className="text-lg font-bold text-gray-900">הכנסות</h2>
-        </button>
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              {/* Collapsible Header */}
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
+              >
+                {isCollapsed ? (
+                  <ChevronDown className="w-5 h-5 text-gray-500" />
+                ) : (
+                  <ChevronUp className="w-5 h-5 text-gray-500" />
+                )}
+                <h2 className="text-lg font-bold text-gray-900">הכנסות</h2>
+              </button>
 
-        {/* Content */}
-        {!isCollapsed && (
-          <div className="p-6">
-            <div className="flex items-center gap-4">
-              <Label className="text-sm font-medium whitespace-nowrap">מקור הכנסה</Label>
-              <Select value={incomeSource} onValueChange={(value) => {
-                setIncomeSource(value);
-                updatePersonMutation.mutate({
-                  custom_data: { ...(person?.custom_data || {}), income_source: value }
-                });
-              }}>
-                <SelectTrigger className="w-56">
-                  <SelectValue placeholder="בחר מקור הכנסה" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="תלוש משכורת-שכיר">תלוש משכורת-שכיר</SelectItem>
-                  <SelectItem value="עצמאי-עוסק מורשה">עצמאי-עוסק מורשה</SelectItem>
-                  <SelectItem value="עצמאי-עוסק פטור">עצמאי-עוסק פטור</SelectItem>
-                  <SelectItem value="שכיר בעל שליטה">שכיר בעל שליטה</SelectItem>
-                  <SelectItem value="מלגת כולל">מלגת כולל</SelectItem>
-                  <SelectItem value="קצבה">קצבה</SelectItem>
-                  <SelectItem value="פנסיה">פנסיה</SelectItem>
-                  <SelectItem value="השכרת נכס">השכרת נכס</SelectItem>
-                  <SelectItem value="דיבידנדים">דיבידנדים</SelectItem>
-                  <SelectItem value="אחר">אחר</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        )}
-        </div>
-        </div>
-        );
-        }
+              {/* Content */}
+              {!isCollapsed && (
+                <div className="p-6">
+                  <div className="flex items-center gap-4">
+                    <Label className="text-sm font-medium whitespace-nowrap">מקור הכנסה</Label>
+                    <Select value={incomeSource} onValueChange={(value) => {
+                      setIncomeSource(value);
+                      updatePersonMutation.mutate({
+                        custom_data: { ...(person?.custom_data || {}), income_source: value }
+                      });
+                    }}>
+                      <SelectTrigger className="w-56">
+                        <SelectValue placeholder="בחר מקור הכנסה" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="תלוש משכורת-שכיר">תלוש משכורת-שכיר</SelectItem>
+                        <SelectItem value="עצמאי-עוסק מורשה">עצמאי-עוסק מורשה</SelectItem>
+                        <SelectItem value="עצמאי-עוסק פטור">עצמאי-עוסק פטור</SelectItem>
+                        <SelectItem value="שכיר בעל שליטה">שכיר בעל שליטה</SelectItem>
+                        <SelectItem value="מלגת כולל">מלגת כולל</SelectItem>
+                        <SelectItem value="קצבה">קצבה</SelectItem>
+                        <SelectItem value="פנסיה">פנסיה</SelectItem>
+                        <SelectItem value="השכרת נכס">השכרת נכס</SelectItem>
+                        <SelectItem value="דיבידנדים">דיבידנדים</SelectItem>
+                        <SelectItem value="אחר">אחר</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+              </div>
+              </div>
+              );
+              }
