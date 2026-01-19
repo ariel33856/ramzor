@@ -257,7 +257,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
   return (
     <div className="space-y-4">
       {error && (
-        <div className="p-3 bg-red-600 border-2 border-red-700 rounded-lg text-white text-sm">
+        <div className="p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-700 text-sm">
           {error}
         </div>
       )}
@@ -265,7 +265,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       <div className="grid grid-cols-2 gap-4 overflow-visible">
         {/* Upload Section 1 */}
         <div 
-          className="border-2 border-dashed border-blue-500 rounded-xl p-0 bg-blue-100 hover:bg-blue-100 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+          className="border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
           onClick={() => !preview && fileInputRef.current?.click()}
         >
           {preview ? (
@@ -370,7 +370,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         {/* Upload Section 2 - Conditional */}
         {detectionResult && detectionResult !== 'both' && (
           <div 
-            className="border-2 border-dashed border-orange-500 rounded-xl p-0 bg-orange-100 hover:bg-orange-100 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+            className="border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
             onClick={() => !preview2 && fileInputRef2.current?.click()}
           >
             {preview2 ? (
@@ -445,7 +445,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
       {/* Detection Result Message - Only for incomplete uploads */}
       {detectionResult && detectionResult !== 'both' && (
-        <div className="p-3 rounded-lg text-sm font-medium text-center bg-orange-600 text-white border-2 border-orange-700">
+        <div className="p-3 rounded-lg text-sm font-medium text-center bg-orange-100 text-orange-800 border-2 border-orange-300">
           {detectionResult === 'id_card' && '⚠ זוהתה תעודת זהות - נא להשלים ספח'}
           {detectionResult === 'appendix' && '⚠ זוהה ספח - נא להשלים תעודת זהות'}
         </div>
@@ -454,13 +454,12 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       {/* Extracted Data Display */}
       <div className="flex gap-3">
         {/* Title Cube */}
-        <div className="w-16 bg-blue-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
-          <span className="text-sm font-bold text-white">נתוני</span>
-          <span className="text-sm font-bold text-white">התעודה</span>
+        <div className="w-16 bg-blue-200 rounded-xl p-2 flex items-center justify-center">
+          <span className="text-sm font-bold text-blue-900 text-center" style={{writingMode: 'vertical-rl', textOrientation: 'mixed', wordBreak: 'break-word'}}>נתוני התעודה</span>
         </div>
         
         {/* Data Grid */}
-        <div className={`flex-1 grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-100 border-2 border-blue-400' : 'bg-gray-50 border-2 border-gray-200'}`}>
+        <div className={`flex-1 grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />

@@ -845,8 +845,8 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Birth Info Section - Yellow */}
-             <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
-               <div className="flex items-center gap-2 flex-wrap justify-between">
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
@@ -897,15 +897,8 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
-                >
-                <Plus className="w-4 h-4" />
-                </Button>
-                </div>
-                </div>
+              </div>
+            </div>
 
             {/* Children Data Section - Green */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
