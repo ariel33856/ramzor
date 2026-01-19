@@ -954,7 +954,7 @@ export default function PersonDetailsView({ personId }) {
                     </PopoverTrigger>
                     <PopoverContent className="w-48 p-3">
                       <div className="flex flex-col gap-2">
-                        <Label className="text-xs">שם הילד</Label>
+                        <Label className="text-xs text-center">שם הילד</Label>
                         <Input
                           value={childrenNames[index] || ''}
                           onChange={(e) => {
