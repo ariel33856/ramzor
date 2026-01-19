@@ -807,17 +807,16 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Children Data Section */}
-            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
-                  <Input 
-                    value={person?.custom_data?.id_upload_data?.birth_date || ''} 
-                    readOnly 
-                    className="bg-white w-28"
-                  />
-                  <Label className="text-sm whitespace-nowrap">גיל</Label>
-                  <div className="flex h-9 w-16 rounded-md border border-input bg-white px-3 py-1 items-center">
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Label className="text-xs whitespace-nowrap">תאריך לידה</Label>
+                <Input 
+                  value={person?.custom_data?.id_upload_data?.birth_date || ''} 
+                  readOnly 
+                  className="bg-white w-24 h-7 text-xs"
+                />
+                <Label className="text-xs whitespace-nowrap">גיל</Label>
+                <div className="flex h-7 w-12 rounded-md border border-input bg-white px-2 py-1 items-center text-xs">
                     {(() => {
                       const birthDate = person?.custom_data?.id_upload_data?.birth_date;
                       if (!birthDate || birthDate.length !== 10) return '';
@@ -850,19 +849,19 @@ export default function PersonDetailsView({ personId }) {
                       );
                     })()}
                   </div>
-                  <Label className="text-sm whitespace-nowrap">מין</Label>
-                  <Select value={gender} onValueChange={setGender}>
-                    <SelectTrigger className="h-9 bg-white w-20">
-                      <SelectValue placeholder="בחר"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">זכר</SelectItem>
-                      <SelectItem value="female">נקבה</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
-                  <Select value={maritalStatus} onValueChange={setMaritalStatus}>
-                    <SelectTrigger className="w-20">
+                <Label className="text-xs whitespace-nowrap">מין</Label>
+                <Select value={gender} onValueChange={setGender}>
+                  <SelectTrigger className="h-7 bg-white w-16 text-xs">
+                    <SelectValue placeholder="בחר"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">זכר</SelectItem>
+                    <SelectItem value="female">נקבה</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Label className="text-xs whitespace-nowrap">{personFields.marital_status}</Label>
+                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
+                  <SelectTrigger className="h-7 w-16 text-xs">
                       <SelectValue placeholder="בחר"/>
                     </SelectTrigger>
                     <SelectContent className="min-w-[5rem]">
@@ -897,13 +896,11 @@ export default function PersonDetailsView({ personId }) {
                       )}
                     </SelectContent>
                   </Select>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
-                  <Input 
-                    type="number"
-                    value={manualNumChildren}
-                    onChange={(e) => {
+                <Label className="text-xs whitespace-nowrap">{personFields.num_children}</Label>
+                <Input 
+                  type="number"
+                  value={manualNumChildren}
+                  onChange={(e) => {
                       setManualNumChildren(e.target.value);
                       const actualCount = childrenDates.filter(d => d.length === 10).length;
                       if (e.target.value && parseInt(e.target.value) !== actualCount) {
@@ -927,18 +924,18 @@ export default function PersonDetailsView({ personId }) {
                       });
                     }}
                     placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
-                    className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                    className={`w-10 text-center h-7 text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
                         ? 'border-red-500 bg-red-50'
                         : ''
                     }`}
                     style={{ MozAppearance: 'textfield' }}
                   />
-                  <Label className="text-sm whitespace-nowrap">{personFields.num_children_under_18}</Label>
-                  <Input 
-                    type="number"
-                    value={manualNumChildrenUnder18}
-                    onChange={(e) => {
+                <Label className="text-xs whitespace-nowrap">{personFields.num_children_under_18}</Label>
+                <Input 
+                  type="number"
+                  value={manualNumChildrenUnder18}
+                  onChange={(e) => {
                       setManualNumChildrenUnder18(e.target.value);
                       const actualCount = childrenDates.filter(d => {
                         if (d.length !== 10) return false;
@@ -968,50 +965,50 @@ export default function PersonDetailsView({ personId }) {
                         age--;
                       }
                       return age < 18;
-                    }).length.toString()}
-                    className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                      }).length.toString()}
+                      className={`w-10 text-center h-7 text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
-                        if (d.length !== 10) return false;
-                        const [day, month, year] = d.split('-').map(Number);
-                        const birthDate = new Date(year, month - 1, day);
-                        const today = new Date();
-                        let age = today.getFullYear() - birthDate.getFullYear();
-                        const monthDiff = today.getMonth() - birthDate.getMonth();
-                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                          age--;
-                        }
-                        return age < 18;
+                      if (d.length !== 10) return false;
+                      const [day, month, year] = d.split('-').map(Number);
+                      const birthDate = new Date(year, month - 1, day);
+                      const today = new Date();
+                      let age = today.getFullYear() - birthDate.getFullYear();
+                      const monthDiff = today.getMonth() - birthDate.getMonth();
+                      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                      }
+                      return age < 18;
                       }).length
-                        ? 'border-red-500 bg-red-50'
-                        : ''
-                    }`}
-                    style={{ MozAppearance: 'textfield' }}
-                  />
-                  <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
-                  <Input 
-                    type="number" 
-                    value={numSiblings}
-                    onChange={(e) => {
+                      ? 'border-red-500 bg-red-50'
+                      : ''
+                      }`}
+                      style={{ MozAppearance: 'textfield' }}
+                      />
+                      <Label className="text-xs whitespace-nowrap">{personFields.num_siblings}</Label>
+                      <Input 
+                      type="number" 
+                      value={numSiblings}
+                      onChange={(e) => {
                       const value = e.target.value;
                       setNumSiblings(value);
                       updatePersonMutation.mutate({ 
-                        custom_data: { ...(person?.custom_data || {}), num_siblings: value }
+                      custom_data: { ...(person?.custom_data || {}), num_siblings: value }
                       });
-                    }}
-                    className="w-12 text-center h-8" 
-                  />
-                  
-                  {/* Children Ages Section */}
-                  <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}</Label>
-                  {childrenDates.map((date, index) => (
-                    <Popover key={index}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={`w-24 h-8 justify-start text-right font-normal ${
-                            !date ? 'text-gray-400' : ''
-                          }`}
-                        >
+                      }}
+                      className="w-10 text-center h-7 text-xs" 
+                      />
+
+                      {/* Children Ages Section */}
+                      <Label className="text-xs whitespace-nowrap">{personFields.children_birth_dates}</Label>
+                {childrenDates.map((date, index) => (
+                  <Popover key={index}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-16 h-7 justify-center text-center font-normal text-xs ${
+                          !date ? 'text-gray-400' : ''
+                        }`}
+                      >
                           {date ? (() => {
                             if (date.length !== 10) return date;
                             const [day, month, year] = date.split('-').map(Number);
@@ -1042,14 +1039,14 @@ export default function PersonDetailsView({ personId }) {
                               </span>
                             );
                           })() : 'גיל'}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-48 p-3">
-                        <div className="flex flex-col gap-2">
-                          <Label className="text-xs">תאריך לידה (DD-MM-YYYY)</Label>
-                          <Input
-                            value={date}
-                            onChange={(e) => {
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-48 p-3">
+                      <div className="flex flex-col gap-2">
+                        <Label className="text-xs">תאריך לידה (DD-MM-YYYY)</Label>
+                        <Input
+                          value={date}
+                          onChange={(e) => {
                               const value = e.target.value;
                               const newDates = [...childrenDates];
                               newDates[index] = value;
@@ -1079,7 +1076,7 @@ export default function PersonDetailsView({ personId }) {
                               }
                             }}
                             placeholder="01-01-2010"
-                            className="text-sm h-8"
+                            className="text-sm h-7"
                           />
                           {date && (
                             <Button
