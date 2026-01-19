@@ -837,6 +837,13 @@ export default function PersonDetailsView({ personId }) {
                   placeholder="כתובת"
                   className="text-sm w-48 h-8 bg-white"
                 />
+                <Label className="text-sm whitespace-nowrap">מספר בנין</Label>
+                <Input
+                  value={basicData.building_number}
+                  onChange={(e) => handleBasicDataChange('building_number', e.target.value)}
+                  placeholder=""
+                  className="text-sm w-20 h-8 bg-white"
+                />
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
