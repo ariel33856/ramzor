@@ -73,7 +73,9 @@ export default function PersonDetailsView({ personId }) {
     notes: '',
     residential_city: '',
     address: '',
-    building_number: ''
+    building_number: '',
+    entrance: '',
+    apartment_number: ''
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
