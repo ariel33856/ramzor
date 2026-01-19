@@ -234,11 +234,85 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
   const clearAll = () => {
     setPreview(null);
     setPreview2(null);
+    setPreview3(null);
     setExtractedData(null);
     setFileType(null);
     setFileType2(null);
+    setFileType3(null);
+    setIdType(null);
     setDetectionResult(null);
     onDataExtracted?.(null);
+  };
+
+  const handleFileUpload3 = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    console.log('📤 Starting appendix upload:', file.name);
+    setUploading3(true);
+    setFileType3(file.type);
+    setLocalFile3(file);
+
+    try {
+      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      const file_url = uploadResult.file_url;
+      setPreview3(file_url);
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `חלץ מידע נוסף מהספח. החזר JSON עם:
+      - first_name, last_name, id_number, birth_date, gender, address, building_number, city, entrance, apartment_number
+      - num_children (מספר הילדים - מהספח)
+      - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
+      - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
+      - israeli_status (מעמד ישראלי - זהה מהספח את המעמד: "אזרחות ישראלית", "תושבות קבע", "תושבות ארעית", "אשרת שהיה", או "ללא")
+
+      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערכים ריקים.`,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            first_name: { type: "string" },
+            last_name: { type: "string" },
+            id_number: { type: "string" },
+            birth_date: { type: "string" },
+            gender: { type: "string" },
+            address: { type: "string" },
+            building_number: { type: "string" },
+            city: { type: "string" },
+            entrance: { type: "string" },
+            apartment_number: { type: "string" },
+            num_children: { type: "number" },
+            children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            children_names: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            israeli_status: { type: "string" }
+          }
+        }
+      });
+
+      // Merge data
+      const mergedData = { 
+        ...extractedData, 
+        ...result, 
+        file_url_3: file_url, 
+        file_type_3: file.type
+      };
+      setExtractedData(mergedData);
+      onDataExtracted?.(mergedData);
+
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 2000);
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setError(error.message || 'שגיאה בעיבוד הספח');
+    } finally {
+      setUploading3(false);
+    }
   };
 
   const downloadAsPDF = async (fileUrl, fileType, fileName = 'document.pdf') => {
