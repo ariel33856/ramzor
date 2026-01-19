@@ -513,15 +513,25 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         </div>
         <div>
           <Label className="text-xs text-gray-600">מעמד ישראלי</Label>
-          <Input 
+          <Select 
             value={extractedData?.israeli_status || ''} 
-            onChange={(e) => {
-              const updatedData = { ...extractedData, israeli_status: e.target.value };
+            onValueChange={(value) => {
+              const updatedData = { ...extractedData, israeli_status: value };
               setExtractedData(updatedData);
               onDataExtracted?.(updatedData);
             }}
-            className="bg-white" 
-          />
+          >
+            <SelectTrigger className="bg-white">
+              <SelectValue placeholder="בחר מעמד" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="אזרחות ישראלית">אזרחות ישראלית</SelectItem>
+              <SelectItem value="תושבות קבע">תושבות קבע</SelectItem>
+              <SelectItem value="תושבות ארעית">תושבות ארעית</SelectItem>
+              <SelectItem value="אשרת שהיה">אשרת שהיה</SelectItem>
+              <SelectItem value="ללא">ללא</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
