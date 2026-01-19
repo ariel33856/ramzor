@@ -897,7 +897,6 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
-                </div>
                 <Button
                 variant="ghost"
                 size="icon"
