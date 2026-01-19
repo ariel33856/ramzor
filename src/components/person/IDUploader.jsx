@@ -16,14 +16,20 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
   const [fileType, setFileType] = useState(initialData?.file_type_1 || null);
   const [error, setError] = useState(null);
   const [detectionResult, setDetectionResult] = useState(initialData?.document_type || null);
+  const [idType, setIdType] = useState(initialData?.id_type || null); // biometric or regular
   const [preview2, setPreview2] = useState(null);
   const [fileType2, setFileType2] = useState(initialData?.file_type_2 || null);
   const [uploading2, setUploading2] = useState(false);
+  const [preview3, setPreview3] = useState(null);
+  const [fileType3, setFileType3] = useState(initialData?.file_type_3 || null);
+  const [uploading3, setUploading3] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [localFile, setLocalFile] = useState(null);
   const [localFile2, setLocalFile2] = useState(null);
+  const [localFile3, setLocalFile3] = useState(null);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
+  const fileInputRef3 = React.useRef(null);
 
   React.useEffect(() => {
     if (initialData?.file_url_1) {
