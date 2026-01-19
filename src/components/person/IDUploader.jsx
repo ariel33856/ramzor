@@ -522,8 +522,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             className="bg-white" 
           />
         </div>
-        </div>
       </div>
+    </div>
     </div>
   );
 }
