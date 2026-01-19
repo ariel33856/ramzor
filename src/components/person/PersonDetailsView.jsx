@@ -940,9 +940,14 @@ export default function PersonDetailsView({ personId }) {
                 </div>
               )}
               </div>
+            </div>
 
               {/* Children & Family Info Section */}
-              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
+              <div className="flex gap-0">
+                <div className="bg-red-200 rounded-l-lg px-2 flex items-center justify-center" style={{writingMode: 'vertical-rl', transform: 'rotate(180deg)'}}>
+                  <span className="text-sm font-bold text-red-900 whitespace-nowrap">משפחה וילדים</span>
+                </div>
+                <div className="bg-red-50 border-2 border-red-200 rounded-r-lg p-3 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
