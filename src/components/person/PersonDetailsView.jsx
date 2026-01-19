@@ -845,7 +845,11 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Birth Info Section - Yellow */}
-            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
+            <div className="flex gap-0">
+              <div className="bg-yellow-200 rounded-l-lg px-2 flex items-center justify-center" style={{writingMode: 'vertical-rl', transform: 'rotate(180deg)'}}>
+                <span className="text-sm font-bold text-yellow-900 whitespace-nowrap">תאריך לידה וגיל</span>
+              </div>
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-r-lg p-3 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
