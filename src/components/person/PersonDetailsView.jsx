@@ -1106,12 +1106,15 @@ export default function PersonDetailsView({ personId }) {
                   <SelectValue placeholder="בחר מקור הכנסה" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="שכיר">שכיר</SelectItem>
-                  <SelectItem value="עצמאי">עצמאי</SelectItem>
-                  <SelectItem value="חברה בע״מ">חברה בע״מ</SelectItem>
-                  <SelectItem value="פנסיה">פנסיה</SelectItem>
+                  <SelectItem value="תלוש משכורת-שכיר">תלוש משכורת-שכיר</SelectItem>
+                  <SelectItem value="עצמאי-עוסק מורשה">עצמאי-עוסק מורשה</SelectItem>
+                  <SelectItem value="עצמאי-עוסק פטור">עצמאי-עוסק פטור</SelectItem>
+                  <SelectItem value="שכיר בעל שליטה">שכיר בעל שליטה</SelectItem>
+                  <SelectItem value="מלגת כולל">מלגת כולל</SelectItem>
                   <SelectItem value="קצבה">קצבה</SelectItem>
-                  <SelectItem value="השכרה">השכרה</SelectItem>
+                  <SelectItem value="פנסיה">פנסיה</SelectItem>
+                  <SelectItem value="השכרת נכס">השכרת נכס</SelectItem>
+                  <SelectItem value="דיבידנדים">דיבידנדים</SelectItem>
                   <SelectItem value="אחר">אחר</SelectItem>
                 </SelectContent>
               </Select>
