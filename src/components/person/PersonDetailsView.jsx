@@ -800,12 +800,11 @@ export default function PersonDetailsView({ personId }) {
                 if (data.last_name) updates.last_name = data.last_name;
                 if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
                 
-                // Extract building number, entrance, and apartment number
+                // Extract address fields from document
+                if (data.address) updates.address = data.address;
                 if (data.building_number) updates.building_number = data.building_number;
                 if (data.entrance) updates.entrance = data.entrance;
                 if (data.apartment_number) updates.apartment_number = data.apartment_number;
-                
-                // Extract city if available
                 if (data.city) updates.residential_city = data.city;
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
