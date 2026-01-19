@@ -470,9 +470,83 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                  </div>
               </>
             )}
-          </div>
-        )}
-      </div>
+            </div>
+
+            {/* Section 3 - Appendix (only for biometric) */}
+            {idType === 'ביומטרית' && (
+            <div 
+              className="border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+              onClick={() => !preview3 && fileInputRef3.current?.click()}
+            >
+              {preview3 ? (
+                <>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPreview3(null);
+                      setFileType3(null);
+                    }}
+                    className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-50"
+                    size="icon"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            downloadAsPDF(preview3, fileType3, 'ספח-תעודת-זהות.pdf');
+                          }}
+                          className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                          size="icon"
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>הורד כקובץ PDF</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  {uploading3 && (
+                    <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
+                      <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
+                        <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
+                        <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <iframe 
+                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
+                    className="w-full h-full min-h-[280px] rounded-xl"
+                    frameBorder="0"
+                  />
+                </>
+              ) : (
+                <>
+                  <input
+                    ref={fileInputRef3}
+                    type="file"
+                    accept="image/*,.pdf"
+                    onChange={handleFileUpload3}
+                    className="hidden"
+                    disabled={uploading3}
+                  />
+                  <div className="flex flex-col items-center justify-center h-full gap-3">
+                    <Upload className="w-12 h-12 text-orange-600" />
+                    <p className="text-sm font-medium text-gray-700 text-center">העלה ספח</p>
+                    <p className="text-xs text-gray-500">תמונה או PDF</p>
+                  </div>
+                </>
+              )}
+            </div>
+            )}
+            </>
+            )}
+            </div>
 
       {/* Detection Result Message - Only for incomplete uploads */}
       {detectionResult && detectionResult !== 'both' && (
