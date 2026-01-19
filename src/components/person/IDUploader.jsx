@@ -72,6 +72,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - address (כתובת מלאה - מהספח)
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
+      - israeli_status (מעמד ישראלי - זהה מהתעודה או הספח את המעמד: "אזרחות ישראלית", "תושבות קבע", "תושבות ארעית", "אשרת שהיה", או "ללא")
 
       אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
         file_urls: [file_url],
@@ -91,7 +92,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             children_birth_dates: { 
               type: "array",
               items: { type: "string" }
-            }
+            },
+            israeli_status: { type: "string" }
           }
         }
       });
@@ -138,6 +140,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
+      - israeli_status (מעמד ישראלי - זהה מהתעודה או הספח את המעמד: "אזרחות ישראלית", "תושבות קבע", "תושבות ארעית", "אשרת שהיה", או "ללא")
 
       אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
         file_urls: [file_url],
@@ -157,7 +160,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             children_birth_dates: { 
               type: "array",
               items: { type: "string" }
-            }
+            },
+            israeli_status: { type: "string" }
           }
         }
       });
