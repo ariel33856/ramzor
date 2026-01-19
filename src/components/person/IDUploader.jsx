@@ -93,6 +93,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           type: "object",
           properties: {
             document_type: { type: "string" },
+            id_type: { type: "string" },
             first_name: { type: "string" },
             last_name: { type: "string" },
             id_number: { type: "string" },
@@ -170,6 +171,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           type: "object",
           properties: {
             document_type: { type: "string" },
+            id_type: { type: "string" },
             first_name: { type: "string" },
             last_name: { type: "string" },
             id_number: { type: "string" },
