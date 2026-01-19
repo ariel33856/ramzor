@@ -449,31 +449,38 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         </div>
         <div>
           <Label className="text-xs text-gray-600">גיל</Label>
-          <Input value={(() => {
-            if (!extractedData?.birth_date || extractedData.birth_date.length !== 10) return '';
-            const [day, month, year] = extractedData.birth_date.split('-').map(Number);
-            const birthDate = new Date(year, month - 1, day);
-            const today = new Date();
-            
-            let years = today.getFullYear() - birthDate.getFullYear();
-            let months = today.getMonth() - birthDate.getMonth();
-            let days = today.getDate() - birthDate.getDate();
+          <div className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 items-center">
+            {(() => {
+              if (!extractedData?.birth_date || extractedData.birth_date.length !== 10) return '';
+              const [day, month, year] = extractedData.birth_date.split('-').map(Number);
+              const birthDate = new Date(year, month - 1, day);
+              const today = new Date();
+              
+              let years = today.getFullYear() - birthDate.getFullYear();
+              let months = today.getMonth() - birthDate.getMonth();
+              let days = today.getDate() - birthDate.getDate();
 
-            if (days < 0) {
-              months--;
-              const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-              days += prevMonth.getDate();
-            }
+              if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+              }
 
-            if (months < 0) {
-              years--;
-              months += 12;
-            }
+              if (months < 0) {
+                years--;
+                months += 12;
+              }
 
-            const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
-            
-            return `${years}.${decimal}`;
-          })()} readOnly className="bg-white" />
+              const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+              
+              return (
+                <span>
+                  <span className="text-base">{years}</span>
+                  <span className="text-xs">.{decimal}</span>
+                </span>
+              );
+            })()}
+          </div>
         </div>
         <div>
           <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
