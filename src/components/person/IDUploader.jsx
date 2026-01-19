@@ -93,6 +93,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             gender: { type: "string" },
             address: { type: "string" },
             city: { type: "string" },
+            entrance: { type: "string" },
+            apartment_number: { type: "string" },
             num_children: { type: "number" },
             children_birth_dates: { 
               type: "array",
@@ -167,6 +169,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             gender: { type: "string" },
             address: { type: "string" },
             city: { type: "string" },
+            entrance: { type: "string" },
+            apartment_number: { type: "string" },
             num_children: { type: "number" },
             children_birth_dates: { 
               type: "array",
