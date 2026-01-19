@@ -903,21 +903,21 @@ export default function PersonDetailsView({ personId }) {
                   placeholder="כתובת"
                   className="text-sm w-48 h-8 bg-white"
                 />
-                <Label className="text-sm whitespace-nowrap">מספר בנין</Label>
+                <Label className="text-sm whitespace-nowrap">בנין</Label>
                 <Input
                   value={basicData.building_number}
                   onChange={(e) => handleBasicDataChange('building_number', e.target.value)}
                   placeholder=""
                   className="text-sm w-20 h-8 bg-white"
                 />
-                <Label className="text-sm whitespace-nowrap">מספר כניסה</Label>
+                <Label className="text-sm whitespace-nowrap">כניסה</Label>
                 <Input
                   value={basicData.entrance}
                   onChange={(e) => handleBasicDataChange('entrance', e.target.value)}
                   placeholder=""
                   className="text-sm w-20 h-8 bg-white"
                 />
-                <Label className="text-sm whitespace-nowrap">מספר דירה</Label>
+                <Label className="text-sm whitespace-nowrap">דירה</Label>
                 <Input
                   value={basicData.apartment_number}
                   onChange={(e) => handleBasicDataChange('apartment_number', e.target.value)}
