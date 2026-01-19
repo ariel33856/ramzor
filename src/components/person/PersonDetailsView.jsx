@@ -809,14 +809,14 @@ export default function PersonDetailsView({ personId }) {
             {/* Children Data Section */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <Label className="text-xs whitespace-nowrap">תאריך לידה</Label>
+                <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
                   readOnly 
-                  className="bg-white w-24 h-7 text-xs"
+                  className="bg-white w-20 h-8"
                 />
-                <Label className="text-xs whitespace-nowrap">גיל</Label>
-                <div className="flex h-7 w-12 rounded-md border border-input bg-white px-2 py-1 items-center text-xs">
+                <Label className="text-sm whitespace-nowrap">גיל</Label>
+                <div className="flex h-8 w-10 rounded-md border border-input bg-white px-1 py-1 items-center text-xs">
                     {(() => {
                       const birthDate = person?.custom_data?.id_upload_data?.birth_date;
                       if (!birthDate || birthDate.length !== 10) return '';
@@ -849,9 +849,9 @@ export default function PersonDetailsView({ personId }) {
                       );
                     })()}
                   </div>
-                <Label className="text-xs whitespace-nowrap">מין</Label>
+                <Label className="text-sm whitespace-nowrap">מין</Label>
                 <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger className="h-7 bg-white w-16 text-xs">
+                  <SelectTrigger className="h-8 bg-white w-14">
                     <SelectValue placeholder="בחר"/>
                   </SelectTrigger>
                   <SelectContent>
@@ -859,9 +859,9 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
-                <Label className="text-xs whitespace-nowrap">{personFields.marital_status}</Label>
+                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                 <Select value={maritalStatus} onValueChange={setMaritalStatus}>
-                  <SelectTrigger className="h-7 w-16 text-xs">
+                  <SelectTrigger className="h-8 w-14">
                       <SelectValue placeholder="בחר"/>
                     </SelectTrigger>
                     <SelectContent className="min-w-[5rem]">
@@ -896,7 +896,7 @@ export default function PersonDetailsView({ personId }) {
                       )}
                     </SelectContent>
                   </Select>
-                <Label className="text-xs whitespace-nowrap">{personFields.num_children}</Label>
+                <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
                 <Input 
                   type="number"
                   value={manualNumChildren}
@@ -924,14 +924,14 @@ export default function PersonDetailsView({ personId }) {
                       });
                     }}
                     placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
-                    className={`w-10 text-center h-7 text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                    className={`w-8 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
                         ? 'border-red-500 bg-red-50'
                         : ''
                     }`}
                     style={{ MozAppearance: 'textfield' }}
                   />
-                <Label className="text-xs whitespace-nowrap">{personFields.num_children_under_18}</Label>
+                <Label className="text-sm whitespace-nowrap">{personFields.num_children_under_18}</Label>
                 <Input 
                   type="number"
                   value={manualNumChildrenUnder18}
@@ -966,7 +966,7 @@ export default function PersonDetailsView({ personId }) {
                       }
                       return age < 18;
                       }).length.toString()}
-                      className={`w-10 text-center h-7 text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                      className={`w-8 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
                       if (d.length !== 10) return false;
                       const [day, month, year] = d.split('-').map(Number);
@@ -984,7 +984,7 @@ export default function PersonDetailsView({ personId }) {
                       }`}
                       style={{ MozAppearance: 'textfield' }}
                       />
-                      <Label className="text-xs whitespace-nowrap">{personFields.num_siblings}</Label>
+                      <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
                       <Input 
                       type="number" 
                       value={numSiblings}
@@ -995,17 +995,17 @@ export default function PersonDetailsView({ personId }) {
                       custom_data: { ...(person?.custom_data || {}), num_siblings: value }
                       });
                       }}
-                      className="w-10 text-center h-7 text-xs" 
+                      className="w-8 text-center h-8" 
                       />
 
                       {/* Children Ages Section */}
-                      <Label className="text-xs whitespace-nowrap">{personFields.children_birth_dates}</Label>
+                      <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}</Label>
                       {childrenDates.map((date, index) => (
                   <Popover key={index}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-16 h-7 justify-center text-center font-normal text-xs ${
+                        className={`w-14 h-8 justify-center text-center font-normal text-xs ${
                           !date ? 'text-gray-400' : ''
                         }`}
                       >
@@ -1076,7 +1076,7 @@ export default function PersonDetailsView({ personId }) {
                               }
                             }}
                             placeholder="01-01-2010"
-                            className="text-sm h-7"
+                            className="text-sm h-8"
                           />
                           {date && (
                             <Button
