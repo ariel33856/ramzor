@@ -1480,8 +1480,9 @@ export default function PersonDetailsView({ personId }) {
                />
               </div>
               </div>
+              </div>
               )}
-      </div>
+              </div>
 
       {/* Income Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
