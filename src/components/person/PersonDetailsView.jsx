@@ -795,7 +795,31 @@ export default function PersonDetailsView({ personId }) {
                 if (data.first_name) updates.first_name = data.first_name;
                 if (data.last_name) updates.last_name = data.last_name;
                 if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
-                if (data.address) updates.address = data.address;
+                
+                // Parse address to extract street name and building number
+                if (data.address) {
+                  const addressParts = data.address.trim().split(/\s+/);
+                  if (addressParts.length > 0) {
+                    // Last part is usually the building number
+                    const lastPart = addressParts[addressParts.length - 1];
+                    if (/^\d+/.test(lastPart)) {
+                      // Last part starts with number, it's the building number
+                      updates.building_number = lastPart;
+                      updates.address = addressParts.slice(0, -1).join(' ');
+                    } else {
+                      updates.address = data.address;
+                    }
+                  }
+                }
+                
+                // Extract city if available (usually first word or specific pattern)
+                if (data.address) {
+                  const words = data.address.split(/\s+/);
+                  // Try to find city - usually first word or look for common patterns
+                  if (words.length > 0) {
+                    updates.residential_city = words[0];
+                  }
+                }
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
