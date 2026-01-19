@@ -843,7 +843,7 @@ export default function PersonDetailsView({ personId }) {
                       
                       return (
                         <span>
-                          <span className="text-base">{years}</span>
+                          <span className="text-xs">{years}</span>
                           <span className="text-xs">.{decimal}</span>
                         </span>
                       );
