@@ -93,6 +93,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
             address: { type: "string" },
+            building_number: { type: "string" },
             city: { type: "string" },
             entrance: { type: "string" },
             apartment_number: { type: "string" },
