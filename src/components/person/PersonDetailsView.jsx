@@ -812,9 +812,13 @@ export default function PersonDetailsView({ personId }) {
                   }
                 }
                 
-                // Extract city from the dedicated city field
-                if (data.city) {
-                  updates.residential_city = data.city;
+                // Extract city if available (usually first word or specific pattern)
+                if (data.address) {
+                  const words = data.address.split(/\s+/);
+                  // Try to find city - usually first word or look for common patterns
+                  if (words.length > 0) {
+                    updates.residential_city = words[0];
+                  }
                 }
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
@@ -906,7 +910,7 @@ export default function PersonDetailsView({ personId }) {
                   placeholder=""
                   className="text-sm w-48 h-8 bg-white"
                 />
-                <Label className="text-sm whitespace-nowrap">כתובת</Label>
+                <Label className="text-sm whitespace-nowrap">רחוב</Label>
                 <Input
                   value={basicData.address}
                   onChange={(e) => handleBasicDataChange('address', e.target.value)}
