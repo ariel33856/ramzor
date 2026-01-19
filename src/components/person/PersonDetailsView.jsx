@@ -1102,7 +1102,7 @@ export default function PersonDetailsView({ personId }) {
                   custom_data: { ...(person?.custom_data || {}), income_source: value }
                 });
               }}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-56">
                   <SelectValue placeholder="בחר מקור הכנסה" />
                 </SelectTrigger>
                 <SelectContent>
