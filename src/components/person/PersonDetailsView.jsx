@@ -910,8 +910,17 @@ export default function PersonDetailsView({ personId }) {
             </div>
 
             {/* Children Data Section - Green */}
-            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
-              <div className="flex items-center gap-2 flex-wrap">
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                {/* Title Cube - Address Info */}
+                <div className="w-16 bg-green-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
+                  <span className="text-sm font-bold text-white">כתובת</span>
+                  <span className="text-sm font-bold text-white">ומגורים</span>
+                </div>
+                
+                {/* Address Info Content */}
+                <div className="flex-1 bg-green-50 border-2 border-green-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">עיר מגורים</Label>
                 <Input
                   value={basicData.residential_city}
