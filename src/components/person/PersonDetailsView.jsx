@@ -1069,6 +1069,29 @@ export default function PersonDetailsView({ personId }) {
           </div>
         )}
       </div>
+
+      {/* Income Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Collapsible Header */}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
+        >
+          {isCollapsed ? (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          )}
+          <h2 className="text-lg font-bold text-gray-900">הכנסות</h2>
+        </button>
+
+        {/* Content */}
+        {!isCollapsed && (
+          <div className="p-6">
+            <p className="text-gray-500 text-center">תוכן הכנסות יתווסף בהמשך</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
