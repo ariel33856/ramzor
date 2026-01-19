@@ -791,7 +791,22 @@ export default function PersonDetailsView({ personId }) {
                   setChildrenNames(['']);
                   setManualNumChildren('');
                   setManualNumChildrenUnder18('');
-                  updatePersonMutation.mutate({ custom_data: customData });
+                  setBasicData(prev => ({
+                    ...prev,
+                    address: '',
+                    building_number: '',
+                    entrance: '',
+                    apartment_number: '',
+                    residential_city: ''
+                  }));
+                  updatePersonMutation.mutate({ 
+                    custom_data: customData,
+                    address: '',
+                    building_number: '',
+                    entrance: '',
+                    apartment_number: '',
+                    residential_city: ''
+                  });
                   return;
                 }
                 
