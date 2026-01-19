@@ -469,8 +469,15 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       {/* Detection Result Message - Only for incomplete uploads */}
       {detectionResult && detectionResult !== 'both' && (
         <div className="p-3 rounded-lg text-sm font-medium text-center bg-orange-100 text-orange-800 border-2 border-orange-300">
-          {detectionResult === 'id_card' && '⚠ זוהתה תעודת זהות - נא להשלים ספח'}
+          {detectionResult === 'id_card' && `⚠ זוהתה תעודת זהות ${idType ? `(${idType})` : ''} - נא להשלים ספח`}
           {detectionResult === 'appendix' && '⚠ זוהה ספח - נא להשלים תעודת זהות'}
+        </div>
+      )}
+
+      {/* Show ID Type Message for biometric ID cards */}
+      {idType === 'ביומטרית' && detectionResult === 'id_card' && !preview2 && (
+        <div className="p-3 rounded-lg text-sm font-medium text-center bg-blue-100 text-blue-800 border-2 border-blue-300">
+          ℹ תעודה ביומטרית - אנא העלה גם צילום של הצד השני
         </div>
       )}
 
