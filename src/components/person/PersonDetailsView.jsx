@@ -903,9 +903,14 @@ export default function PersonDetailsView({ personId }) {
                 </Select>
               </div>
             </div>
+            </div>
 
             {/* Children Data Section - Green */}
-            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+            <div className="flex gap-0">
+              <div className="bg-green-200 rounded-l-lg px-2 flex items-center justify-center" style={{writingMode: 'vertical-rl', transform: 'rotate(180deg)'}}>
+                <span className="text-sm font-bold text-green-900 whitespace-nowrap">כתובת ומיקום</span>
+              </div>
+              <div className="bg-green-50 border-2 border-green-200 rounded-r-lg p-3 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">עיר מגורים</Label>
                 <Input
