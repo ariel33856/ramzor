@@ -454,8 +454,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       {/* Extracted Data Display */}
       <div className="flex gap-3">
         {/* Title Cube */}
-        <div className="w-16 bg-blue-200 rounded-xl p-2 flex items-center justify-center">
-          <span className="text-sm font-bold text-blue-900 text-center" style={{writingMode: 'vertical-rl', textOrientation: 'mixed', wordBreak: 'break-word'}}>נתוני התעודה</span>
+        <div className="w-16 bg-blue-200 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
+          <span className="text-sm font-bold text-blue-900">נתוני</span>
+          <span className="text-sm font-bold text-blue-900">התעודה</span>
         </div>
         
         {/* Data Grid */}
