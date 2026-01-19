@@ -1249,7 +1249,9 @@ export default function PersonDetailsView({ personId }) {
               </div>
               </div>
               </div>
+              </div>
               )}
+              </div>
               </div>
 
       {/* Income Card */}
