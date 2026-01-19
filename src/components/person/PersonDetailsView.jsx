@@ -1114,7 +1114,6 @@ export default function PersonDetailsView({ personId }) {
                       </PopoverContent>
                     </Popover>
                   ))}
-                </div>
               </div>
               {showChildrenWarning && (
                 <div className="text-red-600 text-sm font-medium text-center mt-2">
