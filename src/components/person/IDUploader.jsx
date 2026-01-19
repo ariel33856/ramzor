@@ -490,7 +490,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           <Label className="text-xs text-gray-600">תוקף</Label>
           <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
         </div>
-        <div>
+        <div className="col-span-2 md:col-span-4">
           <Label className="text-xs text-gray-600">מין</Label>
           <Select value={gender} onValueChange={(value) => {
             setGender(value);
@@ -498,7 +498,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             setExtractedData(updatedData);
             onDataExtracted?.(updatedData);
           }}>
-            <SelectTrigger className="h-9 bg-white">
+            <SelectTrigger className="h-9 bg-white w-1/2">
               <SelectValue placeholder="בחר"/>
             </SelectTrigger>
             <SelectContent>
