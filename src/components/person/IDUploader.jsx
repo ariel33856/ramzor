@@ -511,6 +511,18 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           <Label className="text-xs text-gray-600">כתובת</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />
         </div>
+        <div>
+          <Label className="text-xs text-gray-600">מעמד ישראלי</Label>
+          <Input 
+            value={extractedData?.israeli_status || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, israeli_status: e.target.value };
+              setExtractedData(updatedData);
+              onDataExtracted?.(updatedData);
+            }}
+            className="bg-white" 
+          />
+        </div>
       </div>
     </div>
   );
