@@ -949,9 +949,20 @@ export default function PersonDetailsView({ personId }) {
                 </div>
               )}
               </div>
+              </div>
+              </div>
 
               {/* Children & Family Info Section */}
-              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
+              <div className="space-y-3">
+              <div className="flex gap-3">
+              {/* Title Cube - Family Info */}
+              <div className="w-16 bg-red-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
+              <span className="text-sm font-bold text-white">נתוני</span>
+              <span className="text-sm font-bold text-white">משפחה</span>
+              </div>
+
+              {/* Family Info Content */}
+              <div className="flex-1 bg-red-50 border-2 border-red-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
