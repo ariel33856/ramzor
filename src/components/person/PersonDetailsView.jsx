@@ -464,11 +464,12 @@ export default function PersonDetailsView({ personId }) {
               </DropdownMenu>
               {linkedAccountsData.map(account => (
                 <div key={account.id} className="flex items-center gap-0">
-                  <Link to={createPageUrl('CaseDetails') + `?id=${account.id}`}>
-                    <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none">
-                      חשבון משויך: {account.client_name} {account.account_number}
-                    </Button>
-                  </Link>
+                  <Button 
+                    onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none cursor-pointer"
+                  >
+                    חשבון משויך: {account.client_name} {account.account_number}
+                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
