@@ -72,9 +72,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - address (כתובת מלאה - מהספח)
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
+      - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
       - israeli_status (מעמד ישראלי - זהה מהתעודה או הספח את המעמד: "אזרחות ישראלית", "תושבות קבע", "תושבות ארעית", "אשרת שהיה", או "ללא")
 
-      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
+      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערכים ריקים.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -90,6 +91,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             address: { type: "string" },
             num_children: { type: "number" },
             children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            children_names: { 
               type: "array",
               items: { type: "string" }
             },
@@ -140,9 +145,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
+      - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
       - israeli_status (מעמד ישראלי - זהה מהתעודה או הספח את המעמד: "אזרחות ישראלית", "תושבות קבע", "תושבות ארעית", "אשרת שהיה", או "ללא")
 
-      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערך ריק.`,
+      אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערכים ריקים.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -158,6 +164,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             address: { type: "string" },
             num_children: { type: "number" },
             children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            children_names: { 
               type: "array",
               items: { type: "string" }
             },
