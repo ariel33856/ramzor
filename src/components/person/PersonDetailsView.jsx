@@ -873,7 +873,7 @@ export default function PersonDetailsView({ personId }) {
                 </Select>
                 <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                 <Select value={maritalStatus} onValueChange={setMaritalStatus}>
-                  <SelectTrigger className="h-8 w-14">
+                  <SelectTrigger className="h-8 w-14 bg-white">
                       <SelectValue placeholder="בחר"/>
                     </SelectTrigger>
                     <SelectContent className="min-w-[5rem]">
