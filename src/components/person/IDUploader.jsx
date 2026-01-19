@@ -620,9 +620,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             )}
             </>
             )}
-            </div>
 
-      {/* Detection Result Message - Only for incomplete uploads */}
+            {/* Detection Result Message - Only for incomplete uploads */}
       {detectionResult && detectionResult !== 'both' && (
         <div className="p-3 rounded-lg text-sm font-medium text-center bg-orange-100 text-orange-800 border-2 border-orange-300">
           {detectionResult === 'id_card' && `⚠ זוהתה תעודת זהות ${idType ? `(${idType})` : ''} - נא להשלים ספח`}
