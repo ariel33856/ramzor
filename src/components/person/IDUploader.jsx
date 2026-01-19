@@ -391,7 +391,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         </div>
 
         {/* Upload Section 2 - Conditional */}
-        {detectionResult && detectionResult !== 'both' && (
+        {detectionResult && detectionResult !== 'both' && idType !== 'ביומטרית' && (
           <div 
             className="border-2 border-dashed border-orange-300 rounded-xl p-0 bg-orange-50/50 hover:bg-orange-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
             onClick={() => !preview2 && fileInputRef2.current?.click()}
