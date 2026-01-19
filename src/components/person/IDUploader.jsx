@@ -507,7 +507,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             </SelectContent>
           </Select>
         </div>
-        <div className="md:col-span-2">
+        <div>
           <Label className="text-xs text-gray-600">כתובת</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />
         </div>
