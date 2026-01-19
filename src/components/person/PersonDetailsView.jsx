@@ -821,18 +821,18 @@ export default function PersonDetailsView({ personId }) {
             {/* Children Data Section */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <Label className="text-sm whitespace-nowrap">כתובת</Label>
-                <Input
-                  value={basicData.address}
-                  onChange={(e) => handleBasicDataChange('address', e.target.value)}
-                  placeholder="כתובת"
-                  className="text-sm w-48 h-8 bg-white"
-                />
                 <Label className="text-sm whitespace-nowrap">עיר</Label>
                 <Input
                   value={basicData.residential_city}
                   onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
                   placeholder="עיר"
+                  className="text-sm w-48 h-8 bg-white"
+                />
+                <Label className="text-sm whitespace-nowrap">כתובת</Label>
+                <Input
+                  value={basicData.address}
+                  onChange={(e) => handleBasicDataChange('address', e.target.value)}
+                  placeholder="כתובת"
                   className="text-sm w-48 h-8 bg-white"
                 />
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
