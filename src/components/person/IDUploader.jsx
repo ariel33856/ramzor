@@ -71,6 +71,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - gender (male או female - מהספח)
       - address (כתובת מלאה - מהספח)
       - city (ישוב/עיר מגורים - מהספח)
+      - entrance (מס' כניסה - מהספח)
+      - apartment_number (מס' דירה - מהספח)
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
       - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
