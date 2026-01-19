@@ -898,8 +898,16 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-            </div>
+                </div>
+                <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                >
+                <Plus className="w-4 h-4" />
+                </Button>
+                </div>
+                </div>
 
             {/* Children Data Section - Green */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
