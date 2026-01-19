@@ -278,7 +278,8 @@ export default function PersonDetailsView({ personId }) {
         email: person.email || '',
         notes: person.notes || '',
         residential_city: person.residential_city || '',
-        address: person.address || ''
+        address: person.address || '',
+        building_number: person.building_number || ''
       });
       
       if (person.linked_accounts) {
