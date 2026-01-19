@@ -536,10 +536,10 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 <div className="flex flex-col items-center justify-center h-full gap-3">
                    <Upload className={`w-12 h-12 ${idType === 'ביומטרית' ? 'text-purple-600' : 'text-orange-600'}`} />
                    <p className="text-sm font-medium text-gray-700 text-center">
-                     {idType === 'ביומטרית' 
-                       ? 'העלה צילום של הצד השני' 
-                       : detectionResult === 'id_card' ? 'העלה ספח' : 'העלה תעודת זהות'}
-                   </p>
+                      {idType === 'ביומטרית' 
+                        ? 'העלה צילום של הצד השני + ספח' 
+                        : detectionResult === 'id_card' ? 'העלה ספח' : 'העלה תעודת זהות'}
+                    </p>
                    <p className="text-xs text-gray-500">תמונה או PDF</p>
                  </div>
               </>
