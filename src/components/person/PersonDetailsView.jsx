@@ -820,7 +820,7 @@ export default function PersonDetailsView({ personId }) {
 
             {/* Children Data Section */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
@@ -835,7 +835,7 @@ export default function PersonDetailsView({ personId }) {
                       const [day, month, year] = birthDate.split('-').map(Number);
                       const birth = new Date(year, month - 1, day);
                       const today = new Date();
-                      
+
                       let years = today.getFullYear() - birth.getFullYear();
                       let months = today.getMonth() - birth.getMonth();
                       let days = today.getDate() - birth.getDate();
@@ -852,7 +852,7 @@ export default function PersonDetailsView({ personId }) {
                       }
 
                       const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
-                      
+
                       return (
                         <span>
                           <span className="text-sm">{years}</span>
@@ -871,6 +871,8 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap mt-3">
                 <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                 <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                   <SelectTrigger className="h-8 w-auto min-w-16 bg-white">
