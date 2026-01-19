@@ -845,8 +845,17 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Birth Info Section - Yellow */}
-            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
-              <div className="flex items-center gap-2 flex-wrap">
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                {/* Title Cube - Birth Info */}
+                <div className="w-16 bg-yellow-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
+                  <span className="text-sm font-bold text-white">נתוני</span>
+                  <span className="text-sm font-bold text-white">לידה</span>
+                </div>
+                
+                {/* Birth Info Content */}
+                <div className="flex-1 bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
