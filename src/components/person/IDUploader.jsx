@@ -70,6 +70,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       - id_expiry_date (תוקף בפורמט DD-MM-YYYY - מהתעודה)
       - gender (male או female - מהספח)
       - address (כתובת מלאה - מהספח)
+      - city (ישוב/עיר מגורים - מהספח)
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
       - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
