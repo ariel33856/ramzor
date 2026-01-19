@@ -66,7 +66,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `נתח את המסמך וחלץ מידע:
       1. זהה האם זה תעודת זהות (יש בה תמונה, מספר ת.ז, שם) או ספח (יש בו רק נתונים טקסטואליים כמו כתובת, ילדים).
-      2. החזר JSON עם:
+      2. אם זה תעודת זהות - זהה אם היא ביומטרית (יש שבב זהוב בצד שמאל, עיצוב כחול בהיר עם הולוגרמות/כוכבים) או רגילה (אין שבב, עיצוב כחול כהה יותר).
+      3. החזר JSON עם:
       - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
       - first_name (שם פרטי - מהתעודה או הספח)
       - last_name (שם משפחה - מהתעודה או הספח)
