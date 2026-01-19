@@ -917,6 +917,20 @@ export default function PersonDetailsView({ personId }) {
                   placeholder=""
                   className="text-sm w-20 h-8 bg-white"
                 />
+                <Label className="text-sm whitespace-nowrap">מספר כניסה</Label>
+                <Input
+                  value={basicData.entrance}
+                  onChange={(e) => handleBasicDataChange('entrance', e.target.value)}
+                  placeholder=""
+                  className="text-sm w-20 h-8 bg-white"
+                />
+                <Label className="text-sm whitespace-nowrap">מספר דירה</Label>
+                <Input
+                  value={basicData.apartment_number}
+                  onChange={(e) => handleBasicDataChange('apartment_number', e.target.value)}
+                  placeholder=""
+                  className="text-sm w-20 h-8 bg-white"
+                />
               </div>
               {showChildrenWarning && (
                 <div className="text-red-600 text-sm font-medium text-center mt-2">
