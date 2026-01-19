@@ -847,7 +847,6 @@ export default function PersonDetailsView({ personId }) {
             {/* Birth Info Section - Yellow */}
              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
                <div className="flex items-center gap-2 flex-wrap justify-between">
-                 <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
