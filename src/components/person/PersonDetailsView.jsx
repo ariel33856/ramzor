@@ -281,7 +281,9 @@ export default function PersonDetailsView({ personId }) {
         notes: person.notes || '',
         residential_city: person.residential_city || '',
         address: person.address || '',
-        building_number: person.building_number || ''
+        building_number: person.building_number || '',
+        entrance: person.entrance || '',
+        apartment_number: person.apartment_number || ''
       });
       
       if (person.linked_accounts) {
