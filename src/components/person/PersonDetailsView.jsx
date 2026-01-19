@@ -1156,14 +1156,16 @@ export default function PersonDetailsView({ personId }) {
                       />
                       <Label className="text-sm whitespace-nowrap">{personFields.num_siblings}</Label>
                       <Input 
-                      type="number" 
+                      type="text" 
                       value={numSiblings}
                       onChange={(e) => {
                       const value = e.target.value;
-                      setNumSiblings(value);
-                      updatePersonMutation.mutate({ 
-                      custom_data: { ...(person?.custom_data || {}), num_siblings: value }
-                      });
+                      if (value === '' || (/^\d{1,2}$/.test(value))) {
+                        setNumSiblings(value);
+                        updatePersonMutation.mutate({ 
+                        custom_data: { ...(person?.custom_data || {}), num_siblings: value }
+                        });
+                      }
                       }}
                       className="w-12 text-center h-8" 
                       />
