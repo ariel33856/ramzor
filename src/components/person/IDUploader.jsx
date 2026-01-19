@@ -69,6 +69,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       2. אם זה תעודת זהות - זהה אם היא ביומטרית (יש שבב זהוב בצד שמאל, עיצוב כחול בהיר עם הולוגרמות/כוכבים) או רגילה (אין שבב, עיצוב כחול כהה יותר).
       3. החזר JSON עם:
       - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+      - id_type (ביומטרית או רגילה - זוהה מתעודת זהות בלבד)
       - first_name (שם פרטי - מהתעודה או הספח)
       - last_name (שם משפחה - מהתעודה או הספח)
       - id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
