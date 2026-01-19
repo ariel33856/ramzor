@@ -807,7 +807,7 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Children Data Section */}
-            <div>
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
