@@ -452,15 +452,16 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       )}
 
       {/* Extracted Data Display */}
-      <div className="flex gap-3">
-        {/* Title Cube */}
-        <div className="w-16 bg-blue-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
-          <span className="text-sm font-bold text-white">נתוני</span>
-          <span className="text-sm font-bold text-white">התעודה</span>
-        </div>
-        
-        {/* Data Grid */}
-        <div className={`flex-1 grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-100 border-2 border-blue-400' : 'bg-gray-50 border-2 border-gray-200'}`}>
+      <div className="space-y-3">
+        <div className="flex gap-3">
+          {/* Title Cube - ID Data */}
+          <div className="w-16 bg-blue-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
+            <span className="text-sm font-bold text-white">נתוני</span>
+            <span className="text-sm font-bold text-white">התעודה</span>
+          </div>
+          
+          {/* Data Grid */}
+          <div className={`flex-1 grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-100 border-2 border-blue-400' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
@@ -523,8 +524,8 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             className="bg-white" 
           />
         </div>
-      </div>
-    </div>
-    </div>
-  );
-}
+        </div>
+        </div>
+        </div>
+        );
+        }
