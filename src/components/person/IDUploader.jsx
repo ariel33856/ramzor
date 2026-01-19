@@ -616,7 +616,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </div>
                 </>
               )}
-            </div>
+              </div>
             )}
             </>
             )}
