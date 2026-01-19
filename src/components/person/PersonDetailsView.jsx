@@ -805,14 +805,8 @@ export default function PersonDetailsView({ personId }) {
                 if (data.entrance) updates.entrance = data.entrance;
                 if (data.apartment_number) updates.apartment_number = data.apartment_number;
                 
-                // Extract city if available (usually first word or specific pattern)
-                if (data.address) {
-                  const words = data.address.split(/\s+/);
-                  // Try to find city - usually first word or look for common patterns
-                  if (words.length > 0) {
-                    updates.residential_city = words[0];
-                  }
-                }
+                // Extract city if available
+                if (data.city) updates.residential_city = data.city;
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
                 if (data.gender) setGender(data.gender);
