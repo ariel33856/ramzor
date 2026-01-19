@@ -422,7 +422,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          downloadAsPDF(preview2, fileType2, 'ספח-תעודת-זהות.pdf');
+                          downloadAsPDF(preview2, fileType2, idType === 'ביומטרית' ? 'צד-שני-תעודה.pdf' : 'ספח-תעודת-זהות.pdf');
                         }}
                         className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
                         size="icon"
