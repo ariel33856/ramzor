@@ -844,30 +844,9 @@ export default function PersonDetailsView({ personId }) {
               }}
             />
 
-            {/* Children Data Section */}
-            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+            {/* Birth Info Section - Yellow */}
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <Label className="text-sm whitespace-nowrap">עיר מגורים</Label>
-                <Input
-                  value={basicData.residential_city}
-                  onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
-                  placeholder=""
-                  className="text-sm w-48 h-8 bg-white"
-                />
-                <Label className="text-sm whitespace-nowrap">כתובת</Label>
-                <Input
-                  value={basicData.address}
-                  onChange={(e) => handleBasicDataChange('address', e.target.value)}
-                  placeholder="כתובת"
-                  className="text-sm w-48 h-8 bg-white"
-                />
-                <Label className="text-sm whitespace-nowrap">מספר בנין</Label>
-                <Input
-                  value={basicData.building_number}
-                  onChange={(e) => handleBasicDataChange('building_number', e.target.value)}
-                  placeholder=""
-                  className="text-sm w-20 h-8 bg-white"
-                />
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
@@ -918,6 +897,33 @@ export default function PersonDetailsView({ personId }) {
                     <SelectItem value="female">נקבה</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* Children Data Section - Green */}
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Label className="text-sm whitespace-nowrap">עיר מגורים</Label>
+                <Input
+                  value={basicData.residential_city}
+                  onChange={(e) => handleBasicDataChange('residential_city', e.target.value)}
+                  placeholder=""
+                  className="text-sm w-48 h-8 bg-white"
+                />
+                <Label className="text-sm whitespace-nowrap">כתובת</Label>
+                <Input
+                  value={basicData.address}
+                  onChange={(e) => handleBasicDataChange('address', e.target.value)}
+                  placeholder="כתובת"
+                  className="text-sm w-48 h-8 bg-white"
+                />
+                <Label className="text-sm whitespace-nowrap">מספר בנין</Label>
+                <Input
+                  value={basicData.building_number}
+                  onChange={(e) => handleBasicDataChange('building_number', e.target.value)}
+                  placeholder=""
+                  className="text-sm w-20 h-8 bg-white"
+                />
               </div>
               {showChildrenWarning && (
                 <div className="text-red-600 text-sm font-medium text-center mt-2">
