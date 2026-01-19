@@ -84,6 +84,7 @@ export default function PersonDetailsView({ personId }) {
   const [maritalStatus, setMaritalStatus] = useState('married');
   const [idError, setIdError] = useState('');
   const [additionalPhones, setAdditionalPhones] = useState([]);
+  const [incomeSource, setIncomeSource] = useState('');
 
 
   const { data: person, isLoading } = useQuery({
@@ -317,6 +318,11 @@ export default function PersonDetailsView({ personId }) {
         // Load additional phones from custom_data
         if (person.custom_data.additional_phones && Array.isArray(person.custom_data.additional_phones)) {
           setAdditionalPhones(person.custom_data.additional_phones);
+        }
+
+        // Load income source from custom_data
+        if (person.custom_data.income_source) {
+          setIncomeSource(person.custom_data.income_source);
         }
       }
       }
@@ -1088,7 +1094,28 @@ export default function PersonDetailsView({ personId }) {
         {/* Content */}
         {!isCollapsed && (
           <div className="p-6">
-            <p className="text-gray-500 text-center">תוכן הכנסות יתווסף בהמשך</p>
+            <div className="flex items-center gap-4">
+              <Label className="text-sm font-medium whitespace-nowrap">מקור הכנסה</Label>
+              <Select value={incomeSource} onValueChange={(value) => {
+                setIncomeSource(value);
+                updatePersonMutation.mutate({
+                  custom_data: { ...(person?.custom_data || {}), income_source: value }
+                });
+              }}>
+                <SelectTrigger className="w-64">
+                  <SelectValue placeholder="בחר מקור הכנסה" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="שכיר">שכיר</SelectItem>
+                  <SelectItem value="עצמאי">עצמאי</SelectItem>
+                  <SelectItem value="חברה בע״מ">חברה בע״מ</SelectItem>
+                  <SelectItem value="פנסיה">פנסיה</SelectItem>
+                  <SelectItem value="קצבה">קצבה</SelectItem>
+                  <SelectItem value="השכרה">השכרה</SelectItem>
+                  <SelectItem value="אחר">אחר</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         )}
       </div>
