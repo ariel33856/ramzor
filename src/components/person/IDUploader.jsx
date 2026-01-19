@@ -452,14 +452,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       )}
 
       {/* Extracted Data Display */}
-      <div className="flex gap-3">
-        {/* Title Cube */}
-        <div className="w-16 bg-blue-200 rounded-xl p-2 flex items-center justify-center">
-          <span className="text-sm font-bold text-blue-900 text-center" style={{writingMode: 'vertical-rl', textOrientation: 'mixed', wordBreak: 'break-word'}}>נתוני התעודה</span>
-        </div>
-        
-        {/* Data Grid */}
-        <div className={`flex-1 grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
+      <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
           <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
@@ -523,7 +516,6 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           />
         </div>
       </div>
-    </div>
     </div>
   );
 }
