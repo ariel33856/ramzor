@@ -598,7 +598,7 @@ export default function Dashboard() {
                                   setSortDirection('desc');
                                 }
                               }}
-                              className={`p-0.5 rounded transition-colors flex items-center gap-0 ${sortField === fieldId ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                              className={`p-0.5 rounded border-2 transition-colors flex items-center gap-0 ${sortField === fieldId ? 'bg-blue-100 border-blue-400' : 'hover:bg-gray-100 border-gray-300'}`}
                               title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
                             >
                               <ArrowUp className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} />
@@ -606,7 +606,7 @@ export default function Dashboard() {
                             </button>
                             <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
                               <PopoverTrigger asChild>
-                                <button className="relative hover:text-blue-600 transition-colors">
+                                <button className="relative hover:text-blue-600 transition-colors p-0.5 rounded border-2 border-gray-300 hover:border-blue-400">
                                   <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
                                   {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
                                     <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
