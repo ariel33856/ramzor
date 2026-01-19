@@ -76,6 +76,7 @@ export default function PersonDetailsView({ personId }) {
   });
   const [numChildren, setNumChildren] = useState(0);
   const [childrenDates, setChildrenDates] = useState(['']);
+  const [childrenNames, setChildrenNames] = useState(['']);
   const [dateError, setDateError] = useState('');
   const [numSiblings, setNumSiblings] = useState('');
   const [manualNumChildren, setManualNumChildren] = useState('');
@@ -307,6 +308,12 @@ export default function PersonDetailsView({ personId }) {
           setChildrenDates([...idUploadData.children_birth_dates, '']);
         } else if (person.custom_data.children_birth_dates && Array.isArray(person.custom_data.children_birth_dates)) {
           setChildrenDates([...person.custom_data.children_birth_dates, '']);
+        }
+
+        if (idUploadData?.children_names && Array.isArray(idUploadData.children_names)) {
+          setChildrenNames([...idUploadData.children_names, '']);
+        } else if (person.custom_data.children_names && Array.isArray(person.custom_data.children_names)) {
+          setChildrenNames([...person.custom_data.children_names, '']);
         }
 
         if (idUploadData?.num_children) {
@@ -772,8 +779,10 @@ export default function PersonDetailsView({ personId }) {
                   const customData = { ...(person?.custom_data || {}) };
                   delete customData.id_upload_data;
                   delete customData.children_birth_dates;
+                  delete customData.children_names;
                   delete customData.num_children;
                   setChildrenDates(['']);
+                  setChildrenNames(['']);
                   setManualNumChildren('');
                   setManualNumChildrenUnder18('');
                   updatePersonMutation.mutate({ custom_data: customData });
@@ -792,6 +801,9 @@ export default function PersonDetailsView({ personId }) {
                 // Update children data
                 if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
                   setChildrenDates([...data.children_birth_dates, '']);
+                }
+                if (data.children_names && Array.isArray(data.children_names)) {
+                  setChildrenNames([...data.children_names, '']);
                 }
                 if (data.num_children) {
                   setManualNumChildren(String(data.num_children));
@@ -942,6 +954,38 @@ export default function PersonDetailsView({ personId }) {
                     </PopoverTrigger>
                     <PopoverContent className="w-48 p-3">
                       <div className="flex flex-col gap-2">
+                        <Label className="text-xs">שם הילד</Label>
+                        <Input
+                          value={childrenNames[index] || ''}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const newNames = [...childrenNames];
+                            newNames[index] = value;
+                            
+                            if (value && !newNames.find((n, i) => i > index && n === '')) {
+                              newNames.push('');
+                            }
+                            
+                            setChildrenNames(newNames);
+                            
+                            const validNames = newNames.filter(n => n);
+                            const validDates = childrenDates.filter(d => d.length === 10);
+                            const updatedIdData = {
+                              ...(person?.custom_data?.id_upload_data || {}),
+                              children_names: validNames,
+                              children_birth_dates: validDates
+                            };
+                            updatePersonMutation.mutate({ 
+                              custom_data: { 
+                                ...(person?.custom_data || {}),
+                                id_upload_data: updatedIdData,
+                                children_names: validNames
+                              }
+                            });
+                          }}
+                          placeholder="שם הילד"
+                          className="text-sm h-8"
+                        />
                         <Label className="text-xs">תאריך לידה (DD-MM-YYYY)</Label>
                         <Input
                           value={date}
@@ -984,15 +1028,22 @@ export default function PersonDetailsView({ personId }) {
                               className="text-red-500 hover:text-red-600 h-6 text-xs"
                               onClick={() => {
                                 const newDates = childrenDates.filter((_, i) => i !== index);
+                                const newNames = childrenNames.filter((_, i) => i !== index);
                                 if (newDates.length === 0 || newDates[newDates.length - 1] !== '') {
                                   newDates.push('');
                                 }
+                                if (newNames.length === 0 || newNames[newNames.length - 1] !== '') {
+                                  newNames.push('');
+                                }
                                 setChildrenDates(newDates);
+                                setChildrenNames(newNames);
                                 
                                 const validDates = newDates.filter(d => d.length === 10);
+                                const validNames = newNames.filter(n => n);
                                 const updatedIdData = {
                                   ...(person?.custom_data?.id_upload_data || {}),
                                   children_birth_dates: validDates,
+                                  children_names: validNames,
                                   num_children: validDates.length
                                 };
                                 updatePersonMutation.mutate({ 
@@ -1000,6 +1051,7 @@ export default function PersonDetailsView({ personId }) {
                                     ...(person?.custom_data || {}),
                                     id_upload_data: updatedIdData,
                                     children_birth_dates: validDates,
+                                    children_names: validNames,
                                     num_children: validDates.length
                                   }
                                 });
