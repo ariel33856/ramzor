@@ -845,17 +845,8 @@ export default function PersonDetailsView({ personId }) {
             />
 
             {/* Birth Info Section - Yellow */}
-            <div className="space-y-3">
-              <div className="flex gap-3">
-                {/* Title Cube - Birth Info */}
-                <div className="w-16 bg-yellow-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
-                  <span className="text-sm font-bold text-white">נתוני</span>
-                  <span className="text-sm font-bold text-white">לידה</span>
-                </div>
-                
-                {/* Birth Info Content */}
-                <div className="flex-1 bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
-                  <div className="flex items-center gap-2 flex-wrap">
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || ''} 
@@ -910,17 +901,8 @@ export default function PersonDetailsView({ personId }) {
             </div>
 
             {/* Children Data Section - Green */}
-            <div className="space-y-3">
-              <div className="flex gap-3">
-                {/* Title Cube - Address Info */}
-                <div className="w-16 bg-green-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
-                  <span className="text-sm font-bold text-white">כתובת</span>
-                  <span className="text-sm font-bold text-white">ומגורים</span>
-                </div>
-                
-                {/* Address Info Content */}
-                <div className="flex-1 bg-green-50 border-2 border-green-200 rounded-lg p-3">
-                  <div className="flex items-center gap-2 flex-wrap">
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">עיר מגורים</Label>
                 <Input
                   value={basicData.residential_city}
@@ -942,28 +924,17 @@ export default function PersonDetailsView({ personId }) {
                   placeholder=""
                   className="text-sm w-20 h-8 bg-white"
                 />
-                  </div>
-                  {showChildrenWarning && (
-                    <div className="text-red-600 text-sm font-medium text-center mt-2">
-                      נא למלא תאריכי לידה של הילדים
-                    </div>
-                  )}
-                </div>
               </div>
-            </div>
-
-            {/* Children & Family Info Section */}
-            <div className="space-y-3">
-              <div className="flex gap-3">
-                {/* Title Cube - Family Info */}
-                <div className="w-16 bg-red-600 rounded-xl p-2 flex flex-col items-center justify-center gap-1">
-                  <span className="text-sm font-bold text-white">נתוני</span>
-                  <span className="text-sm font-bold text-white">משפחה</span>
+              {showChildrenWarning && (
+                <div className="text-red-600 text-sm font-medium text-center mt-2">
+                  נא למלא תאריכי לידה של הילדים
                 </div>
+              )}
+              </div>
 
-                {/* Family Info Content */}
-                <div className="flex-1 bg-red-50 border-2 border-red-200 rounded-lg p-3">
-                  <div className="flex items-center gap-2 flex-wrap">
+              {/* Children & Family Info Section */}
+              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 flex-wrap">
                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                  <SelectTrigger className="h-8 w-auto min-w-32 bg-white">
@@ -1260,7 +1231,6 @@ export default function PersonDetailsView({ personId }) {
                  }}
                  className="w-12 text-center h-8 bg-white" 
                />
-              </div>
               </div>
               </div>
               </div>
