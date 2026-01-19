@@ -601,8 +601,8 @@ export default function Dashboard() {
                               className={`p-0.5 rounded border-2 transition-colors flex items-center ${sortField === fieldId ? 'bg-blue-100 border-blue-400' : 'hover:bg-gray-100 border-gray-300'}`}
                               title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
                             >
-                              <ArrowUp className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} />
-                              <ArrowDown className={`w-4 h-4 -mr-2 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} />
+                              <ArrowUp className={`w-4 h-4 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} style={{transform: 'scaleY(0.85)'}} />
+                              <ArrowDown className={`w-4 h-4 -mr-2 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} style={{transform: 'scaleY(0.85)'}} />
                             </button>
                             <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
                               <PopoverTrigger asChild>
