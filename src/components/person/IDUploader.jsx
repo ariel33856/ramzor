@@ -183,11 +183,18 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
     console.log('📤 Starting second upload:', file.name);
     setUploading2(true);
-    setFileType2(file.type);
     setLocalFile2(file);
 
     try {
-      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      let uploadFile = file;
+      if (file.type.includes('image')) {
+        uploadFile = await convertImageToPdf(file);
+        setFileType2('application/pdf');
+      } else {
+        setFileType2(file.type);
+      }
+
+      const uploadResult = await base44.integrations.Core.UploadFile({ file: uploadFile });
       const file_url = uploadResult.file_url;
       setPreview2(file_url);
 
