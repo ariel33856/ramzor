@@ -291,11 +291,18 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
     console.log('📤 Starting appendix upload:', file.name);
     setUploading3(true);
-    setFileType3(file.type);
     setLocalFile3(file);
 
     try {
-      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      let uploadFile = file;
+      if (file.type.includes('image')) {
+        uploadFile = await convertImageToPdf(file);
+        setFileType3('application/pdf');
+      } else {
+        setFileType3(file.type);
+      }
+
+      const uploadResult = await base44.integrations.Core.UploadFile({ file: uploadFile });
       const file_url = uploadResult.file_url;
       setPreview3(file_url);
 
