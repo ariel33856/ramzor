@@ -122,6 +122,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
+      setIdType(result.id_type);
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
@@ -129,7 +130,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       };
       setExtractedData(dataWithFiles);
       onDataExtracted?.(dataWithFiles);
-      
+
       if (result.document_type === 'both') {
         setShowMessage(true);
         setTimeout(() => setShowMessage(false), 2000);
