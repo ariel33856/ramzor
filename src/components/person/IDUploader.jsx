@@ -533,6 +533,30 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             </SelectContent>
           </Select>
         </div>
+        <div>
+          <Label className="text-xs text-gray-600">אזרחות זרה</Label>
+          <Input 
+            value={extractedData?.foreign_citizenship || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, foreign_citizenship: e.target.value };
+              setExtractedData(updatedData);
+              onDataExtracted?.(updatedData);
+            }}
+            className="bg-white" 
+          />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">מס' דרכון</Label>
+          <Input 
+            value={extractedData?.passport_number || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, passport_number: e.target.value };
+              setExtractedData(updatedData);
+              onDataExtracted?.(updatedData);
+            }}
+            className="bg-white" 
+          />
+        </div>
       </div>
     </div>
   );
