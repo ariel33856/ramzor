@@ -1000,7 +1000,7 @@ export default function PersonDetailsView({ personId }) {
 
                       {/* Children Ages Section */}
                       <Label className="text-xs whitespace-nowrap">{personFields.children_birth_dates}</Label>
-                {childrenDates.map((date, index) => (
+                      {childrenDates.map((date, index) => (
                   <Popover key={index}>
                     <PopoverTrigger asChild>
                       <Button
