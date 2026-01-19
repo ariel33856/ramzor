@@ -828,8 +828,6 @@ export default function PersonDetailsView({ personId }) {
                   placeholder="כתובת"
                   className="text-sm w-48 h-8 bg-white"
                 />
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
                 <Label className="text-sm whitespace-nowrap">עיר</Label>
                 <Input
                   value={basicData.residential_city}
