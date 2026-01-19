@@ -933,7 +933,7 @@ export default function PersonDetailsView({ personId }) {
               </div>
 
               {/* Children & Family Info Section */}
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
+              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
                <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
