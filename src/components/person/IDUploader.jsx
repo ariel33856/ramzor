@@ -43,6 +43,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     }
   }, [initialData]);
 
+  const convertImageToPdf = async (file) => {
+    if (!file.type.includes('image')) return file;
+    
+    console.log('🖼️ Converting image to PDF...');
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+
+    const pdf = new jsPDF({
+      orientation: img.width > img.height ? 'landscape' : 'portrait',
+      unit: 'px',
+      format: [img.width, img.height]
+    });
+
+    pdf.addImage(img, 'JPEG', 0, 0, img.width, img.height);
+    
+    // Convert PDF to blob
+    const blob = pdf.output('blob');
+    return new File([blob], file.name.replace(/\.[^/.]+$/, '.pdf'), { type: 'application/pdf' });
+  };
+
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -50,12 +75,19 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     console.log('📤 Starting upload:', file.name, file.type);
     setError(null);
     setUploading(true);
-    setFileType(file.type);
     setLocalFile(file);
 
     try {
+      let uploadFile = file;
+      if (file.type.includes('image')) {
+        uploadFile = await convertImageToPdf(file);
+        setFileType('application/pdf');
+      } else {
+        setFileType(file.type);
+      }
+
       console.log('⬆️ Uploading file...');
-      const uploadResult = await base44.integrations.Core.UploadFile({ file });
+      const uploadResult = await base44.integrations.Core.UploadFile({ file: uploadFile });
       console.log('✅ Upload result:', uploadResult);
       
       const file_url = uploadResult.file_url;
