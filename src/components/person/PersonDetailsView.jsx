@@ -810,6 +810,56 @@ export default function PersonDetailsView({ personId }) {
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 flex-wrap">
+                  <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
+                  <Input 
+                    value={person?.custom_data?.id_upload_data?.birth_date || ''} 
+                    readOnly 
+                    className="bg-white w-28"
+                  />
+                  <Label className="text-sm whitespace-nowrap">גיל</Label>
+                  <div className="flex h-9 w-16 rounded-md border border-input bg-white px-3 py-1 items-center">
+                    {(() => {
+                      const birthDate = person?.custom_data?.id_upload_data?.birth_date;
+                      if (!birthDate || birthDate.length !== 10) return '';
+                      const [day, month, year] = birthDate.split('-').map(Number);
+                      const birth = new Date(year, month - 1, day);
+                      const today = new Date();
+                      
+                      let years = today.getFullYear() - birth.getFullYear();
+                      let months = today.getMonth() - birth.getMonth();
+                      let days = today.getDate() - birth.getDate();
+
+                      if (days < 0) {
+                        months--;
+                        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                        days += prevMonth.getDate();
+                      }
+
+                      if (months < 0) {
+                        years--;
+                        months += 12;
+                      }
+
+                      const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+                      
+                      return (
+                        <span>
+                          <span className="text-base">{years}</span>
+                          <span className="text-xs">.{decimal}</span>
+                        </span>
+                      );
+                    })()}
+                  </div>
+                  <Label className="text-sm whitespace-nowrap">מין</Label>
+                  <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger className="h-9 bg-white w-20">
+                      <SelectValue placeholder="בחר"/>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">זכר</SelectItem>
+                      <SelectItem value="female">נקבה</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <Label className="text-sm whitespace-nowrap">{personFields.marital_status}</Label>
                   <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                     <SelectTrigger className="w-20">
