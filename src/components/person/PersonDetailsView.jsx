@@ -1094,7 +1094,7 @@ export default function PersonDetailsView({ personId }) {
                       });
                     }}
                     placeholder={childrenDates.filter(d => d.length === 10).length.toString()}
-                    className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                    className={`w-12 text-center h-8 bg-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildren && parseInt(manualNumChildren) !== childrenDates.filter(d => d.length === 10).length
                         ? 'border-red-500 bg-red-50'
                         : ''
@@ -1136,7 +1136,7 @@ export default function PersonDetailsView({ personId }) {
                       }
                       return age < 18;
                       }).length.toString()}
-                      className={`w-12 text-center h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                      className={`w-12 text-center h-8 bg-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                       manualNumChildrenUnder18 && parseInt(manualNumChildrenUnder18) !== childrenDates.filter(d => {
                       if (d.length !== 10) return false;
                       const [day, month, year] = d.split('-').map(Number);
