@@ -46,7 +46,6 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     setUploading(true);
     setFileType(file.type);
     setLocalFile(file);
-    setPreview(URL.createObjectURL(file));
 
     try {
       console.log('⬆️ Uploading file...');
@@ -55,6 +54,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       
       const file_url = uploadResult.file_url;
       console.log('🔗 File URL:', file_url);
+      setPreview(file_url);
 
       console.log('🤖 Extracting data with AI...');
       const result = await base44.integrations.Core.InvokeLLM({
@@ -98,7 +98,6 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
-      setPreview(file_url);
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
@@ -127,11 +126,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     setUploading2(true);
     setFileType2(file.type);
     setLocalFile2(file);
-    setPreview2(URL.createObjectURL(file));
 
     try {
       const uploadResult = await base44.integrations.Core.UploadFile({ file });
       const file_url = uploadResult.file_url;
+      setPreview2(file_url);
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
@@ -164,7 +163,6 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       });
 
       // Merge data
-      setPreview2(file_url);
       const mergedData = { 
         ...extractedData, 
         ...result, 
