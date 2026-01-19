@@ -896,6 +896,124 @@ export default function PersonDetailsView({ personId }) {
                       )}
                     </SelectContent>
                   </Select>
+
+                      {/* Children Ages Section */}
+                      <Label className="text-sm whitespace-nowrap">{personFields.children_birth_dates}</Label>
+                      {childrenDates.map((date, index) => (
+                  <Popover key={index}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-10 h-8 justify-center text-center font-normal text-xs ${
+                          !date ? 'text-gray-400' : ''
+                        }`}
+                      >
+                          {date ? (() => {
+                            if (date.length !== 10) return date;
+                            const [day, month, year] = date.split('-').map(Number);
+                            const birthDate = new Date(year, month - 1, day);
+                            const today = new Date();
+                            
+                            let years = today.getFullYear() - birthDate.getFullYear();
+                            let months = today.getMonth() - birthDate.getMonth();
+                            let days = today.getDate() - birthDate.getDate();
+
+                            if (days < 0) {
+                              months--;
+                              const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                              days += prevMonth.getDate();
+                            }
+
+                            if (months < 0) {
+                              years--;
+                              months += 12;
+                            }
+
+                            const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+                            
+                            return (
+                              <span>
+                                <span className="text-sm">{years}</span>
+                                <span className="text-xs">.{decimal}</span>
+                              </span>
+                            );
+                          })() : 'גיל'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-48 p-3">
+                      <div className="flex flex-col gap-2">
+                        <Label className="text-xs">תאריך לידה (DD-MM-YYYY)</Label>
+                        <Input
+                          value={date}
+                          onChange={(e) => {
+                              const value = e.target.value;
+                              const newDates = [...childrenDates];
+                              newDates[index] = value;
+                              
+                              if (value.length === 10 && !newDates.find((d, i) => i > index && d === '')) {
+                                newDates.push('');
+                              }
+                              
+                              setChildrenDates(newDates);
+                              
+                              if (value.length === 10) {
+                                const validDates = newDates.filter(d => d.length === 10);
+                                const updatedIdData = {
+                                  ...(person?.custom_data?.id_upload_data || {}),
+                                  children_birth_dates: validDates,
+                                  num_children: validDates.length
+                                };
+                                updatePersonMutation.mutate({ 
+                                  custom_data: { 
+                                    ...(person?.custom_data || {}),
+                                    id_upload_data: updatedIdData,
+                                    children_birth_dates: validDates,
+                                    num_children: validDates.length
+                                  }
+                                });
+                                setManualNumChildren(String(validDates.length));
+                              }
+                            }}
+                            placeholder="01-01-2010"
+                            className="text-sm h-8"
+                          />
+                          {date && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-500 hover:text-red-600 h-6 text-xs"
+                              onClick={() => {
+                                const newDates = childrenDates.filter((_, i) => i !== index);
+                                if (newDates.length === 0 || newDates[newDates.length - 1] !== '') {
+                                  newDates.push('');
+                                }
+                                setChildrenDates(newDates);
+                                
+                                const validDates = newDates.filter(d => d.length === 10);
+                                const updatedIdData = {
+                                  ...(person?.custom_data?.id_upload_data || {}),
+                                  children_birth_dates: validDates,
+                                  num_children: validDates.length
+                                };
+                                updatePersonMutation.mutate({ 
+                                  custom_data: { 
+                                    ...(person?.custom_data || {}),
+                                    id_upload_data: updatedIdData,
+                                    children_birth_dates: validDates,
+                                    num_children: validDates.length
+                                  }
+                                });
+                                setManualNumChildren(String(validDates.length));
+                              }}
+                            >
+                              מחק
+                            </Button>
+                          )}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  ))}
+
                 <Label className="text-sm whitespace-nowrap">{personFields.num_children}</Label>
                 <Input 
                   type="number"
