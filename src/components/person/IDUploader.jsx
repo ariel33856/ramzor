@@ -454,12 +454,25 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             const [day, month, year] = extractedData.birth_date.split('-').map(Number);
             const birthDate = new Date(year, month - 1, day);
             const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-              age--;
+            
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+              months--;
+              const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+              days += prevMonth.getDate();
             }
-            return age.toString();
+
+            if (months < 0) {
+              years--;
+              months += 12;
+            }
+
+            const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1];
+            
+            return `${years}.${decimal}`;
           })()} readOnly className="bg-white" />
         </div>
         <div>
