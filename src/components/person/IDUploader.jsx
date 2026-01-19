@@ -90,6 +90,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
             address: { type: "string" },
+            city: { type: "string" },
             num_children: { type: "number" },
             children_birth_dates: { 
               type: "array",
