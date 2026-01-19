@@ -478,8 +478,12 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
           <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
         </div>
         <div>
-          <Label className="text-xs text-gray-600">כתובת</Label>
+          <Label className="text-xs text-gray-600">רחוב</Label>
           <Input value={extractedData?.address || ''} readOnly className="bg-white" />
+        </div>
+        <div>
+          <Label className="text-xs text-gray-600">מס' בנין</Label>
+          <Input value={extractedData?.building_number || ''} readOnly className="bg-white" />
         </div>
         <div>
           <Label className="text-xs text-gray-600">מעמד ישראלי</Label>
