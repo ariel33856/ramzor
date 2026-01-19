@@ -150,7 +150,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
       - document_type: "id_card" או "appendix" או "both"
-      - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address, city, entrance, apartment_number
+      - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address, building_number, city, entrance, apartment_number
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
       - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
@@ -170,6 +170,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             id_expiry_date: { type: "string" },
             gender: { type: "string" },
             address: { type: "string" },
+            building_number: { type: "string" },
             city: { type: "string" },
             entrance: { type: "string" },
             apartment_number: { type: "string" },
