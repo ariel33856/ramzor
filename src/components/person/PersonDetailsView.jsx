@@ -1167,7 +1167,7 @@ export default function PersonDetailsView({ personId }) {
                         });
                       }
                       }}
-                      className="w-12 text-center h-8" 
+                      className="w-12 text-center h-8 bg-white" 
                       />
               </div>
               {showChildrenWarning && (
