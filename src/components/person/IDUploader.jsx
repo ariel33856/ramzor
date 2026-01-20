@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Upload, Loader2, X, Download, Image, ArrowRight, FileText } from 'lucide-react';
+import { Upload, Loader2, X, Download, FileImage, ArrowRight, FileText } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -489,7 +489,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                     {convertingToPdf ? (
                       <div className="flex items-center gap-4">
                         <div className="animate-bounce">
-                          <Image className="w-16 h-16 text-blue-600" />
+                          <FileImage className="w-16 h-16 text-blue-600" />
                         </div>
                         <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
                         <div className="animate-bounce" style={{animationDelay: '200ms'}}>
@@ -622,7 +622,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                        {convertingToPdf2 ? (
                          <div className="flex items-center gap-4">
                            <div className="animate-bounce">
-                             <Image className="w-16 h-16 text-orange-600" />
+                             <FileImage className="w-16 h-16 text-orange-600" />
                            </div>
                            <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
                            <div className="animate-bounce" style={{animationDelay: '200ms'}}>
@@ -739,7 +739,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                            {convertingToPdf3 ? (
                              <div className="flex items-center gap-4">
                                <div className="animate-bounce">
-                                 <Image className="w-16 h-16 text-orange-600" />
+                                 <FileImage className="w-16 h-16 text-orange-600" />
                                </div>
                                <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
                                <div className="animate-bounce" style={{animationDelay: '200ms'}}>
