@@ -189,6 +189,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       if (result.document_type === 'both') {
         setShowMessage(true);
         setTimeout(() => setShowMessage(false), 2000);
+      } else {
+        // Auto-open second upload for missing document
+        setTimeout(() => {
+          fileInputRef2.current?.click();
+        }, 800);
       }
     } catch (error) {
       console.error('❌ Error:', error);
