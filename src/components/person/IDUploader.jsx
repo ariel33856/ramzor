@@ -77,13 +77,17 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
     console.log('📤 Starting upload:', file.name, file.type);
     setError(null);
-    setUploading(true);
     setLocalFile(file);
+    
+    // Set converting state before uploading if it's an image
+    if (file.type.includes('image')) {
+      setConvertingToPdf(true);
+    }
+    setUploading(true);
 
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
-        setConvertingToPdf(true);
         uploadFile = await convertImageToPdf(file);
         setConvertingToPdf(false);
         setFileType('application/pdf');
@@ -187,13 +191,16 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     if (!file) return;
 
     console.log('📤 Starting second upload:', file.name);
-    setUploading2(true);
     setLocalFile2(file);
+    
+    if (file.type.includes('image')) {
+      setConvertingToPdf2(true);
+    }
+    setUploading2(true);
 
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
-        setConvertingToPdf2(true);
         uploadFile = await convertImageToPdf(file);
         setConvertingToPdf2(false);
         setFileType2('application/pdf');
@@ -297,13 +304,16 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     if (!file) return;
 
     console.log('📤 Starting appendix upload:', file.name);
-    setUploading3(true);
     setLocalFile3(file);
+    
+    if (file.type.includes('image')) {
+      setConvertingToPdf3(true);
+    }
+    setUploading3(true);
 
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
-        setConvertingToPdf3(true);
         uploadFile = await convertImageToPdf(file);
         setConvertingToPdf3(false);
         setFileType3('application/pdf');
