@@ -533,19 +533,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 </div>
               )}
 
-              {fileType?.includes('pdf') ? (
-                <iframe 
-                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
-                  className="w-full h-full min-h-[280px] rounded-xl"
-                  frameBorder="0"
-                />
-              ) : (
-                <img 
-                  src={preview} 
-                  alt="תעודת זהות" 
-                  className="w-full h-full object-contain rounded-xl"
-                />
-              )}
+              <iframe 
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
+                className="w-full h-full min-h-[280px] rounded-xl"
+                frameBorder="0"
+              />
             </>
           ) : (
             <>
@@ -658,19 +650,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                    </div>
                  )}
 
-                 {fileType2?.includes('pdf') ? (
-                   <iframe 
-                     src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
-                     className="w-full h-full min-h-[280px] rounded-xl"
-                     frameBorder="0"
-                   />
-                 ) : (
-                   <img 
-                     src={preview2} 
-                     alt="צד שני או ספח" 
-                     className="w-full h-full object-contain rounded-xl"
-                   />
-                 )}
+                 <iframe 
+                   src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
+                   className="w-full h-full min-h-[280px] rounded-xl"
+                   frameBorder="0"
+                 />
               </>
             ) : (
               <>
@@ -775,19 +759,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                        </div>
                      )}
 
-                     {fileType3?.includes('pdf') ? (
-                       <iframe 
-                         src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
-                         className="w-full h-full min-h-[280px] rounded-xl"
-                         frameBorder="0"
-                       />
-                     ) : (
-                       <img 
-                         src={preview3} 
-                         alt="ספח" 
-                         className="w-full h-full object-contain rounded-xl"
-                       />
-                     )}
+                     <iframe 
+                       src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
+                       className="w-full h-full min-h-[280px] rounded-xl"
+                       frameBorder="0"
+                     />
                   </>
                 ) : (
                   <>
