@@ -30,6 +30,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
   const [localFile, setLocalFile] = useState(null);
   const [localFile2, setLocalFile2] = useState(null);
   const [localFile3, setLocalFile3] = useState(null);
+  const [autoOpenedUpload, setAutoOpenedUpload] = useState(false);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
   const fileInputRef3 = React.useRef(null);
@@ -48,13 +49,14 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
 
   // Auto-open file upload when detection requires additional documents
   React.useEffect(() => {
-    if (detectionResult && detectionResult !== 'both' && !preview2) {
+    if (detectionResult && detectionResult !== 'both' && !preview2 && !autoOpenedUpload && !uploading) {
+      setAutoOpenedUpload(true);
       // Small delay to ensure upload is complete and UI is ready
       setTimeout(() => {
         fileInputRef2.current?.click();
-      }, 500);
+      }, 800);
     }
-  }, [detectionResult]);
+  }, [detectionResult, uploading, preview2, autoOpenedUpload]);
 
   const convertImageToPdf = async (file) => {
     if (!file.type.includes('image')) return file;
