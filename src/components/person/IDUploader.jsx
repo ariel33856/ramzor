@@ -474,12 +474,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
               </TooltipProvider>
               
               {uploading && (
-                <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
-                  <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
-                    <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                    <p className="text-sm font-medium text-gray-700">
-                      {convertingToPdf ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
-                    </p>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
+                  <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                      <Loader2 className="w-16 h-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient)'}} />
+                      <svg width="0" height="0">
+                        <defs>
+                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#3b82f6" />
+                            <stop offset="50%" stopColor="#a855f7" />
+                            <stop offset="100%" stopColor="#ec4899" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        {convertingToPdf ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
+                      </p>
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                        <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -576,12 +595,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 </TooltipProvider>
                 
                 {uploading2 && (
-                   <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
-                     <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
-                       <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
-                       <p className="text-sm font-medium text-gray-700">
-                         {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
-                       </p>
+                   <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
+                     <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
+                       <div className="relative">
+                         <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                         <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient2)'}} />
+                         <svg width="0" height="0">
+                           <defs>
+                             <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                               <stop offset="0%" stopColor="#f97316" />
+                               <stop offset="50%" stopColor="#a855f7" />
+                               <stop offset="100%" stopColor="#ec4899" />
+                             </linearGradient>
+                           </defs>
+                         </svg>
+                       </div>
+                       <div className="flex flex-col items-center gap-2">
+                         <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                           {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
+                         </p>
+                         <div className="flex gap-1">
+                           <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                           <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                           <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                         </div>
+                       </div>
                      </div>
                    </div>
                  )}
@@ -662,12 +700,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                     </TooltipProvider>
 
                     {uploading3 && (
-                       <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
-                         <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
-                           <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
-                           <p className="text-sm font-medium text-gray-700">
-                             {convertingToPdf3 ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
-                           </p>
+                       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
+                         <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
+                           <div className="relative">
+                             <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                             <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient3)'}} />
+                             <svg width="0" height="0">
+                               <defs>
+                                 <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                   <stop offset="0%" stopColor="#f97316" />
+                                   <stop offset="50%" stopColor="#a855f7" />
+                                   <stop offset="100%" stopColor="#ec4899" />
+                                 </linearGradient>
+                               </defs>
+                             </svg>
+                           </div>
+                           <div className="flex flex-col items-center gap-2">
+                             <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                               {convertingToPdf3 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
+                             </p>
+                             <div className="flex gap-1">
+                               <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                               <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                               <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                             </div>
+                           </div>
                          </div>
                        </div>
                      )}
