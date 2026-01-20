@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Upload, Loader2, X, Download } from 'lucide-react';
+import { Upload, Loader2, X, Download, FileImage, ArrowRight, FileText } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -486,19 +486,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
               {uploading && (
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
                   <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                      <Loader2 className="w-16 h-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient)'}} />
-                      <svg width="0" height="0">
-                        <defs>
-                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#3b82f6" />
-                            <stop offset="50%" stopColor="#a855f7" />
-                            <stop offset="100%" stopColor="#ec4899" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    </div>
+                    {convertingToPdf ? (
+                      <div className="flex items-center gap-4">
+                        <div className="animate-bounce">
+                          <FileImage className="w-16 h-16 text-blue-600" />
+                        </div>
+                        <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
+                        <div className="animate-bounce" style={{animationDelay: '200ms'}}>
+                          <FileText className="w-16 h-16 text-pink-600" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                        <Loader2 className="w-16 h-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient)'}} />
+                        <svg width="0" height="0">
+                          <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stopColor="#3b82f6" />
+                              <stop offset="50%" stopColor="#a855f7" />
+                              <stop offset="100%" stopColor="#ec4899" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                      </div>
+                    )}
                     <div className="flex flex-col items-center gap-2">
                       <p className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                         {convertingToPdf ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
@@ -607,19 +619,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 {uploading2 && (
                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
                      <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
-                       <div className="relative">
-                         <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                         <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient2)'}} />
-                         <svg width="0" height="0">
-                           <defs>
-                             <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                               <stop offset="0%" stopColor="#f97316" />
-                               <stop offset="50%" stopColor="#a855f7" />
-                               <stop offset="100%" stopColor="#ec4899" />
-                             </linearGradient>
-                           </defs>
-                         </svg>
-                       </div>
+                       {convertingToPdf2 ? (
+                         <div className="flex items-center gap-4">
+                           <div className="animate-bounce">
+                             <FileImage className="w-16 h-16 text-orange-600" />
+                           </div>
+                           <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
+                           <div className="animate-bounce" style={{animationDelay: '200ms'}}>
+                             <FileText className="w-16 h-16 text-pink-600" />
+                           </div>
+                         </div>
+                       ) : (
+                         <div className="relative">
+                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                           <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient2)'}} />
+                           <svg width="0" height="0">
+                             <defs>
+                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                 <stop offset="0%" stopColor="#f97316" />
+                                 <stop offset="50%" stopColor="#a855f7" />
+                                 <stop offset="100%" stopColor="#ec4899" />
+                               </linearGradient>
+                             </defs>
+                           </svg>
+                         </div>
+                       )}
                        <div className="flex flex-col items-center gap-2">
                          <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                            {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
@@ -712,19 +736,31 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                     {uploading3 && (
                        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
                          <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
-                           <div className="relative">
-                             <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                             <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient3)'}} />
-                             <svg width="0" height="0">
-                               <defs>
-                                 <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-                                   <stop offset="0%" stopColor="#f97316" />
-                                   <stop offset="50%" stopColor="#a855f7" />
-                                   <stop offset="100%" stopColor="#ec4899" />
-                                 </linearGradient>
-                               </defs>
-                             </svg>
-                           </div>
+                           {convertingToPdf3 ? (
+                             <div className="flex items-center gap-4">
+                               <div className="animate-bounce">
+                                 <FileImage className="w-16 h-16 text-orange-600" />
+                               </div>
+                               <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
+                               <div className="animate-bounce" style={{animationDelay: '200ms'}}>
+                                 <FileText className="w-16 h-16 text-pink-600" />
+                               </div>
+                             </div>
+                           ) : (
+                             <div className="relative">
+                               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                               <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient3)'}} />
+                               <svg width="0" height="0">
+                                 <defs>
+                                   <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                     <stop offset="0%" stopColor="#f97316" />
+                                     <stop offset="50%" stopColor="#a855f7" />
+                                     <stop offset="100%" stopColor="#ec4899" />
+                                   </linearGradient>
+                                 </defs>
+                               </svg>
+                             </div>
+                           )}
                            <div className="flex flex-col items-center gap-2">
                              <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                                {convertingToPdf3 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
