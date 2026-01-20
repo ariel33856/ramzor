@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 
 export default function IDUploader({ onDataExtracted, initialData, gender, setGender }) {
   const [uploading, setUploading] = useState(false);
+  const [convertingToPdf, setConvertingToPdf] = useState(false);
   const [preview, setPreview] = useState(null);
   const [extractedData, setExtractedData] = useState(initialData || null);
   const [fileType, setFileType] = useState(initialData?.file_type_1 || null);
@@ -20,9 +21,11 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
   const [preview2, setPreview2] = useState(null);
   const [fileType2, setFileType2] = useState(initialData?.file_type_2 || null);
   const [uploading2, setUploading2] = useState(false);
+  const [convertingToPdf2, setConvertingToPdf2] = useState(false);
   const [preview3, setPreview3] = useState(null);
   const [fileType3, setFileType3] = useState(initialData?.file_type_3 || null);
   const [uploading3, setUploading3] = useState(false);
+  const [convertingToPdf3, setConvertingToPdf3] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [localFile, setLocalFile] = useState(null);
   const [localFile2, setLocalFile2] = useState(null);
@@ -80,7 +83,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
+        setConvertingToPdf(true);
         uploadFile = await convertImageToPdf(file);
+        setConvertingToPdf(false);
         setFileType('application/pdf');
       } else {
         setFileType(file.type);
@@ -188,7 +193,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
+        setConvertingToPdf2(true);
         uploadFile = await convertImageToPdf(file);
+        setConvertingToPdf2(false);
         setFileType2('application/pdf');
       } else {
         setFileType2(file.type);
@@ -296,7 +303,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     try {
       let uploadFile = file;
       if (file.type.includes('image')) {
+        setConvertingToPdf3(true);
         uploadFile = await convertImageToPdf(file);
+        setConvertingToPdf3(false);
         setFileType3('application/pdf');
       } else {
         setFileType3(file.type);
@@ -468,7 +477,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
                   <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
                     <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                    <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {convertingToPdf ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
+                    </p>
                   </div>
                 </div>
               )}
@@ -568,7 +579,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                    <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
                      <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
                        <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
-                       <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                       <p className="text-sm font-medium text-gray-700">
+                         {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
+                       </p>
                      </div>
                    </div>
                  )}
@@ -652,7 +665,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                        <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center z-10">
                          <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
                            <Loader2 className="w-8 h-8 text-orange-600 animate-spin" />
-                           <p className="text-sm font-medium text-gray-700">מחלץ נתונים...</p>
+                           <p className="text-sm font-medium text-gray-700">
+                             {convertingToPdf3 ? 'ממיר ל-PDF...' : 'מחלץ נתונים...'}
+                           </p>
                          </div>
                        </div>
                      )}
