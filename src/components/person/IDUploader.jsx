@@ -627,53 +627,53 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                 </TooltipProvider>
                 
                 {uploading2 && (
-                   <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
-                     <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
-                       {convertingToPdf2 ? (
-                         <div className="flex items-center gap-4">
-                           <div className="animate-bounce">
-                             <FileImage className="w-16 h-16 text-orange-600" />
-                           </div>
-                           <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
-                           <div className="animate-bounce" style={{animationDelay: '200ms'}}>
-                             <FileText className="w-16 h-16 text-pink-600" />
-                           </div>
-                         </div>
-                       ) : (
-                         <div className="relative">
-                           <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                           <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient2)'}} />
-                           <svg width="0" height="0">
-                             <defs>
-                               <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                 <stop offset="0%" stopColor="#f97316" />
-                                 <stop offset="50%" stopColor="#a855f7" />
-                                 <stop offset="100%" stopColor="#ec4899" />
-                               </linearGradient>
-                             </defs>
-                           </svg>
-                         </div>
-                       )}
-                       <div className="flex flex-col items-center gap-2">
-                         <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                           {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
-                         </p>
-                         <div className="flex gap-1">
-                           <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
-                           <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
-                           <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 )}
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
+                    <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
+                      {convertingToPdf2 ? (
+                        <div className="flex items-center gap-4">
+                          <div className="animate-bounce">
+                            <FileImage className="w-16 h-16 text-orange-600" />
+                          </div>
+                          <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
+                          <div className="animate-bounce" style={{animationDelay: '200ms'}}>
+                            <FileText className="w-16 h-16 text-pink-600" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                          <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient2)'}} />
+                          <svg width="0" height="0">
+                            <defs>
+                              <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#f97316" />
+                                <stop offset="50%" stopColor="#a855f7" />
+                                <stop offset="100%" stopColor="#ec4899" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </div>
+                      )}
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                          {convertingToPdf2 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
+                        </p>
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                          <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                          <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                 <iframe 
-                   key={preview2}
-                   src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
-                   className="w-full h-full min-h-[280px] rounded-xl"
-                   frameBorder="0"
-                 />
+                <iframe 
+                  key={preview2}
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
+                  className="w-full h-full min-h-[280px] rounded-xl"
+                  frameBorder="0"
+                />
               </>
             ) : (
               <>
