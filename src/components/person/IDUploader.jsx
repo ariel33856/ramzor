@@ -800,13 +800,6 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
               </div>
             )}
 
-      {/* Show ID Type Message for biometric ID cards */}
-      {idType === 'ביומטרית' && detectionResult === 'id_card' && !preview2 && (
-        <div className="p-3 rounded-lg text-sm font-medium text-center bg-blue-100 text-blue-800 border-2 border-blue-300">
-          ℹ תעודה ביומטרית - אנא העלה גם צילום של הצד השני
-        </div>
-      )}
-
       {/* Extracted Data Display */}
       <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
