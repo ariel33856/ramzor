@@ -534,6 +534,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
               )}
 
               <iframe 
+                key={preview}
                 src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
                 className="w-full h-full min-h-[280px] rounded-xl"
                 frameBorder="0"
@@ -651,6 +652,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                  )}
 
                  <iframe 
+                   key={preview2}
                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
                    className="w-full h-full min-h-[280px] rounded-xl"
                    frameBorder="0"
@@ -760,6 +762,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                      )}
 
                      <iframe 
+                       key={preview3}
                        src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
                        className="w-full h-full min-h-[280px] rounded-xl"
                        frameBorder="0"
