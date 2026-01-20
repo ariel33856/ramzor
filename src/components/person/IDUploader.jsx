@@ -46,6 +46,16 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     }
   }, [initialData]);
 
+  // Auto-open file upload when detection requires additional documents
+  React.useEffect(() => {
+    if (detectionResult && detectionResult !== 'both' && !preview2) {
+      // Small delay to ensure upload is complete and UI is ready
+      setTimeout(() => {
+        fileInputRef2.current?.click();
+      }, 500);
+    }
+  }, [detectionResult]);
+
   const convertImageToPdf = async (file) => {
     if (!file.type.includes('image')) return file;
     
