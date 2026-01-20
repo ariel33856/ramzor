@@ -169,7 +169,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
-        file_type_1: file.type 
+        file_type_1: uploadFile.type 
       };
       setExtractedData(dataWithFiles);
       onDataExtracted?.(dataWithFiles);
@@ -259,7 +259,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         ...extractedData, 
         ...result, 
         file_url_2: file_url, 
-        file_type_2: file.type,
+        file_type_2: uploadFile.type,
         document_type: 'both'
       };
       setExtractedData(mergedData);
@@ -367,7 +367,7 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         ...extractedData, 
         ...result, 
         file_url_3: file_url, 
-        file_type_3: file.type
+        file_type_3: uploadFile.type
       };
       setExtractedData(mergedData);
       onDataExtracted?.(mergedData);
