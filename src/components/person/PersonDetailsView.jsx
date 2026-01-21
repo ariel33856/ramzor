@@ -1314,7 +1314,7 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 {income.type === 'תלוש משכורת-שכיר' ? (
                   <div className="space-y-3">
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-5 gap-3">
                       <div>
                         <Label className="text-xs">שם מעסיק</Label>
                         <Input 
@@ -1365,8 +1365,6 @@ export default function PersonDetailsView({ personId }) {
                           className="h-8"
                         />
                       </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-3">
                       <div>
                         <Label className="text-xs">משכורת חודש ראשון</Label>
                         <Input 
