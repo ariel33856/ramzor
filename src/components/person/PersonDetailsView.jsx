@@ -88,7 +88,7 @@ export default function PersonDetailsView({ personId }) {
   const [maritalStatus, setMaritalStatus] = useState('married');
   const [idError, setIdError] = useState('');
   const [additionalPhones, setAdditionalPhones] = useState([]);
-  const [incomeSource, setIncomeSource] = useState('');
+  const [incomeSources, setIncomeSources] = useState([]);
 
 
   const { data: person, isLoading } = useQuery({
@@ -338,9 +338,9 @@ export default function PersonDetailsView({ personId }) {
           setAdditionalPhones(person.custom_data.additional_phones);
         }
 
-        // Load income source from custom_data
-        if (person.custom_data.income_source) {
-          setIncomeSource(person.custom_data.income_source);
+        // Load income sources from custom_data
+        if (person.custom_data.income_sources && Array.isArray(person.custom_data.income_sources)) {
+          setIncomeSources(person.custom_data.income_sources);
         }
       }
       }
@@ -1291,12 +1291,112 @@ export default function PersonDetailsView({ personId }) {
         {/* Content */}
         {!isCollapsed && (
           <div className="p-6 space-y-4">
+            {incomeSources.map((income, index) => (
+              <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-gray-900">
+                    {income.type === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${income.type}`}
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-red-500 hover:text-red-600"
+                    onClick={() => {
+                      const newSources = incomeSources.filter((_, i) => i !== index);
+                      setIncomeSources(newSources);
+                      updatePersonMutation.mutate({
+                        custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                      });
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+                {income.type === 'תלוש משכורת-שכיר' ? (
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <Label className="text-xs">שם מעסיק</Label>
+                      <Input 
+                        value={income.employer_name || ''}
+                        onChange={(e) => {
+                          const newSources = [...incomeSources];
+                          newSources[index] = { ...newSources[index], employer_name: e.target.value };
+                          setIncomeSources(newSources);
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                          });
+                        }}
+                        placeholder="שם החברה"
+                        className="h-8"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">משכורת ברוטו</Label>
+                      <Input 
+                        type="number"
+                        value={income.gross_salary || ''}
+                        onChange={(e) => {
+                          const newSources = [...incomeSources];
+                          newSources[index] = { ...newSources[index], gross_salary: e.target.value };
+                          setIncomeSources(newSources);
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                          });
+                        }}
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">משכורת נטו</Label>
+                      <Input 
+                        type="number"
+                        value={income.net_salary || ''}
+                        onChange={(e) => {
+                          const newSources = [...incomeSources];
+                          newSources[index] = { ...newSources[index], net_salary: e.target.value };
+                          setIncomeSources(newSources);
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                          });
+                        }}
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <Label className="text-xs">סכום הכנסה חודשית</Label>
+                      <Input 
+                        type="number"
+                        value={income.monthly_amount || ''}
+                        onChange={(e) => {
+                          const newSources = [...incomeSources];
+                          newSources[index] = { ...newSources[index], monthly_amount: e.target.value };
+                          setIncomeSources(newSources);
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                          });
+                        }}
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            
             <div className="flex items-center gap-4">
-              <Label className="text-sm font-medium whitespace-nowrap">מקור הכנסה</Label>
-              <Select value={incomeSource} onValueChange={(value) => {
-                setIncomeSource(value);
+              <Label className="text-sm font-medium whitespace-nowrap">הוסף מקור הכנסה</Label>
+              <Select onValueChange={(value) => {
+                const newSource = { type: value };
+                const newSources = [...incomeSources, newSource];
+                setIncomeSources(newSources);
                 updatePersonMutation.mutate({
-                  custom_data: { ...(person?.custom_data || {}), income_source: value }
+                  custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
                 });
               }}>
                 <SelectTrigger className="w-56">
@@ -1316,52 +1416,6 @@ export default function PersonDetailsView({ personId }) {
                 </SelectContent>
               </Select>
             </div>
-
-            {incomeSource && (
-              <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30">
-                <h3 className="text-sm font-bold text-gray-900 mb-3">
-                  {incomeSource === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${incomeSource}`}
-                </h3>
-                {incomeSource === 'תלוש משכורת-שכיר' ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <Label className="text-xs">שם מעסיק</Label>
-                      <Input 
-                        placeholder="שם החברה"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">משכורת ברוטו</Label>
-                      <Input 
-                        type="number"
-                        placeholder="0"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">משכורת נטו</Label>
-                      <Input 
-                        type="number"
-                        placeholder="0"
-                        className="h-8"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <Label className="text-xs">סכום הכנסה חודשית</Label>
-                      <Input 
-                        type="number"
-                        placeholder="0"
-                        className="h-8"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
       </div>
