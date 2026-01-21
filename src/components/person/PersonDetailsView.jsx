@@ -860,41 +860,37 @@ export default function PersonDetailsView({ personId }) {
                       const birthDate = person?.custom_data?.id_upload_data?.birth_date;
                       if (!birthDate || birthDate.length !== 10) return '';
                       
-                      try {
-                        const [day, month, year] = birthDate.split('-').map(Number);
-                        if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) return '';
-                        
-                        const birth = new Date(year, month - 1, day);
-                        if (isNaN(birth.getTime())) return '';
-                        
-                        const today = new Date();
+                      const [day, month, year] = birthDate.split('-').map(Number);
+                      if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) return '';
+                      
+                      const birth = new Date(year, month - 1, day);
+                      if (isNaN(birth.getTime())) return '';
+                      
+                      const today = new Date();
 
-                        let years = today.getFullYear() - birth.getFullYear();
-                        let months = today.getMonth() - birth.getMonth();
-                        let days = today.getDate() - birth.getDate();
+                      let years = today.getFullYear() - birth.getFullYear();
+                      let months = today.getMonth() - birth.getMonth();
+                      let days = today.getDate() - birth.getDate();
 
-                        if (days < 0) {
-                          months--;
-                          const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-                          days += prevMonth.getDate();
-                        }
-
-                        if (months < 0) {
-                          years--;
-                          months += 12;
-                        }
-
-                        const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1] || '0';
-
-                        return (
-                          <>
-                            <span className="text-sm">{years}</span>
-                            <span className="text-xs">.{decimal}</span>
-                          </>
-                        );
-                      } catch (error) {
-                        return '';
+                      if (days < 0) {
+                        months--;
+                        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                        days += prevMonth.getDate();
                       }
+
+                      if (months < 0) {
+                        years--;
+                        months += 12;
+                      }
+
+                      const decimal = (months / 12 + days / 365).toFixed(1).split('.')[1] || '0';
+
+                      return (
+                        <span>
+                          <span className="text-sm">{years}</span>
+                          <span className="text-xs">.{decimal}</span>
+                        </span>
+                      );
                     })()}
                   </div>
                 <Label className="text-sm whitespace-nowrap">מין</Label>
