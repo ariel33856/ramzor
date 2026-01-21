@@ -1314,23 +1314,23 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 {income.type === 'תלוש משכורת-שכיר' ? (
                   <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs">שם מעסיק</Label>
+                      <Input 
+                        value={income.employer_name || ''}
+                        onChange={(e) => {
+                          const newSources = [...incomeSources];
+                          newSources[index] = { ...newSources[index], employer_name: e.target.value };
+                          setIncomeSources(newSources);
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                          });
+                        }}
+                        placeholder="שם החברה"
+                        className="h-8"
+                      />
+                    </div>
                     <div className="grid grid-cols-5 gap-3">
-                      <div>
-                        <Label className="text-xs">שם מעסיק</Label>
-                        <Input 
-                          value={income.employer_name || ''}
-                          onChange={(e) => {
-                            const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], employer_name: e.target.value };
-                            setIncomeSources(newSources);
-                            updatePersonMutation.mutate({
-                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                            });
-                          }}
-                          placeholder="שם החברה"
-                          className="h-8"
-                        />
-                      </div>
                       <div>
                         <Label className="text-xs">משכורת ברוטו</Label>
                         <Input 
