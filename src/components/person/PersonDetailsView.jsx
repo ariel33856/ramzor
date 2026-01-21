@@ -855,6 +855,43 @@ export default function PersonDetailsView({ personId }) {
                   className="bg-white w-32 h-8"
                 />
                 <Label className="text-sm whitespace-nowrap">גיל</Label>
+                <Input 
+                  value={(() => {
+                    const birthDate = person?.custom_data?.id_upload_data?.birth_date || person?.custom_data?.birth_date;
+                    if (!birthDate) return '';
+                    
+                    const parts = birthDate.split('-');
+                    if (parts.length !== 3) return '';
+                    
+                    const [day, month, year] = parts.map(num => parseInt(num, 10));
+                    if (!day || !month || !year) return '';
+                    
+                    const birth = new Date(year, month - 1, day);
+                    const today = new Date();
+
+                    let years = today.getFullYear() - birth.getFullYear();
+                    let months = today.getMonth() - birth.getMonth();
+                    let days = today.getDate() - birth.getDate();
+
+                    if (days < 0) {
+                      months--;
+                      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                      days += prevMonth.getDate();
+                    }
+
+                    if (months < 0) {
+                      years--;
+                      months += 12;
+                    }
+
+                    const decimalPart = ((months * 30 + days) / 365).toFixed(1).split('.')[1];
+
+                    return `${years}.${decimalPart}`;
+                  })()}
+                  readOnly
+                  className="bg-white w-16 h-8 text-center"
+                />
+                <Label className="text-sm whitespace-nowrap">גיל</Label>
                 <div className="flex h-8 w-10 rounded-md border border-input bg-white px-1 py-1 items-center text-xs justify-center">
                   {(() => {
                     const birthDate = person?.custom_data?.id_upload_data?.birth_date || person?.custom_data?.birth_date;
