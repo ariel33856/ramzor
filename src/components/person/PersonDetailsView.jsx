@@ -1322,17 +1322,44 @@ export default function PersonDetailsView({ personId }) {
                 <h3 className="text-sm font-bold text-gray-900 mb-3">
                   {incomeSource === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${incomeSource}`}
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {/* כאן ניתן להוסיף שדות ספציפיים לכל סוג הכנסה */}
-                  <div>
-                    <Label className="text-xs">סכום הכנסה חודשית</Label>
-                    <Input 
-                      type="number"
-                      placeholder="0"
-                      className="h-8"
-                    />
+                {incomeSource === 'תלוש משכורת-שכיר' ? (
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <Label className="text-xs">שם מעסיק</Label>
+                      <Input 
+                        placeholder="שם החברה"
+                        className="h-8"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">משכורת ברוטו</Label>
+                      <Input 
+                        type="number"
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">משכורת נטו</Label>
+                      <Input 
+                        type="number"
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <Label className="text-xs">סכום הכנסה חודשית</Label>
+                      <Input 
+                        type="number"
+                        placeholder="0"
+                        className="h-8"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
