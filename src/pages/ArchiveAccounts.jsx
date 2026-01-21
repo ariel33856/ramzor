@@ -83,9 +83,14 @@ export default function ArchiveAccounts() {
   };
 
   const getFieldValue = (contact, fieldName) => {
-    if (contact[fieldName]) return contact[fieldName];
-    if (contact.custom_data && contact.custom_data[fieldName]) return contact.custom_data[fieldName];
-    return '—';
+    const value = contact[fieldName] || (contact.custom_data && contact.custom_data[fieldName]);
+    
+    // Don't render objects or arrays directly
+    if (typeof value === 'object' && value !== null) {
+      return '—';
+    }
+    
+    return value || '—';
   };
 
   const filteredContacts = contacts.filter(c => {
