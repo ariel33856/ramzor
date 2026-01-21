@@ -1285,7 +1285,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Content */}
         {!isCollapsed && (
-          <div className="p-6">
+          <div className="p-6 space-y-4">
             <div className="flex items-center gap-4">
               <Label className="text-sm font-medium whitespace-nowrap">מקור הכנסה</Label>
               <Select value={incomeSource} onValueChange={(value) => {
@@ -1311,6 +1311,25 @@ export default function PersonDetailsView({ personId }) {
                 </SelectContent>
               </Select>
             </div>
+
+            {incomeSource && (
+              <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">
+                  {incomeSource === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${incomeSource}`}
+                </h3>
+                <div className="grid grid-cols-3 gap-3">
+                  {/* כאן ניתן להוסיף שדות ספציפיים לכל סוג הכנסה */}
+                  <div>
+                    <Label className="text-xs">סכום הכנסה חודשית</Label>
+                    <Input 
+                      type="number"
+                      placeholder="0"
+                      className="h-8"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
