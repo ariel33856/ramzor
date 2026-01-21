@@ -291,11 +291,16 @@ export default function PersonDetailsView({ personId }) {
       }
       
       if (person.custom_data) {
-        const fields = Object.entries(person.custom_data).map(([name, value], index) => ({
-          id: `custom_${index}`,
-          name,
-          value
-        }));
+        // Filter out known object fields and array fields from custom_data
+        const excludedFields = ['id_upload_data', 'spouse_id', 'num_siblings', 'children_birth_dates', 'children_names', 'num_children', 'additional_phones', 'income_source', 'birth_date'];
+        const fields = Object.entries(person.custom_data)
+          .filter(([name]) => !excludedFields.includes(name))
+          .filter(([_, value]) => typeof value !== 'object' || value === null)
+          .map(([name, value], index) => ({
+            id: `custom_${index}`,
+            name,
+            value
+          }));
         setCustomFields(fields);
 
         // Load spouse_id from custom_data
