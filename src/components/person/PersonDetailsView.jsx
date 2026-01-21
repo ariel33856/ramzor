@@ -1313,56 +1313,111 @@ export default function PersonDetailsView({ personId }) {
                   </Button>
                 </div>
                 {income.type === 'תלוש משכורת-שכיר' ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <Label className="text-xs">שם מעסיק</Label>
-                      <Input 
-                        value={income.employer_name || ''}
-                        onChange={(e) => {
-                          const newSources = [...incomeSources];
-                          newSources[index] = { ...newSources[index], employer_name: e.target.value };
-                          setIncomeSources(newSources);
-                          updatePersonMutation.mutate({
-                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                          });
-                        }}
-                        placeholder="שם החברה"
-                        className="h-8"
-                      />
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <Label className="text-xs">שם מעסיק</Label>
+                        <Input 
+                          value={income.employer_name || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], employer_name: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="שם החברה"
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">משכורת ברוטו</Label>
+                        <Input 
+                          type="number"
+                          value={income.gross_salary || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], gross_salary: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="0"
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">משכורת נטו</Label>
+                        <Input 
+                          type="number"
+                          value={income.net_salary || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], net_salary: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="0"
+                          className="h-8"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label className="text-xs">משכורת ברוטו</Label>
-                      <Input 
-                        type="number"
-                        value={income.gross_salary || ''}
-                        onChange={(e) => {
-                          const newSources = [...incomeSources];
-                          newSources[index] = { ...newSources[index], gross_salary: e.target.value };
-                          setIncomeSources(newSources);
-                          updatePersonMutation.mutate({
-                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                          });
-                        }}
-                        placeholder="0"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">משכורת נטו</Label>
-                      <Input 
-                        type="number"
-                        value={income.net_salary || ''}
-                        onChange={(e) => {
-                          const newSources = [...incomeSources];
-                          newSources[index] = { ...newSources[index], net_salary: e.target.value };
-                          setIncomeSources(newSources);
-                          updatePersonMutation.mutate({
-                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                          });
-                        }}
-                        placeholder="0"
-                        className="h-8"
-                      />
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <Label className="text-xs">משכורת חודש ראשון</Label>
+                        <Input 
+                          type="number"
+                          value={income.month_1_salary || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], month_1_salary: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="0"
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">משכורת חודש שני</Label>
+                        <Input 
+                          type="number"
+                          value={income.month_2_salary || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], month_2_salary: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="0"
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">משכורת חודש שלישי</Label>
+                        <Input 
+                          type="number"
+                          value={income.month_3_salary || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], month_3_salary: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="0"
+                          className="h-8"
+                        />
+                      </div>
                     </div>
                   </div>
                 ) : (
