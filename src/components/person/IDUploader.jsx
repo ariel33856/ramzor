@@ -668,12 +668,14 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
                   </div>
                 )}
 
-                <iframe 
-                  key={preview2}
-                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
-                  className="w-full h-full min-h-[280px] rounded-xl"
-                  frameBorder="0"
-                />
+                {!uploading2 && (
+                  <iframe 
+                    key={preview2}
+                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
+                    className="w-full h-full min-h-[280px] rounded-xl"
+                    frameBorder="0"
+                  />
+                )}
               </>
             ) : (
               <>
