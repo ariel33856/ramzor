@@ -184,7 +184,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         file_type_1: uploadFile.type 
       };
       setExtractedData(dataWithFiles);
-      onDataExtracted?.(dataWithFiles);
+      if (onDataExtracted && typeof onDataExtracted === 'function') {
+        onDataExtracted(dataWithFiles);
+      }
 
       if (result.document_type === 'both') {
         setShowMessage(true);
@@ -281,7 +283,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
       };
       setExtractedData(mergedData);
       setDetectionResult('both');
-      onDataExtracted?.(mergedData);
+      if (onDataExtracted && typeof onDataExtracted === 'function') {
+        onDataExtracted(mergedData);
+      }
       
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
@@ -300,7 +304,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     delete updatedData.file_url_1;
     delete updatedData.file_type_1;
     setExtractedData(updatedData);
-    onDataExtracted?.(updatedData);
+    if (onDataExtracted && typeof onDataExtracted === 'function') {
+      onDataExtracted(updatedData);
+    }
   };
 
   const clearAll = () => {
@@ -313,7 +319,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
     setFileType3(null);
     setIdType(null);
     setDetectionResult(null);
-    onDataExtracted?.(null);
+    if (onDataExtracted && typeof onDataExtracted === 'function') {
+      onDataExtracted(null);
+    }
   };
 
   const handleFileUpload3 = async (e) => {
@@ -387,7 +395,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
         file_type_3: uploadFile.type
       };
       setExtractedData(mergedData);
-      onDataExtracted?.(mergedData);
+      if (onDataExtracted && typeof onDataExtracted === 'function') {
+        onDataExtracted(mergedData);
+      }
 
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 2000);
@@ -734,7 +744,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             onValueChange={(value) => {
               const updatedData = { ...extractedData, israeli_status: value };
               setExtractedData(updatedData);
-              onDataExtracted?.(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
             }}
           >
             <SelectTrigger className="bg-white">
@@ -756,7 +768,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             onChange={(e) => {
               const updatedData = { ...extractedData, foreign_citizenship: e.target.value };
               setExtractedData(updatedData);
-              onDataExtracted?.(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
             }}
             className="bg-white" 
           />
@@ -768,7 +782,9 @@ export default function IDUploader({ onDataExtracted, initialData, gender, setGe
             onChange={(e) => {
               const updatedData = { ...extractedData, passport_number: e.target.value };
               setExtractedData(updatedData);
-              onDataExtracted?.(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
             }}
             className="bg-white" 
           />
