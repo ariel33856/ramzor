@@ -1314,21 +1314,87 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 {income.type === 'תלוש משכורת-שכיר' ? (
                   <div className="space-y-3">
-                    <div>
-                      <Label className="text-xs">שם מעסיק</Label>
-                      <Input 
-                        value={income.employer_name || ''}
-                        onChange={(e) => {
-                          const newSources = [...incomeSources];
-                          newSources[index] = { ...newSources[index], employer_name: e.target.value };
-                          setIncomeSources(newSources);
-                          updatePersonMutation.mutate({
-                            custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                          });
-                        }}
-                        placeholder="שם החברה"
-                        className="h-8"
-                      />
+                    <div className="grid grid-cols-5 gap-3">
+                      <div>
+                        <Label className="text-xs">שם מעסיק</Label>
+                        <Input 
+                          value={income.employer_name || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], employer_name: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder="שם החברה"
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">שדה 1</Label>
+                        <Input 
+                          value={income.field_1 || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], field_1: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder=""
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">שדה 2</Label>
+                        <Input 
+                          value={income.field_2 || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], field_2: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder=""
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">שדה 3</Label>
+                        <Input 
+                          value={income.field_3 || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], field_3: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder=""
+                          className="h-8"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">שדה 4</Label>
+                        <Input 
+                          value={income.field_4 || ''}
+                          onChange={(e) => {
+                            const newSources = [...incomeSources];
+                            newSources[index] = { ...newSources[index], field_4: e.target.value };
+                            setIncomeSources(newSources);
+                            updatePersonMutation.mutate({
+                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                            });
+                          }}
+                          placeholder=""
+                          className="h-8"
+                        />
+                      </div>
                     </div>
                     <div className="grid grid-cols-5 gap-3">
                       <div>
