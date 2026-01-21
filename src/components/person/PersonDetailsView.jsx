@@ -14,6 +14,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
 import IDUploader from './IDUploader';
+import { Upload } from 'lucide-react';
 
 
 const validateIsraeliID = (id) => {
@@ -89,6 +90,7 @@ export default function PersonDetailsView({ personId }) {
   const [idError, setIdError] = useState('');
   const [additionalPhones, setAdditionalPhones] = useState([]);
   const [incomeSources, setIncomeSources] = useState([]);
+  const [uploadingPayslip, setUploadingPayslip] = useState(null);
 
 
   const { data: person, isLoading } = useQuery({
@@ -1314,6 +1316,61 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 {income.type === 'תלוש משכורת-שכיר' ? (
                   <div className="space-y-3">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-3">
+                      <Label className="text-xs font-semibold mb-2 block">העלאת תלוש משכורת</Label>
+                      <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          
+                          setUploadingPayslip(index);
+                          try {
+                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                            
+                            const extractedData = await base44.integrations.Core.ExtractDataFromUploadedFile({
+                              file_url,
+                              json_schema: {
+                                type: "object",
+                                properties: {
+                                  employer_name: { type: "string", description: "שם המעסיק או החברה" },
+                                  gross_salary: { type: "number", description: "משכורת ברוטו" },
+                                  net_salary: { type: "number", description: "משכורת נטו" },
+                                  month_1_salary: { type: "number", description: "משכורת חודש ראשון אם קיים" },
+                                  month_2_salary: { type: "number", description: "משכורת חודש שני אם קיים" },
+                                  month_3_salary: { type: "number", description: "משכורת חודש שלישי אם קיים" }
+                                }
+                              }
+                            });
+                            
+                            if (extractedData.status === 'success' && extractedData.output) {
+                              const newSources = [...incomeSources];
+                              newSources[index] = { 
+                                ...newSources[index], 
+                                ...extractedData.output,
+                                payslip_url: file_url
+                              };
+                              setIncomeSources(newSources);
+                              updatePersonMutation.mutate({
+                                custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
+                              });
+                            }
+                          } catch (error) {
+                            console.error('Error uploading payslip:', error);
+                          } finally {
+                            setUploadingPayslip(null);
+                          }
+                        }}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
+                      />
+                      {uploadingPayslip === index && (
+                        <div className="flex items-center gap-2 mt-2 text-blue-600">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-xs">מעלה ומעבד תלוש...</span>
+                        </div>
+                      )}
+                    </div>
                     <div className="grid grid-cols-5 gap-3">
                       <div>
                         <Label className="text-xs">שם מעסיק</Label>
