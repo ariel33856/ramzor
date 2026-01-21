@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted, initialData, gender, setGender }) {
+export default function IDUploader({ onDataExtracted, initialData = null, gender, setGender }) {
   const [uploading, setUploading] = useState(false);
   const [convertingToPdf, setConvertingToPdf] = useState(false);
   const [preview, setPreview] = useState(null);
