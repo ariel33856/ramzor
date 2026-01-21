@@ -1411,7 +1411,8 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
+                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
                       <div>
@@ -1428,7 +1429,8 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
+                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
                       <div>
@@ -1445,7 +1447,8 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
+                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
                       <div>
@@ -1462,7 +1465,8 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
+                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
                       <div>
@@ -1479,7 +1483,8 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
+                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
                     </div>
