@@ -1373,13 +1373,28 @@ export default function PersonDetailsView({ personId }) {
                             </div>
                           )}
                           {income[`payslip_${payslipNum}_url`] && (
-                            <div className="mt-2 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50">
-                              <img
-                                src={income[`payslip_${payslipNum}_url`]}
-                                alt={`תלוש ${payslipNum}`}
-                                className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
-                              />
+                            <div className="mt-2 border-2 border-blue-300 rounded-lg overflow-hidden bg-white">
+                              {income[`payslip_${payslipNum}_url`].toLowerCase().includes('.pdf') ? (
+                                <object
+                                  data={income[`payslip_${payslipNum}_url`]}
+                                  type="application/pdf"
+                                  className="w-full h-48"
+                                >
+                                  <div className="flex items-center justify-center h-48 cursor-pointer hover:bg-blue-50" onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}>
+                                    <span className="text-blue-600 text-sm">לחץ לצפייה בתלוש PDF</span>
+                                  </div>
+                                </object>
+                              ) : (
+                                <img
+                                  src={income[`payslip_${payslipNum}_url`]}
+                                  alt={`תלוש ${payslipNum}`}
+                                  className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
+                                  onError={(e) => {
+                                    e.target.parentElement.innerHTML = '<div class="flex items-center justify-center h-48"><span class="text-red-600 text-sm">שגיאה בטעינת התמונה</span></div>';
+                                  }}
+                                />
+                              )}
                             </div>
                           )}
                         </div>
