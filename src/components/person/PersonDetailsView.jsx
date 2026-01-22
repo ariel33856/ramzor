@@ -1372,6 +1372,23 @@ export default function PersonDetailsView({ personId }) {
                               <span className="text-xs">מעבד...</span>
                             </div>
                           )}
+                          {income[`payslip_${payslipNum}_url`] && (
+                            <div className="mt-2 border-2 border-gray-200 rounded-lg overflow-hidden">
+                              {income[`payslip_${payslipNum}_url`].endsWith('.pdf') ? (
+                                <iframe
+                                  src={income[`payslip_${payslipNum}_url`]}
+                                  className="w-full h-48"
+                                  title={`תלוש ${payslipNum}`}
+                                />
+                              ) : (
+                                <img
+                                  src={income[`payslip_${payslipNum}_url`]}
+                                  alt={`תלוש ${payslipNum}`}
+                                  className="w-full h-48 object-contain bg-gray-50"
+                                />
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
