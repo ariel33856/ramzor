@@ -1373,11 +1373,12 @@ export default function PersonDetailsView({ personId }) {
                             </div>
                           )}
                           {income[`payslip_${payslipNum}_url`] && (
-                            <div className="mt-2 border-2 border-blue-300 rounded-lg overflow-hidden bg-white h-48">
-                              <iframe
-                                src={income[`payslip_${payslipNum}_url`] + '#toolbar=0&navpanes=0&scrollbar=0'}
-                                className="w-full h-full"
-                                title={`תלוש ${payslipNum}`}
+                            <div className="mt-2 border-2 border-blue-300 rounded-lg overflow-hidden bg-white">
+                              <img
+                                src={income[`payslip_${payslipNum}_url`]}
+                                alt={`תלוש ${payslipNum}`}
+                                className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                                onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
                               />
                             </div>
                           )}
