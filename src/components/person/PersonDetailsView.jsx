@@ -1373,20 +1373,13 @@ export default function PersonDetailsView({ personId }) {
                             </div>
                           )}
                           {income[`payslip_${payslipNum}_url`] && (
-                            <div className="mt-2 border-2 border-gray-200 rounded-lg overflow-hidden">
-                              {income[`payslip_${payslipNum}_url`].endsWith('.pdf') ? (
-                                <iframe
-                                  src={income[`payslip_${payslipNum}_url`]}
-                                  className="w-full h-48"
-                                  title={`תלוש ${payslipNum}`}
-                                />
-                              ) : (
-                                <img
-                                  src={income[`payslip_${payslipNum}_url`]}
-                                  alt={`תלוש ${payslipNum}`}
-                                  className="w-full h-48 object-contain bg-gray-50"
-                                />
-                              )}
+                            <div className="mt-2 border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+                              <img
+                                src={income[`payslip_${payslipNum}_url`]}
+                                alt={`תלוש ${payslipNum}`}
+                                className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                                onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
+                              />
                             </div>
                           )}
                         </div>
