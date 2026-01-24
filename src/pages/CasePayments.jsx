@@ -116,28 +116,23 @@ export default function CasePayments() {
           onClick={() => fieldName && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing ? (
-           <Input
-             type="text"
-             inputMode="decimal"
-             value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] || 0)}
-             onChange={(e) => {
-               const numValue = e.target.value.replace(/,/g, '');
-               if (!isNaN(numValue) || numValue === '') {
-                 setEditValues({ ...editValues, [fieldName]: numValue });
-               }
-             }}
-             onKeyDown={(e) => {
-               if (e.key === 'Enter') handleBlur(fieldName);
-               if (e.key === 'Escape') setEditingField(null);
-             }}
-             onClick={(e) => e.stopPropagation()}
-             autoFocus
-             className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
-           />
-          ) : (
-            <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
-          )}
+          <Input
+            type="text"
+            inputMode="decimal"
+            value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] !== undefined ? editValues[fieldName] : priceWithoutVat)}
+            onChange={(e) => {
+              const numValue = e.target.value.replace(/,/g, '');
+              if (!isNaN(numValue) || numValue === '') {
+                setEditValues({ ...editValues, [fieldName]: numValue });
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleBlur(fieldName);
+              if (e.key === 'Escape') setEditValues({ ...editValues, [fieldName]: undefined });
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
+          />
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">מע"מ 18%</p>
