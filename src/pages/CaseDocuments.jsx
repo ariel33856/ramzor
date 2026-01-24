@@ -15,6 +15,27 @@ export default function CaseDocuments() {
     enabled: !!caseId
   });
 
+  const { data: allPersons = [] } = useQuery({
+    queryKey: ['all-persons'],
+    queryFn: () => base44.entities.Person.list(),
+    enabled: !!caseId
+  });
+
+  const linkedPerson = React.useMemo(() => {
+    if (!caseId || !allPersons.length) return null;
+    return allPersons.find(person => 
+      person.linked_accounts && person.linked_accounts.includes(caseId)
+    );
+  }, [caseId, allPersons]);
+
+  const { data: personById } = useQuery({
+    queryKey: ['person', caseData?.person_id],
+    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    enabled: !!caseData?.person_id
+  });
+
+  const person = linkedPerson || personById;
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
