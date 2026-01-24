@@ -101,9 +101,19 @@ export default function PersonDetailsView({ personId }) {
     refetchOnWindowFocus: false
   });
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['current-user-for-accounts'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 60000
+  });
+
   const { data: allAccounts = [] } = useQuery({
-    queryKey: ['all-accounts'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    queryKey: ['all-accounts', currentUser?.email],
+    queryFn: async () => {
+      if (!currentUser) return [];
+      return base44.entities.MortgageCase.filter({ created_by: currentUser.email }, '-created_date');
+    },
+    enabled: !!currentUser,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
