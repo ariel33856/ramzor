@@ -7,6 +7,14 @@ import { createPageUrl } from '@/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 
+const subStatusOptions = {
+  'ליד חדש': ['יצירת קשר ראשוני', 'המתנה לתגובה', 'קבע פגישה', 'לא הגיב'],
+  'בתהליך מכירה': ['איסוף מסמכים', 'בדיקת כדאיות', 'הכנת הצעה', 'משא ומתן', 'סגירת עסקה'],
+  'לקוח פעיל': ['בטיפול שוטף', 'הוגש לבנק', 'אושר', 'ממתין לחתימה', 'הושלם'],
+  'נטש': ['לא רלוונטי', 'לא מעוניין', 'לא עונה', 'עבר למתחרה'],
+  'ארכיון': ['הושלם', 'בוטל', 'לא רלוונטי יותר']
+};
+
 export default function CaseStatus() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
@@ -93,11 +101,9 @@ export default function CaseStatus() {
                   <SelectValue placeholder="בחר תת סטטוס" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ממתין למסמכים">ממתין למסמכים</SelectItem>
-                  <SelectItem value="בבדיקה">בבדיקה</SelectItem>
-                  <SelectItem value="הוגש לבנק">הוגש לבנק</SelectItem>
-                  <SelectItem value="אושר">אושר</SelectItem>
-                  <SelectItem value="נדחה">נדחה</SelectItem>
+                  {subStatusOptions[caseData.main_status || 'ליד חדש']?.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
