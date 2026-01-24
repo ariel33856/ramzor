@@ -112,7 +112,7 @@ export default function CasePayments() {
       <div className="grid grid-cols-4 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
-          className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
+          className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName === 'payments_received' ? 'border-2 border-blue-400' : ''} ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
           onClick={() => fieldName && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
