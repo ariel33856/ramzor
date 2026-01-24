@@ -42,26 +42,26 @@ export default function CasePayments() {
     mutationFn: (data) => base44.entities.MortgageCase.update(caseId, {
       custom_data: {
         ...caseData.custom_data,
-        closing_price: parseFloat(data.closing_price) || 0,
-        payments_received: parseFloat(data.payments_received) || 0
+        ...data
       }
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
-      setIsEditing(false);
+      setEditingField(null);
     }
   });
 
-  const handleEditStart = () => {
-    setEditValues({
-      closing_price: closingPrice,
-      payments_received: paymentsReceived
-    });
-    setIsEditing(true);
+  const handleFieldClick = (field, value) => {
+    setEditingField(field);
+    setEditValues({ [field]: value });
   };
 
-  const handleSave = () => {
-    updatePaymentsMutation.mutate(editValues);
+  const handleSaveField = (field) => {
+    updatePaymentsMutation.mutate({ [field]: parseFloat(editValues[field]) || 0 });
+  };
+
+  const handleBlur = (field) => {
+    handleSaveField(field);
   };
 
   if (isLoading) {
