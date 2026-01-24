@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Database } from 'lucide-react';
+import { Loader2, Database, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export default function CaseData() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  const [incomeOpen, setIncomeOpen] = useState(false);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -38,10 +41,18 @@ export default function CaseData() {
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
-      <div className="mx-auto">
-        <p className="text-gray-500 text-center py-8">
-          תוכן הכרטיסייה "נתונים" יתווסף בהמשך
-        </p>
+      <div className="mx-auto space-y-3">
+        <Collapsible open={incomeOpen} onOpenChange={setIncomeOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" className="w-full justify-between h-12 bg-white hover:bg-gray-50">
+              <span className="text-base font-semibold">הכנסות</span>
+              {incomeOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-2 bg-white rounded-lg border p-4">
+            <p className="text-gray-500 text-center py-4">תוכן הכנסות יתווסף בהמשך</p>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </div>
   );
