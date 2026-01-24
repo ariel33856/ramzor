@@ -1,9 +1,10 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2, FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import IDUploader from '@/components/person/IDUploader';
 
 export default function CaseDocuments() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,6 +36,22 @@ export default function CaseDocuments() {
   });
 
   const person = linkedPerson || personById;
+  const queryClient = useQueryClient();
+  const [gender, setGender] = useState('male');
+
+  const updatePersonMutation = useMutation({
+    mutationFn: (data) => base44.entities.Person.update(person?.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['person', person?.id] });
+      queryClient.invalidateQueries({ queryKey: ['all-persons'] });
+    }
+  });
+
+  React.useEffect(() => {
+    if (person?.custom_data?.id_upload_data?.gender) {
+      setGender(person.custom_data.id_upload_data.gender);
+    }
+  }, [person]);
 
   if (isLoading) {
     return (
@@ -60,15 +77,31 @@ export default function CaseDocuments() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2">
       <div className="mx-auto space-y-3">
-        {person?.custom_data?.id_upload_data?.file_url && (
-          <div className="border rounded-lg bg-white p-4">
-            <h3 className="text-base font-semibold mb-3">תעודת זהות</h3>
-            <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white max-w-md">
-              <img
-                src={person.custom_data.id_upload_data.file_url}
-                alt="תעודת זהות"
-                className="w-full h-auto object-contain cursor-pointer hover:opacity-90 transition-opacity"
-                onClick={() => window.open(person.custom_data.id_upload_data.file_url, '_blank')}
+        {person && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-4 border-b">
+              <h2 className="text-lg font-bold text-gray-900">תעודת זהות</h2>
+            </div>
+            <div className="p-6">
+              <IDUploader 
+                initialData={person?.custom_data?.id_upload_data}
+                gender={gender}
+                setGender={setGender}
+                onDataExtracted={(data) => {
+                  if (!data) {
+                    const customData = { ...(person?.custom_data || {}) };
+                    delete customData.id_upload_data;
+                    updatePersonMutation.mutate({ custom_data: customData });
+                    return;
+                  }
+                  
+                  const customData = { 
+                    ...(person?.custom_data || {}), 
+                    id_upload_data: data,
+                    birth_date: data.birth_date || person?.custom_data?.birth_date
+                  };
+                  updatePersonMutation.mutate({ custom_data: customData });
+                }}
               />
             </div>
           </div>
