@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronLeft } from 'lucide-react';
+import { ChevronDown, ChevronLeft, X } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +35,12 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-96 max-h-[600px] overflow-y-auto">
+        <button
+          onClick={() => document.querySelector('[data-radix-popper-content-wrapper]')?.click()}
+          className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+        >
+          <X className="w-4 h-4 text-gray-500" />
+        </button>
         <div className="space-y-2">
           <h4 className="font-semibold text-sm mb-4">בחר שדות להצגה בטבלה</h4>
           

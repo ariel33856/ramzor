@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
   Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive,
-  ArrowUp, ArrowDown, FilterX
+  ArrowUp, ArrowDown, FilterX, X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -444,6 +444,12 @@ export default function Dashboard() {
                 </PopoverTrigger>
 
                 <PopoverContent className="w-80" align="start">
+                  <button
+                    onClick={() => setReorderDialogOpen(false)}
+                    className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+                  >
+                    <X className="w-4 h-4 text-gray-500" />
+                  </button>
                   <div className="space-y-3">
                     <div>
                       <h4 className="font-semibold text-sm mb-1">סדר עמודות</h4>
@@ -562,6 +568,12 @@ export default function Dashboard() {
                                 </button>
                               </PopoverTrigger>
                               <PopoverContent className="w-40 p-2" align="center">
+                                <button
+                                  onClick={() => setColumnMenuOpen(null)}
+                                  className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                >
+                                  <X className="w-4 h-4 text-gray-500" />
+                                </button>
                                 <div className="space-y-1">
                                   <Button
                                     variant="ghost"
@@ -610,6 +622,12 @@ export default function Dashboard() {
                                 </button>
                               </PopoverTrigger>
                               <PopoverContent className="w-80" align="center">
+                                <button
+                                  onClick={() => setFilterDialogOpen(null)}
+                                  className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+                                >
+                                  <X className="w-4 h-4 text-gray-500" />
+                                </button>
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between gap-2 mb-3">
                                     <h4 className="font-semibold text-sm">
