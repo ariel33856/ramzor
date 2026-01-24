@@ -111,7 +111,10 @@ export default function CasePayments() {
               type="number"
               value={editValues[fieldName]}
               onChange={(e) => setEditValues({ ...editValues, [fieldName]: e.target.value })}
-              onBlur={() => handleBlur(fieldName)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleBlur(fieldName);
+                if (e.key === 'Escape') setEditingField(null);
+              }}
               onClick={(e) => e.stopPropagation()}
               autoFocus
               className="text-lg font-bold text-blue-600 p-1 h-auto"
