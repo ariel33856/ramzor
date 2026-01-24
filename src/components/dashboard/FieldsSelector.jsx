@@ -29,7 +29,7 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button className="gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg">
           <ChevronDown className="w-4 h-4" />
           בחר שדות להצגה
         </Button>

@@ -437,7 +437,7 @@ export default function Dashboard() {
 
               <Popover open={reorderDialogOpen} onOpenChange={setReorderDialogOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">
+                  <Button className="bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white shadow-lg">
                     <GripVertical className="w-5 h-5 ml-2" />
                     סדר עמודות
                   </Button>
