@@ -9,6 +9,18 @@ import { Input } from '@/components/ui/input';
 export default function ContactsArchive() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterUser, setFilterUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('globalFilterUser') || 'all';
+    }
+    return 'all';
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 60000
+  });
 
   const unarchiveMutation = useMutation({
     mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: false }),
@@ -18,8 +30,13 @@ export default function ContactsArchive() {
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts-archive'],
-    queryFn: () => base44.entities.Person.list('-updated_date')
+    queryKey: ['contacts-archive', user?.email, filterUser],
+    queryFn: async () => {
+      if (!user) return [];
+      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
+      return base44.entities.Person.filter({ created_by: targetUser }, '-updated_date');
+    },
+    enabled: !!user
   });
 
   const archivedContacts = allPeople.filter(p => p.type === 'איש קשר' && p.is_archived);
@@ -38,6 +55,15 @@ export default function ContactsArchive() {
     window.contactsArchiveSearchTerm = searchTerm;
     window.setContactsArchiveSearchTerm = setSearchTerm;
   }, [searchTerm]);
+
+  React.useEffect(() => {
+    const handleGlobalFilterChange = (e) => {
+      setFilterUser(e.detail.filterUser);
+      queryClient.invalidateQueries({ queryKey: ['contacts-archive'] });
+    };
+    window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+    return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+  }, [queryClient]);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
