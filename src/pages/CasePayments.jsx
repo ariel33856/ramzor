@@ -120,7 +120,7 @@ export default function CasePayments() {
             <Input
               type="text"
               inputMode="decimal"
-              value={editValues[fieldName] !== undefined && editValues[fieldName] ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : '₪'}
+              value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] !== undefined ? editValues[fieldName] : priceWithoutVat)}
               onChange={(e) => {
                 const numValue = e.target.value.replace(/,/g, '');
                 if (!isNaN(numValue) || numValue === '') {
