@@ -59,7 +59,7 @@ const pageComponents = {
 };
 
 export default function CaseDetails() {
-  const [activeTab, setActiveTab] = useState('personal');
+  const [activeTab, setActiveTab] = useState(null);
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const isNew = urlParams.get('new') === 'true';
@@ -71,7 +71,8 @@ export default function CaseDetails() {
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId,
     retry: 1,
-    staleTime: 30000
+    staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {
