@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Upload, FileText, Trash2, Check } from 'lucide-react';
+import { Loader2, Upload, FileText, Trash2, Check, Edit2, Save, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import DocumentUploader from '../components/documents/DocumentUploader';
 
 export default function CasePayments() {
@@ -12,6 +13,8 @@ export default function CasePayments() {
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [showUploader, setShowUploader] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValues, setEditValues] = useState({});
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
