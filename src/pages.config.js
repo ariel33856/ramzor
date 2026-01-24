@@ -21,7 +21,6 @@ import CasePayments from './pages/CasePayments';
 import CasePersonal from './pages/CasePersonal';
 import CaseProducts from './pages/CaseProducts';
 import CaseProfiles from './pages/CaseProfiles';
-import CaseStatus from './pages/CaseStatus';
 import CaseSummary from './pages/CaseSummary';
 import CaseTracking from './pages/CaseTracking';
 import CaseWorkflow from './pages/CaseWorkflow';
@@ -44,6 +43,7 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
+import CaseStatus from './pages/CaseStatus';
 import __Layout from './Layout.jsx';
 
 
@@ -71,7 +71,6 @@ export const PAGES = {
     "CasePersonal": CasePersonal,
     "CaseProducts": CaseProducts,
     "CaseProfiles": CaseProfiles,
-    "CaseStatus": CaseStatus,
     "CaseSummary": CaseSummary,
     "CaseTracking": CaseTracking,
     "CaseWorkflow": CaseWorkflow,
@@ -94,6 +93,7 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
+    "CaseStatus": CaseStatus,
 }
 
 export const pagesConfig = {

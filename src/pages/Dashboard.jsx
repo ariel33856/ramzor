@@ -57,7 +57,7 @@ export default function Dashboard() {
     staleTime: 5 * 60 * 1000
   });
 
-  const [selectedFields, setSelectedFields] = useState(['account_number', 'first_name', 'last_name']);
+  const [selectedFields, setSelectedFields] = useState(['account_number', 'main_status']);
   const [columnMenuOpen, setColumnMenuOpen] = useState(null);
   const [columnFilters, setColumnFilters] = useState({});
   const [rangeFilters, setRangeFilters] = useState({});
