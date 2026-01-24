@@ -253,10 +253,11 @@ export default function Dashboard() {
   React.useEffect(() => {
     const handleGlobalFilterChange = (e) => {
       setFilterUser(e.detail.filterUser);
+      queryClient.invalidateQueries({ queryKey: ['cases'] });
     };
     window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
     return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
-  }, []);
+  }, [queryClient]);
 
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
