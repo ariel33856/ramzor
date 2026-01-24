@@ -133,7 +133,7 @@ export default function CasePayments() {
              }}
              onClick={(e) => e.stopPropagation()}
              autoFocus
-             className="text-2xl font-bold text-blue-600 border-0 bg-transparent p-0 h-auto -mb-2 leading-none"
+             className="!text-2xl !font-bold text-blue-600 border-0 bg-transparent p-0 h-auto"
            />
           ) : (
             <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
