@@ -1579,6 +1579,22 @@ export default function PersonDetailsView({ personId }) {
             ))}
             
             <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 border-2 border-green-300 bg-green-50 rounded-lg px-4 py-2">
+                <Label className="text-sm font-bold whitespace-nowrap">סך ההכנסות המשוקלל:</Label>
+                <span className="text-lg font-bold text-green-700">
+                  {incomeSources.reduce((total, income) => {
+                    if (income.type === 'תלוש משכורת-שכיר') {
+                      const month1 = parseFloat(income.month_1_salary) || 0;
+                      const month2 = parseFloat(income.month_2_salary) || 0;
+                      const month3 = parseFloat(income.month_3_salary) || 0;
+                      const avg = (month1 + month2 + month3) / 3;
+                      return total + avg;
+                    } else {
+                      return total + (parseFloat(income.monthly_amount) || 0);
+                    }
+                  }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
+                </span>
+              </div>
               <Label className="text-sm font-medium whitespace-nowrap">הוסף מקור הכנסה</Label>
               <Select onValueChange={(value) => {
                 const newSource = { type: value };
