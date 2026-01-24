@@ -38,6 +38,13 @@ export default function NewCase() {
   const isArchive = urlParams.get('archive') === 'true';
   const moduleId = urlParams.get('moduleId');
 
+  const [filterUser, setFilterUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('globalFilterUser') || 'all';
+    }
+    return 'all';
+  });
+
   const { data: currentUser } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me(),
@@ -45,14 +52,26 @@ export default function NewCase() {
   });
 
   const { data: allPersons = [] } = useQuery({
-    queryKey: ['all-persons', currentUser?.email],
+    queryKey: ['all-persons', currentUser?.email, filterUser],
     queryFn: async () => {
       if (!currentUser) return [];
-      return base44.entities.Person.filter({ created_by: currentUser.email });
+      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : currentUser.email;
+      return base44.entities.Person.filter({ created_by: targetUser });
     },
     enabled: !!currentUser,
     staleTime: 5 * 60 * 1000
   });
+
+  const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    const handleGlobalFilterChange = (e) => {
+      setFilterUser(e.detail.filterUser);
+      queryClient.invalidateQueries({ queryKey: ['all-persons'] });
+    };
+    window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+    return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
+  }, [queryClient]);
 
   const filteredPersons = allPersons.filter(person => 
     person.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
