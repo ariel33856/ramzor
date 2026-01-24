@@ -115,7 +115,7 @@ export default function CasePayments() {
           className="bg-blue-50 rounded-lg p-3 text-right cursor-pointer hover:bg-blue-100 transition-colors"
           onClick={() => !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
-          <p className="text-xs text-gray-600 mb-1">للا מעמ"ם</p>
+          <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
           {isEditing ? (
             <Input
               type="number"
@@ -134,11 +134,11 @@ export default function CasePayments() {
           )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
-          <p className="text-xs text-gray-600 mb-1">מעמ"ם 18%</p>
+          <p className="text-xs text-gray-600 mb-1">מע"מ 18%</p>
           <p className="text-lg font-bold text-orange-600">{formatCurrency(vat)}</p>
         </div>
         <div className="bg-green-50 rounded-lg p-3 text-right">
-          <p className="text-xs text-gray-600 mb-1">סה"כ עם מעמ"ם</p>
+          <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
           <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
         </div>
       </div>
