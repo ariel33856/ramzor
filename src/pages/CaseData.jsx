@@ -71,6 +71,13 @@ export default function CaseData() {
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="border-t p-4">
+            <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+              <div>Debug: caseId = {caseId}</div>
+              <div>Debug: person = {person ? 'קיים' : 'לא קיים'}</div>
+              <div>Debug: person.id = {person?.id}</div>
+              <div>Debug: person.first_name = {person?.first_name}</div>
+              <div>Debug: income_sources = {person?.custom_data?.income_sources ? JSON.stringify(person.custom_data.income_sources) : 'לא קיים'}</div>
+            </div>
             {!person ? (
               <p className="text-gray-500 text-center py-4">לא נמצא איש קשר מקושר לתיק</p>
             ) : !person.custom_data?.income_sources || person.custom_data.income_sources.length === 0 ? (
