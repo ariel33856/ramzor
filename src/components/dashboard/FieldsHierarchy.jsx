@@ -103,6 +103,7 @@ export const tabComponents = {
       label: 'מידע סטטוס',
       fields: [
         { id: 'status', label: 'סטטוס', source: 'case', visible: false },
+        { id: 'main_status', label: 'סטטוס ראשי', source: 'case', visible: false },
         { id: 'urgency', label: 'דחיפות', source: 'case', visible: false },
         { id: 'assigned_consultant', label: 'יועץ אחראי', source: 'case', visible: false }
       ]
