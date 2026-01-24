@@ -1425,6 +1425,7 @@ export default function PersonDetailsView({ personId }) {
                       <div>
                         <Label className="text-xs">תאריך תחילת עבודה</Label>
                         <Input 
+                          type="date"
                           value={income.field_1 || ''}
                           onChange={(e) => {
                             const newSources = [...incomeSources];
@@ -1434,7 +1435,6 @@ export default function PersonDetailsView({ personId }) {
                               custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
                             });
                           }}
-                          placeholder=""
                           className="h-8"
                         />
                       </div>
