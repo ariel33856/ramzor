@@ -103,15 +103,16 @@ export default function CasePayments() {
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
           className="bg-blue-50 rounded-lg p-3 text-right cursor-pointer hover:bg-blue-100 transition-colors"
-          onClick={() => handleFieldClick(fieldName, priceWithoutVat)}
+          onClick={() => !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
-          <p className="text-xs text-gray-600 mb-1">ללא מעמ"ם</p>
+          <p className="text-xs text-gray-600 mb-1">للا מעמ"ם</p>
           {isEditing ? (
             <Input
               type="number"
               value={editValues[fieldName]}
               onChange={(e) => setEditValues({ ...editValues, [fieldName]: e.target.value })}
               onBlur={() => handleBlur(fieldName)}
+              onClick={(e) => e.stopPropagation()}
               autoFocus
               className="text-lg font-bold text-blue-600 p-1 h-auto"
             />
