@@ -93,16 +93,31 @@ export default function CasePayments() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount);
   };
 
-  const renderPriceRow = (label, priceWithoutVat) => {
+  const renderPriceRow = (label, fieldName, priceWithoutVat) => {
     const vat = priceWithoutVat * 0.18;
     const totalWithVat = priceWithoutVat + vat;
+    const isEditing = editingField === fieldName;
 
     return (
       <div className="grid grid-cols-4 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
-        <div className="bg-blue-50 rounded-lg p-3 text-right">
+        <div 
+          className="bg-blue-50 rounded-lg p-3 text-right cursor-pointer hover:bg-blue-100 transition-colors"
+          onClick={() => handleFieldClick(fieldName, priceWithoutVat)}
+        >
           <p className="text-xs text-gray-600 mb-1">ללא מעמ"ם</p>
-          <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
+          {isEditing ? (
+            <Input
+              type="number"
+              value={editValues[fieldName]}
+              onChange={(e) => setEditValues({ ...editValues, [fieldName]: e.target.value })}
+              onBlur={() => handleBlur(fieldName)}
+              autoFocus
+              className="text-lg font-bold text-blue-600 p-1 h-auto"
+            />
+          ) : (
+            <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
+          )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">מעמ"ם 18%</p>
