@@ -136,7 +136,7 @@ export default function CasePayments() {
              className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
            />
           ) : (
-            <p className={`text-lg font-bold text-blue-600 ${fieldName === 'payments_received' ? 'border-2 border-blue-400 rounded px-2 py-1 inline-block' : ''}`}>{formatCurrency(priceWithoutVat)}</p>
+            <p className="text-lg font-bold text-blue-600 border-2 border-blue-400 rounded px-2 py-1 inline-block">{formatCurrency(priceWithoutVat)}</p>
           )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
