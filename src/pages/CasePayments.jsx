@@ -9,6 +9,16 @@ import { Input } from '@/components/ui/input';
 import DocumentUploader from '../components/documents/DocumentUploader';
 
 export default function CasePayments() {
+  const spinnerStyles = `
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  `;
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
