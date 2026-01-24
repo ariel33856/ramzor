@@ -41,18 +41,15 @@ export default function ArchiveAccounts() {
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts', user?.role, user?.email, filterUser],
+    queryKey: ['contacts', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
       
-      if (user.role === 'admin') {
-        if (filterUser !== 'all') {
-          return base44.entities.Person.filter({ created_by: filterUser }, '-created_date');
-        }
-        return base44.entities.Person.list('-created_date');
-      }
+      // Determine which user to filter by
+      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
       
-      return base44.entities.Person.filter({ created_by: user.email }, '-created_date');
+      // Show only contacts created by the target user
+      return base44.entities.Person.filter({ created_by: targetUser }, '-created_date');
     },
     enabled: !!user
   });
@@ -111,10 +108,11 @@ export default function ArchiveAccounts() {
   React.useEffect(() => {
     const handleGlobalFilterChange = (e) => {
       setFilterUser(e.detail.filterUser);
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
     };
     window.addEventListener('globalFilterUserChanged', handleGlobalFilterChange);
     return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
-  }, []);
+  }, [queryClient]);
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
