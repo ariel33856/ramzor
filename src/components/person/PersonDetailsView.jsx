@@ -101,27 +101,29 @@ export default function PersonDetailsView({ personId }) {
     refetchOnWindowFocus: false
   });
 
-  const { data: currentUser } = useQuery({
-    queryKey: ['current-user-for-accounts'],
-    queryFn: () => base44.auth.me(),
-    staleTime: 60000
-  });
-
   const { data: allAccounts = [] } = useQuery({
-    queryKey: ['all-accounts', currentUser?.email],
-    queryFn: async () => {
-      if (!currentUser) return [];
-      return base44.entities.MortgageCase.filter({ created_by: currentUser.email }, '-created_date');
-    },
-    enabled: !!currentUser,
+    queryKey: ['all-accounts'],
+    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['current-user-for-contacts'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 60000
+  });
+
   const { data: allContacts = [] } = useQuery({
-    queryKey: ['all-contacts-spouse'],
-    queryFn: () => base44.entities.Person.filter({ is_archived: false }),
-    enabled: spouseDialogOpen,
+    queryKey: ['all-contacts-spouse', currentUser?.email],
+    queryFn: async () => {
+      if (!currentUser) return [];
+      return base44.entities.Person.filter({ 
+        is_archived: false,
+        created_by: currentUser.email 
+      });
+    },
+    enabled: spouseDialogOpen && !!currentUser,
     staleTime: 5 * 60 * 1000
   });
 
