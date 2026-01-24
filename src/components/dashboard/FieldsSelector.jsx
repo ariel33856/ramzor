@@ -34,12 +34,12 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
           בחר שדות להצגה
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-96 max-h-[600px] overflow-y-auto">
+      <PopoverContent align="end" className="w-[420px] max-h-[600px] overflow-y-auto">
         <button
           onClick={() => document.querySelector('[data-radix-popper-content-wrapper]')?.click()}
-          className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+          className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"
         >
-          <X className="w-4 h-4 text-gray-500" />
+          <X className="w-5 h-5 text-red-600 font-bold" />
         </button>
         <div className="space-y-2">
           <h4 className="font-semibold text-sm mb-4">בחר שדות להצגה בטבלה</h4>

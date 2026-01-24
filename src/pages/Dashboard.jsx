@@ -443,12 +443,12 @@ export default function Dashboard() {
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-80" align="start">
+                <PopoverContent className="w-96" align="start">
                   <button
                     onClick={() => setReorderDialogOpen(false)}
-                    className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+                    className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"
                   >
-                    <X className="w-4 h-4 text-gray-500" />
+                    <X className="w-5 h-5 text-red-600 font-bold" />
                   </button>
                   <div className="space-y-3">
                     <div>
@@ -567,12 +567,12 @@ export default function Dashboard() {
                                   {field?.label || fieldId}
                                 </button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-40 p-2" align="center">
+                              <PopoverContent className="w-48 p-2" align="center">
                                 <button
                                   onClick={() => setColumnMenuOpen(null)}
-                                  className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                  className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors shadow-sm"
                                 >
-                                  <X className="w-4 h-4 text-gray-500" />
+                                  <X className="w-5 h-5 text-red-600 font-bold" />
                                 </button>
                                 <div className="space-y-1">
                                   <Button
@@ -621,12 +621,12 @@ export default function Dashboard() {
                                   )}
                                 </button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-80" align="center">
+                              <PopoverContent className="w-96" align="center">
                                 <button
                                   onClick={() => setFilterDialogOpen(null)}
-                                  className="absolute top-2 left-2 p-1 rounded-full hover:bg-gray-100 transition-colors z-50"
+                                  className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"
                                 >
-                                  <X className="w-4 h-4 text-gray-500" />
+                                  <X className="w-5 h-5 text-red-600 font-bold" />
                                 </button>
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between gap-2 mb-3">
