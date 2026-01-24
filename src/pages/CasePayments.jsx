@@ -107,35 +107,34 @@ export default function CasePayments() {
     const vat = priceWithoutVat * 0.18;
     const totalWithVat = priceWithoutVat + vat;
     const isEditing = editingField === fieldName;
-    const isEditableField = fieldName && fieldName !== null;
 
     return (
       <div className="grid grid-cols-4 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
-          className={`rounded-lg p-3 text-right transition-colors ${isEditableField ? 'bg-blue-50 cursor-pointer hover:bg-blue-100 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}
-          onClick={() => isEditableField && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
+          className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
+          onClick={() => fieldName && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditableField && isEditing ? (
+          {isEditing ? (
            <Input
-              type="text"
-              inputMode="decimal"
-              value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] || 0)}
-              onChange={(e) => {
-                const numValue = e.target.value.replace(/,/g, '');
-                if (!isNaN(numValue) || numValue === '') {
-                  setEditValues({ ...editValues, [fieldName]: numValue });
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleBlur(fieldName);
-                if (e.key === 'Escape') setEditingField(null);
-              }}
-              onClick={(e) => e.stopPropagation()}
-              autoFocus
-              className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
-            />
+             type="text"
+             inputMode="decimal"
+             value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] || 0)}
+             onChange={(e) => {
+               const numValue = e.target.value.replace(/,/g, '');
+               if (!isNaN(numValue) || numValue === '') {
+                 setEditValues({ ...editValues, [fieldName]: numValue });
+               }
+             }}
+             onKeyDown={(e) => {
+               if (e.key === 'Enter') handleBlur(fieldName);
+               if (e.key === 'Escape') setEditingField(null);
+             }}
+             onClick={(e) => e.stopPropagation()}
+             autoFocus
+             className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
+           />
           ) : (
             <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
           )}
