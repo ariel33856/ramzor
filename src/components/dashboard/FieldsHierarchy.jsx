@@ -37,28 +37,7 @@ export const tabComponents = {
     {
       id: 'person_details',
       label: 'פרטי איש קשר',
-      fields: [
-        { id: 'first_name', label: 'שם פרטי', source: 'person', visible: false },
-        { id: 'last_name', label: 'שם משפחה', source: 'person', visible: false },
-        { id: 'id_number', label: 'מס\' תעודת זהות', source: 'person', visible: false },
-        { id: 'phone', label: 'טלפון', source: 'person', visible: false },
-        { id: 'email', label: 'אימייל', source: 'person', visible: false },
-        { id: 'notes', label: 'הערות', source: 'person', visible: false },
-        { id: 'residential_city', label: 'יישוב מגורים', source: 'person', visible: false },
-        { id: 'address', label: 'כתובת', source: 'person', visible: false },
-        { id: 'type', label: 'סוג איש קשר', source: 'person', visible: false },
-        { id: 'is_archived', label: 'בארכיון', source: 'person', visible: false },
-        { id: 'birth_date', label: 'תאריך לידה', source: 'person_custom', visible: false },
-        { id: 'id_issue_date', label: 'תאריך הנפקת ת.ז.', source: 'person_custom', visible: false },
-        { id: 'id_expiry_date', label: 'תוקף ת.ז.', source: 'person_custom', visible: false },
-        { id: 'gender', label: 'מין', source: 'person_custom', visible: false },
-        { id: 'marital_status', label: 'סטטוס משפחתי', source: 'person_custom', visible: false },
-        { id: 'num_siblings', label: 'מס\' אחים (מהאב ומהאם יחד)', source: 'person_custom', visible: false },
-        { id: 'spouse_id', label: 'בן/בת זוג', source: 'person_custom', visible: false },
-        { id: 'children_birth_dates', label: 'גילאי הילדים', source: 'person_custom', visible: false },
-        { id: 'num_children', label: 'מס\' ילדים', source: 'person_custom', visible: false },
-        { id: 'num_children_under_18', label: 'מס\' ילדים מתחת גיל 18', source: 'person_custom', visible: false }
-      ]
+      fields: []
     }
   ],
   contact: [
@@ -72,29 +51,21 @@ export const tabComponents = {
     {
       id: 'linked_contacts',
       label: 'אנשי קשר משויכים',
-      fields: [
-        { id: 'linked_accounts', label: 'חשבונות משויכים', source: 'person', visible: false }
-      ]
+      fields: []
     }
   ],
   summary: [
     {
       id: 'case_summary',
       label: 'תקציר כללי',
-      fields: [
-        { id: 'client_name', label: 'שם לקוח', source: 'case', visible: false },
-        { id: 'last_name', label: 'שם משפחה', source: 'case', visible: false },
-        { id: 'progress_percentage', label: 'אחוז התקדמות', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   notes: [
     {
       id: 'case_notes',
       label: 'הערות התיק',
-      fields: [
-        { id: 'notes', label: 'הערות', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   status: [
@@ -102,10 +73,7 @@ export const tabComponents = {
       id: 'status_info',
       label: 'מידע סטטוס',
       fields: [
-        { id: 'status', label: 'סטטוס', source: 'case', visible: false },
-        { id: 'main_status', label: 'סטטוס ראשי', source: 'case', visible: false },
-        { id: 'urgency', label: 'דחיפות', source: 'case', visible: false },
-        { id: 'assigned_consultant', label: 'יועץ אחראי', source: 'case', visible: false }
+        { id: 'main_status', label: 'סטטוס ראשי', source: 'case', visible: false }
       ]
     }
   ],
@@ -113,81 +81,49 @@ export const tabComponents = {
     {
       id: 'financial_data',
       label: 'נתונים פיננסיים',
-      fields: [
-        { id: 'property_value', label: 'שווי נכס', source: 'case', visible: false },
-        { id: 'loan_amount', label: 'סכום הלוואה', source: 'case', visible: false },
-        { id: 'monthly_income', label: 'הכנסה חודשית', source: 'case', visible: false },
-        { id: 'monthly_expenses', label: 'הוצאות חודשיות', source: 'case', visible: false },
-        { id: 'family_size', label: 'גודל משפחה', source: 'case', visible: false },
-        { id: 'ltv_ratio', label: 'יחס LTV', source: 'case', visible: false },
-        { id: 'dti_ratio', label: 'יחס DTI', source: 'case', visible: false },
-        { id: 'income_per_capita', label: 'הכנסה לנפש', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   profiles: [
     {
       id: 'client_profile',
       label: 'פרופיל לקוח',
-      fields: [
-        { id: 'client_id', label: 'תעודת זהות לקוח', source: 'case', visible: false },
-        { id: 'client_phone', label: 'טלפון לקוח', source: 'case', visible: false },
-        { id: 'client_email', label: 'אימייל לקוח', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   account: [
     {
       id: 'account_info',
       label: 'מידע חשבון',
-      fields: [
-        { id: 'account_number', label: 'מספר חשבון', source: 'case', visible: true },
-        { id: 'target_bank', label: 'בנק יעד', source: 'case', visible: false },
-        { id: 'created_date', label: 'תאריך פתיחה', source: 'case', visible: false },
-        { id: 'updated_date', label: 'תאריך עדכון', source: 'case', visible: false },
-        { id: 'created_by', label: 'נוצר על ידי', source: 'case', visible: false },
-        { id: 'module_id', label: 'מזהה מודול', source: 'case', visible: false },
-        { id: 'person_id', label: 'מזהה איש קשר', source: 'case', visible: false },
-        { id: 'linked_borrowers', label: 'לווים משויכים', source: 'case', visible: false },
-        { id: 'is_archived', label: 'בארכיון', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   workflow: [
     {
       id: 'workflow_status',
       label: 'תהליך עבודה',
-      fields: [
-        { id: 'status', label: 'סטטוס', source: 'case', visible: false },
-        { id: 'progress_percentage', label: 'אחוז התקדמות', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   metrics: [
     {
       id: 'case_metrics',
       label: 'מדדי תיק',
-      fields: [
-        { id: 'red_flags', label: 'דגלים אדומים', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   calendar: [
     {
       id: 'calendar_info',
       label: 'מידע יומן',
-      fields: [
-        { id: 'created_date', label: 'תאריך יצירה', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   tracking: [
     {
       id: 'tracking_info',
       label: 'מעקב',
-      fields: [
-        { id: 'updated_date', label: 'עדכון אחרון', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   documents: [
@@ -201,9 +137,7 @@ export const tabComponents = {
     {
       id: 'dashboard_info',
       label: 'דשבורד',
-      fields: [
-        { id: 'progress_percentage', label: 'התקדמות', source: 'case', visible: false }
-      ]
+      fields: []
     }
   ],
   calculator: [
