@@ -44,7 +44,6 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import CaseServiceAgreement from './pages/CaseServiceAgreement';
 import __Layout from './Layout.jsx';
 
 
@@ -95,7 +94,6 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "CaseServiceAgreement": CaseServiceAgreement,
 }
 
 export const pagesConfig = {
