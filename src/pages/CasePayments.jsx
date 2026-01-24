@@ -38,6 +38,32 @@ export default function CasePayments() {
     }
   });
 
+  const updatePaymentsMutation = useMutation({
+    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, {
+      custom_data: {
+        ...caseData.custom_data,
+        closing_price: parseFloat(data.closing_price) || 0,
+        payments_received: parseFloat(data.payments_received) || 0
+      }
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      setIsEditing(false);
+    }
+  });
+
+  const handleEditStart = () => {
+    setEditValues({
+      closing_price: closingPrice,
+      payments_received: paymentsReceived
+    });
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    updatePaymentsMutation.mutate(editValues);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
