@@ -18,6 +18,17 @@ export default function CasePayments() {
     input[type="number"] {
       -moz-appearance: textfield;
     }
+    .price-input {
+      font-size: 1.5rem !important;
+      line-height: 1.5rem !important;
+      height: 1.5rem !important;
+      padding: 0 !important;
+    }
+    .price-input:focus {
+      font-size: 1.5rem !important;
+      line-height: 1.5rem !important;
+      height: 1.5rem !important;
+    }
   `;
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
