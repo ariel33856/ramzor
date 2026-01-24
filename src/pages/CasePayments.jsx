@@ -120,12 +120,70 @@ export default function CasePayments() {
     <div className="h-full bg-gray-50/50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
-          {renderPriceRow('מחיר סגירה', closingPrice)}
-          {renderPriceRow('תשלומים שהתקבלו', paymentsReceived)}
-          <div className="border-t-2 border-gray-200 pt-3 mt-3">
-            {renderPriceRow('יתרת חוב', debtBalance)}
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">סיכום תשלומים</h3>
+            {!isEditing ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleEditStart}
+                className="gap-2"
+              >
+                <Edit2 className="w-4 h-4" />
+                ערוך
+              </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={updatePaymentsMutation.isPending}
+                  className="gap-2 bg-green-600 hover:bg-green-700"
+                >
+                  <Save className="w-4 h-4" />
+                  שמור
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditing(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
+
+          {isEditing ? (
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">מחיר סגירה (ללא מעמ"ם)</label>
+                <Input
+                  type="number"
+                  value={editValues.closing_price}
+                  onChange={(e) => setEditValues({ ...editValues, closing_price: e.target.value })}
+                  className="text-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">תשלומים שהתקבלו (ללא מעמ"ם)</label>
+                <Input
+                  type="number"
+                  value={editValues.payments_received}
+                  onChange={(e) => setEditValues({ ...editValues, payments_received: e.target.value })}
+                  className="text-lg"
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              {renderPriceRow('מחיר סגירה', closingPrice)}
+              {renderPriceRow('תשלומים שהתקבלו', paymentsReceived)}
+              <div className="border-t-2 border-gray-200 pt-3 mt-3">
+                {renderPriceRow('יתרת חוב', debtBalance)}
+              </div>
+            </>
+          )}
         </div>
 
         <div>
