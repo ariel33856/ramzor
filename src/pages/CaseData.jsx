@@ -90,34 +90,14 @@ export default function CaseData() {
                             <span className="text-sm">{income.employer_name}</span>
                           </div>
                         )}
-                        <div className="grid grid-cols-4 gap-3">
-                          {income.month_1_salary && (
-                            <div>
-                              <div className="text-xs text-gray-500">חודש 1</div>
-                              <div className="text-sm font-semibold">{parseFloat(income.month_1_salary).toLocaleString('he-IL')} ₪</div>
-                            </div>
-                          )}
-                          {income.month_2_salary && (
-                            <div>
-                              <div className="text-xs text-gray-500">חודש 2</div>
-                              <div className="text-sm font-semibold">{parseFloat(income.month_2_salary).toLocaleString('he-IL')} ₪</div>
-                            </div>
-                          )}
-                          {income.month_3_salary && (
-                            <div>
-                              <div className="text-xs text-gray-500">חודש 3</div>
-                              <div className="text-sm font-semibold">{parseFloat(income.month_3_salary).toLocaleString('he-IL')} ₪</div>
-                            </div>
-                          )}
-                          {(income.month_1_salary || income.month_2_salary || income.month_3_salary) && (
-                            <div>
-                              <div className="text-xs text-gray-500">ממוצע</div>
-                              <div className="text-sm font-bold text-blue-700">
-                                {Math.round(((parseFloat(income.month_1_salary) || 0) + (parseFloat(income.month_2_salary) || 0) + (parseFloat(income.month_3_salary) || 0)) / 3).toLocaleString('he-IL')} ₪
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                        {(income.month_1_salary || income.month_2_salary || income.month_3_salary) && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium">ממוצע:</span>
+                            <span className="text-sm font-bold text-blue-700">
+                              {Math.round(((parseFloat(income.month_1_salary) || 0) + (parseFloat(income.month_2_salary) || 0) + (parseFloat(income.month_3_salary) || 0)) / 3).toLocaleString('he-IL')} ₪
+                            </span>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div>
