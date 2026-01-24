@@ -42,14 +42,14 @@ export default function CaseData() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto space-y-3">
-        <Collapsible open={incomeOpen} onOpenChange={setIncomeOpen}>
+        <Collapsible open={incomeOpen} onOpenChange={setIncomeOpen} className="border rounded-lg bg-white">
           <CollapsibleTrigger asChild>
-            <Button variant="outline" className="w-full justify-between h-12 bg-white hover:bg-gray-50">
+            <Button variant="ghost" className="w-full justify-between h-12 hover:bg-gray-50 rounded-none rounded-t-lg">
               <span className="text-base font-semibold">הכנסות</span>
               {incomeOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="mt-2 bg-white rounded-lg border p-4">
+          <CollapsibleContent className="border-t p-4">
             <p className="text-gray-500 text-center py-4">תוכן הכנסות יתווסף בהמשך</p>
           </CollapsibleContent>
         </Collapsible>
