@@ -147,6 +147,7 @@ export default function CasePayments() {
 
   return (
     <div className="h-full bg-gray-50/50 p-6">
+      <style>{spinnerStyles}</style>
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
