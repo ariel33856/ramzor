@@ -87,6 +87,7 @@ export default function CaseDocuments() {
                 initialData={person?.custom_data?.id_upload_data}
                 gender={gender}
                 setGender={setGender}
+                compactMode={true}
                 onDataExtracted={(data) => {
                   if (!data) {
                     const customData = { ...(person?.custom_data || {}) };

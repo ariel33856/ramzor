@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import jsPDF from 'jspdf';
 
-export default function IDUploader({ onDataExtracted, initialData = null, gender, setGender }) {
+export default function IDUploader({ onDataExtracted, initialData = null, gender, setGender, compactMode = false }) {
   const [uploading, setUploading] = useState(false);
   const [convertingToPdf, setConvertingToPdf] = useState(false);
   const [preview, setPreview] = useState(null);
@@ -723,6 +723,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
             )}
 
       {/* Extracted Data Display */}
+      {!compactMode && (
       <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
@@ -790,6 +791,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
           />
         </div>
       </div>
+      )}
     </div>
   );
 }
