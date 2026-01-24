@@ -112,7 +112,7 @@ export default function CasePayments() {
       <div className="grid grid-cols-4 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
-          className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName === 'payments_received' ? 'border-2 border-blue-400' : ''} ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
+          className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
           onClick={() => fieldName && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
         >
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
@@ -136,7 +136,7 @@ export default function CasePayments() {
              className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
            />
           ) : (
-            <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
+            <p className={`text-lg font-bold text-blue-600 ${fieldName === 'payments_received' ? 'border-2 border-blue-400 rounded px-2 py-1 inline-block' : ''}`}>{formatCurrency(priceWithoutVat)}</p>
           )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
