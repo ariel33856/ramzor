@@ -95,8 +95,8 @@ export default function CasePayments() {
 
   const agreement = documents[0];
 
-  const closingPrice = caseData.custom_data?.closing_price || 0;
-  const paymentsReceived = caseData.custom_data?.payments_received || 0;
+  const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || 0);
+  const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
   const debtBalance = closingPrice - paymentsReceived;
 
   const formatCurrency = (amount) => {
