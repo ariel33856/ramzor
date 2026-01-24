@@ -677,7 +677,29 @@ export default function Dashboard() {
                                       </div>
                                     ))}
                                   </div>
-                                  <div className="flex gap-2 justify-end pt-2 border-t">
+                                  <div className="space-y-2 pt-2 border-t">
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => {
+                                          setSortField(fieldId);
+                                          setSortDirection('asc');
+                                        }}
+                                        className={`px-2 py-1 rounded text-xs transition-colors ${sortField === fieldId && sortDirection === 'asc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                        title="מהקטן לגדול"
+                                      >
+                                        ⬆️
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          setSortField(fieldId);
+                                          setSortDirection('desc');
+                                        }}
+                                        className={`px-2 py-1 rounded text-xs transition-colors ${sortField === fieldId && sortDirection === 'desc' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                        title="מהגדול לקטן"
+                                      >
+                                        ⬇️
+                                      </button>
+                                    </div>
                                     <Button
                                       variant="outline"
                                       size="sm"
