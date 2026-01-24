@@ -91,6 +91,8 @@ export default function PersonDetailsView({ personId }) {
   const [additionalPhones, setAdditionalPhones] = useState([]);
   const [incomeSources, setIncomeSources] = useState([]);
   const [uploadingPayslip, setUploadingPayslip] = useState(null);
+  const [obligations, setObligations] = useState([]);
+  const [isCollapsedObligations, setIsCollapsedObligations] = useState(false);
 
 
   const { data: person, isLoading } = useQuery({
@@ -355,6 +357,11 @@ export default function PersonDetailsView({ personId }) {
         // Load income sources from custom_data
         if (person.custom_data.income_sources && Array.isArray(person.custom_data.income_sources)) {
           setIncomeSources(person.custom_data.income_sources);
+        }
+
+        // Load obligations from custom_data
+        if (person.custom_data.obligations && Array.isArray(person.custom_data.obligations)) {
+          setObligations(person.custom_data.obligations);
         }
       }
       }
@@ -1617,6 +1624,155 @@ export default function PersonDetailsView({ personId }) {
                   <SelectItem value="פנסיה">פנסיה</SelectItem>
                   <SelectItem value="השכרת נכס">השכרת נכס</SelectItem>
                   <SelectItem value="דיבידנדים">דיבידנדים</SelectItem>
+                  <SelectItem value="אחר">אחר</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Obligations Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Collapsible Header */}
+        <button
+          onClick={() => setIsCollapsedObligations(!isCollapsedObligations)}
+          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
+        >
+          {isCollapsedObligations ? (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          )}
+          <h2 className="text-lg font-bold text-gray-900">התחייבויות</h2>
+        </button>
+
+        {/* Content */}
+        {!isCollapsedObligations && (
+          <div className="p-6 space-y-4">
+            {obligations.map((obligation, index) => (
+              <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-gray-900">
+                    {obligation.type}
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-red-500 hover:text-red-600"
+                    onClick={() => {
+                      const newObligations = obligations.filter((_, i) => i !== index);
+                      setObligations(newObligations);
+                      updatePersonMutation.mutate({
+                        custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                      });
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-4 gap-3">
+                  <div>
+                    <Label className="text-xs">שם המוסד</Label>
+                    <Input 
+                      value={obligation.institution_name || ''}
+                      onChange={(e) => {
+                        const newObligations = [...obligations];
+                        newObligations[index] = { ...newObligations[index], institution_name: e.target.value };
+                        setObligations(newObligations);
+                        updatePersonMutation.mutate({
+                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                        });
+                      }}
+                      placeholder="שם הבנק/מוסד"
+                      className="h-8"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">סכום יתרה</Label>
+                    <Input 
+                      type="number"
+                      value={obligation.balance || ''}
+                      onChange={(e) => {
+                        const newObligations = [...obligations];
+                        newObligations[index] = { ...newObligations[index], balance: e.target.value };
+                        setObligations(newObligations);
+                        updatePersonMutation.mutate({
+                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                        });
+                      }}
+                      placeholder="0"
+                      className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      style={{ MozAppearance: 'textfield' }}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">החזר חודשי</Label>
+                    <Input 
+                      type="number"
+                      value={obligation.monthly_payment || ''}
+                      onChange={(e) => {
+                        const newObligations = [...obligations];
+                        newObligations[index] = { ...newObligations[index], monthly_payment: e.target.value };
+                        setObligations(newObligations);
+                        updatePersonMutation.mutate({
+                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                        });
+                      }}
+                      placeholder="0"
+                      className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      style={{ MozAppearance: 'textfield' }}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">הערות</Label>
+                    <Input 
+                      value={obligation.notes || ''}
+                      onChange={(e) => {
+                        const newObligations = [...obligations];
+                        newObligations[index] = { ...newObligations[index], notes: e.target.value };
+                        setObligations(newObligations);
+                        updatePersonMutation.mutate({
+                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                        });
+                      }}
+                      placeholder="הערות"
+                      className="h-8"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 border-2 border-red-300 bg-red-50 rounded-lg px-4 py-2">
+                <Label className="text-sm font-bold whitespace-nowrap">סך התחייבויות חודשיות:</Label>
+                <span className="text-lg font-bold text-red-700">
+                  {obligations.reduce((total, obligation) => {
+                    return total + (parseFloat(obligation.monthly_payment) || 0);
+                  }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
+                </span>
+              </div>
+              <Label className="text-sm font-medium whitespace-nowrap">הוסף התחייבות</Label>
+              <Select onValueChange={(value) => {
+                const newObligation = { type: value };
+                const newObligations = [...obligations, newObligation];
+                setObligations(newObligations);
+                updatePersonMutation.mutate({
+                  custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                });
+              }}>
+                <SelectTrigger className="w-56">
+                  <SelectValue placeholder="בחר סוג התחייבות" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="הלוואה בנקאית">הלוואה בנקאית</SelectItem>
+                  <SelectItem value="משכנתא">משכנתא</SelectItem>
+                  <SelectItem value="הלוואה מגוף פיננסי">הלוואה מגוף פיננסי</SelectItem>
+                  <SelectItem value="כרטיס אשראי">כרטיס אשראי</SelectItem>
+                  <SelectItem value="חוב פרטי">חוב פרטי</SelectItem>
+                  <SelectItem value="מזונות">מזונות</SelectItem>
+                  <SelectItem value="ליסינג">ליסינג</SelectItem>
                   <SelectItem value="אחר">אחר</SelectItem>
                 </SelectContent>
               </Select>
