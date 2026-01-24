@@ -1422,7 +1422,7 @@ export default function PersonDetailsView({ personId }) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">שדה 1</Label>
+                        <Label className="text-xs">תאריך תחילת עבודה</Label>
                         <Input 
                           value={income.field_1 || ''}
                           onChange={(e) => {
