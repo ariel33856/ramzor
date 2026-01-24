@@ -35,7 +35,6 @@ import CasePayments from './CasePayments';
 import CaseInsurance from './CaseInsurance';
 import CaseProducts from './CaseProducts';
 import CaseAccount from './CaseAccount';
-import CaseServiceAgreement from './CaseServiceAgreement';
 
 const pageComponents = {
   personal: CasePersonal,
@@ -56,8 +55,7 @@ const pageComponents = {
   payments: CasePayments,
   insurance: CaseInsurance,
   products: CaseProducts,
-  account: CaseAccount,
-  serviceAgreement: CaseServiceAgreement
+  account: CaseAccount
 };
 
 export default function CaseDetails() {
