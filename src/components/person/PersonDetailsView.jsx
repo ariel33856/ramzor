@@ -1427,8 +1427,11 @@ export default function PersonDetailsView({ personId }) {
                         <Input 
                           value={income.field_1 || ''}
                           onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, '');
+                            if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+                            if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
                             const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], field_1: e.target.value };
+                            newSources[index] = { ...newSources[index], field_1: value };
                             setIncomeSources(newSources);
                             updatePersonMutation.mutate({
                               custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
@@ -1436,6 +1439,7 @@ export default function PersonDetailsView({ personId }) {
                           }}
                           placeholder="DD/MM/YYYY"
                           className="h-8"
+                          maxLength={10}
                         />
                       </div>
                       <div>
