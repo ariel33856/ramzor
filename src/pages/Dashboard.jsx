@@ -443,7 +443,7 @@ export default function Dashboard() {
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-96" align="start">
+                <PopoverContent className="w-80 min-h-[150px]" align="start">
                   <button
                     onClick={() => setReorderDialogOpen(false)}
                     className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"
@@ -567,7 +567,7 @@ export default function Dashboard() {
                                   {field?.label || fieldId}
                                 </button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-48 p-2" align="center">
+                              <PopoverContent className="w-40 min-h-[120px] p-2" align="center">
                                 <button
                                   onClick={() => setColumnMenuOpen(null)}
                                   className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors shadow-sm"
@@ -621,7 +621,7 @@ export default function Dashboard() {
                                   )}
                                 </button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-96" align="center">
+                              <PopoverContent className="w-80 min-h-[150px]" align="center">
                                 <button
                                   onClick={() => setFilterDialogOpen(null)}
                                   className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"

@@ -34,7 +34,7 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
           בחר שדות להצגה
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[420px] max-h-[600px] overflow-y-auto">
+      <PopoverContent align="end" className="w-96 min-h-[150px] max-h-[600px] overflow-y-auto">
         <button
           onClick={() => document.querySelector('[data-radix-popper-content-wrapper]')?.click()}
           className="absolute top-2 left-2 p-1.5 rounded-full hover:bg-red-100 bg-red-50 transition-colors z-50 shadow-sm"
