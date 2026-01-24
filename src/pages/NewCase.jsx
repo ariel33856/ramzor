@@ -38,9 +38,20 @@ export default function NewCase() {
   const isArchive = urlParams.get('archive') === 'true';
   const moduleId = urlParams.get('moduleId');
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 60000
+  });
+
   const { data: allPersons = [] } = useQuery({
-    queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list()
+    queryKey: ['all-persons', currentUser?.email],
+    queryFn: async () => {
+      if (!currentUser) return [];
+      return base44.entities.Person.filter({ created_by: currentUser.email });
+    },
+    enabled: !!currentUser,
+    staleTime: 5 * 60 * 1000
   });
 
   const filteredPersons = allPersons.filter(person => 
