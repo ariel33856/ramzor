@@ -1356,6 +1356,7 @@ export default function PersonDetailsView({ personId }) {
                                     type: "object",
                                     properties: {
                                       employer_name: { type: "string", description: "שם המעסיק או החברה" },
+                                      start_date: { type: "string", description: "תאריך תחילת עבודה" },
                                       gross_salary: { type: "number", description: "משכורת ברוטו" },
                                       net_salary: { type: "number", description: "משכורת נטו" },
                                       month_1_salary: { type: "number", description: "משכורת חודש ראשון אם קיים" },
