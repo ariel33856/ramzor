@@ -450,7 +450,7 @@ export default function Dashboard() {
                   >
                     <X className="w-5 h-5 text-red-600 font-bold" />
                   </button>
-                  <div className="space-y-3">
+                  <div className="space-y-3 pt-6">
                     <div>
                       <h4 className="font-semibold text-sm mb-1">סדר עמודות</h4>
                       <p className="text-xs text-gray-600">גרור את השדות כדי לשנות את הסדר</p>
@@ -574,16 +574,16 @@ export default function Dashboard() {
                                 >
                                   <X className="w-5 h-5 text-red-600 font-bold" />
                                 </button>
-                                <div className="space-y-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="w-full justify-start"
-                                    onClick={() => {
-                                      setFilterDialogOpen(fieldId);
-                                      setColumnMenuOpen(null);
-                                    }}
-                                  >
+                                <div className="space-y-1 pt-6">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="w-full justify-start"
+                                  onClick={() => {
+                                    setFilterDialogOpen(fieldId);
+                                    setColumnMenuOpen(null);
+                                  }}
+                                >
                                     <Filter className="w-4 h-4 ml-2" />
                                     סנן
                                     {columnFilters[fieldId]?.length > 0 && (
@@ -628,9 +628,9 @@ export default function Dashboard() {
                                 >
                                   <X className="w-5 h-5 text-red-600 font-bold" />
                                 </button>
-                                <div className="space-y-3">
-                                  <div className="flex items-center justify-between gap-2 mb-3">
-                                    <h4 className="font-semibold text-sm">
+                                <div className="space-y-3 pt-6">
+                                <div className="flex items-center justify-between gap-2 mb-3">
+                                  <h4 className="font-semibold text-sm">
                                       סנן לפי {field?.label || fieldId}
                                     </h4>
                                     <div className="flex gap-1">

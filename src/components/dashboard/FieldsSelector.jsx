@@ -41,7 +41,7 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
         >
           <X className="w-5 h-5 text-red-600 font-bold" />
         </button>
-        <div className="space-y-2">
+        <div className="space-y-2 pt-6">
           <h4 className="font-semibold text-sm mb-4">בחר שדות להצגה בטבלה</h4>
           
           {mainGroups.map(group => {
