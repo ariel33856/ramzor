@@ -294,21 +294,16 @@ export default function Dashboard() {
   };
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['cases', user?.role, user?.email, filterUser],
+    queryKey: ['cases', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
       
-      // Admin logic
-      if (user.role === 'admin') {
-        if (filterUser && filterUser !== 'all') {
-           // If filtering by specific user
-           return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
-        }
-        // Show all
-        return base44.entities.MortgageCase.list('-created_date');
+      // If specific user selected, filter by that user
+      if (filterUser && filterUser !== 'all') {
+        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
       
-      // Regular user logic - only show their own
+      // Otherwise show current user's cases only
       return base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date');
     },
     enabled: !!user,
