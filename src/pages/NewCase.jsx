@@ -85,7 +85,7 @@ export default function NewCase() {
 
     const caseData = {
       client_name: '',
-      status: 'new',
+      status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
@@ -150,7 +150,7 @@ export default function NewCase() {
     // Create new MortgageCase
     const caseData = {
       client_name: '',
-      status: 'new',
+      status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
