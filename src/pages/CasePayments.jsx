@@ -56,9 +56,49 @@ export default function CasePayments() {
 
   const agreement = documents[0];
 
+  const closingPrice = caseData.custom_data?.closing_price || 0;
+  const paymentsReceived = caseData.custom_data?.payments_received || 0;
+  const debtBalance = closingPrice - paymentsReceived;
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount);
+  };
+
+  const renderPriceRow = (label, priceWithoutVat) => {
+    const vat = priceWithoutVat * 0.18;
+    const totalWithVat = priceWithoutVat + vat;
+
+    return (
+      <div className="grid grid-cols-4 gap-4 mb-3 items-center">
+        <div className="text-sm font-semibold text-gray-900">{label}</div>
+        <div className="bg-blue-50 rounded-lg p-3 text-right">
+          <p className="text-xs text-gray-600 mb-1">ללא מעמ"ם</p>
+          <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
+        </div>
+        <div className="bg-orange-50 rounded-lg p-3 text-right">
+          <p className="text-xs text-gray-600 mb-1">מעמ"ם 18%</p>
+          <p className="text-lg font-bold text-orange-600">{formatCurrency(vat)}</p>
+        </div>
+        <div className="bg-green-50 rounded-lg p-3 text-right">
+          <p className="text-xs text-gray-600 mb-1">סה"כ עם מעמ"ם</p>
+          <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="h-full bg-gray-50/50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
+          {renderPriceRow('מחיר סגירה', closingPrice)}
+          {renderPriceRow('תשלומים שהתקבלו', paymentsReceived)}
+          <div className="border-t-2 border-gray-200 pt-3 mt-3">
+            {renderPriceRow('יתרת חוב', debtBalance)}
+          </div>
+        </div>
+
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
           {!agreement && !showUploader ? (
