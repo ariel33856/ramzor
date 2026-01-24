@@ -13,7 +13,6 @@ import { tabs } from '@/components/CaseTabs';
 export default function FieldsSelector({ selectedFields, onFieldToggle }) {
   const [expandedGroups, setExpandedGroups] = useState({});
   const [expandedTabs, setExpandedTabs] = useState({});
-  const [expandedComponents, setExpandedComponents] = useState({});
 
   const toggleGroup = (groupId) => {
     setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
@@ -21,10 +20,6 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
 
   const toggleTab = (tabId) => {
     setExpandedTabs(prev => ({ ...prev, [tabId]: !prev[tabId] }));
-  };
-
-  const toggleComponent = (componentId) => {
-    setExpandedComponents(prev => ({ ...prev, [componentId]: !prev[componentId] }));
   };
 
   const isFieldSelected = (fieldId) => {
@@ -88,52 +83,29 @@ export default function FieldsSelector({ selectedFields, onFieldToggle }) {
                             )}
                           </button>
 
-                          {/* קומפוננטות */}
+                          {/* שדות */}
                           {isTabExpanded && (
-                            <div className="bg-gray-50">
-                              {components.map(component => {
-                                const isComponentExpanded = expandedComponents[component.id];
-                                
-                                return (
-                                  <div key={component.id} className="border-t border-gray-200">
-                                    <button
-                                      onClick={() => toggleComponent(component.id)}
-                                      className="w-full px-6 py-2 flex items-center justify-between hover:bg-gray-100 transition-colors"
+                            <div className="bg-white">
+                              {components.map(component => (
+                                component.fields.map(field => (
+                                  <div
+                                    key={field.id}
+                                    className="px-8 py-2 flex items-center gap-2 hover:bg-blue-50 transition-colors border-t border-gray-100"
+                                  >
+                                    <Checkbox
+                                      id={`field-${field.id}`}
+                                      checked={isFieldSelected(field.id)}
+                                      onCheckedChange={() => onFieldToggle(field.id)}
+                                    />
+                                    <label
+                                      htmlFor={`field-${field.id}`}
+                                      className="text-sm cursor-pointer flex-1"
                                     >
-                                      <span className="text-sm text-gray-700">{component.label}</span>
-                                      {isComponentExpanded ? (
-                                        <ChevronDown className="w-3 h-3" />
-                                      ) : (
-                                        <ChevronLeft className="w-3 h-3" />
-                                      )}
-                                    </button>
-
-                                    {/* שדות */}
-                                    {isComponentExpanded && (
-                                      <div className="bg-white">
-                                        {component.fields.map(field => (
-                                          <div
-                                            key={field.id}
-                                            className="px-8 py-2 flex items-center gap-2 hover:bg-blue-50 transition-colors"
-                                          >
-                                            <Checkbox
-                                              id={`field-${field.id}`}
-                                              checked={isFieldSelected(field.id)}
-                                              onCheckedChange={() => onFieldToggle(field.id)}
-                                            />
-                                            <label
-                                              htmlFor={`field-${field.id}`}
-                                              className="text-sm cursor-pointer flex-1"
-                                            >
-                                              {field.label}
-                                            </label>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                      {field.label}
+                                    </label>
                                   </div>
-                                );
-                              })}
+                                ))
+                              ))}
                             </div>
                           )}
                         </div>
