@@ -226,9 +226,6 @@ export default function CaseDetails() {
               </button>
               <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id)).map((tab) => {
-                 // Add service agreement option
-                 const tabsWithAgreement = [...tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id))];
-                 return tabsWithAgreement;
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
