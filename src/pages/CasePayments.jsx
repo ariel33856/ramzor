@@ -136,7 +136,7 @@ export default function CasePayments() {
              className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
            />
           ) : (
-            <p className="text-lg font-bold text-blue-600 border-2 border-blue-400 rounded px-2 py-1 inline-block">{formatCurrency(priceWithoutVat)}</p>
+            <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
           )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
@@ -159,7 +159,7 @@ export default function CasePayments() {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
           {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
-          <div className="pt-3 mt-3">
+          <div className="border-t-2 border-gray-200 pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
         </div>
