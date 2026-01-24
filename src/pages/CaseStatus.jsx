@@ -28,6 +28,16 @@ export default function CaseStatus() {
     }
   });
 
+  const updateSubStatusMutation = useMutation({
+    mutationFn: (subStatus) => 
+      base44.entities.MortgageCase.update(caseId, { 
+        sub_status: subStatus 
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+    }
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
@@ -53,23 +63,44 @@ export default function CaseStatus() {
     <div className="min-h-screen bg-gray-50/50 p-2">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="max-w-md">
-            <Label className="text-base font-semibold">סטטוס ראשי</Label>
-            <Select 
-              value={caseData.main_status || 'ליד חדש'} 
-              onValueChange={(value) => updateStatusMutation.mutate(value)}
-            >
-              <SelectTrigger className="mt-2 h-11">
-                <SelectValue placeholder="בחר סטטוס" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ליד חדש">ליד חדש</SelectItem>
-                <SelectItem value="בתהליך מכירה">בתהליך מכירה</SelectItem>
-                <SelectItem value="לקוח פעיל">לקוח פעיל</SelectItem>
-                <SelectItem value="נטש">נטש</SelectItem>
-                <SelectItem value="ארכיון">ארכיון</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            <div>
+              <Label className="text-base font-semibold">סטטוס ראשי</Label>
+              <Select 
+                value={caseData.main_status || 'ליד חדש'} 
+                onValueChange={(value) => updateStatusMutation.mutate(value)}
+              >
+                <SelectTrigger className="mt-2 h-11">
+                  <SelectValue placeholder="בחר סטטוס" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ליד חדש">ליד חדש</SelectItem>
+                  <SelectItem value="בתהליך מכירה">בתהליך מכירה</SelectItem>
+                  <SelectItem value="לקוח פעיל">לקוח פעיל</SelectItem>
+                  <SelectItem value="נטש">נטש</SelectItem>
+                  <SelectItem value="ארכיון">ארכיון</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label className="text-base font-semibold">תת סטטוס</Label>
+              <Select 
+                value={caseData.sub_status || ''} 
+                onValueChange={(value) => updateSubStatusMutation.mutate(value)}
+              >
+                <SelectTrigger className="mt-2 h-11">
+                  <SelectValue placeholder="בחר תת סטטוס" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ממתין למסמכים">ממתין למסמכים</SelectItem>
+                  <SelectItem value="בבדיקה">בבדיקה</SelectItem>
+                  <SelectItem value="הוגש לבנק">הוגש לבנק</SelectItem>
+                  <SelectItem value="אושר">אושר</SelectItem>
+                  <SelectItem value="נדחה">נדחה</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
