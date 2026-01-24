@@ -21,12 +21,14 @@ import CasePayments from './pages/CasePayments';
 import CasePersonal from './pages/CasePersonal';
 import CaseProducts from './pages/CaseProducts';
 import CaseProfiles from './pages/CaseProfiles';
+import CaseStatus from './pages/CaseStatus';
 import CaseSummary from './pages/CaseSummary';
 import CaseTracking from './pages/CaseTracking';
 import CaseWorkflow from './pages/CaseWorkflow';
 import ClientPortal from './pages/ClientPortal';
 import Communication from './pages/Communication';
 import ContactsArchive from './pages/ContactsArchive';
+import Dashboard from './pages/Dashboard';
 import ERP from './pages/ERP';
 import Management from './pages/Management';
 import ManagementHub from './pages/ManagementHub';
@@ -42,8 +44,7 @@ import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import CaseStatus from './pages/CaseStatus';
-import Dashboard from './pages/Dashboard';
+import CaseServiceAgreement from './pages/CaseServiceAgreement';
 import __Layout from './Layout.jsx';
 
 
@@ -71,12 +72,14 @@ export const PAGES = {
     "CasePersonal": CasePersonal,
     "CaseProducts": CaseProducts,
     "CaseProfiles": CaseProfiles,
+    "CaseStatus": CaseStatus,
     "CaseSummary": CaseSummary,
     "CaseTracking": CaseTracking,
     "CaseWorkflow": CaseWorkflow,
     "ClientPortal": ClientPortal,
     "Communication": Communication,
     "ContactsArchive": ContactsArchive,
+    "Dashboard": Dashboard,
     "ERP": ERP,
     "Management": Management,
     "ManagementHub": ManagementHub,
@@ -92,8 +95,7 @@ export const PAGES = {
     "Products": Products,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "CaseStatus": CaseStatus,
-    "Dashboard": Dashboard,
+    "CaseServiceAgreement": CaseServiceAgreement,
 }
 
 export const pagesConfig = {
