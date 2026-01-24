@@ -1439,19 +1439,22 @@ export default function PersonDetailsView({ personId }) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">שדה 2</Label>
+                        <Label className="text-xs">ותק בעבודה</Label>
                         <Input 
-                          value={income.field_2 || ''}
-                          onChange={(e) => {
-                            const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], field_2: e.target.value };
-                            setIncomeSources(newSources);
-                            updatePersonMutation.mutate({
-                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                            });
-                          }}
+                          value={(() => {
+                            if (!income.field_1) return '';
+                            const startDate = new Date(income.field_1.split('/').reverse().join('-'));
+                            const now = new Date();
+                            const years = now.getFullYear() - startDate.getFullYear();
+                            const months = now.getMonth() - startDate.getMonth();
+                            const totalMonths = years * 12 + months;
+                            const displayYears = Math.floor(totalMonths / 12);
+                            const displayMonths = totalMonths % 12;
+                            return displayYears > 0 ? `${displayYears} שנים ${displayMonths} חודשים` : `${displayMonths} חודשים`;
+                          })()}
+                          readOnly
                           placeholder=""
-                          className="h-8"
+                          className="h-8 bg-gray-50"
                         />
                       </div>
                       <div>
