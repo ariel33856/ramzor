@@ -1479,43 +1479,7 @@ export default function PersonDetailsView({ personId }) {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-5 gap-3">
-                      <div>
-                        <Label className="text-xs">משכורת ברוטו</Label>
-                        <Input 
-                          type="number"
-                          value={income.gross_salary || ''}
-                          onChange={(e) => {
-                            const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], gross_salary: e.target.value };
-                            setIncomeSources(newSources);
-                            updatePersonMutation.mutate({
-                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                            });
-                          }}
-                          placeholder="0"
-                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">משכורת נטו</Label>
-                        <Input 
-                          type="number"
-                          value={income.net_salary || ''}
-                          onChange={(e) => {
-                            const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], net_salary: e.target.value };
-                            setIncomeSources(newSources);
-                            updatePersonMutation.mutate({
-                              custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
-                            });
-                          }}
-                          placeholder="0"
-                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
-                        />
-                      </div>
+                    <div className="grid grid-cols-4 gap-3">
                       <div>
                         <Label className="text-xs">משכורת חודש ראשון</Label>
                         <Input 
@@ -1567,6 +1531,24 @@ export default function PersonDetailsView({ personId }) {
                           }}
                           placeholder="0"
                           className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          style={{ MozAppearance: 'textfield' }}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">ממוצע 3 חודשים</Label>
+                        <Input 
+                          type="number"
+                          value={(() => {
+                            const month1 = parseFloat(income.month_1_salary) || 0;
+                            const month2 = parseFloat(income.month_2_salary) || 0;
+                            const month3 = parseFloat(income.month_3_salary) || 0;
+                            if (month1 === 0 && month2 === 0 && month3 === 0) return '';
+                            const avg = Math.round((month1 + month2 + month3) / 3);
+                            return avg;
+                          })()}
+                          readOnly
+                          placeholder="0"
+                          className="h-8 bg-blue-50 font-bold [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           style={{ MozAppearance: 'textfield' }}
                         />
                       </div>
