@@ -18,17 +18,6 @@ export default function CasePayments() {
     input[type="number"] {
       -moz-appearance: textfield;
     }
-    .price-input {
-      font-size: 1.5rem !important;
-      line-height: 1.5rem !important;
-      height: 1.5rem !important;
-      padding: 0 !important;
-    }
-    .price-input:focus {
-      font-size: 1.5rem !important;
-      line-height: 1.5rem !important;
-      height: 1.5rem !important;
-    }
   `;
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
@@ -144,7 +133,7 @@ export default function CasePayments() {
              }}
              onClick={(e) => e.stopPropagation()}
              autoFocus
-             className="price-input text-blue-600"
+             className="!text-lg !font-bold text-blue-600 !border-0 !bg-transparent !p-0 !h-[1.75rem] !leading-[1.75rem]"
            />
           ) : (
             <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
