@@ -83,22 +83,37 @@ export default function CaseData() {
                       {income.type === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${income.type}`}
                     </h3>
                     {income.type === 'תלוש משכורת-שכיר' ? (
-                      <div className="space-y-3">
-                        {income.employer_name && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium">מעסיק:</span>
-                            <span className="text-sm">{income.employer_name}</span>
-                          </div>
-                        )}
-                        {(income.month_1_salary || income.month_2_salary || income.month_3_salary) && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium">ממוצע:</span>
-                            <span className="text-sm font-bold text-blue-700">
-                              {Math.round(((parseFloat(income.month_1_salary) || 0) + (parseFloat(income.month_2_salary) || 0) + (parseFloat(income.month_3_salary) || 0)) / 3).toLocaleString('he-IL')} ₪
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                     <div className="space-y-3">
+                       {income.employer_name && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-xs font-medium">מעסיק:</span>
+                           <span className="text-sm">{income.employer_name}</span>
+                         </div>
+                       )}
+                       {(income.month_1_salary || income.month_2_salary || income.month_3_salary) && (
+                         <div className="flex items-center gap-2">
+                           <span className="text-xs font-medium">ממוצע:</span>
+                           <span className="text-sm font-bold text-blue-700">
+                             {Math.round(((parseFloat(income.month_1_salary) || 0) + (parseFloat(income.month_2_salary) || 0) + (parseFloat(income.month_3_salary) || 0)) / 3).toLocaleString('he-IL')} ₪
+                           </span>
+                         </div>
+                       )}
+                       <div className="grid grid-cols-3 gap-3 mt-3">
+                         {[1, 2, 3].map((payslipNum) => (
+                           income[`payslip_${payslipNum}_url`] && (
+                             <div key={payslipNum} className="border-2 border-blue-300 rounded-lg overflow-hidden bg-white">
+                               <div className="text-xs font-semibold bg-blue-100 px-2 py-1 text-center">תלוש {payslipNum}</div>
+                               <img
+                                 src={income[`payslip_${payslipNum}_url`]}
+                                 alt={`תלוש ${payslipNum}`}
+                                 className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                                 onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
+                               />
+                             </div>
+                           )
+                         ))}
+                       </div>
+                     </div>
                     ) : (
                       <div>
                         {income.monthly_amount && (
