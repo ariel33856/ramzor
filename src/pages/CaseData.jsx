@@ -63,6 +63,20 @@ export default function CaseData() {
   return (
     <div className="min-h-screen bg-gray-50/50 p-2 md:p-3">
       <div className="mx-auto space-y-3">
+        {person?.custom_data?.id_upload_data?.file_url && (
+          <div className="border rounded-lg bg-white p-4">
+            <h3 className="text-base font-semibold mb-3">תעודת זהות</h3>
+            <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white max-w-md">
+              <img
+                src={person.custom_data.id_upload_data.file_url}
+                alt="תעודת זהות"
+                className="w-full h-auto object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => window.open(person.custom_data.id_upload_data.file_url, '_blank')}
+              />
+            </div>
+          </div>
+        )}
+        
         <Collapsible open={incomeOpen} onOpenChange={setIncomeOpen} className="border rounded-lg bg-white">
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between h-12 hover:bg-gray-50 rounded-none rounded-t-lg">
