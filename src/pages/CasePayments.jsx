@@ -117,18 +117,24 @@ export default function CasePayments() {
         >
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
           {isEditing ? (
-            <Input
-              type="number"
-              value={editValues[fieldName]}
-              onChange={(e) => setEditValues({ ...editValues, [fieldName]: e.target.value })}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleBlur(fieldName);
-                if (e.key === 'Escape') setEditingField(null);
-              }}
-              onClick={(e) => e.stopPropagation()}
-              autoFocus
-              className="text-lg font-bold text-blue-600 p-1 h-auto"
-            />
+           <Input
+             type="text"
+             inputMode="decimal"
+             value={new Intl.NumberFormat('he-IL').format(editValues[fieldName] || 0)}
+             onChange={(e) => {
+               const numValue = e.target.value.replace(/,/g, '');
+               if (!isNaN(numValue) || numValue === '') {
+                 setEditValues({ ...editValues, [fieldName]: numValue });
+               }
+             }}
+             onKeyDown={(e) => {
+               if (e.key === 'Enter') handleBlur(fieldName);
+               if (e.key === 'Escape') setEditingField(null);
+             }}
+             onClick={(e) => e.stopPropagation()}
+             autoFocus
+             className="text-lg font-bold text-blue-600 p-1 h-auto"
+           />
           ) : (
             <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
           )}
