@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Upload, FileText, Trash2, Check, TrendingUp } from 'lucide-react';
+import { Loader2, Upload, FileText, Trash2, Check, TrendingUp, PlusCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ export default function CasePayments() {
   const [showUploader, setShowUploader] = useState(false);
   const [editingField, setEditingField] = useState(null);
   const [editValues, setEditValues] = useState({});
+  const [paymentTimesCount, setPaymentTimesCount] = useState(2);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -236,7 +237,19 @@ export default function CasePayments() {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
           {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
           {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
-          {renderPriceRow('זמן תשלום שני', 'payment_times_2', caseData.custom_data?.payment_times_2 || 0)}
+          {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
+            const fieldName = `payment_times_${index + 2}`;
+            return renderPriceRow(`זמן תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, fieldName, caseData.custom_data?.[fieldName] || 0);
+          })}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPaymentTimesCount(prev => prev + 1)}
+            className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+          >
+            <PlusCircle className="w-4 h-4 ml-2" />
+            הוסף זמן
+          </Button>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="border-t-2 border-gray-200 pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
