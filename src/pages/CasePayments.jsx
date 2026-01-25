@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Upload, FileText, Trash2, Check, TrendingUp, PlusCircle } from 'lucide-react';
+import { Loader2, Upload, FileText, Trash2, Check, TrendingUp, PlusCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -105,7 +105,7 @@ export default function CasePayments() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount);
   };
 
-  const renderPriceRow = (label, fieldName, priceWithoutVat) => {
+  const renderPriceRow = (label, fieldName, priceWithoutVat, onDelete) => {
     const vat = priceWithoutVat * 0.18;
     const totalWithVat = priceWithoutVat + vat;
     const isEditing = editingField === fieldName;
@@ -114,7 +114,17 @@ export default function CasePayments() {
 
     return (
       <div className="grid grid-cols-6 gap-4 mb-3 items-center">
-        <div className="text-sm font-semibold text-gray-900">{label}</div>
+        <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+          {label}
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-1 hover:bg-red-100 rounded-full transition-colors"
+            >
+              <X className="w-4 h-4 text-red-600" />
+            </button>
+          )}
+        </div>
         <div 
           className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
           onClick={() => fieldName && !isEditing && handleFieldClick(fieldName, priceWithoutVat)}
@@ -239,7 +249,12 @@ export default function CasePayments() {
           {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
           {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
             const fieldName = `payment_times_${index + 2}`;
-            return renderPriceRow(`זמן תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, fieldName, caseData.custom_data?.[fieldName] || 0);
+            return renderPriceRow(
+              `זמן תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, 
+              fieldName, 
+              caseData.custom_data?.[fieldName] || 0,
+              () => setPaymentTimesCount(prev => Math.max(2, prev - 1))
+            );
           })}
           <Button
             variant="outline"
