@@ -153,9 +153,23 @@ export default function CasePayments() {
           <p className="text-xs text-gray-600 mb-1">תאריך</p>
           {dateFieldName ? (
             <Input
-              type="date"
+              type="text"
+              inputMode="numeric"
+              placeholder="DD/MM/YYYY"
               value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
-              onChange={(e) => setEditValues({ ...editValues, [dateFieldName]: e.target.value })}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                  value = value.slice(0, 2) + '/' + value.slice(2);
+                }
+                if (value.length >= 5) {
+                  value = value.slice(0, 5) + '/' + value.slice(5);
+                }
+                if (value.length > 10) {
+                  value = value.slice(0, 10);
+                }
+                setEditValues({ ...editValues, [dateFieldName]: value });
+              }}
               onBlur={() => {
                 if (editValues[dateFieldName] !== undefined) {
                   updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
