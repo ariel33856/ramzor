@@ -28,6 +28,7 @@ export default function CasePayments() {
   const [editValues, setEditValues] = useState({});
   const [paymentTimesCount, setPaymentTimesCount] = useState(2);
   const [extraFamilies, setExtraFamilies] = useState([]);
+  const [extraTransactions, setExtraTransactions] = useState([]);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -105,6 +106,13 @@ export default function CasePayments() {
     }
   }, [caseData?.custom_data?.extra_families]);
 
+  // Load extra transactions from custom_data on mount
+  React.useEffect(() => {
+    if (caseData?.custom_data?.extra_transactions) {
+      setExtraTransactions(caseData.custom_data.extra_transactions);
+    }
+  }, [caseData?.custom_data?.extra_transactions]);
+
   // Get calculation inputs
   const transactionType = caseData?.custom_data?.transaction_type || 0;
   const loanAmount = caseData?.custom_data?.loan_amount || 0;
@@ -115,7 +123,14 @@ export default function CasePayments() {
   const calculateBasePrice = () => {
     const baseLoanFee = Math.max(8500, loanAmount * 0.01);
     const extraFamiliesSum = extraFamilies.reduce((sum, family) => sum + (family.family_role || 0), 0);
-    return baseLoanFee + transactionType + difficultyLevel + creditReport + extraFamiliesSum;
+    
+    // Add extra transactions
+    const extraTransactionsSum = extraTransactions.reduce((sum, transaction) => {
+      const txBaseLoanFee = Math.max(8500, (transaction.loan_amount || 0) * 0.01);
+      return sum + txBaseLoanFee + (transaction.transaction_type || 0) + (transaction.difficulty_level || 0) + (transaction.credit_report || 0);
+    }, 0);
+    
+    return baseLoanFee + transactionType + difficultyLevel + creditReport + extraFamiliesSum + extraTransactionsSum;
   };
 
   const calculatedBasePrice = calculateBasePrice();
@@ -339,12 +354,120 @@ export default function CasePayments() {
             </div>
           </div>
 
+          {/* Extra Transactions */}
+          {extraTransactions.map((transaction, index) => (
+            <div key={index} className="border-t pt-4 mb-4">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-semibold text-gray-900">עסקה נוספת {index + 1}</h4>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    const newTransactions = extraTransactions.filter((_, i) => i !== index);
+                    setExtraTransactions(newTransactions);
+                    updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                  }}
+                  className="text-red-600 hover:bg-red-50"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
+                  <Select
+                    value={String(transaction.transaction_type || 0)}
+                    onValueChange={(value) => {
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], transaction_type: parseInt(value) };
+                      setExtraTransactions(newTransactions);
+                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר סוג עסקה" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">משכנתא לרכישה</SelectItem>
+                      <SelectItem value="1000">שיפוצים</SelectItem>
+                      <SelectItem value="2500">איחוד הלוואות</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">סכום הלוואה מבוקשת</label>
+                  <Input
+                    type="number"
+                    placeholder="הזן סכום בשקלים"
+                    value={transaction.loan_amount || ''}
+                    onChange={(e) => {
+                      const value = parseFloat(e.target.value) || 0;
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], loan_amount: value };
+                      setExtraTransactions(newTransactions);
+                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">דרגת קושי</label>
+                  <Select
+                    value={String(transaction.difficulty_level || 0)}
+                    onValueChange={(value) => {
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], difficulty_level: parseInt(value) };
+                      setExtraTransactions(newTransactions);
+                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר דרגת קושי" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">קלה</SelectItem>
+                      <SelectItem value="1000">בינונית</SelectItem>
+                      <SelectItem value="5000">קשה</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">דוח אשראי</label>
+                  <Select
+                    value={String(transaction.credit_report || 0)}
+                    onValueChange={(value) => {
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], credit_report: parseInt(value) };
+                      setExtraTransactions(newTransactions);
+                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר מצב אשראי" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">תקין</SelectItem>
+                      <SelectItem value="3000">בעייתי</SelectItem>
+                      <SelectItem value="6000">בעייתי מאוד</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          ))}
+
           {/* Add Transaction Button */}
           <div className="border-t pt-4 mb-4">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setExtraFamilies([...extraFamilies, { family_role: 8500 }])}
+              onClick={() => {
+                const newTransactions = [...extraTransactions, { transaction_type: 0, loan_amount: 0, difficulty_level: 0, credit_report: 0 }];
+                setExtraTransactions(newTransactions);
+                updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+              }}
               className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
             >
               <PlusCircle className="w-4 h-4 ml-2" />
