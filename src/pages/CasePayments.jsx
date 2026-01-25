@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Upload, FileText, Trash2, Check } from 'lucide-react';
+import { Loader2, Upload, FileText, Trash2, Check, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -197,8 +197,12 @@ export default function CasePayments() {
             </div>
           </>
         ) : (
-          <div className="col-span-2 bg-gray-100 rounded-lg p-3 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-400">✕</span>
+          <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3 flex items-center justify-center gap-2 border-2 border-blue-200">
+            <TrendingUp className="w-6 h-6 text-blue-600" />
+            <span className="text-2xl font-bold text-blue-700">
+              {closingPrice > 0 ? Math.round((paymentsReceived / closingPrice) * 100) : 0}%
+            </span>
+            <span className="text-xs text-blue-600 font-medium">התקבל</span>
           </div>
         )}
         </div>
