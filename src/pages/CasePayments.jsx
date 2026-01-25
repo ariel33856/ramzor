@@ -289,45 +289,46 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
           
-          <div className="grid grid-cols-5 gap-4 mb-6">
+          <div className="grid grid-cols-6 gap-2 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">סוג עסקה</label>
               <Select
                 value={String(transactionType)}
                 onValueChange={(value) => updatePaymentsMutation.mutate({ transaction_type: parseInt(value) })}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר סוג עסקה" />
+                <SelectTrigger className="h-8 text-sm">
+                  <SelectValue placeholder="בחר" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">משכנתא לרכישה</SelectItem>
+                  <SelectItem value="0">רכישה</SelectItem>
                   <SelectItem value="1000">שיפוצים</SelectItem>
-                  <SelectItem value="2500">איחוד הלוואות</SelectItem>
+                  <SelectItem value="2500">איחוד</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">סכום הלוואה מבוקשת</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
               <Input
                 type="number"
-                placeholder="הזן סכום בשקלים"
+                placeholder="₪"
                 value={loanAmount || ''}
                 onChange={(e) => {
                   const value = parseFloat(e.target.value) || 0;
                   updatePaymentsMutation.mutate({ loan_amount: value });
                 }}
+                className="h-8 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">דרגת קושי</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">דרגת קושי</label>
               <Select
                 value={String(difficultyLevel)}
                 onValueChange={(value) => updatePaymentsMutation.mutate({ difficulty_level: parseInt(value) })}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר דרגת קושי" />
+                <SelectTrigger className="h-8 text-sm">
+                  <SelectValue placeholder="בחר" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="0">קלה</SelectItem>
@@ -338,23 +339,23 @@ export default function CasePayments() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">דוח אשראי</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">דוח אשראי</label>
               <Select
                 value={String(creditReport)}
                 onValueChange={(value) => updatePaymentsMutation.mutate({ credit_report: parseInt(value) })}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר מצב אשראי" />
+                <SelectTrigger className="h-8 text-sm">
+                  <SelectValue placeholder="בחר" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="0">תקין</SelectItem>
                   <SelectItem value="3000">בעייתי</SelectItem>
-                  <SelectItem value="6000">בעייתי מאוד</SelectItem>
+                  <SelectItem value="6000">מאוד</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="flex items-end">
+            <div className="flex items-end col-span-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -363,9 +364,9 @@ export default function CasePayments() {
                   setExtraFamilies(newFamilies);
                   updatePaymentsMutation.mutate({ extra_families: newFamilies });
                 }}
-                className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+                className="w-full h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm"
               >
-                <PlusCircle className="w-4 h-4 ml-2" />
+                <PlusCircle className="w-3 h-3 ml-1" />
                 הוסף תא משפחתי
               </Button>
             </div>
@@ -373,11 +374,11 @@ export default function CasePayments() {
 
           {/* Extra Families for main transaction */}
           {extraFamilies.length > 0 && (
-            <div className="border-t pt-4">
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
-              <div className="flex gap-3 flex-wrap">
+            <div className="border-t pt-2">
+              <h4 className="text-xs font-semibold text-gray-900 mb-2">תאים משפחתיים נוספים</h4>
+              <div className="flex gap-2 flex-wrap">
                 {extraFamilies.map((family, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div key={index} className="flex items-center gap-1">
                     <Select
                       value={String(family.family_role || 0)}
                       onValueChange={(value) => {
@@ -387,8 +388,8 @@ export default function CasePayments() {
                         updatePaymentsMutation.mutate({ extra_families: newFamilies });
                       }}
                     >
-                      <SelectTrigger className="w-40">
-                        <SelectValue placeholder="בחר סיווג" />
+                      <SelectTrigger className="w-32 h-7 text-xs">
+                        <SelectValue placeholder="בחר" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="8500">לווה נוסף</SelectItem>
@@ -403,9 +404,9 @@ export default function CasePayments() {
                         setExtraFamilies(newFamilies);
                         updatePaymentsMutation.mutate({ extra_families: newFamilies });
                       }}
-                      className="text-red-600 hover:bg-red-50"
+                      className="h-7 w-7 text-red-600 hover:bg-red-50"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3 h-3" />
                     </Button>
                   </div>
                 ))}
@@ -431,9 +432,9 @@ export default function CasePayments() {
                   <X className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="grid grid-cols-5 gap-4">
+              <div className="grid grid-cols-6 gap-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">סוג עסקה</label>
                   <Select
                     value={String(transaction.transaction_type || 0)}
                     onValueChange={(value) => {
@@ -443,22 +444,22 @@ export default function CasePayments() {
                       updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="בחר סוג עסקה" />
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue placeholder="בחר" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0">משכנתא לרכישה</SelectItem>
+                      <SelectItem value="0">רכישה</SelectItem>
                       <SelectItem value="1000">שיפוצים</SelectItem>
-                      <SelectItem value="2500">איחוד הלוואות</SelectItem>
+                      <SelectItem value="2500">איחוד</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">סכום הלוואה מבוקשת</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
                   <Input
                     type="number"
-                    placeholder="הזן סכום בשקלים"
+                    placeholder="₪"
                     value={transaction.loan_amount || ''}
                     onChange={(e) => {
                       const value = parseFloat(e.target.value) || 0;
@@ -467,11 +468,12 @@ export default function CasePayments() {
                       setExtraTransactions(newTransactions);
                       updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
+                    className="h-8 text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">דרגת קושי</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">דרגת קושי</label>
                   <Select
                     value={String(transaction.difficulty_level || 0)}
                     onValueChange={(value) => {
@@ -481,8 +483,8 @@ export default function CasePayments() {
                       updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="בחר דרגת קושי" />
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue placeholder="בחר" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="0">קלה</SelectItem>
@@ -493,7 +495,7 @@ export default function CasePayments() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">דוח אשראי</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">דוח אשראי</label>
                   <Select
                     value={String(transaction.credit_report || 0)}
                     onValueChange={(value) => {
@@ -503,18 +505,18 @@ export default function CasePayments() {
                       updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="בחר מצב אשראי" />
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue placeholder="בחר" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="0">תקין</SelectItem>
                       <SelectItem value="3000">בעייתי</SelectItem>
-                      <SelectItem value="6000">בעייתי מאוד</SelectItem>
+                      <SelectItem value="6000">מאוד</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="flex items-end">
+                <div className="flex items-end col-span-2">
                   <Button
                     variant="outline"
                     size="sm"
@@ -525,9 +527,9 @@ export default function CasePayments() {
                       setExtraTransactions(newTransactions);
                       updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
-                    className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+                    className="w-full h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm"
                   >
-                    <PlusCircle className="w-4 h-4 ml-2" />
+                    <PlusCircle className="w-3 h-3 ml-1" />
                     הוסף תא משפחתי
                   </Button>
                 </div>
@@ -535,11 +537,11 @@ export default function CasePayments() {
 
               {/* Extra Families for this transaction */}
               {(transaction.extra_families || []).length > 0 && (
-                <div className="mt-4">
-                  <h5 className="text-xs font-semibold text-gray-700 mb-2">תאים משפחתיים נוספים</h5>
-                  <div className="flex gap-3 flex-wrap">
+                <div className="mt-2">
+                  <h5 className="text-xs font-semibold text-gray-700 mb-1">תאים משפחתיים נוספים</h5>
+                  <div className="flex gap-2 flex-wrap">
                     {transaction.extra_families.map((family, fIndex) => (
-                      <div key={fIndex} className="flex items-center gap-2">
+                      <div key={fIndex} className="flex items-center gap-1">
                         <Select
                           value={String(family.family_role || 0)}
                           onValueChange={(value) => {
@@ -551,8 +553,8 @@ export default function CasePayments() {
                             updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                           }}
                         >
-                          <SelectTrigger className="w-40">
-                            <SelectValue placeholder="בחר סיווג" />
+                          <SelectTrigger className="w-32 h-7 text-xs">
+                            <SelectValue placeholder="בחר" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="8500">לווה נוסף</SelectItem>
@@ -569,9 +571,9 @@ export default function CasePayments() {
                             setExtraTransactions(newTransactions);
                             updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                           }}
-                          className="text-red-600 hover:bg-red-50"
+                          className="h-7 w-7 text-red-600 hover:bg-red-50"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3 h-3" />
                         </Button>
                       </div>
                     ))}
