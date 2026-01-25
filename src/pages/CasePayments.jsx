@@ -375,9 +375,9 @@ export default function CasePayments() {
           {extraFamilies.length > 0 && (
             <div className="border-t pt-4">
               <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
-              <div className="space-y-2">
+              <div className="flex gap-3 flex-wrap">
                 {extraFamilies.map((family, index) => (
-                  <div key={index} className="flex items-center gap-3">
+                  <div key={index} className="flex items-center gap-2">
                     <Select
                       value={String(family.family_role || 0)}
                       onValueChange={(value) => {
@@ -387,7 +387,7 @@ export default function CasePayments() {
                         updatePaymentsMutation.mutate({ extra_families: newFamilies });
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-40">
                         <SelectValue placeholder="בחר סיווג" />
                       </SelectTrigger>
                       <SelectContent>
@@ -537,9 +537,9 @@ export default function CasePayments() {
               {(transaction.extra_families || []).length > 0 && (
                 <div className="mt-4">
                   <h5 className="text-xs font-semibold text-gray-700 mb-2">תאים משפחתיים נוספים</h5>
-                  <div className="space-y-2">
+                  <div className="flex gap-3 flex-wrap">
                     {transaction.extra_families.map((family, fIndex) => (
-                      <div key={fIndex} className="flex items-center gap-3">
+                      <div key={fIndex} className="flex items-center gap-2">
                         <Select
                           value={String(family.family_role || 0)}
                           onValueChange={(value) => {
@@ -551,7 +551,7 @@ export default function CasePayments() {
                             updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                           }}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="w-40">
                             <SelectValue placeholder="בחר סיווג" />
                           </SelectTrigger>
                           <SelectContent>
