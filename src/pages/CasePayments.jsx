@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DocumentUploader from '../components/documents/DocumentUploader';
 
 export default function CasePayments() {
@@ -26,6 +27,7 @@ export default function CasePayments() {
   const [editingField, setEditingField] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [paymentTimesCount, setPaymentTimesCount] = useState(2);
+  const [extraFamilies, setExtraFamilies] = useState([]);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -96,7 +98,30 @@ export default function CasePayments() {
 
   const agreement = documents[0];
 
-  const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || 0);
+  // Load extra families from custom_data on mount
+  React.useEffect(() => {
+    if (caseData?.custom_data?.extra_families) {
+      setExtraFamilies(caseData.custom_data.extra_families);
+    }
+  }, [caseData?.custom_data?.extra_families]);
+
+  // Get calculation inputs
+  const transactionType = caseData?.custom_data?.transaction_type || 0;
+  const loanAmount = caseData?.custom_data?.loan_amount || 0;
+  const difficultyLevel = caseData?.custom_data?.difficulty_level || 0;
+  
+  // Calculate formula
+  const calculateBasePrice = () => {
+    const baseLoanFee = Math.max(8500, loanAmount * 0.01);
+    const extraFamiliesSum = extraFamilies.reduce((sum, family) => sum + (family.family_role || 0), 0);
+    return baseLoanFee + transactionType + difficultyLevel + extraFamiliesSum;
+  };
+
+  const calculatedBasePrice = calculateBasePrice();
+  const calculatedVat = calculatedBasePrice * 0.17;
+  const calculatedTotal = calculatedBasePrice + calculatedVat;
+
+  const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || calculatedTotal);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
   const debtBalance = closingPrice - paymentsReceived;
@@ -243,6 +268,131 @@ export default function CasePayments() {
     <div className="h-full bg-gray-50/50 p-6">
       <style>{spinnerStyles}</style>
       <div className="max-w-7xl mx-auto space-y-6">
+        {/* Calculation Inputs */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
+          
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
+              <Select
+                value={String(transactionType)}
+                onValueChange={(value) => updatePaymentsMutation.mutate({ transaction_type: parseInt(value) })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר סוג עסקה" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">משכנתא לרכישה</SelectItem>
+                  <SelectItem value="1000">שיפוצים</SelectItem>
+                  <SelectItem value="2500">איחוד הלוואות</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">סכום הלוואה מבוקשת</label>
+              <Input
+                type="number"
+                placeholder="הזן סכום בשקלים"
+                value={loanAmount || ''}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value) || 0;
+                  updatePaymentsMutation.mutate({ loan_amount: value });
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">דרגת קושי</label>
+              <Select
+                value={String(difficultyLevel)}
+                onValueChange={(value) => updatePaymentsMutation.mutate({ difficulty_level: parseInt(value) })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר דרגת קושי" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">קלה</SelectItem>
+                  <SelectItem value="1000">בינונית</SelectItem>
+                  <SelectItem value="5000">קשה</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Extra Families */}
+          <div className="border-t pt-4">
+            <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
+            <div className="space-y-2 mb-3">
+              {extraFamilies.map((family, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <Select
+                    value={String(family.family_role || 0)}
+                    onValueChange={(value) => {
+                      const newFamilies = [...extraFamilies];
+                      newFamilies[index] = { ...newFamilies[index], family_role: parseInt(value) };
+                      setExtraFamilies(newFamilies);
+                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר סיווג" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="8500">לווה נוסף</SelectItem>
+                      <SelectItem value="4250">ערב</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      const newFamilies = extraFamilies.filter((_, i) => i !== index);
+                      setExtraFamilies(newFamilies);
+                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                    }}
+                    className="text-red-600 hover:bg-red-50"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExtraFamilies([...extraFamilies, { family_role: 0 }])}
+              className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+            >
+              <PlusCircle className="w-4 h-4 ml-2" />
+              הוסף תא משפחתי
+            </Button>
+          </div>
+
+          {/* Calculation Summary */}
+          <div className="border-t mt-6 pt-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">בסיס חישוב:</span>
+              <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">מע"מ (17%):</span>
+              <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-bold border-t pt-2">
+              <span>סה"כ:</span>
+              <span className="text-green-600">{formatCurrency(calculatedTotal)}</span>
+            </div>
+            <Button
+              onClick={() => updatePaymentsMutation.mutate({ closing_price: calculatedTotal })}
+              className="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+            >
+              עדכן מחיר סגירה
+            </Button>
+          </div>
+        </div>
+
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
           {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
