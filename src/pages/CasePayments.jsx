@@ -96,6 +96,7 @@ export default function CasePayments() {
   const agreement = documents[0];
 
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || 0);
+  const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
   const debtBalance = closingPrice - paymentsReceived;
 
@@ -158,6 +159,7 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
           {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+          {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="border-t-2 border-gray-200 pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
