@@ -206,11 +206,21 @@ export default function CasePayments() {
             </div>
             <div className="relative w-full h-5 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
               <div 
-                className="absolute top-0 right-0 h-full bg-gradient-to-l from-green-600 via-yellow-500 to-red-600 transition-all duration-500"
+                className="absolute top-0 right-0 h-full transition-all duration-500 overflow-hidden"
                 style={{ 
                   width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%`
                 }}
-              />
+              >
+                <div 
+                  className="h-full bg-gradient-to-l from-green-600 via-yellow-500 to-red-600"
+                  style={{ 
+                    width: (() => {
+                      const percent = closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0;
+                      return percent > 0 ? `${10000 / percent}%` : '0%';
+                    })()
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}
