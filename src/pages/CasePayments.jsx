@@ -197,14 +197,14 @@ export default function CasePayments() {
             </div>
           </>
         ) : (
-          <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3 border-2 border-blue-200 flex flex-col justify-center h-full">
-            <div className="flex items-center justify-between mb-1">
+          <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3 border-2 border-blue-200">
+            <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-blue-600 font-medium">התקבל</span>
               <span className="text-lg font-bold text-blue-700">
                 {closingPrice > 0 ? Math.round((paymentsReceived / closingPrice) * 100) : 0}%
               </span>
             </div>
-            <div className="relative w-full h-6 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
+            <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
               <div 
                 className="absolute top-0 right-0 h-full bg-gradient-to-l from-green-500 via-blue-500 to-purple-500 transition-all duration-500"
                 style={{ width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%` }}
