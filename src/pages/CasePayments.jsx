@@ -150,57 +150,57 @@ export default function CasePayments() {
           <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
           <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
         </div>
-        <div className="bg-purple-50 rounded-lg p-3 text-right">
-          <p className="text-xs text-gray-600 mb-1">תאריך</p>
-          {dateFieldName ? (
-            <Input
-              type="text"
-              inputMode="numeric"
-              placeholder="DD/MM/YYYY"
-              value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
-              onChange={(e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                  value = value.slice(0, 2) + '/' + value.slice(2);
-                }
-                if (value.length >= 5) {
-                  value = value.slice(0, 5) + '/' + value.slice(5);
-                }
-                if (value.length > 10) {
-                  value = value.slice(0, 10);
-                }
-                setEditValues({ ...editValues, [dateFieldName]: value });
-              }}
-              onBlur={() => {
-                if (editValues[dateFieldName] !== undefined) {
-                  updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
-                }
-              }}
-              className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
-            />
-          ) : (
-            <p className="text-sm text-gray-500">—</p>
-          )}
-        </div>
-        <div className="bg-teal-50 rounded-lg p-3 text-right">
-          <p className="text-xs text-gray-600 mb-1">אמצעי תשלום</p>
-          {paymentMethodFieldName ? (
-            <Input
-              type="text"
-              placeholder="מזומן/העברה/צ׳ק"
-              value={editValues[paymentMethodFieldName] !== undefined ? editValues[paymentMethodFieldName] : (caseData.custom_data?.[paymentMethodFieldName] || '')}
-              onChange={(e) => setEditValues({ ...editValues, [paymentMethodFieldName]: e.target.value })}
-              onBlur={() => {
-                if (editValues[paymentMethodFieldName] !== undefined) {
-                  updatePaymentsMutation.mutate({ [paymentMethodFieldName]: editValues[paymentMethodFieldName] });
-                }
-              }}
-              className="!text-sm !font-bold text-teal-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
-            />
-          ) : (
-            <p className="text-sm text-gray-500">—</p>
-          )}
-        </div>
+        {fieldName ? (
+          <>
+            <div className="bg-purple-50 rounded-lg p-3 text-right">
+              <p className="text-xs text-gray-600 mb-1">תאריך</p>
+              <Input
+                type="text"
+                inputMode="numeric"
+                placeholder="DD/MM/YYYY"
+                value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, '');
+                  if (value.length >= 2) {
+                    value = value.slice(0, 2) + '/' + value.slice(2);
+                  }
+                  if (value.length >= 5) {
+                    value = value.slice(0, 5) + '/' + value.slice(5);
+                  }
+                  if (value.length > 10) {
+                    value = value.slice(0, 10);
+                  }
+                  setEditValues({ ...editValues, [dateFieldName]: value });
+                }}
+                onBlur={() => {
+                  if (editValues[dateFieldName] !== undefined) {
+                    updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
+                  }
+                }}
+                className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+              />
+            </div>
+            <div className="bg-teal-50 rounded-lg p-3 text-right">
+              <p className="text-xs text-gray-600 mb-1">אמצעי תשלום</p>
+              <Input
+                type="text"
+                placeholder="מזומן/העברה/צ׳ק"
+                value={editValues[paymentMethodFieldName] !== undefined ? editValues[paymentMethodFieldName] : (caseData.custom_data?.[paymentMethodFieldName] || '')}
+                onChange={(e) => setEditValues({ ...editValues, [paymentMethodFieldName]: e.target.value })}
+                onBlur={() => {
+                  if (editValues[paymentMethodFieldName] !== undefined) {
+                    updatePaymentsMutation.mutate({ [paymentMethodFieldName]: editValues[paymentMethodFieldName] });
+                  }
+                }}
+                className="!text-sm !font-bold text-teal-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+              />
+            </div>
+          </>
+        ) : (
+          <div className="col-span-2 bg-gray-100 rounded-lg p-3 flex items-center justify-center">
+            <span className="text-2xl font-bold text-gray-400">✕</span>
+          </div>
+        )}
         </div>
         );
         };
