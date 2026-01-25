@@ -108,9 +108,10 @@ export default function CasePayments() {
     const vat = priceWithoutVat * 0.18;
     const totalWithVat = priceWithoutVat + vat;
     const isEditing = editingField === fieldName;
+    const dateFieldName = fieldName ? `${fieldName}_date` : null;
 
     return (
-      <div className="grid grid-cols-4 gap-4 mb-3 items-center">
+      <div className="grid grid-cols-5 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
           className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
@@ -148,9 +149,27 @@ export default function CasePayments() {
           <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
           <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
         </div>
-      </div>
-    );
-  };
+        <div className="bg-purple-50 rounded-lg p-3 text-right">
+          <p className="text-xs text-gray-600 mb-1">תאריך</p>
+          {dateFieldName ? (
+            <Input
+              type="date"
+              value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
+              onChange={(e) => setEditValues({ ...editValues, [dateFieldName]: e.target.value })}
+              onBlur={() => {
+                if (editValues[dateFieldName] !== undefined) {
+                  updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
+                }
+              }}
+              className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+            />
+          ) : (
+            <p className="text-sm text-gray-500">—</p>
+          )}
+        </div>
+        </div>
+        );
+        };
 
   return (
     <div className="h-full bg-gray-50/50 p-6">
