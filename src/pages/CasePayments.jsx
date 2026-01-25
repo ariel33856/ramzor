@@ -263,7 +263,7 @@ export default function CasePayments() {
             className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
           >
             <PlusCircle className="w-4 h-4 ml-2" />
-            הוסף זמן
+            הוסף זמן תשלום
           </Button>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="border-t-2 border-gray-200 pt-3 mt-3">
