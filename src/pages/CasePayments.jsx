@@ -119,7 +119,7 @@ export default function CasePayments() {
   };
 
   const calculatedBasePrice = calculateBasePrice();
-  const calculatedVat = calculatedBasePrice * 0.17;
+  const calculatedVat = calculatedBasePrice * 0.18;
   const calculatedTotal = calculatedBasePrice + calculatedVat;
 
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || calculatedTotal);
@@ -395,7 +395,7 @@ export default function CasePayments() {
               <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">מע"מ (17%):</span>
+              <span className="text-gray-600">מע"מ (18%):</span>
               <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold border-t pt-2">
