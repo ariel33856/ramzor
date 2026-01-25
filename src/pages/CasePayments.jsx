@@ -339,6 +339,19 @@ export default function CasePayments() {
             </div>
           </div>
 
+          {/* Add Transaction Button */}
+          <div className="border-t pt-4 mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExtraFamilies([...extraFamilies, { family_role: 8500 }])}
+              className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
+            >
+              <PlusCircle className="w-4 h-4 ml-2" />
+              הוסף עסקה
+            </Button>
+          </div>
+
           {/* Extra Families */}
           <div className="border-t pt-4">
             <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
