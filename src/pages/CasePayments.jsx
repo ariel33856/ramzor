@@ -127,6 +127,7 @@ export default function CasePayments() {
                   setEditValues({ ...editValues, [fieldName]: numValue });
                 }
               }}
+              onBlur={() => handleBlur(fieldName)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleBlur(fieldName);
                 if (e.key === 'Escape') setEditValues({ ...editValues, [fieldName]: undefined });
