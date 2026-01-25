@@ -212,7 +212,7 @@ export default function CasePayments() {
                 }}
               >
                 <div 
-                  className="h-full bg-gradient-to-r from-red-600 via-yellow-500 to-green-600"
+                  className="h-full bg-gradient-to-l from-red-600 via-yellow-500 to-green-600"
                   style={{ 
                     width: (() => {
                       const percent = closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0;
