@@ -380,7 +380,7 @@ export default function CasePayments() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setExtraFamilies([...extraFamilies, { family_role: 0 }])}
+              onClick={() => setExtraFamilies([...extraFamilies, { family_role: 8500 }])}
               className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
             >
               <PlusCircle className="w-4 h-4 ml-2" />
