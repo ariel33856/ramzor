@@ -109,12 +109,13 @@ export default function CasePayments() {
   const transactionType = caseData?.custom_data?.transaction_type || 0;
   const loanAmount = caseData?.custom_data?.loan_amount || 0;
   const difficultyLevel = caseData?.custom_data?.difficulty_level || 0;
+  const creditReport = caseData?.custom_data?.credit_report || 0;
   
   // Calculate formula
   const calculateBasePrice = () => {
     const baseLoanFee = Math.max(8500, loanAmount * 0.01);
     const extraFamiliesSum = extraFamilies.reduce((sum, family) => sum + (family.family_role || 0), 0);
-    return baseLoanFee + transactionType + difficultyLevel + extraFamiliesSum;
+    return baseLoanFee + transactionType + difficultyLevel + creditReport + extraFamiliesSum;
   };
 
   const calculatedBasePrice = calculateBasePrice();
@@ -272,7 +273,7 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
           
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-4 gap-4 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
               <Select
@@ -316,6 +317,23 @@ export default function CasePayments() {
                   <SelectItem value="0">קלה</SelectItem>
                   <SelectItem value="1000">בינונית</SelectItem>
                   <SelectItem value="5000">קשה</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">דוח אשראי</label>
+              <Select
+                value={String(creditReport)}
+                onValueChange={(value) => updatePaymentsMutation.mutate({ credit_report: parseInt(value) })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר מצב אשראי" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">תקין</SelectItem>
+                  <SelectItem value="3000">בעייתי</SelectItem>
+                  <SelectItem value="6000">בעייתי מאוד</SelectItem>
                 </SelectContent>
               </Select>
             </div>
