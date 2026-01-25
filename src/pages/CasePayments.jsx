@@ -289,7 +289,7 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
           
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-5 gap-4 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">סוג עסקה</label>
               <Select
@@ -353,60 +353,65 @@ export default function CasePayments() {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="flex items-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newFamilies = [...extraFamilies, { family_role: 8500 }];
+                  setExtraFamilies(newFamilies);
+                  updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                }}
+                className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+              >
+                <PlusCircle className="w-4 h-4 ml-2" />
+                הוסף תא משפחתי
+              </Button>
+            </div>
           </div>
 
           {/* Extra Families for main transaction */}
-          <div className="border-t pt-4">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
-            <div className="space-y-2 mb-3">
-              {extraFamilies.map((family, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Select
-                    value={String(family.family_role || 0)}
-                    onValueChange={(value) => {
-                      const newFamilies = [...extraFamilies];
-                      newFamilies[index] = { ...newFamilies[index], family_role: parseInt(value) };
-                      setExtraFamilies(newFamilies);
-                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="בחר סיווג" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="8500">לווה נוסף</SelectItem>
-                      <SelectItem value="4250">ערב</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      const newFamilies = extraFamilies.filter((_, i) => i !== index);
-                      setExtraFamilies(newFamilies);
-                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
-                    }}
-                    className="text-red-600 hover:bg-red-50"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
+          {extraFamilies.length > 0 && (
+            <div className="border-t pt-4">
+              <h4 className="text-sm font-semibold text-gray-900 mb-3">תאים משפחתיים נוספים</h4>
+              <div className="space-y-2">
+                {extraFamilies.map((family, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <Select
+                      value={String(family.family_role || 0)}
+                      onValueChange={(value) => {
+                        const newFamilies = [...extraFamilies];
+                        newFamilies[index] = { ...newFamilies[index], family_role: parseInt(value) };
+                        setExtraFamilies(newFamilies);
+                        updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="בחר סיווג" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="8500">לווה נוסף</SelectItem>
+                        <SelectItem value="4250">ערב</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        const newFamilies = extraFamilies.filter((_, i) => i !== index);
+                        setExtraFamilies(newFamilies);
+                        updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                      }}
+                      className="text-red-600 hover:bg-red-50"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const newFamilies = [...extraFamilies, { family_role: 8500 }];
-                setExtraFamilies(newFamilies);
-                updatePaymentsMutation.mutate({ extra_families: newFamilies });
-              }}
-              className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-            >
-              <PlusCircle className="w-4 h-4 ml-2" />
-              הוסף תא משפחתי
-            </Button>
-          </div>
+          )}
 
           {/* Extra Transactions */}
           {extraTransactions.map((transaction, index) => (
