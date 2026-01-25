@@ -109,9 +109,10 @@ export default function CasePayments() {
     const totalWithVat = priceWithoutVat + vat;
     const isEditing = editingField === fieldName;
     const dateFieldName = fieldName ? `${fieldName}_date` : null;
+    const paymentMethodFieldName = fieldName ? `${fieldName}_payment_method` : null;
 
     return (
-      <div className="grid grid-cols-5 gap-4 mb-3 items-center">
+      <div className="grid grid-cols-6 gap-4 mb-3 items-center">
         <div className="text-sm font-semibold text-gray-900">{label}</div>
         <div 
           className={`bg-blue-50 rounded-lg p-3 text-right transition-colors ${fieldName ? 'cursor-pointer hover:bg-blue-100' : ''}`}
@@ -176,6 +177,25 @@ export default function CasePayments() {
                 }
               }}
               className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+            />
+          ) : (
+            <p className="text-sm text-gray-500">—</p>
+          )}
+        </div>
+        <div className="bg-teal-50 rounded-lg p-3 text-right">
+          <p className="text-xs text-gray-600 mb-1">אמצעי תשלום</p>
+          {paymentMethodFieldName ? (
+            <Input
+              type="text"
+              placeholder="מזומן/העברה/צ׳ק"
+              value={editValues[paymentMethodFieldName] !== undefined ? editValues[paymentMethodFieldName] : (caseData.custom_data?.[paymentMethodFieldName] || '')}
+              onChange={(e) => setEditValues({ ...editValues, [paymentMethodFieldName]: e.target.value })}
+              onBlur={() => {
+                if (editValues[paymentMethodFieldName] !== undefined) {
+                  updatePaymentsMutation.mutate({ [paymentMethodFieldName]: editValues[paymentMethodFieldName] });
+                }
+              }}
+              className="!text-sm !font-bold text-teal-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
             />
           ) : (
             <p className="text-sm text-gray-500">—</p>
