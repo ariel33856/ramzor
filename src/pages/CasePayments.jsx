@@ -236,6 +236,7 @@ export default function CasePayments() {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">סיכום תשלומים</h3>
           {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
           {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
+          {renderPriceRow('זמן תשלום שני', 'payment_times_2', caseData.custom_data?.payment_times_2 || 0)}
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="border-t-2 border-gray-200 pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
