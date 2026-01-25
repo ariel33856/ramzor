@@ -206,13 +206,9 @@ export default function CasePayments() {
             </div>
             <div className="relative w-full h-8 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
               <div 
-                className="absolute top-0 right-0 h-full bg-gradient-to-l from-green-500 via-blue-500 to-purple-500 transition-all duration-500 flex items-center justify-center"
+                className="absolute top-0 right-0 h-full bg-gradient-to-l from-green-500 via-blue-500 to-purple-500 transition-all duration-500"
                 style={{ width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%` }}
-              >
-                {closingPrice > 0 && Math.round((paymentsReceived / closingPrice) * 100) > 15 && (
-                  <TrendingUp className="w-5 h-5 text-white" />
-                )}
-              </div>
+              />
             </div>
           </div>
         )}
