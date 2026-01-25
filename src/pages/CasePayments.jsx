@@ -265,6 +265,10 @@ export default function CasePayments() {
             <PlusCircle className="w-4 h-4 ml-2" />
             הוסף זמן תשלום
           </Button>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="border-t-2 border-gray-200 pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
