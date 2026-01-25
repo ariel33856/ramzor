@@ -206,8 +206,22 @@ export default function CasePayments() {
             </div>
             <div className="relative w-full h-5 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
               <div 
-                className="absolute top-0 right-0 h-full bg-gradient-to-l from-green-600 via-yellow-500 to-red-600 transition-all duration-500"
-                style={{ width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%` }}
+                className="absolute top-0 right-0 h-full transition-all duration-500"
+                style={{ 
+                  width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%`,
+                  background: (() => {
+                    const percent = closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0;
+                    if (percent < 50) {
+                      // 0-50%: אדום לצהוב
+                      const ratio = percent / 50;
+                      return `rgb(${220 - ratio * 20}, ${40 + ratio * 175}, 40)`;
+                    } else {
+                      // 50-100%: צהוב לירוק
+                      const ratio = (percent - 50) / 50;
+                      return `rgb(${200 - ratio * 120}, ${215 - ratio * 25}, ${40 + ratio * 40})`;
+                    }
+                  })()
+                }}
               />
             </div>
           </div>
