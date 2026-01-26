@@ -682,6 +682,33 @@ export default function CasePayments() {
                 </div>
               </div>
               <div className="flex items-center gap-2 text-sm">
+                <div className="relative w-16">
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={editValues.discountPercent !== undefined ? editValues.discountPercent : (calculatedBasePrice > 0 ? ((discount / calculatedBasePrice) * 100).toFixed(1) : '0')}
+                    onChange={(e) => {
+                      const numValue = e.target.value.replace(/[^\d.]/g, '');
+                      if (!isNaN(numValue) || numValue === '') {
+                        setEditValues({ ...editValues, discountPercent: numValue });
+                        const discountAmount = (calculatedBasePrice * parseFloat(numValue || 0)) / 100;
+                        setEditValues({ ...editValues, discountPercent: numValue, discount: discountAmount.toFixed(0) });
+                      }
+                    }}
+                    onBlur={() => {
+                      if (editValues.discountPercent !== undefined) {
+                        const discountAmount = (calculatedBasePrice * parseFloat(editValues.discountPercent || 0)) / 100;
+                        updatePaymentsMutation.mutate({ discount: discountAmount });
+                        setEditValues({ ...editValues, discountPercent: undefined });
+                      }
+                    }}
+                    className="h-7 text-xs pl-5 text-left font-semibold"
+                  />
+                  <span className="absolute left-1 top-1/2 -translate-y-1/2 text-xs text-gray-500">%</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-600 text-xs">לאחר הנחה:</span>
                 <span className="font-semibold">{formatCurrency(priceAfterDiscount)}</span>
               </div>
