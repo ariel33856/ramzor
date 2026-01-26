@@ -390,10 +390,13 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
         }
       });
 
-      // Merge data
+      // Merge data - preserve critical fields from previous documents
       const mergedData = { 
         ...extractedData, 
-        ...result, 
+        ...result,
+        // Preserve id_issue_date and id_expiry_date from first document if not in third
+        id_issue_date: result.id_issue_date || extractedData.id_issue_date,
+        id_expiry_date: result.id_expiry_date || extractedData.id_expiry_date,
         file_url_3: file_url, 
         file_type_3: uploadFile.type
       };
