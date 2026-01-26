@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Upload, FileText, Trash2, Check, TrendingUp, PlusCircle, X } from 'lucide-react';
+import { Loader2, Upload, FileText, Trash2, Check, TrendingUp, PlusCircle, X, PenTool, Send, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import DocumentUploader from '../components/documents/DocumentUploader';
+import SignaturePad from '../components/payments/SignaturePad';
 
 export default function CasePayments() {
   const spinnerStyles = `
@@ -30,6 +32,8 @@ export default function CasePayments() {
   const [extraFamilies, setExtraFamilies] = useState([]);
   const [extraTransactions, setExtraTransactions] = useState([]);
   const [tempLoanAmount, setTempLoanAmount] = useState('');
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
+  const [emailForSignature, setEmailForSignature] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -63,6 +67,55 @@ export default function CasePayments() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       setEditingField(null);
+    }
+  });
+
+  const saveSignatureMutation = useMutation({
+    mutationFn: (signatureData) => base44.entities.MortgageCase.update(caseId, {
+      custom_data: {
+        ...caseData.custom_data,
+        signature: signatureData,
+        signature_status: 'signed',
+        signature_date: new Date().toISOString()
+      }
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      setSignatureDialogOpen(false);
+    }
+  });
+
+  const sendSignatureLinkMutation = useMutation({
+    mutationFn: async (email) => {
+      // Create a signature link (in real app, would use actual e-signature service)
+      const signatureLink = `${window.location.origin}${createPageUrl('ClientPortal')}?id=${caseId}&action=sign`;
+      
+      await base44.integrations.Core.SendEmail({
+        to: email,
+        subject: 'בקשה לחתימה על הצעת מחיר',
+        body: `
+שלום,
+
+אנא לחץ על הקישור הבא כדי לחתום על הצעת המחיר:
+${signatureLink}
+
+בברכה,
+צוות יועצי המשכנתא
+        `
+      });
+
+      return base44.entities.MortgageCase.update(caseId, {
+        custom_data: {
+          ...caseData.custom_data,
+          signature_status: 'pending',
+          signature_link_sent_to: email,
+          signature_link_sent_at: new Date().toISOString()
+        }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      setEmailForSignature('');
     }
   });
 
@@ -766,6 +819,99 @@ export default function CasePayments() {
           </div>
         </div>
 
+        {/* Signature Section */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">חתימה דיגיטלית</h3>
+
+          {caseData.custom_data?.signature_status === 'signed' ? (
+            <div className="space-y-4">
+              <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <CheckCircle2 className="w-6 h-6 text-green-600" />
+                  <div>
+                    <p className="font-semibold text-green-900">הצעת המחיר נחתמה</p>
+                    <p className="text-sm text-green-700">
+                      תאריך חתימה: {new Date(caseData.custom_data.signature_date).toLocaleDateString('he-IL')}
+                    </p>
+                  </div>
+                </div>
+                {caseData.custom_data?.signature && (
+                  <div className="bg-white rounded-lg p-4 border border-green-200">
+                    <p className="text-sm text-gray-600 mb-2">חתימה:</p>
+                    <img 
+                      src={caseData.custom_data.signature} 
+                      alt="חתימה" 
+                      className="max-h-24 border border-gray-200 rounded"
+                    />
+                  </div>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  updatePaymentsMutation.mutate({ 
+                    signature: null, 
+                    signature_status: null,
+                    signature_date: null 
+                  });
+                }}
+                className="border-red-300 text-red-600 hover:bg-red-50"
+              >
+                <Trash2 className="w-4 h-4 ml-2" />
+                מחק חתימה
+              </Button>
+            </div>
+          ) : caseData.custom_data?.signature_status === 'pending' ? (
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <Loader2 className="w-6 h-6 text-yellow-600 animate-spin" />
+                <div>
+                  <p className="font-semibold text-yellow-900">ממתין לחתימה</p>
+                  <p className="text-sm text-yellow-700">
+                    קישור נשלח אל: {caseData.custom_data.signature_link_sent_to}
+                  </p>
+                  <p className="text-xs text-yellow-600">
+                    {new Date(caseData.custom_data.signature_link_sent_at).toLocaleString('he-IL')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  onClick={() => setSignatureDialogOpen(true)}
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                >
+                  <PenTool className="w-4 h-4 ml-2" />
+                  חתום עכשיו
+                </Button>
+
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="אימייל לחתימה"
+                    value={emailForSignature}
+                    onChange={(e) => setEmailForSignature(e.target.value)}
+                    type="email"
+                  />
+                  <Button
+                    onClick={() => sendSignatureLinkMutation.mutate(emailForSignature)}
+                    disabled={!emailForSignature || sendSignatureLinkMutation.isPending}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  >
+                    {sendSignatureLinkMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4 ml-2" />
+                    )}
+                    שלח
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
           {!agreement && !showUploader ? (
@@ -825,6 +971,20 @@ export default function CasePayments() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
+
+      {/* Signature Dialog */}
+      <Dialog open={signatureDialogOpen} onOpenChange={setSignatureDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>חתימה על הצעת המחיר</DialogTitle>
+          </DialogHeader>
+          <SignaturePad
+            onSave={(signatureData) => saveSignatureMutation.mutate(signatureData)}
+            onCancel={() => setSignatureDialogOpen(false)}
+            initialSignature={caseData.custom_data?.signature}
+          />
+        </DialogContent>
+      </Dialog>
+      </div>
+      );
+      }
