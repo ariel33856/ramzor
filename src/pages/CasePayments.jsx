@@ -28,7 +28,7 @@ export default function CasePayments() {
   const [showUploader, setShowUploader] = useState(false);
   const [editingField, setEditingField] = useState(null);
   const [editValues, setEditValues] = useState({});
-  const [paymentTimesCount, setPaymentTimesCount] = useState(2);
+  const [paymentTimesCount, setPaymentTimesCount] = useState(1);
   const [paymentsReceivedCount, setPaymentsReceivedCount] = useState(1);
   const [extraFamilies, setExtraFamilies] = useState([]);
   const [extraTransactions, setExtraTransactions] = useState([]);
