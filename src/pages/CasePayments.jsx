@@ -408,7 +408,7 @@ export default function CasePayments() {
 
           {/* Extra Transactions */}
           {extraTransactions.map((transaction, index) => (
-            <div key={index} className="border-t pt-4 mb-4">
+            <div key={index} className="pt-4 mb-4">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-semibold text-gray-900">עסקה נוספת {index + 1}</h4>
                 <Button
@@ -568,7 +568,7 @@ export default function CasePayments() {
           ))}
 
           {/* Add Transaction Button */}
-          <div className="border-t pt-4 mb-4">
+          <div className="pt-4 mb-4">
             <Button
               variant="outline"
               size="sm"
@@ -587,7 +587,7 @@ export default function CasePayments() {
 
 
           {/* Calculation Summary */}
-          <div className="border-t mt-6 pt-4 space-y-2">
+          <div className="mt-6 pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">בסיס חישוב:</span>
               <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
@@ -640,7 +640,7 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
-          <div className="border-t-2 border-gray-200 pt-3 mt-3">
+          <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
         </div>
