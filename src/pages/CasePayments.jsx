@@ -774,12 +774,20 @@ ${signatureLink}
                 <span className="font-bold text-green-600 text-base">{formatCurrency(calculatedTotal)}</span>
               </div>
             </div>
-            <Button
-              onClick={() => updatePaymentsMutation.mutate({ closing_price: calculatedTotal })}
-              className="w-full mt-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-            >
-              עדכן מחיר סגירה
-            </Button>
+            <div className="flex gap-2 mt-2">
+              <Button
+                onClick={() => updatePaymentsMutation.mutate({ closing_price: calculatedTotal })}
+                className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+              >
+                עדכן מחיר סגירה
+              </Button>
+              <Button
+                onClick={() => window.print()}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              >
+                הפק הצעת מחיר
+              </Button>
+            </div>
           </div>
         </div>
 
