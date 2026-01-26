@@ -307,7 +307,7 @@ ${signatureLink}
         </div>
         {fieldName ? (
           <>
-            <div className="bg-purple-50 rounded-lg p-3 text-right">
+            <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
               <p className="text-xs text-gray-600 mb-1">תאריך</p>
               <Input
                 type="text"
@@ -332,10 +332,10 @@ ${signatureLink}
                     updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
                   }
                 }}
-                className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+                className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 h-9"
               />
             </div>
-            <div className="bg-teal-50 rounded-lg p-3 text-right">
+            <div className="bg-teal-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
               <p className="text-xs text-gray-600 mb-1">אמצעי תשלום</p>
               <Input
                 type="text"
@@ -347,7 +347,7 @@ ${signatureLink}
                     updatePaymentsMutation.mutate({ [paymentMethodFieldName]: editValues[paymentMethodFieldName] });
                   }
                 }}
-                className="!text-sm !font-bold text-teal-600 !border-0 !bg-transparent !p-0 !h-[1.75rem]"
+                className="!text-sm !font-bold text-teal-600 !border-0 !bg-transparent !p-0 h-9"
               />
             </div>
           </>
