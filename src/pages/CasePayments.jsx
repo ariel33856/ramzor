@@ -37,6 +37,7 @@ export default function CasePayments() {
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const [emailForSignature, setEmailForSignature] = useState('');
   const [percentages, setPercentages] = useState({});
+  const [showPrintPreview, setShowPrintPreview] = useState(false);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
