@@ -291,20 +291,20 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+              className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-blue-600'} ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' ? `cursor-pointer hover:${isRemainingPayment ? 'bg-red-100' : 'bg-blue-100'} rounded px-2 -mx-2 transition-colors` : ''}`}
                onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' && handleFieldClick(fieldName, displayAmount)}
             >
               {formatCurrency(displayAmount)}
             </p>
           )}
         </div>
-        <div className="bg-orange-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-          <p className="text-xs text-gray-600 mb-1">מע"מ 18%</p>
-          <p className="text-lg font-bold text-orange-600">{formatCurrency(vat)}</p>
+        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isRemainingPayment ? 'bg-red-50' : 'bg-orange-50'}`}>
+          <p className={`text-xs mb-1 ${isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>מע"מ 18%</p>
+          <p className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-orange-600'}`}>{formatCurrency(vat)}</p>
         </div>
-        <div className="bg-green-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-          <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
-          <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
+        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isRemainingPayment ? 'bg-red-50' : 'bg-green-50'}`}>
+          <p className={`text-xs mb-1 ${isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>סה"כ עם מע"מ</p>
+          <p className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-green-600'}`}>{formatCurrency(totalWithVat)}</p>
         </div>
         {fieldName && fieldName !== 'remaining_payment_times' ? (
           <>
