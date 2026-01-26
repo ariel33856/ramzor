@@ -942,7 +942,7 @@ ${signatureLink}
 
               <div className="flex gap-2 mt-6">
                 <Button
-                  onClick={() => window.print()}
+                  onClick={() => setShowPrintPreview(true)}
                   className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                 >
                   הפקת הצעת מחיר
