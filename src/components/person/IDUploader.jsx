@@ -218,12 +218,6 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check if first document is uploaded
-    if (!preview) {
-      setError('⚠️ נא להעלות קודם את הצד הראשון של התעודה');
-      return;
-    }
-
     console.log('📤 Starting second upload:', file.name);
     setLocalFile2(file);
     
