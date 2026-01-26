@@ -222,6 +222,7 @@ ${signatureLink}
     const dateFieldName = fieldName ? `${fieldName}_date` : null;
     const paymentMethodFieldName = fieldName ? `${fieldName}_payment_method` : null;
     const percentageFieldName = fieldName ? `${fieldName}_percentage` : null;
+    const isRemainingPayment = fieldName === 'remaining_payment_times';
     
     // Calculate amount based on percentage if percentage is set
     const currentPercentage = percentages[percentageFieldName] !== undefined ? percentages[percentageFieldName] : (caseData.custom_data?.[percentageFieldName] || '');
@@ -230,7 +231,7 @@ ${signatureLink}
 
     return (
       <div className="grid grid-cols-7 gap-3 mb-2 items-stretch">
-        <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+        <div className={`text-sm font-semibold flex items-center gap-2 ${isRemainingPayment ? 'text-red-900' : 'text-gray-900'}`}>
           {label}
           {onDelete && (
             <button
@@ -242,10 +243,10 @@ ${signatureLink}
           )}
         </div>
         {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && (
-          <div className="bg-indigo-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-            <p className="text-xs text-gray-600 mb-1">אחוז %</p>
+          <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isRemainingPayment ? 'bg-red-50' : 'bg-indigo-50'}`}>
+            <p className={`text-xs mb-1 ${isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>אחוז %</p>
             {fieldName === 'remaining_payment_times' ? (
-              <p className="text-lg font-bold text-indigo-600">
+              <p className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-indigo-600'}`}>
                 {priceAfterDiscount > 0 ? ((priceWithoutVat / priceAfterDiscount) * 100).toFixed(1) : '0'}%
               </p>
             ) : (
@@ -273,8 +274,8 @@ ${signatureLink}
             )}
           </div>
         )}
-        <div className="bg-blue-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-          <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
+        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isRemainingPayment ? 'bg-red-50' : 'bg-blue-50'}`}>
+          <p className={`text-xs mb-1 ${isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>ללא מע"מ</p>
           {isEditing && fieldName !== 'remaining_payment_times' && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
             <Input
               type="text"
