@@ -188,6 +188,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       console.log('✅ AI Result:', result);
       setDetectionResult(result.document_type);
       setIdType(result.id_type);
+      setDetectionResult2(null); // Reset for new upload
       const dataWithFiles = { 
         ...result, 
         file_url_1: file_url, 
