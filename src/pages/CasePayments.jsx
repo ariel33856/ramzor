@@ -223,6 +223,7 @@ ${signatureLink}
     const paymentMethodFieldName = fieldName ? `${fieldName}_payment_method` : null;
     const percentageFieldName = fieldName ? `${fieldName}_percentage` : null;
     const isRemainingPayment = fieldName === 'remaining_payment_times';
+    const isBalanceClear = isRemainingPayment && priceWithoutVat === 0;
     
     // Calculate amount based on percentage if percentage is set
     const currentPercentage = percentages[percentageFieldName] !== undefined ? percentages[percentageFieldName] : (caseData.custom_data?.[percentageFieldName] || '');
