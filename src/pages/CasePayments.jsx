@@ -277,6 +277,18 @@ ${signatureLink}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d.]/g, '');
                 setPercentages({ ...percentages, [percentageFieldName]: value });
+                // Calculate the value and auto-fill next payment with remainder
+                if (value && priceAfterDiscount > 0 && (fieldName === 'payment_times' || fieldName?.startsWith('payment_times_'))) {
+                  const percentage = parseFloat(value) || 0;
+                  const calculatedValue = (priceAfterDiscount * percentage) / 100;
+                  const fieldIndex = fieldName === 'payment_times' ? 1 : parseInt(fieldName.split('_')[2]);
+                  const remainder = priceAfterDiscount - calculatedValue;
+                  if (remainder > 0) {
+                    const nextFieldName = `payment_times_${fieldIndex + 1}`;
+                    setEditValues({ ...editValues, [nextFieldName]: remainder });
+                    setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
+                  }
+                }
               }}
               onBlur={() => {
                 if (percentages[percentageFieldName] !== undefined) {
