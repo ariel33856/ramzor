@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import DocumentUploader from '../components/documents/DocumentUploader';
 import SignaturePad from '../components/payments/SignaturePad';
+import PriceOfferPrint from '../components/payments/PriceOfferPrint';
 
 export default function CasePayments() {
   const spinnerStyles = `
