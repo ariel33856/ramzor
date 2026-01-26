@@ -766,33 +766,33 @@ ${signatureLink}
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <h4 className="text-md font-semibold text-gray-900 mb-4">מחיר סגירה</h4>
-              {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+              <h4 className="text-md font-semibold text-gray-900 mb-4">זמני תשלום</h4>
+              {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
+              {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
+                const fieldName = `payment_times_${index + 2}`;
+                return renderPriceRow(
+                  `זמן תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, 
+                  fieldName, 
+                  caseData.custom_data?.[fieldName] || 0,
+                  () => setPaymentTimesCount(prev => Math.max(2, prev - 1))
+                );
+              })}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPaymentTimesCount(prev => prev + 1)}
+                className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+              >
+                <PlusCircle className="w-4 h-4 ml-2" />
+                הוסף זמן תשלום
+              </Button>
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">זמני תשלום</h3>
-          {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
-          {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
-            const fieldName = `payment_times_${index + 2}`;
-            return renderPriceRow(
-              `זמן תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, 
-              fieldName, 
-              caseData.custom_data?.[fieldName] || 0,
-              () => setPaymentTimesCount(prev => Math.max(2, prev - 1))
-            );
-          })}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPaymentTimesCount(prev => prev + 1)}
-            className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-          >
-            <PlusCircle className="w-4 h-4 ml-2" />
-            הוסף זמן תשלום
-          </Button>
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
+          {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">
