@@ -307,7 +307,7 @@ ${signatureLink}
           <p className={`text-xs mb-1 ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>סה"כ עם מע"מ</p>
           <p className={`text-lg font-bold ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-green-600'}`}>{formatCurrency(totalWithVat)}</p>
         </div>
-        {fieldName && fieldName !== 'remaining_payment_times' ? (
+        {fieldName && fieldName !== 'remaining_payment_times' && fieldName !== 'debt_balance' ? (
           <>
             <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
               <p className="text-xs text-gray-600 mb-1">תאריך</p>
