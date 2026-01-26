@@ -613,7 +613,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                   {detectionResult === 'both' 
                     ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית' : 'רגילה'} + ספח`
                     : detectionResult === 'id_card' 
-                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית (צד ראשון)' : 'רגילה'}`
+                    ? `תעודת זהות ${idType === 'ביומטרית' ? `ביומטרית${extractedData?.has_photo ? ' (צד ראשון)' : ' (צד שני)'}` : 'רגילה'}`
                     : 'ספח'}
                 </p>
               </div>
