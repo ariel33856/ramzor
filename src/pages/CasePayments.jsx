@@ -908,7 +908,7 @@ ${signatureLink}
           })}
           <div className="pt-3 mt-3 border-t border-gray-200">
             {renderPriceRow('סך התשלומים שהתקבלו', null, totalPaymentsReceived)}
-            {renderPriceRow('יתרת חוב', null, debtBalance)}
+            {renderPriceRow('יתרת חוב', 'debt_balance', debtBalance)}
             {renderPriceRow('תשלום בפיגור', 'late_payment', latePayment)}
           </div>
         </div>
