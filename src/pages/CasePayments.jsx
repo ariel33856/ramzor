@@ -349,8 +349,7 @@ ${signatureLink}
           <>
             {fieldName === 'late_payment' || fieldName?.startsWith('late_payment_') ? (
               (() => {
-                const amountValue = parseFloat(editValues[fieldName] !== undefined ? editValues[fieldName] : (caseData.custom_data?.[fieldName] || 0)) || 0;
-                if (amountValue === 0) {
+                if (priceWithoutVat === 0) {
                   return (
                     <div className="bg-green-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
                       <p className="text-xs text-green-600 mb-1">ימי פיגור</p>
