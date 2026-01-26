@@ -58,6 +58,15 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
     }
   }, [detectionResult, uploading, preview2, autoOpenedUpload]);
 
+  // Auto-open file upload for third file when biometric ID with second document is uploaded
+  React.useEffect(() => {
+    if (idType === 'ביומטרית' && preview2 && !preview3 && !uploading2) {
+      setTimeout(() => {
+        fileInputRef3.current?.click();
+      }, 800);
+    }
+  }, [idType, preview2, preview3, uploading2]);
+
   const convertImageToPdf = async (file) => {
     if (!file.type.includes('image')) return file;
     
