@@ -29,7 +29,7 @@ export default function CasePayments() {
   const [editingField, setEditingField] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [paymentTimesCount, setPaymentTimesCount] = useState(2);
-  const [paymentsReceivedCount, setPaymentsReceivedCount] = useState(2);
+  const [paymentsReceivedCount, setPaymentsReceivedCount] = useState(1);
   const [extraFamilies, setExtraFamilies] = useState([]);
   const [extraTransactions, setExtraTransactions] = useState([]);
   const [tempLoanAmount, setTempLoanAmount] = useState('');
@@ -843,7 +843,7 @@ ${signatureLink}
               `תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, 
               fieldName, 
               caseData.custom_data?.[fieldName] || 0,
-              () => setPaymentsReceivedCount(prev => Math.max(2, prev - 1))
+              () => setPaymentsReceivedCount(prev => Math.max(1, prev - 1))
             );
           })}
           <div className="pt-3 mt-3">
