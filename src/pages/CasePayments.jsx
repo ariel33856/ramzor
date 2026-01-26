@@ -355,10 +355,10 @@ ${signatureLink}
         ) : fieldName ? (
         <div className="col-span-2"></div>
         ) : (
-        <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200 h-[60px] flex flex-col justify-center">
+        <div className={`col-span-2 rounded-lg p-2 border-2 h-[60px] flex flex-col justify-center ${isRemainingPayment ? 'bg-red-50 border-red-200' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-blue-600 font-medium">התקבל</span>
-            <span className="text-base font-bold text-blue-700">
+            <span className={`text-xs font-medium ${isRemainingPayment ? 'text-red-600' : 'text-blue-600'}`}>התקבל</span>
+            <span className={`text-base font-bold ${isRemainingPayment ? 'text-red-700' : 'text-blue-700'}`}>
               {closingPrice > 0 ? Math.round((totalPaymentsReceived / closingPrice) * 100) : 0}%
             </span>
           </div>
@@ -370,7 +370,7 @@ ${signatureLink}
               }}
             >
               <div 
-                className="h-full bg-gradient-to-l from-red-600 via-yellow-500 to-green-600"
+                className={`h-full ${isRemainingPayment ? 'bg-gradient-to-l from-red-600 to-red-400' : 'bg-gradient-to-l from-red-600 via-yellow-500 to-green-600'}`}
                 style={{ 
                   width: (() => {
                     const percent = closingPrice > 0 ? Math.min(Math.round((totalPaymentsReceived / closingPrice) * 100), 100) : 0;
