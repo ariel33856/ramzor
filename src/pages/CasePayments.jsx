@@ -235,7 +235,7 @@ ${signatureLink}
         </div>
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment') ? (
+          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
             <Input
               type="text"
               inputMode="decimal"
@@ -249,19 +249,12 @@ ${signatureLink}
               className="text-lg font-bold text-blue-600 !border-2 !border-blue-400 !bg-white"
             />
           ) : (
-            <div className="flex items-center gap-2">
-              <p className="text-lg font-bold text-blue-600">
-                {formatCurrency(priceWithoutVat)}
-              </p>
-              {(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment') && (
-                <button
-                  onClick={() => handleFieldClick(fieldName, priceWithoutVat)}
-                  className="p-1 hover:bg-blue-100 rounded transition-colors"
-                >
-                  <PenTool className="w-4 h-4 text-blue-600" />
-                </button>
-              )}
-            </div>
+            <p 
+              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && handleFieldClick(fieldName, priceWithoutVat)}
+            >
+              {formatCurrency(priceWithoutVat)}
+            </p>
           )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
