@@ -602,18 +602,18 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
           )}
         </div>
 
-        {/* Upload Section 2 & 3 - For appendix or back side */}
-        {(detectionResult && detectionResult !== 'both') || preview2 ? (
-          <>
-            {/* Section 2 - Appendix or Back Side */}
-            <div 
-              className={`border-2 border-dashed rounded-xl p-0 transition-colors relative min-h-[300px] cursor-pointer overflow-visible ${
-                idType === 'ביומטרית' 
-                  ? 'border-purple-300 bg-purple-50/50 hover:bg-purple-50' 
-                  : 'border-orange-300 bg-orange-50/50 hover:bg-orange-50'
-              }`}
-              onClick={() => !preview2 && fileInputRef2.current?.click()}
-            >
+        {/* Upload Section 2 - Back Side for biometric or Appendix for regular */}
+         {(detectionResult && detectionResult !== 'both') || preview2 ? (
+           <>
+             {/* Section 2 */}
+             <div 
+               className={`border-2 border-dashed rounded-xl p-0 transition-colors relative min-h-[300px] cursor-pointer overflow-visible ${
+                 idType === 'ביומטרית' 
+                   ? 'border-purple-300 bg-purple-50/50 hover:bg-purple-50' 
+                   : 'border-orange-300 bg-orange-50/50 hover:bg-orange-50'
+               }`}
+               onClick={() => !preview2 && fileInputRef2.current?.click()}
+             >
             {preview2 ? (
               <>
                 <Button
