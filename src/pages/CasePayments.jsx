@@ -241,7 +241,7 @@ ${signatureLink}
             </button>
           )}
         </div>
-        {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && (
+        {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && (
           <div className="bg-indigo-50 rounded-lg p-3 text-right">
             <p className="text-xs text-gray-600 mb-1">אחוז %</p>
             <Input
@@ -269,7 +269,7 @@ ${signatureLink}
         )}
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
+          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') ? (
             <Input
               type="text"
               inputMode="decimal"
@@ -284,8 +284,8 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
-               onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && handleFieldClick(fieldName, displayAmount)}
+              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+               onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && handleFieldClick(fieldName, displayAmount)}
             >
               {formatCurrency(displayAmount)}
             </p>
@@ -839,7 +839,7 @@ ${signatureLink}
                   return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
                 }, 0);
                 const remainingBalance = Math.max(0, priceAfterDiscount - totalPaymentTimes);
-                return renderPriceRow('יתרה להזנת זמן תשלום', null, remainingBalance);
+                return renderPriceRow('יתרה להזנת זמן תשלום', 'remaining_payment_times', remainingBalance);
               })()}
               <Button
                 variant="outline"
