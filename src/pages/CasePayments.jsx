@@ -284,8 +284,8 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
-              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && handleFieldClick(fieldName, displayAmount)}
+              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+               onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && handleFieldClick(fieldName, displayAmount)}
             >
               {formatCurrency(displayAmount)}
             </p>
