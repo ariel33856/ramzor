@@ -608,7 +608,11 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                   frameBorder="0"
                 />
                 <p className="text-xs text-gray-500 mt-2 text-center">
-                  {detectionResult === 'both' ? 'תעודת זהות + ספח' : detectionResult === 'id_card' ? 'תעודת זהות' : 'ספח'}
+                  {detectionResult === 'both' 
+                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית' : 'רגילה'} + ספח`
+                    : detectionResult === 'id_card' 
+                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית (צד ראשון)' : 'רגילה'}`
+                    : 'ספח'}
                 </p>
               </div>
             </>
