@@ -896,10 +896,11 @@ ${signatureLink}
               </div>
             </div>
           )}
-        </div>
+          </div>
 
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
+          {/* חוזה שירות */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
           {!agreement && !showUploader ? (
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 p-8 text-center">
               <FileText className="w-12 h-12 text-blue-400 mx-auto mb-3" />
