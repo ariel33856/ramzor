@@ -650,13 +650,15 @@ export default function CasePayments() {
 
           {/* Calculation Summary */}
           <div className="mt-6 pt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">מחיר לפני מע"מ:</span>
-              <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">מע"מ (18%):</span>
-              <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex justify-between flex-1 text-sm">
+                <span className="text-gray-600">מחיר לפני מע"מ:</span>
+                <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
+              </div>
+              <div className="flex justify-between flex-1 text-sm">
+                <span className="text-gray-600">מע"מ (18%):</span>
+                <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
+              </div>
             </div>
             <div className="flex justify-between text-lg font-bold border-t pt-2">
               <span>סה"כ:</span>
