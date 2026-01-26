@@ -338,7 +338,7 @@ export default function CasePayments() {
             </div>
 
             <div className="w-28">
-              <label className="block text-xs font-medium text-gray-700 mb-1">קושי</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">דרגת קושי</label>
               <Select
                 value={String(difficultyLevel)}
                 onValueChange={(value) => updatePaymentsMutation.mutate({ difficulty_level: parseInt(value) })}
@@ -358,7 +358,7 @@ export default function CasePayments() {
             </div>
 
             <div className="w-28">
-              <label className="block text-xs font-medium text-gray-700 mb-1">אשראי</label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">דוח אשראי</label>
               <Select
                 value={String(creditReport)}
                 onValueChange={(value) => updatePaymentsMutation.mutate({ credit_report: parseInt(value) })}
@@ -369,7 +369,7 @@ export default function CasePayments() {
                 <SelectContent>
                   <SelectItem value="0">תקין</SelectItem>
                   <SelectItem value="3000">בעייתי</SelectItem>
-                  <SelectItem value="6000">בעייתי מאוד</SelectItem>
+                  <SelectItem value="6000">מאוד</SelectItem>
                 </SelectContent>
               </Select>
               <div className="h-5 mt-1 flex items-center justify-center">
