@@ -765,15 +765,16 @@ ${signatureLink}
               </Button>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
-          {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
-        </div>
+          {/* מחיר סגירה */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
+            {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+          </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">זמני תשלום</h3>
+          {/* זמני תשלום */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">זמני תשלום</h3>
           {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
           {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
             const fieldName = `payment_times_${index + 2}`;
