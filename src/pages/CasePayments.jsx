@@ -588,9 +588,52 @@ export default function CasePayments() {
 
           {/* Calculation Summary */}
           <div className="mt-6 pt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">בסיס חישוב:</span>
-              <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
+            <div className="bg-blue-50 p-4 rounded-lg space-y-1">
+              <div className="flex justify-between text-sm font-semibold text-blue-900 mb-2">
+                <span>בסיס חישוב:</span>
+                <span>{formatCurrency(calculatedBasePrice)}</span>
+              </div>
+              <div className="text-xs text-gray-600 space-y-1 mr-4">
+                <div className="flex justify-between">
+                  <span>• סכום הלוואה ({formatCurrency(loanAmount)} × 1% = {formatCurrency(loanAmount * 0.01)}, מינימום 8,500):</span>
+                  <span className="font-medium">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</span>
+                </div>
+                {transactionType > 0 && (
+                  <div className="flex justify-between">
+                    <span>• סוג עסקה ({transactionType === 1000 ? 'שיפוצים' : 'איחוד'}):</span>
+                    <span className="font-medium">{formatCurrency(transactionType)}</span>
+                  </div>
+                )}
+                {difficultyLevel > 0 && (
+                  <div className="flex justify-between">
+                    <span>• דרגת קושי ({difficultyLevel === 1000 ? 'בינונית' : difficultyLevel === 5000 ? 'קשה' : ''}):</span>
+                    <span className="font-medium">{formatCurrency(difficultyLevel)}</span>
+                  </div>
+                )}
+                {creditReport > 0 && (
+                  <div className="flex justify-between">
+                    <span>• דוח אשראי ({creditReport === 3000 ? 'בעייתי' : creditReport === 6000 ? 'בעייתי מאוד' : ''}):</span>
+                    <span className="font-medium">{formatCurrency(creditReport)}</span>
+                  </div>
+                )}
+                {extraFamilies.length > 0 && extraFamilies.map((family, idx) => (
+                  <div key={idx} className="flex justify-between">
+                    <span>• תא משפחתי נוסף ({family.family_role === 8500 ? 'לווה נוסף' : 'ערב'}):</span>
+                    <span className="font-medium">{formatCurrency(family.family_role || 0)}</span>
+                  </div>
+                ))}
+                {extraTransactions.map((transaction, idx) => {
+                  const txBaseLoanFee = Math.max(8500, (transaction.loan_amount || 0) * 0.01);
+                  const txExtraFamiliesSum = (transaction.extra_families || []).reduce((fSum, family) => fSum + (family.family_role || 0), 0);
+                  const txTotal = txBaseLoanFee + (transaction.transaction_type || 0) + (transaction.difficulty_level || 0) + (transaction.credit_report || 0) + txExtraFamiliesSum;
+                  return (
+                    <div key={idx} className="flex justify-between">
+                      <span>• עסקה נוספת {idx + 1}:</span>
+                      <span className="font-medium">{formatCurrency(txTotal)}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">מע"מ (18%):</span>
