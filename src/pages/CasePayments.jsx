@@ -200,7 +200,43 @@ ${signatureLink}
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || priceAfterDiscount);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
-  const latePayment = editValues.late_payment !== undefined ? parseFloat(editValues.late_payment) || 0 : (caseData.custom_data?.late_payment || 0);
+
+  // Calculate overdue payments based on due dates
+  const calculateOverduePayments = () => {
+    const today = new Date();
+    const overduePayments = [];
+
+    for (let i = 1; i <= paymentTimesCount; i++) {
+      const amountFieldName = i === 1 ? 'payment_times' : `payment_times_${i}`;
+      const dateFieldName = `${amountFieldName}_date`;
+      const dueDate = caseData.custom_data?.[dateFieldName];
+
+      if (dueDate) {
+        const dueDateObj = new Date(dueDate.split('/').reverse().join('-'));
+        if (dueDateObj < today) {
+          const expectedAmount = editValues[amountFieldName] !== undefined ? parseFloat(editValues[amountFieldName]) || 0 : (caseData.custom_data?.[amountFieldName] || 0);
+          const receivedFieldName = i === 1 ? 'payments_received' : `payments_received_${i}`;
+          const receivedAmount = editValues[receivedFieldName] !== undefined ? parseFloat(editValues[receivedFieldName]) || 0 : (caseData.custom_data?.[receivedFieldName] || 0);
+
+          const missing = Math.max(0, expectedAmount - receivedAmount);
+          if (missing > 0) {
+            overduePayments.push({
+              index: i,
+              amountFieldName,
+              dateFieldName,
+              expectedAmount,
+              receivedAmount,
+              missing,
+              percentage: expectedAmount > 0 ? (missing / expectedAmount) * 100 : 0
+            });
+          }
+        }
+      }
+    }
+    return overduePayments;
+  };
+
+  const overduePayments = calculateOverduePayments();
   
   // Calculate total payments received including additional payments
   const totalPaymentsReceived = paymentsReceived + Array.from({ length: paymentsReceivedCount - 1 }).reduce((sum, _, index) => {
