@@ -297,11 +297,11 @@ ${signatureLink}
             </p>
           )}
         </div>
-        <div className="bg-orange-50 rounded-lg p-3 text-right">
+        <div className="bg-orange-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
           <p className="text-xs text-gray-600 mb-1">מע"מ 18%</p>
           <p className="text-lg font-bold text-orange-600">{formatCurrency(vat)}</p>
         </div>
-        <div className="bg-green-50 rounded-lg p-3 text-right">
+        <div className="bg-green-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
           <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
           <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
         </div>
