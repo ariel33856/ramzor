@@ -721,7 +721,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
             </div>
 
             {/* Section 3 - Appendix (only for biometric IDs) */}
-            {idType === 'ביומטרית' && (detectionResult && detectionResult !== 'both') || preview3 ? (
+            {(idType === 'ביומטרית' && detectionResult && detectionResult !== 'both') || preview3 ? (
             <div 
               className="border-2 border-dashed border-cyan-300 rounded-xl p-0 bg-cyan-50/50 hover:bg-cyan-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
               onClick={() => !preview3 && fileInputRef3.current?.click()}
