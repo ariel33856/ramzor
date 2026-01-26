@@ -225,7 +225,27 @@ ${signatureLink}
         </div>
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          <p className="text-lg font-bold text-blue-600">{formatCurrency(priceWithoutVat)}</p>
+          {isEditing ? (
+            <Input
+              type="text"
+              inputMode="decimal"
+              value={editValues[fieldName] !== undefined ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : new Intl.NumberFormat('he-IL').format(priceWithoutVat)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^\d]/g, '');
+                setEditValues({ ...editValues, [fieldName]: value });
+              }}
+              onBlur={() => handleBlur(fieldName)}
+              autoFocus
+              className="text-lg font-bold text-blue-600 !border-2 !border-blue-400 !bg-white"
+            />
+          ) : (
+            <p 
+              className="text-lg font-bold text-blue-600 cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors"
+              onClick={() => handleFieldClick(fieldName, priceWithoutVat)}
+            >
+              {formatCurrency(priceWithoutVat)}
+            </p>
+          )}
         </div>
         <div className="bg-orange-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">מע"מ 18%</p>
