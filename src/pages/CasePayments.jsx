@@ -302,6 +302,11 @@ ${signatureLink}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d]/g, '');
                 setEditValues({ ...editValues, [fieldName]: value });
+                // Update percentage based on entered value
+                if (value && priceAfterDiscount > 0) {
+                  const percentage = (parseFloat(value) / priceAfterDiscount) * 100;
+                  setPercentages({ ...percentages, [percentageFieldName]: percentage.toFixed(2) });
+                }
               }}
               onBlur={() => handleBlur(fieldName)}
               autoFocus
