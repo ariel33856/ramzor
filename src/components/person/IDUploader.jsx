@@ -719,6 +719,117 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
               </>
             )}
             </div>
+
+            {/* Section 3 - Appendix (only for biometric IDs) */}
+            {idType === 'ביומטרית' && (detectionResult && detectionResult !== 'both') || preview3 ? (
+            <div 
+              className="border-2 border-dashed border-cyan-300 rounded-xl p-0 bg-cyan-50/50 hover:bg-cyan-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
+              onClick={() => !preview3 && fileInputRef3.current?.click()}
+            >
+            {preview3 ? (
+              <>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreview3(null);
+                    setFileType3(null);
+                  }}
+                  className="absolute -top-3 -left-3 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 p-0 z-50"
+                  size="icon"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadAsPDF(preview3, fileType3, 'ספח-תעודת-זהות.pdf');
+                        }}
+                        className="absolute top-5 -left-3 bg-blue-500 hover:bg-blue-600 rounded-full w-7 h-7 p-0 z-50"
+                        size="icon"
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>הורד כקובץ PDF</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                {uploading3 && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/90 via-purple-500/90 to-pink-500/90 rounded-xl flex items-center justify-center z-10 backdrop-blur-sm">
+                    <div className="bg-white/95 rounded-2xl p-8 flex flex-col items-center gap-4 shadow-2xl border-2 border-white/50">
+                      {convertingToPdf3 ? (
+                        <div className="flex items-center gap-4">
+                          <div className="animate-bounce">
+                            <FileImage className="w-16 h-16 text-cyan-600" />
+                          </div>
+                          <ArrowRight className="w-8 h-8 text-purple-600 animate-pulse" />
+                          <div className="animate-bounce" style={{animationDelay: '200ms'}}>
+                            <FileText className="w-16 h-16 text-pink-600" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+                          <Loader2 className="w-16 h-16 text-transparent animate-spin relative" style={{strokeWidth: 3, stroke: 'url(#gradient3)'}} />
+                          <svg width="0" height="0">
+                            <defs>
+                              <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#06b6d4" />
+                                <stop offset="50%" stopColor="#a855f7" />
+                                <stop offset="100%" stopColor="#ec4899" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </div>
+                      )}
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-xl font-bold bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                          {convertingToPdf3 ? 'ממיר ל-PDF...' : 'מחלץ נתונים עם AI...'}
+                        </p>
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                          <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                          <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {!uploading3 && (
+                  <iframe 
+                    key={preview3}
+                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
+                    className="w-full h-full min-h-[280px] rounded-xl"
+                    frameBorder="0"
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                <input
+                  ref={fileInputRef3}
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleFileUpload3}
+                  className="hidden"
+                  disabled={uploading3}
+                />
+                <div className="flex flex-col items-center justify-center h-full gap-3">
+                   <Upload className="w-12 h-12 text-cyan-600" />
+                   <p className="text-sm font-medium text-gray-700 text-center">
+                      העלה ספח
+                    </p>
+                   <p className="text-xs text-gray-500">תמונה או PDF</p>
+                 </div>
+              </>
+            )}
+            </div>
+            ) : null}
             </>
             ) : null}
             </div>
