@@ -290,7 +290,7 @@ export default function CasePayments() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Calculation Inputs */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">הצעת מחיר</h3>
           
           <div className="flex gap-2 mb-4 flex-wrap items-start">
             <div className="w-32">
