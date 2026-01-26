@@ -316,7 +316,7 @@ ${signatureLink}
               value={editValues[fieldName] !== undefined ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : new Intl.NumberFormat('he-IL').format(displayAmount)}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d]/g, '');
-                setEditValues({ ...editValues, [fieldName]: value });
+                setEditValues({ ...editValues, [fieldName]: parseFloat(value) || 0 });
                 // Update percentage based on entered value
                 if (value && priceAfterDiscount > 0) {
                   const percentage = (parseFloat(value) / priceAfterDiscount) * 100;
