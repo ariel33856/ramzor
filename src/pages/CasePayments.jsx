@@ -1125,10 +1125,11 @@ ${signatureLink}
                 href={agreement.file_url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg transition-colors"
+                className="inline-block bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg transition-colors mb-3"
               >
                 צפה בחוזה
               </a>
+              <p className="text-sm text-gray-600 mt-3">חוזה שירות בין נותן השירות ללקוח המתאר את התנאים והעלויות של השירות.</p>
             </div>
           ) : null}
 
