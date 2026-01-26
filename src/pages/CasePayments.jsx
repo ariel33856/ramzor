@@ -914,6 +914,10 @@ ${signatureLink}
                 variant="outline"
                 size="sm"
                 onClick={() => {
+                  // First save any unsaved payment_times value
+                  if (editingField === 'payment_times' && editValues.payment_times !== undefined) {
+                    updatePaymentsMutation.mutate({ payment_times: parseFloat(editValues.payment_times) || 0 });
+                  }
                   setPaymentTimesCount(prev => prev + 1);
                   const newFieldName = `payment_times_${paymentTimesCount + 1}`;
                   updatePaymentsMutation.mutate({ [newFieldName]: 0 });
