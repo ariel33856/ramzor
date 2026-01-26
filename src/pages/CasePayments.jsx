@@ -845,7 +845,7 @@ ${signatureLink}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-2">עוד נדרש:</p>
+                    <p className="text-sm font-medium text-gray-700 mb-2">יתרה להזנת זמן תשלום:</p>
                     <p className={`text-lg font-bold ${priceAfterDiscount - Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
                       const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
                       return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
