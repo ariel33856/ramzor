@@ -306,7 +306,7 @@ export default function CasePayments() {
                   <SelectItem value="2500">איחוד</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="h-5 mt-1">
+              <div className="h-5 mt-1 flex items-center justify-center">
                 {transactionType > 0 && (
                   <p className="text-xs text-blue-600 font-semibold">{formatCurrency(transactionType)}</p>
                 )}
@@ -334,7 +334,7 @@ export default function CasePayments() {
                 />
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
               </div>
-              <div className="h-5 mt-1">
+              <div className="h-5 mt-1 flex items-center justify-center">
                 {loanAmount > 0 && (
                   <p className="text-xs text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
                 )}
@@ -356,7 +356,7 @@ export default function CasePayments() {
                   <SelectItem value="5000">קשה</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="h-5 mt-1">
+              <div className="h-5 mt-1 flex items-center justify-center">
                 {difficultyLevel > 0 && (
                   <p className="text-xs text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</p>
                 )}
@@ -378,7 +378,7 @@ export default function CasePayments() {
                   <SelectItem value="6000">מאוד</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="h-5 mt-1">
+              <div className="h-5 mt-1 flex items-center justify-center">
                 {creditReport > 0 && (
                   <p className="text-xs text-blue-600 font-semibold">{formatCurrency(creditReport)}</p>
                 )}
@@ -419,7 +419,7 @@ export default function CasePayments() {
                     <X className="w-3 h-3" />
                   </Button>
                 </div>
-                <div className="h-5 mt-1">
+                <div className="h-5 mt-1 flex items-center justify-center">
                   {family.family_role > 0 && (
                     <p className="text-xs text-blue-600 font-semibold">{formatCurrency(family.family_role)}</p>
                   )}
