@@ -307,9 +307,7 @@ export default function CasePayments() {
                 </SelectContent>
               </Select>
               <div className="h-5 mt-1 flex items-center justify-center">
-                {transactionType > 0 && (
-                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(transactionType)}</p>
-                )}
+                <p className="text-xs text-blue-600 font-semibold">{formatCurrency(transactionType)}</p>
               </div>
             </div>
 
@@ -335,9 +333,7 @@ export default function CasePayments() {
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
               </div>
               <div className="h-5 mt-1 flex items-center justify-center">
-                {loanAmount > 0 && (
-                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
-                )}
+                <p className="text-xs text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
               </div>
             </div>
 
@@ -357,9 +353,7 @@ export default function CasePayments() {
                 </SelectContent>
               </Select>
               <div className="h-5 mt-1 flex items-center justify-center">
-                {difficultyLevel > 0 && (
-                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</p>
-                )}
+                <p className="text-xs text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</p>
               </div>
             </div>
 
@@ -379,9 +373,7 @@ export default function CasePayments() {
                 </SelectContent>
               </Select>
               <div className="h-5 mt-1 flex items-center justify-center">
-                {creditReport > 0 && (
-                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(creditReport)}</p>
-                )}
+                <p className="text-xs text-blue-600 font-semibold">{formatCurrency(creditReport)}</p>
               </div>
             </div>
 
@@ -420,9 +412,7 @@ export default function CasePayments() {
                   </Button>
                 </div>
                 <div className="h-5 mt-1 flex items-center justify-center">
-                  {family.family_role > 0 && (
-                    <p className="text-xs text-blue-600 font-semibold">{formatCurrency(family.family_role)}</p>
-                  )}
+                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(family.family_role || 0)}</p>
                 </div>
               </div>
             ))}
