@@ -241,7 +241,7 @@ ${signatureLink}
             </button>
           )}
         </div>
-        {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && (
+        {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && (
           <div className="bg-indigo-50 rounded-lg p-3 text-right">
             <p className="text-xs text-gray-600 mb-1">אחוז %</p>
             <Input
