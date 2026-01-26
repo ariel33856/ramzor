@@ -771,7 +771,7 @@ ${signatureLink}
               </div>
               <div className="flex items-center gap-2 text-sm mr-auto">
                 <span className="text-gray-700 font-semibold">סה"כ:</span>
-                <span className="font-bold text-green-600 text-lg">{formatCurrency(calculatedTotal)}</span>
+                <span className="font-bold text-green-600 text-base">{formatCurrency(calculatedTotal)}</span>
               </div>
             </div>
             <Button
