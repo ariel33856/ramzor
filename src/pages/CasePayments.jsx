@@ -155,7 +155,7 @@ export default function CasePayments() {
     const paymentMethodFieldName = fieldName ? `${fieldName}_payment_method` : null;
 
     return (
-      <div className="grid grid-cols-6 gap-4 mb-3 items-center">
+      <div className="grid grid-cols-6 gap-4 mb-2 items-center">
         <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
           {label}
           {onDelete && (
