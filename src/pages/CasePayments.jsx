@@ -782,8 +782,8 @@ ${signatureLink}
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <h4 className="text-md font-semibold text-gray-900 mb-4">זמני תשלום</h4>
-              {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
+              <h4 className="text-md font-semibold text-gray-900 mb-4">תשלום ראשון</h4>
+              {renderPriceRow('ראשון תשלום', 'payment_times', paymentTimes)}
               {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
                 const fieldName = `payment_times_${index + 2}`;
                 return renderPriceRow(
