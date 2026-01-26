@@ -803,11 +803,11 @@ ${signatureLink}
           <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
-        </div>
+          </div>
 
-        {/* Signature Section */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">חתימה דיגיטלית</h3>
+          {/* חתימה דיגיטלית */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">חתימה דיגיטלית</h3>
 
           {caseData.custom_data?.signature_status === 'signed' ? (
             <div className="space-y-4">
