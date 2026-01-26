@@ -124,20 +124,22 @@ export default function CasePayments() {
   const calculateBasePrice = () => {
     const baseLoanFee = Math.max(8500, loanAmount * 0.01);
     const extraFamiliesSum = extraFamilies.reduce((sum, family) => sum + (family.family_role || 0), 0);
-    
+
     // Add extra transactions
     const extraTransactionsSum = extraTransactions.reduce((sum, transaction) => {
       const txBaseLoanFee = Math.max(8500, (transaction.loan_amount || 0) * 0.01);
       const txExtraFamiliesSum = (transaction.extra_families || []).reduce((fSum, family) => fSum + (family.family_role || 0), 0);
       return sum + txBaseLoanFee + (transaction.transaction_type || 0) + (transaction.difficulty_level || 0) + (transaction.credit_report || 0) + txExtraFamiliesSum;
     }, 0);
-    
+
     return baseLoanFee + transactionType + difficultyLevel + creditReport + extraFamiliesSum + extraTransactionsSum;
   };
 
   const calculatedBasePrice = calculateBasePrice();
-  const calculatedVat = calculatedBasePrice * 0.18;
-  const calculatedTotal = calculatedBasePrice + calculatedVat;
+  const discount = editValues.discount !== undefined ? parseFloat(editValues.discount) || 0 : (caseData.custom_data?.discount || 0);
+  const priceAfterDiscount = calculatedBasePrice - discount;
+  const calculatedVat = priceAfterDiscount * 0.18;
+  const calculatedTotal = priceAfterDiscount + calculatedVat;
 
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || calculatedTotal);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
@@ -658,6 +660,36 @@ export default function CasePayments() {
               <div className="flex justify-between flex-1 text-sm">
                 <span className="text-gray-600">מע"מ (18%):</span>
                 <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
+              </div>
+            </div>
+            <div className="flex justify-between items-center gap-4 mt-2">
+              <div className="flex justify-between flex-1 text-sm">
+                <span className="text-gray-600">הנחה:</span>
+                <div className="relative w-32">
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={editValues.discount !== undefined ? new Intl.NumberFormat('he-IL').format(editValues.discount) : (discount ? new Intl.NumberFormat('he-IL').format(discount) : '')}
+                    onChange={(e) => {
+                      const numValue = e.target.value.replace(/,/g, '');
+                      if (!isNaN(numValue) || numValue === '') {
+                        setEditValues({ ...editValues, discount: numValue });
+                      }
+                    }}
+                    onBlur={() => {
+                      if (editValues.discount !== undefined) {
+                        updatePaymentsMutation.mutate({ discount: parseFloat(editValues.discount) || 0 });
+                      }
+                    }}
+                    className="h-8 text-sm pl-8 text-left font-semibold"
+                  />
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
+                </div>
+              </div>
+              <div className="flex justify-between flex-1 text-sm">
+                <span className="text-gray-600">לאחר הנחה:</span>
+                <span className="font-semibold">{formatCurrency(priceAfterDiscount)}</span>
               </div>
             </div>
             <div className="flex justify-between text-lg font-bold border-t pt-2">
