@@ -945,7 +945,15 @@ ${signatureLink}
           <div className="pt-3 mt-3 border-t border-gray-200">
             {renderPriceRow('סך התשלומים שהתקבלו', null, totalPaymentsReceived)}
             {renderPriceRow('יתרת חוב', 'debt_balance', debtBalance)}
-            {renderPriceRow('תשלום בפיגור', 'late_payment', latePayment)}
+            {overduePayments.map((overdue, idx) => (
+              <React.Fragment key={idx}>
+                {renderPriceRow(
+                  `תשלום בפיגור${idx > 0 ? ` ${idx + 1}` : ''}`, 
+                  `late_payment_${idx}`, 
+                  overdue.missing
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
 
