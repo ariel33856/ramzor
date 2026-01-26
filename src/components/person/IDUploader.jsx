@@ -133,10 +133,9 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
          - ביומטרית: יש שבב זהוב (chip) בצד שמאל, עיצוב כחול בהיר, הולוגרמות, כוכבים, תמונה גדולה של החזית של הפנים, "ISRAEL" בחלק העליון, פס ספרות בתחתית הצד, שדה NFC/chip ברור
          - רגילה: אין שבב, עיצוב כחול כהה יותר, פחות הולוגרמות, עיצוב פשוט יותר
       3. החזר JSON עם:
-       - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
-       - id_type: "ביומטרית" או "רגילה" - זוהה מתעודת זהות בלבד
-       - has_photo: true אם יש תמונה של אדם (צד ראשון), false אם אין (צד שני)
-       - first_name (שם פרטי - מהתעודה או הספח)
+      - document_type: "id_card" (תעודת זהות) או "appendix" (ספח) או "both" (שניהם)
+      - id_type: "ביומטרית" או "רגילה" - זוהה מתעודת זהות בלבד
+      - first_name (שם פרטי - מהתעודה או הספח)
       - last_name (שם משפחה - מהתעודה או הספח)
       - id_number (מספר ת.ז - 9 ספרות - מהתעודה או הספח)
       - birth_date (תאריך לידה בפורמט DD-MM-YYYY - מהספח)
@@ -160,7 +159,6 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
           properties: {
             document_type: { type: "string" },
             id_type: { type: "string" },
-            has_photo: { type: "boolean" },
             first_name: { type: "string" },
             last_name: { type: "string" },
             id_number: { type: "string" },
@@ -247,12 +245,11 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `חלץ מידע נוסף מהמסמך. זהה בדייקנות:
       - אם זה צד שני של תעודה זהות: יש בו קודים, מספרים, בקודים (barcode/MRZ), טקסט מינימלי של נתונים אישיים
-       - אם זה ספח: יש בו נתונים אישיים מלאים כמו כתובת, ילדים, תאריכי לידה, מעמד ישראלי
+      - אם זה ספח: יש בו נתונים אישיים מלאים כמו כתובת, ילדים, תאריכי לידה, מעמד ישראלי
 
-       החזר JSON עם:
-       - document_type: "id_card" (צד שני בלבד), "appendix" (ספח בלבד), או "both" (שניהם באותה תמונה)
-       - has_photo: true אם יש תמונה של אדם (צד ראשון), false אם אין (צד שני)
-       - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address, building_number, city, entrance, apartment_number
+      החזר JSON עם:
+      - document_type: "id_card" (צד שני בלבד), "appendix" (ספח בלבד), או "both" (שניהם באותה תמונה)
+      - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address, building_number, city, entrance, apartment_number
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
       - children_names (מערך של שמות הילדים - מהספח, שמור בדיוק כמו שכתוב)
@@ -261,38 +258,37 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערכים ריקים.`,
         file_urls: [file_url],
         response_json_schema: {
-         type: "object",
-         properties: {
-           document_type: { type: "string" },
-           id_type: { type: "string" },
-           has_photo: { type: "boolean" },
-           first_name: { type: "string" },
-           last_name: { type: "string" },
-           id_number: { type: "string" },
-           birth_date: { type: "string" },
-           id_issue_date: { type: "string" },
-           id_expiry_date: { type: "string" },
-           gender: { type: "string" },
-           address: { type: "string" },
-           building_number: { type: "string" },
-           city: { type: "string" },
-           entrance: { type: "string" },
-           apartment_number: { type: "string" },
-           num_children: { type: "number" },
-           children_birth_dates: { 
-             type: "array",
-             items: { type: "string" }
-           },
-           children_names: { 
-             type: "array",
-             items: { type: "string" }
-           },
-           israeli_status: { type: "string" }
-         }
+          type: "object",
+          properties: {
+            document_type: { type: "string" },
+            id_type: { type: "string" },
+            first_name: { type: "string" },
+            last_name: { type: "string" },
+            id_number: { type: "string" },
+            birth_date: { type: "string" },
+            id_issue_date: { type: "string" },
+            id_expiry_date: { type: "string" },
+            gender: { type: "string" },
+            address: { type: "string" },
+            building_number: { type: "string" },
+            city: { type: "string" },
+            entrance: { type: "string" },
+            apartment_number: { type: "string" },
+            num_children: { type: "number" },
+            children_birth_dates: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            children_names: { 
+              type: "array",
+              items: { type: "string" }
+            },
+            israeli_status: { type: "string" }
+          }
         }
-        });
+      });
 
-        // Detect what was uploaded (if first document not uploaded, update error)
+      // Detect what was uploaded (if first document not uploaded, update error)
       if (!preview && result.document_type === 'id_card') {
         setDetectionResult2('id_card');
         setError('✓ זוהה צד שני - נא להשלים צד ראשון');
@@ -612,11 +608,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                   frameBorder="0"
                 />
                 <p className="text-xs text-gray-500 mt-2 text-center">
-                  {detectionResult === 'both' 
-                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית' : 'רגילה'} + ספח`
-                    : detectionResult === 'id_card' 
-                    ? `תעודת זהות ${idType === 'ביומטרית' ? `ביומטרית${extractedData?.has_photo ? ' (צד ראשון)' : ' (צד שני)'}` : 'רגילה'}`
-                    : 'ספח'}
+                  {detectionResult === 'both' ? 'תעודת זהות + ספח' : detectionResult === 'id_card' ? 'תעודת זהות' : 'ספח'}
                 </p>
               </div>
             </>
@@ -740,7 +732,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                        frameBorder="0"
                      />
                      <p className="text-xs text-gray-500 mt-2 text-center">
-                       {idType === 'ביומטרית' ? `תעודת זהות ביומטרית${result?.has_photo ? ' (צד ראשון)' : ' (צד שני)'}` : 'ספח'}
+                       {idType === 'ביומטרית' ? 'צד שני של תעודה' : 'ספח'}
                      </p>
                    </div>
                  )}
