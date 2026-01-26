@@ -348,22 +348,27 @@ ${signatureLink}
         {fieldName && fieldName !== 'remaining_payment_times' && fieldName !== 'debt_balance' ? (
           <>
             {fieldName === 'late_payment' || fieldName?.startsWith('late_payment_') ? (
-              <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-                <p className="text-xs text-gray-600 mb-1">ימי פיגור</p>
-                <p className="text-lg font-bold text-purple-600">
-                  {(() => {
-                    const index = fieldName === 'late_payment' ? 0 : parseInt(fieldName.split('_')[2]) || 0;
-                    const baseDateFieldName = index === 0 ? 'payment_times_date' : `payment_times_${index + 1}_date`;
-                    const dueDate = caseData.custom_data?.[baseDateFieldName];
-                    if (!dueDate) return '—';
-                    const today = new Date();
-                    const dueDateObj = new Date(dueDate.split('/').reverse().join('-'));
-                    const diffMs = today - dueDateObj;
-                    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-                    return diffDays > 0 ? diffDays : '0';
-                  })()}
-                </p>
-              </div>
+              (() => {
+                const index = fieldName === 'late_payment' ? 0 : parseInt(fieldName.split('_')[2]) || 0;
+                const baseDateFieldName = index === 0 ? 'payment_times_date' : `payment_times_${index + 1}_date`;
+                const dueDate = caseData.custom_data?.[baseDateFieldName];
+                let daysOverdue = 0;
+                if (dueDate) {
+                  const today = new Date();
+                  const dueDateObj = new Date(dueDate.split('/').reverse().join('-'));
+                  const diffMs = today - dueDateObj;
+                  daysOverdue = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                }
+                const isOverdue = daysOverdue > 0;
+                return (
+                  <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isOverdue ? 'bg-red-50' : 'bg-green-50'}`}>
+                    <p className={`text-xs mb-1 ${isOverdue ? 'text-red-600' : 'text-green-600'}`}>ימי פיגור</p>
+                    <p className={`text-lg font-bold ${isOverdue ? 'text-red-600' : 'text-green-600'}`}>
+                      {daysOverdue || '0'}
+                    </p>
+                  </div>
+                );
+              })()
             ) : (
               <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
                 <p className="text-xs text-gray-600 mb-1">תאריך</p>
