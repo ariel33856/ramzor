@@ -243,8 +243,12 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       setPreview2(file_url);
 
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `חלץ מידע נוסף מהמסמך. החזר JSON עם:
-      - document_type: "id_card" או "appendix" או "both"
+        prompt: `חלץ מידע נוסף מהמסמך. זהה בדייקנות:
+      - אם זה צד שני של תעודה זהות: יש בו קודים, מספרים, בקודים (barcode/MRZ), טקסט מינימלי של נתונים אישיים
+      - אם זה ספח: יש בו נתונים אישיים מלאים כמו כתובת, ילדים, תאריכי לידה, מעמד ישראלי
+
+      החזר JSON עם:
+      - document_type: "id_card" (צד שני בלבד), "appendix" (ספח בלבד), או "both" (שניהם באותה תמונה)
       - first_name, last_name, id_number, birth_date, id_issue_date, id_expiry_date, gender, address, building_number, city, entrance, apartment_number
       - num_children (מספר הילדים - מהספח)
       - children_birth_dates (מערך של תאריכי לידה של ילדים בפורמט DD-MM-YYYY - מהספח)
