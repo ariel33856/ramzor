@@ -356,10 +356,10 @@ ${signatureLink}
         ) : fieldName ? (
         <div className="col-span-2"></div>
         ) : (
-        <div className={`col-span-2 rounded-lg p-2 border-2 h-[60px] flex flex-col justify-center ${isRemainingPayment ? 'bg-red-50 border-red-200' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
+        <div className={`col-span-2 rounded-lg p-2 border-2 h-[60px] flex flex-col justify-center ${isBalanceClear ? 'bg-green-50 border-green-200' : isRemainingPayment ? 'bg-red-50 border-red-200' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'}`}>
           <div className="flex items-center justify-between mb-1">
-            <span className={`text-xs font-medium ${isRemainingPayment ? 'text-red-600' : 'text-blue-600'}`}>התקבל</span>
-            <span className={`text-base font-bold ${isRemainingPayment ? 'text-red-700' : 'text-blue-700'}`}>
+            <span className={`text-xs font-medium ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-blue-600'}`}>התקבל</span>
+            <span className={`text-base font-bold ${isBalanceClear ? 'text-green-700' : isRemainingPayment ? 'text-red-700' : 'text-blue-700'}`}>
               {closingPrice > 0 ? Math.round((totalPaymentsReceived / closingPrice) * 100) : 0}%
             </span>
           </div>
