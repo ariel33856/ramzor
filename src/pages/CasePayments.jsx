@@ -428,11 +428,11 @@ ${signatureLink}
                   <SelectValue placeholder="בחר" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">תקין</SelectItem>
-                  <SelectItem value="3000">בעייתי</SelectItem>
-                  <SelectItem value="6000">מאוד</SelectItem>
+                   <SelectItem value="0">תקין</SelectItem>
+                   <SelectItem value="3000">בעייתי</SelectItem>
+                   <SelectItem value="6000">אדום</SelectItem>
                 </SelectContent>
-              </Select>
+                </Select>
               <div className="h-5 mt-1 flex items-center justify-center">
                 <p className="text-xs text-blue-600 font-semibold">{formatCurrency(creditReport)}</p>
               </div>
