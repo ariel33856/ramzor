@@ -366,14 +366,13 @@ ${signatureLink}
                   const today = new Date();
                   const dueDateObj = new Date(dueDate.split('/').reverse().join('-'));
                   const diffMs = today - dueDateObj;
-                  daysOverdue = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                  daysOverdue = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
                 }
-                const isOverdue = daysOverdue > 0;
                 return (
-                  <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isOverdue ? 'bg-red-50' : 'bg-green-50'}`}>
-                    <p className={`text-xs mb-1 ${isOverdue ? 'text-red-600' : 'text-green-600'}`}>ימי פיגור</p>
-                    <p className={`text-lg font-bold ${isOverdue ? 'text-red-600' : 'text-green-600'}`}>
-                      {daysOverdue || '0'}
+                  <div className="bg-red-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
+                    <p className="text-xs text-red-600 mb-1">ימי פיגור</p>
+                    <p className="text-lg font-bold text-red-600">
+                      {daysOverdue}
                     </p>
                   </div>
                 );
