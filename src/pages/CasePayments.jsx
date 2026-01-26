@@ -782,7 +782,7 @@ ${signatureLink}
                 הפק הצעת מחיר
               </Button>
               <Button
-                onClick={() => updatePaymentsMutation.mutate({ closing_price: calculatedTotal })}
+                onClick={() => updatePaymentsMutation.mutate({ closing_price: priceAfterDiscount })}
                 className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
               >
                 עדכן מחיר סגירה
