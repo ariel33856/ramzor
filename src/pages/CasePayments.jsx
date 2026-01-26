@@ -157,7 +157,29 @@ ${signatureLink}
   };
 
   const handleBlur = (field) => {
-    handleSaveField(field);
+    const newValue = parseFloat(editValues[field]) || 0;
+    const updates = { [field]: newValue };
+    
+    // Auto-fill logic for payment times
+    if (field === 'payment_times' || field?.startsWith('payment_times_')) {
+      const fieldIndex = field === 'payment_times' ? 1 : parseInt(field.split('_')[2]);
+      const nextFieldName = `payment_times_${fieldIndex + 1}`;
+      
+      // Calculate total from fields 1 to current
+      const totalBefore = Array.from({ length: fieldIndex }).reduce((sum, _, i) => {
+        const fn = i === 0 ? 'payment_times' : `payment_times_${i + 1}`;
+        const val = fn === field ? newValue : (caseData.custom_data?.[fn] || 0);
+        return sum + val;
+      }, 0);
+      
+      const remainder = Math.max(0, priceAfterDiscount - totalBefore);
+      if (remainder > 0) {
+        updates[nextFieldName] = remainder;
+        setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
+      }
+    }
+    
+    updatePaymentsMutation.mutate(updates);
   };
 
   if (isLoading) {
