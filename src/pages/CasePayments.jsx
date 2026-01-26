@@ -292,7 +292,7 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-blue-600'} ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' ? `cursor-pointer hover:${isRemainingPayment ? 'bg-red-100' : 'bg-blue-100'} rounded px-2 -mx-2 transition-colors` : ''}`}
+              className={`text-lg font-bold ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-blue-600'} ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' ? `cursor-pointer hover:${isBalanceClear ? 'bg-green-100' : isRemainingPayment ? 'bg-red-100' : 'bg-blue-100'} rounded px-2 -mx-2 transition-colors` : ''}`}
                onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && fieldName !== 'remaining_payment_times' && handleFieldClick(fieldName, displayAmount)}
             >
               {formatCurrency(displayAmount)}
