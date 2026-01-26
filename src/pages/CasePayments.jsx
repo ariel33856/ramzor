@@ -29,6 +29,7 @@ export default function CasePayments() {
   const [paymentTimesCount, setPaymentTimesCount] = useState(2);
   const [extraFamilies, setExtraFamilies] = useState([]);
   const [extraTransactions, setExtraTransactions] = useState([]);
+  const [tempLoanAmount, setTempLoanAmount] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -313,12 +314,15 @@ export default function CasePayments() {
                 type="text"
                 inputMode="decimal"
                 placeholder="₪"
-                value={loanAmount || ''}
+                value={tempLoanAmount !== '' ? tempLoanAmount : (loanAmount || '')}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^\d.]/g, '');
-                  if (value === '' || !isNaN(parseFloat(value))) {
-                    updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
-                  }
+                  setTempLoanAmount(value);
+                }}
+                onBlur={(e) => {
+                  const value = e.target.value.replace(/[^\d.]/g, '');
+                  updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
+                  setTempLoanAmount('');
                 }}
                 className="h-8 text-sm"
               />
@@ -459,12 +463,16 @@ export default function CasePayments() {
                     value={transaction.loan_amount || ''}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^\d.]/g, '');
-                      if (value === '' || !isNaN(parseFloat(value))) {
-                        const newTransactions = [...extraTransactions];
-                        newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
-                        setExtraTransactions(newTransactions);
-                        updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
-                      }
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], loan_amount: value };
+                      setExtraTransactions(newTransactions);
+                    }}
+                    onBlur={(e) => {
+                      const value = e.target.value.replace(/[^\d.]/g, '');
+                      const newTransactions = [...extraTransactions];
+                      newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
+                      setExtraTransactions(newTransactions);
+                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                     }}
                     className="h-8 text-sm"
                   />
