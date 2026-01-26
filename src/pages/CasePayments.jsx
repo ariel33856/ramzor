@@ -225,7 +225,7 @@ ${signatureLink}
         </div>
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing ? (
+          {isEditing && fieldName === 'payments_received' ? (
             <Input
               type="text"
               inputMode="decimal"
@@ -240,8 +240,8 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className="text-lg font-bold text-blue-600 cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors"
-              onClick={() => handleFieldClick(fieldName, priceWithoutVat)}
+              className={`text-lg font-bold text-blue-600 ${fieldName === 'payments_received' ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+              onClick={() => fieldName === 'payments_received' && handleFieldClick(fieldName, priceWithoutVat)}
             >
               {formatCurrency(priceWithoutVat)}
             </p>
