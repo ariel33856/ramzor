@@ -652,7 +652,7 @@ export default function CasePayments() {
           <div className="mt-6 pt-4 space-y-2">
             <div className="flex justify-between items-center gap-4">
               <div className="flex justify-between flex-1 text-sm">
-                <span className="text-gray-600">מחיר לפני מע"מ:</span>
+                <span className="text-gray-600">מחיר משוקלל לפני מע"מ:</span>
                 <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
               </div>
               <div className="flex justify-between flex-1 text-sm">
