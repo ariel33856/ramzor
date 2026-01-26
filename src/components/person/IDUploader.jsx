@@ -736,7 +736,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                        frameBorder="0"
                      />
                      <p className="text-xs text-gray-500 mt-2 text-center">
-                       {idType === 'ביומטרית' ? 'צד שני של תעודה' : 'ספח'}
+                       {idType === 'ביומטרית' ? 'תעודת זהות ביומטרית (צד שני)' : 'ספח'}
                      </p>
                    </div>
                  )}
