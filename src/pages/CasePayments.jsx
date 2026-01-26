@@ -244,8 +244,8 @@ ${signatureLink}
           )}
         </div>
         {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && (
-          <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isRemainingPayment ? 'bg-red-50' : 'bg-indigo-50'}`}>
-            <p className={`text-xs mb-1 ${isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>אחוז %</p>
+          <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isBalanceClear ? 'bg-green-50' : isRemainingPayment ? 'bg-red-50' : 'bg-indigo-50'}`}>
+            <p className={`text-xs mb-1 ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>אחוז %</p>
             {fieldName === 'remaining_payment_times' ? (
               <p className={`text-lg font-bold ${isRemainingPayment ? 'text-red-600' : 'text-indigo-600'}`}>
                 {priceAfterDiscount > 0 ? ((priceWithoutVat / priceAfterDiscount) * 100).toFixed(1) : '0'}%
