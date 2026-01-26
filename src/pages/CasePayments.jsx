@@ -765,16 +765,15 @@ ${signatureLink}
               </Button>
             </div>
           </div>
+        </div>
 
-          {/* מחיר סגירה */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
-            {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
-          </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
+          {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+        </div>
 
-          {/* זמני תשלום */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">זמני תשלום</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">זמני תשלום</h3>
           {renderPriceRow('זמני תשלום', 'payment_times', paymentTimes)}
           {Array.from({ length: paymentTimesCount - 1 }).map((_, index) => {
             const fieldName = `payment_times_${index + 2}`;
@@ -794,20 +793,19 @@ ${signatureLink}
             <PlusCircle className="w-4 h-4 ml-2" />
             הוסף זמן תשלום
           </Button>
-          </div>
+        </div>
 
-          {/* מצב תשלומים */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
-          </div>
+        </div>
 
-          {/* חתימה דיגיטלית */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">חתימה דיגיטלית</h3>
+        {/* Signature Section */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">חתימה דיגיטלית</h3>
 
           {caseData.custom_data?.signature_status === 'signed' ? (
             <div className="space-y-4">
@@ -896,11 +894,10 @@ ${signatureLink}
               </div>
             </div>
           )}
-          </div>
+        </div>
 
-          {/* חוזה שירות */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">חוזה שירות</h3>
           {!agreement && !showUploader ? (
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 p-8 text-center">
               <FileText className="w-12 h-12 text-blue-400 mx-auto mb-3" />
@@ -956,7 +953,6 @@ ${signatureLink}
               onCancel={() => setShowUploader(false)}
             />
           )}
-          </div>
         </div>
       </div>
 
@@ -973,6 +969,6 @@ ${signatureLink}
           />
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
+      </div>
+      );
+      }
