@@ -352,7 +352,7 @@ ${signatureLink}
             </div>
           </>
         ) : (
-        <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200">
+        <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200 h-[60px] flex flex-col justify-center">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-blue-600 font-medium">התקבל</span>
             <span className="text-base font-bold text-blue-700">
