@@ -956,6 +956,7 @@ ${signatureLink}
               onCancel={() => setShowUploader(false)}
             />
           )}
+          </div>
         </div>
       </div>
 
