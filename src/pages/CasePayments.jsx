@@ -306,6 +306,9 @@ export default function CasePayments() {
                   <SelectItem value="2500">איחוד</SelectItem>
                 </SelectContent>
               </Select>
+              {transactionType > 0 && (
+                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(transactionType)}</p>
+              )}
             </div>
 
             <div className="w-32">
@@ -329,6 +332,9 @@ export default function CasePayments() {
                 />
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
               </div>
+              {loanAmount > 0 && (
+                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
+              )}
             </div>
 
             <div className="w-28">
@@ -346,6 +352,9 @@ export default function CasePayments() {
                   <SelectItem value="5000">קשה</SelectItem>
                 </SelectContent>
               </Select>
+              {difficultyLevel > 0 && (
+                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(difficultyLevel)}</p>
+              )}
             </div>
 
             <div className="w-28">
@@ -363,39 +372,47 @@ export default function CasePayments() {
                   <SelectItem value="6000">מאוד</SelectItem>
                 </SelectContent>
               </Select>
+              {creditReport > 0 && (
+                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(creditReport)}</p>
+              )}
             </div>
 
             {extraFamilies.map((family, index) => (
-              <div key={index} className="flex items-center gap-1">
-                <Select
-                  value={String(family.family_role || 0)}
-                  onValueChange={(value) => {
-                    const newFamilies = [...extraFamilies];
-                    newFamilies[index] = { ...newFamilies[index], family_role: parseInt(value) };
-                    setExtraFamilies(newFamilies);
-                    updatePaymentsMutation.mutate({ extra_families: newFamilies });
-                  }}
-                >
-                  <SelectTrigger className="w-28 h-8 text-xs">
-                    <SelectValue placeholder="בחר" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="8500">לווה נוסף</SelectItem>
-                    <SelectItem value="4250">ערב</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    const newFamilies = extraFamilies.filter((_, i) => i !== index);
-                    setExtraFamilies(newFamilies);
-                    updatePaymentsMutation.mutate({ extra_families: newFamilies });
-                  }}
-                  className="h-8 w-8 text-red-600 hover:bg-red-50"
-                >
-                  <X className="w-3 h-3" />
-                </Button>
+              <div key={index}>
+                <div className="flex items-center gap-1">
+                  <Select
+                    value={String(family.family_role || 0)}
+                    onValueChange={(value) => {
+                      const newFamilies = [...extraFamilies];
+                      newFamilies[index] = { ...newFamilies[index], family_role: parseInt(value) };
+                      setExtraFamilies(newFamilies);
+                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                    }}
+                  >
+                    <SelectTrigger className="w-28 h-8 text-xs">
+                      <SelectValue placeholder="בחר" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="8500">לווה נוסף</SelectItem>
+                      <SelectItem value="4250">ערב</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      const newFamilies = extraFamilies.filter((_, i) => i !== index);
+                      setExtraFamilies(newFamilies);
+                      updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                    }}
+                    className="h-8 w-8 text-red-600 hover:bg-red-50"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+                {family.family_role > 0 && (
+                  <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(family.family_role)}</p>
+                )}
               </div>
             ))}
 
@@ -413,41 +430,6 @@ export default function CasePayments() {
               הוסף תא משפחתי
             </Button>
             </div>
-
-            {/* Price Breakdown */}
-            <div className="flex gap-3 flex-wrap text-xs text-gray-600 bg-gray-50 p-3 rounded-lg">
-            {transactionType > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="font-medium">סוג עסקה:</span>
-                <span className="text-blue-600 font-semibold">{formatCurrency(transactionType)}</span>
-              </div>
-            )}
-            {loanAmount > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="font-medium">סכום הלוואה:</span>
-                <span className="text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</span>
-              </div>
-            )}
-            {difficultyLevel > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="font-medium">קושי:</span>
-                <span className="text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</span>
-              </div>
-            )}
-            {creditReport > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="font-medium">אשראי:</span>
-                <span className="text-blue-600 font-semibold">{formatCurrency(creditReport)}</span>
-              </div>
-            )}
-            {extraFamilies.map((family, idx) => (
-              <div key={idx} className="flex items-center gap-1">
-                <span className="font-medium">תא משפחתי {idx + 1}:</span>
-                <span className="text-blue-600 font-semibold">{formatCurrency(family.family_role || 0)}</span>
-              </div>
-            ))}
-            </div>
-
 
             {/* Extra Transactions */}
           {extraTransactions.map((transaction, index) => (
