@@ -29,6 +29,7 @@ export default function CasePayments() {
   const [editingField, setEditingField] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [paymentTimesCount, setPaymentTimesCount] = useState(2);
+  const [paymentsReceivedCount, setPaymentsReceivedCount] = useState(2);
   const [extraFamilies, setExtraFamilies] = useState([]);
   const [extraTransactions, setExtraTransactions] = useState([]);
   const [tempLoanAmount, setTempLoanAmount] = useState('');
@@ -197,7 +198,15 @@ ${signatureLink}
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || priceAfterDiscount);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
-  const debtBalance = closingPrice - paymentsReceived;
+  
+  // Calculate total payments received including additional payments
+  const totalPaymentsReceived = paymentsReceived + Array.from({ length: paymentsReceivedCount - 1 }).reduce((sum, _, index) => {
+    const fieldName = `payments_received_${index + 2}`;
+    const value = editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) || 0 : (caseData.custom_data?.[fieldName] || 0);
+    return sum + value;
+  }, 0);
+  
+  const debtBalance = closingPrice - totalPaymentsReceived;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
@@ -225,7 +234,7 @@ ${signatureLink}
         </div>
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing && fieldName === 'payments_received' ? (
+          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) ? (
             <Input
               type="text"
               inputMode="decimal"
@@ -240,8 +249,8 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold text-blue-600 ${fieldName === 'payments_received' ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
-              onClick={() => fieldName === 'payments_received' && handleFieldClick(fieldName, priceWithoutVat)}
+              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) && handleFieldClick(fieldName, priceWithoutVat)}
             >
               {formatCurrency(priceWithoutVat)}
             </p>
@@ -302,32 +311,32 @@ ${signatureLink}
             </div>
           </>
         ) : (
-          <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-blue-600 font-medium">התקבל</span>
-              <span className="text-base font-bold text-blue-700">
-                {closingPrice > 0 ? Math.round((paymentsReceived / closingPrice) * 100) : 0}%
-              </span>
-            </div>
-            <div className="relative w-full h-5 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
+        <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-blue-600 font-medium">התקבל</span>
+            <span className="text-base font-bold text-blue-700">
+              {closingPrice > 0 ? Math.round((totalPaymentsReceived / closingPrice) * 100) : 0}%
+            </span>
+          </div>
+          <div className="relative w-full h-5 bg-gray-200 rounded-full overflow-hidden border-2 border-gray-300">
+            <div 
+              className="absolute top-0 right-0 h-full transition-all duration-500 overflow-hidden"
+              style={{ 
+                width: `${closingPrice > 0 ? Math.min(Math.round((totalPaymentsReceived / closingPrice) * 100), 100) : 0}%`
+              }}
+            >
               <div 
-                className="absolute top-0 right-0 h-full transition-all duration-500 overflow-hidden"
+                className="h-full bg-gradient-to-l from-red-600 via-yellow-500 to-green-600"
                 style={{ 
-                  width: `${closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0}%`
+                  width: (() => {
+                    const percent = closingPrice > 0 ? Math.min(Math.round((totalPaymentsReceived / closingPrice) * 100), 100) : 0;
+                    return percent > 0 ? `${10000 / percent}%` : '0%';
+                  })()
                 }}
-              >
-                <div 
-                  className="h-full bg-gradient-to-l from-red-600 via-yellow-500 to-green-600"
-                  style={{ 
-                    width: (() => {
-                      const percent = closingPrice > 0 ? Math.min(Math.round((paymentsReceived / closingPrice) * 100), 100) : 0;
-                      return percent > 0 ? `${10000 / percent}%` : '0%';
-                    })()
-                  }}
-                />
-              </div>
+              />
             </div>
           </div>
+        </div>
         )}
         </div>
         );
@@ -819,6 +828,24 @@ ${signatureLink}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
+          {Array.from({ length: paymentsReceivedCount - 1 }).map((_, index) => {
+            const fieldName = `payments_received_${index + 2}`;
+            return renderPriceRow(
+              `תשלום ${index === 0 ? 'שני' : index === 1 ? 'שלישי' : index === 2 ? 'רביעי' : index === 3 ? 'חמישי' : `${index + 2}`}`, 
+              fieldName, 
+              caseData.custom_data?.[fieldName] || 0,
+              () => setPaymentsReceivedCount(prev => Math.max(2, prev - 1))
+            );
+          })}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPaymentsReceivedCount(prev => prev + 1)}
+            className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+          >
+            <PlusCircle className="w-4 h-4 ml-2" />
+            הוסף תשלום
+          </Button>
           <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
