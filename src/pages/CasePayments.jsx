@@ -358,9 +358,8 @@ ${signatureLink}
                     </div>
                   );
                 }
-                const index = fieldName === 'late_payment' ? 0 : parseInt(fieldName.split('_')[2]) || 0;
-                const baseDateFieldName = index === 0 ? 'payment_times_date' : `payment_times_${index + 1}_date`;
-                const dueDate = caseData.custom_data?.[baseDateFieldName];
+                // For late_payment field, use payment_times_date as the reference date
+                const dueDate = caseData.custom_data?.payment_times_date;
                 let daysOverdue = 0;
                 if (dueDate) {
                   const today = new Date();
