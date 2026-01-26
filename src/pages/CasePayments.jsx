@@ -839,7 +839,7 @@ ${signatureLink}
                   return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
                 }, 0);
                 const remainingBalance = Math.max(0, priceAfterDiscount - totalPaymentTimes);
-                return renderPriceRow('יתרה להזנת זמן תשלום', null, remainingBalance);
+                return renderPriceRow('יתרה להזנת זמן תשלום', 'remaining_payment_times', remainingBalance);
               })()}
               <Button
                 variant="outline"
