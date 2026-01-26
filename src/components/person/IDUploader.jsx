@@ -160,6 +160,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
           properties: {
             document_type: { type: "string" },
             id_type: { type: "string" },
+            has_photo: { type: "boolean" },
             first_name: { type: "string" },
             last_name: { type: "string" },
             id_number: { type: "string" },
