@@ -611,7 +611,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                   {detectionResult === 'both' 
                     ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית' : 'רגילה'} + ספח`
                     : detectionResult === 'id_card' 
-                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית (צד ראשון)' : 'רגילה'}`
+                    ? `תעודת זהות ${idType === 'ביומטרית' ? 'ביומטרית' : 'רגילה'}`
                     : 'ספח'}
                 </p>
               </div>
