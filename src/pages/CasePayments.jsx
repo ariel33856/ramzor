@@ -245,7 +245,7 @@ ${signatureLink}
           <div className="bg-indigo-50 rounded-lg p-3 text-right">
             <p className="text-xs text-gray-600 mb-1">אחוז %</p>
             {fieldName === 'remaining_payment_times' ? (
-              <p className="text-lg font-bold text-indigo-600">
+              <p className="text-lg font-bold text-indigo-600 h-9 flex items-center justify-end">
                 {priceAfterDiscount > 0 ? ((priceWithoutVat / priceAfterDiscount) * 100).toFixed(1) : '0'}%
               </p>
             ) : (
