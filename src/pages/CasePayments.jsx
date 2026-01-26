@@ -769,9 +769,9 @@ ${signatureLink}
                 <span className="text-gray-600 text-xs">מע"מ (18%):</span>
                 <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-gray-600 text-xs">סה"כ:</span>
-                <span className="font-bold text-green-600">{formatCurrency(calculatedTotal)}</span>
+              <div className="flex items-center gap-2 text-base mr-auto">
+                <span className="text-gray-700 font-semibold">סה"כ:</span>
+                <span className="font-bold text-green-600 text-xl">{formatCurrency(calculatedTotal)}</span>
               </div>
             </div>
             <Button
