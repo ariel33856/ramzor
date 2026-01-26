@@ -251,7 +251,7 @@ ${signatureLink}
     // Calculate amount based on percentage if percentage is set
     const currentPercentage = percentages[percentageFieldName] !== undefined ? percentages[percentageFieldName] : (caseData.custom_data?.[percentageFieldName] || '');
     const calculatedAmount = currentPercentage ? (priceAfterDiscount * parseFloat(currentPercentage)) / 100 : priceWithoutVat;
-    const displayAmount = isEditing ? (editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) : calculatedAmount) : calculatedAmount;
+    const displayAmount = isEditing ? (editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) : calculatedAmount) : (caseData.custom_data?.[fieldName] !== undefined ? caseData.custom_data[fieldName] : calculatedAmount);
 
     return (
       <div className="grid grid-cols-7 gap-3 mb-2 items-center">
