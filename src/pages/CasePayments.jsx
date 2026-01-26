@@ -337,7 +337,7 @@ ${signatureLink}
             </p>
           )}
         </div>
-        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isBalanceClear ? 'bg-green-50' : isRemainingPayment ? 'bg-red-50' : 'bg-orange-50'}`}>
+        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isBalanceClear ? 'bg-green-50' : hasDebt ? 'bg-red-50' : 'bg-orange-50'}`}>
           <p className={`text-xs mb-1 ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>מע"מ 18%</p>
           <p className={`text-lg font-bold ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-orange-600'}`}>{formatCurrency(vat)}</p>
         </div>
