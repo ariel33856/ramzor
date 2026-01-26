@@ -349,6 +349,15 @@ ${signatureLink}
           <>
             {fieldName === 'late_payment' || fieldName?.startsWith('late_payment_') ? (
               (() => {
+                const amountValue = parseFloat(editValues[fieldName] !== undefined ? editValues[fieldName] : (caseData.custom_data?.[fieldName] || 0)) || 0;
+                if (amountValue === 0) {
+                  return (
+                    <div className="bg-green-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
+                      <p className="text-xs text-green-600 mb-1">ימי פיגור</p>
+                      <p className="text-lg font-bold text-green-600">0</p>
+                    </div>
+                  );
+                }
                 const index = fieldName === 'late_payment' ? 0 : parseInt(fieldName.split('_')[2]) || 0;
                 const baseDateFieldName = index === 0 ? 'payment_times_date' : `payment_times_${index + 1}_date`;
                 const dueDate = caseData.custom_data?.[baseDateFieldName];
