@@ -828,6 +828,15 @@ ${signatureLink}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPaymentsReceivedCount(prev => prev + 1)}
+            className="mb-4 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+          >
+            <PlusCircle className="w-4 h-4 ml-2" />
+            הוסף תשלום
+          </Button>
           {Array.from({ length: paymentsReceivedCount - 1 }).map((_, index) => {
             const fieldName = `payments_received_${index + 2}`;
             return renderPriceRow(
@@ -837,15 +846,6 @@ ${signatureLink}
               () => setPaymentsReceivedCount(prev => Math.max(2, prev - 1))
             );
           })}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPaymentsReceivedCount(prev => prev + 1)}
-            className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-          >
-            <PlusCircle className="w-4 h-4 ml-2" />
-            הוסף תשלום
-          </Button>
           <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
