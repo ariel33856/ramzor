@@ -1172,6 +1172,13 @@ ${signatureLink}
           />
         </DialogContent>
       </Dialog>
+
+      {showPrintPreview && (
+        <PriceOfferPrint
+          caseData={caseData}
+          onClose={() => setShowPrintPreview(false)}
+        />
+      )}
       </div>
       );
       }
