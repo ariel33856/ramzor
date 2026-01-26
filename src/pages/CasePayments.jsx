@@ -833,31 +833,14 @@ ${signatureLink}
               })}
 
               {/* Payment Times Summary */}
-              <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700 mb-2">סה"כ זמני תשלום:</p>
-                    <p className="text-lg font-bold text-blue-600">
-                      {formatCurrency(Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
-                        const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
-                        return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
-                      }, 0))}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700 mb-2">יתרה להזנת זמן תשלום:</p>
-                    <p className={`text-lg font-bold ${priceAfterDiscount - Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
-                      const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
-                      return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
-                    }, 0) <= 0 ? 'text-green-600' : 'text-orange-600'}`}>
-                      {formatCurrency(Math.max(0, priceAfterDiscount - Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
-                        const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
-                        return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
-                      }, 0)))}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {(() => {
+                const totalPaymentTimes = Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
+                  const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
+                  return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
+                }, 0);
+                const remainingBalance = Math.max(0, priceAfterDiscount - totalPaymentTimes);
+                return renderPriceRow('יתרה להזנת זמן תשלום', null, remainingBalance);
+              })()}
               <Button
                 variant="outline"
                 size="sm"
