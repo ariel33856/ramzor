@@ -277,39 +277,17 @@ ${signatureLink}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d.]/g, '');
                 setPercentages({ ...percentages, [percentageFieldName]: value });
-                // Calculate the value and auto-fill next payment with remainder
-                if (value && priceAfterDiscount > 0 && (fieldName === 'payment_times' || fieldName?.startsWith('payment_times_'))) {
-                  const percentage = parseFloat(value) || 0;
-                  const calculatedValue = (priceAfterDiscount * percentage) / 100;
-                  const fieldIndex = fieldName === 'payment_times' ? 1 : parseInt(fieldName.split('_')[2]);
-                  const remainder = priceAfterDiscount - calculatedValue;
-                  if (remainder > 0) {
-                    const nextFieldName = `payment_times_${fieldIndex + 1}`;
-                    const nextPercentageFieldName = `payment_times_${fieldIndex + 1}_percentage`;
-                    const nextPercentage = (remainder / priceAfterDiscount) * 100;
-                    setEditValues({ ...editValues, [nextFieldName]: remainder });
-                    setPercentages({ ...percentages, [percentageFieldName]: value, [nextPercentageFieldName]: nextPercentage.toFixed(2) });
-                    setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
-                  }
-                }
               }}
               onBlur={() => {
-                    if (percentages[percentageFieldName] !== undefined) {
-                      const percentage = parseFloat(percentages[percentageFieldName]) || 0;
-                      const calculatedValue = (priceAfterDiscount * percentage) / 100;
-                      const updates = { 
-                        [fieldName]: calculatedValue,
-                        [percentageFieldName]: percentage
-                      };
-                      // If this is updating next field amounts, also save them
-                      Object.entries(editValues).forEach(([key, value]) => {
-                        if (key.startsWith('payment_times') && !updates.hasOwnProperty(key)) {
-                          updates[key] = value;
-                        }
-                      });
-                      updatePaymentsMutation.mutate(updates);
-                    }
-                  }}
+                if (percentages[percentageFieldName] !== undefined) {
+                  const percentage = parseFloat(percentages[percentageFieldName]) || 0;
+                  const calculatedValue = (priceAfterDiscount * percentage) / 100;
+                  updatePaymentsMutation.mutate({ 
+                    [fieldName]: calculatedValue,
+                    [percentageFieldName]: percentage
+                  });
+                }
+              }}
               className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white"
             />
           </div>
@@ -323,12 +301,7 @@ ${signatureLink}
               value={editValues[fieldName] !== undefined ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : new Intl.NumberFormat('he-IL').format(displayAmount)}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d]/g, '');
-                setEditValues({ ...editValues, [fieldName]: parseFloat(value) || 0 });
-                // Update percentage based on entered value
-                if (value && priceAfterDiscount > 0) {
-                  const percentage = (parseFloat(value) / priceAfterDiscount) * 100;
-                  setPercentages({ ...percentages, [percentageFieldName]: percentage.toFixed(2) });
-                }
+                setEditValues({ ...editValues, [fieldName]: value });
               }}
               onBlur={() => handleBlur(fieldName)}
               autoFocus
