@@ -427,19 +427,23 @@ export default function CasePayments() {
               </div>
             ))}
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const newFamilies = [...extraFamilies, { family_role: 8500 }];
-                setExtraFamilies(newFamilies);
-                updatePaymentsMutation.mutate({ extra_families: newFamilies });
-              }}
-              className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
-            >
-              <PlusCircle className="w-3 h-3 ml-1" />
-              הוסף תא משפחתי
-            </Button>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1 invisible">הוסף</label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newFamilies = [...extraFamilies, { family_role: 8500 }];
+                  setExtraFamilies(newFamilies);
+                  updatePaymentsMutation.mutate({ extra_families: newFamilies });
+                }}
+                className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
+              >
+                <PlusCircle className="w-3 h-3 ml-1" />
+                הוסף תא משפחתי
+              </Button>
+              <div className="h-5 mt-1"></div>
+            </div>
             </div>
 
             {/* Extra Transactions */}
