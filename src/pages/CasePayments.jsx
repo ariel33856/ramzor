@@ -294,15 +294,22 @@ ${signatureLink}
                 }
               }}
               onBlur={() => {
-                if (percentages[percentageFieldName] !== undefined) {
-                  const percentage = parseFloat(percentages[percentageFieldName]) || 0;
-                  const calculatedValue = (priceAfterDiscount * percentage) / 100;
-                  updatePaymentsMutation.mutate({ 
-                    [fieldName]: calculatedValue,
-                    [percentageFieldName]: percentage
-                  });
-                }
-              }}
+                    if (percentages[percentageFieldName] !== undefined) {
+                      const percentage = parseFloat(percentages[percentageFieldName]) || 0;
+                      const calculatedValue = (priceAfterDiscount * percentage) / 100;
+                      const updates = { 
+                        [fieldName]: calculatedValue,
+                        [percentageFieldName]: percentage
+                      };
+                      // If this is updating next field amounts, also save them
+                      Object.entries(editValues).forEach(([key, value]) => {
+                        if (key.startsWith('payment_times') && !updates.hasOwnProperty(key)) {
+                          updates[key] = value;
+                        }
+                      });
+                      updatePaymentsMutation.mutate(updates);
+                    }
+                  }}
               className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white"
             />
           </div>
