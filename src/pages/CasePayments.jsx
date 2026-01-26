@@ -794,10 +794,11 @@ ${signatureLink}
             <PlusCircle className="w-4 h-4 ml-2" />
             הוסף זמן תשלום
           </Button>
-        </div>
+          </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
+          {/* מצב תשלומים */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">מצב תשלומים</h3>
           {renderPriceRow('תשלומים שהתקבלו', 'payments_received', paymentsReceived)}
           <div className="pt-3 mt-3">
             {renderPriceRow('יתרת חוב', null, debtBalance)}
