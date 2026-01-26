@@ -194,7 +194,7 @@ ${signatureLink}
   const calculatedVat = priceAfterDiscount * 0.18;
   const calculatedTotal = priceAfterDiscount + calculatedVat;
 
-  const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || calculatedTotal);
+  const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || priceAfterDiscount);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
   const debtBalance = closingPrice - paymentsReceived;
