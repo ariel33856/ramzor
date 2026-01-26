@@ -355,20 +355,6 @@ export default function CasePayments() {
               </Select>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const newFamilies = [...extraFamilies, { family_role: 8500 }];
-                setExtraFamilies(newFamilies);
-                updatePaymentsMutation.mutate({ extra_families: newFamilies });
-              }}
-              className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
-            >
-              <PlusCircle className="w-3 h-3 ml-1" />
-              הוסף תא משפחתי
-            </Button>
-
             {extraFamilies.map((family, index) => (
               <div key={index} className="flex items-center gap-1">
                 <Select
@@ -402,6 +388,20 @@ export default function CasePayments() {
                 </Button>
               </div>
             ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const newFamilies = [...extraFamilies, { family_role: 8500 }];
+                setExtraFamilies(newFamilies);
+                updatePaymentsMutation.mutate({ extra_families: newFamilies });
+              }}
+              className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
+            >
+              <PlusCircle className="w-3 h-3 ml-1" />
+              הוסף תא משפחתי
+            </Button>
           </div>
 
 
@@ -508,22 +508,6 @@ export default function CasePayments() {
                   </Select>
                 </div>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const newTransactions = [...extraTransactions];
-                    const newFamilies = [...(transaction.extra_families || []), { family_role: 8500 }];
-                    newTransactions[index] = { ...newTransactions[index], extra_families: newFamilies };
-                    setExtraTransactions(newTransactions);
-                    updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
-                  }}
-                  className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
-                >
-                  <PlusCircle className="w-3 h-3 ml-1" />
-                  הוסף תא משפחתי
-                </Button>
-
                 {(transaction.extra_families || []).map((family, fIndex) => (
                   <div key={fIndex} className="flex items-center gap-1">
                     <Select
@@ -561,6 +545,22 @@ export default function CasePayments() {
                     </Button>
                   </div>
                 ))}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const newTransactions = [...extraTransactions];
+                    const newFamilies = [...(transaction.extra_families || []), { family_role: 8500 }];
+                    newTransactions[index] = { ...newTransactions[index], extra_families: newFamilies };
+                    setExtraTransactions(newTransactions);
+                    updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                  }}
+                  className="h-8 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 text-sm px-3"
+                >
+                  <PlusCircle className="w-3 h-3 ml-1" />
+                  הוסף תא משפחתי
+                </Button>
               </div>
 
 
