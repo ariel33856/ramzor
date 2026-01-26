@@ -127,7 +127,33 @@ ${signatureLink}
   };
 
   const handleSaveField = (field) => {
-    updatePaymentsMutation.mutate({ [field]: parseFloat(editValues[field]) || 0 });
+    const newValue = parseFloat(editValues[field]) || 0;
+    
+    // Auto-fill logic for payment times
+    if (field === 'payment_times' || field?.startsWith('payment_times_')) {
+      const updates = { [field]: newValue };
+      const fieldIndex = field === 'payment_times' ? 1 : parseInt(field.split('_')[2]);
+      const nextFieldName = `payment_times_${fieldIndex + 1}`;
+      
+      // Calculate remainder
+      const totalBefore = Array.from({ length: fieldIndex }).reduce((sum, _, i) => {
+        const fn = i === 0 ? 'payment_times' : `payment_times_${i + 1}`;
+        const val = fn === field ? newValue : (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
+        return sum + val;
+      }, 0);
+      
+      const remainder = priceAfterDiscount - totalBefore;
+      
+      if (remainder > 0) {
+        updates[nextFieldName] = remainder;
+        setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
+      }
+    }
+    
+    updatePaymentsMutation.mutate(field === 'payment_times' || field?.startsWith('payment_times_') ? Object.keys(arguments[0] || {}).reduce((acc, key) => {
+      acc[key] = parseFloat(editValues[key]) || 0;
+      return acc;
+    }, { [field]: newValue }) : { [field]: newValue });
   };
 
   const handleBlur = (field) => {
