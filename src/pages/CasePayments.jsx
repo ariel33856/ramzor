@@ -973,6 +973,6 @@ ${signatureLink}
           />
         </DialogContent>
       </Dialog>
-      </div>
-      );
-      }
+    </div>
+  );
+}
