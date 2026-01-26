@@ -305,7 +305,7 @@ ${signatureLink}
           <p className="text-xs text-gray-600 mb-1">סה"כ עם מע"מ</p>
           <p className="text-lg font-bold text-green-600">{formatCurrency(totalWithVat)}</p>
         </div>
-        {fieldName ? (
+        {fieldName && fieldName !== 'remaining_payment_times' ? (
           <>
             <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
               <p className="text-xs text-gray-600 mb-1">תאריך</p>
@@ -351,6 +351,8 @@ ${signatureLink}
               />
             </div>
           </>
+        ) : fieldName ? (
+        <div className="col-span-2"></div>
         ) : (
         <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-2 border-2 border-blue-200 h-[60px] flex flex-col justify-center">
           <div className="flex items-center justify-between mb-1">
