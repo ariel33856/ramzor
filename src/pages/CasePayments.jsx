@@ -347,34 +347,53 @@ ${signatureLink}
         )}
         {fieldName && fieldName !== 'remaining_payment_times' && fieldName !== 'debt_balance' ? (
           <>
-            <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
-              <p className="text-xs text-gray-600 mb-1">תאריך</p>
-              <Input
-                type="text"
-                inputMode="numeric"
-                placeholder="DD/MM/YYYY"
-                value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
-                onChange={(e) => {
-                  let value = e.target.value.replace(/\D/g, '');
-                  if (value.length >= 2) {
-                    value = value.slice(0, 2) + '/' + value.slice(2);
-                  }
-                  if (value.length >= 5) {
-                    value = value.slice(0, 5) + '/' + value.slice(5);
-                  }
-                  if (value.length > 10) {
-                    value = value.slice(0, 10);
-                  }
-                  setEditValues({ ...editValues, [dateFieldName]: value });
-                }}
-                onBlur={() => {
-                  if (editValues[dateFieldName] !== undefined) {
-                    updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
-                  }
-                }}
-                className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 h-9"
-              />
-            </div>
+            {fieldName === 'late_payment' || fieldName?.startsWith('late_payment_') ? (
+              <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
+                <p className="text-xs text-gray-600 mb-1">ימי פיגור</p>
+                <p className="text-lg font-bold text-purple-600">
+                  {(() => {
+                    const index = fieldName === 'late_payment' ? 0 : parseInt(fieldName.split('_')[2]) || 0;
+                    const baseDateFieldName = index === 0 ? 'payment_times_date' : `payment_times_${index + 1}_date`;
+                    const dueDate = caseData.custom_data?.[baseDateFieldName];
+                    if (!dueDate) return '—';
+                    const today = new Date();
+                    const dueDateObj = new Date(dueDate.split('/').reverse().join('-'));
+                    const diffMs = today - dueDateObj;
+                    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                    return diffDays > 0 ? diffDays : '0';
+                  })()}
+                </p>
+              </div>
+            ) : (
+              <div className="bg-purple-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
+                <p className="text-xs text-gray-600 mb-1">תאריך</p>
+                <Input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="DD/MM/YYYY"
+                  value={editValues[dateFieldName] !== undefined ? editValues[dateFieldName] : (caseData.custom_data?.[dateFieldName] || '')}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                      value = value.slice(0, 2) + '/' + value.slice(2);
+                    }
+                    if (value.length >= 5) {
+                      value = value.slice(0, 5) + '/' + value.slice(5);
+                    }
+                    if (value.length > 10) {
+                      value = value.slice(0, 10);
+                    }
+                    setEditValues({ ...editValues, [dateFieldName]: value });
+                  }}
+                  onBlur={() => {
+                    if (editValues[dateFieldName] !== undefined) {
+                      updatePaymentsMutation.mutate({ [dateFieldName]: editValues[dateFieldName] });
+                    }
+                  }}
+                  className="!text-sm !font-bold text-purple-600 !border-0 !bg-transparent !p-0 h-9"
+                />
+              </div>
+            )}
             <div className="bg-teal-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
               <p className="text-xs text-gray-600 mb-1">אמצעי תשלום</p>
               <Input
