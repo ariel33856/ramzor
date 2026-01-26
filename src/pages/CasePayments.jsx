@@ -494,7 +494,7 @@ ${signatureLink}
             {/* Extra Transactions */}
           {extraTransactions.map((transaction, index) => (
             <div key={index} className="pt-4 mb-4">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2 mb-4">
                 <h4 className="text-sm font-semibold text-gray-900">עסקה נוספת {index + 1}</h4>
                 <Button
                   variant="ghost"
@@ -504,7 +504,7 @@ ${signatureLink}
                     setExtraTransactions(newTransactions);
                     updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
                   }}
-                  className="text-red-600 hover:bg-red-50"
+                  className="text-red-600 hover:bg-red-50 h-6 w-6"
                 >
                   <X className="w-4 h-4" />
                 </Button>
