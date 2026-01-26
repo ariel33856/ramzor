@@ -282,10 +282,23 @@ ${signatureLink}
                 if (percentages[percentageFieldName] !== undefined) {
                   const percentage = parseFloat(percentages[percentageFieldName]) || 0;
                   const calculatedValue = (priceAfterDiscount * percentage) / 100;
-                  updatePaymentsMutation.mutate({ 
+
+                  // Calculate remainder for next field
+                  const fieldIndex = fieldName === 'payment_times' ? 1 : (fieldName === 'payments_received' ? 1 : parseInt(fieldName.split('_')[2]));
+                  const remainder = priceAfterDiscount - calculatedValue;
+                  const updates = { 
                     [fieldName]: calculatedValue,
                     [percentageFieldName]: percentage
-                  });
+                  };
+
+                  // Auto-fill next field with remainder
+                  if (remainder > 0 && (fieldName === 'payment_times' || fieldName?.startsWith('payment_times_'))) {
+                    const nextFieldName = `payment_times_${fieldIndex + 1}`;
+                    updates[nextFieldName] = remainder;
+                    setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
+                  }
+
+                  updatePaymentsMutation.mutate(updates);
                 }
               }}
               className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white"
