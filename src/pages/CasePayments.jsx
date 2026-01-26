@@ -198,6 +198,7 @@ ${signatureLink}
   const closingPrice = editValues.closing_price !== undefined ? parseFloat(editValues.closing_price) || 0 : (caseData.custom_data?.closing_price || priceAfterDiscount);
   const paymentTimes = editValues.payment_times !== undefined ? parseFloat(editValues.payment_times) || 0 : (caseData.custom_data?.payment_times || 0);
   const paymentsReceived = editValues.payments_received !== undefined ? parseFloat(editValues.payments_received) || 0 : (caseData.custom_data?.payments_received || 0);
+  const latePayment = editValues.late_payment !== undefined ? parseFloat(editValues.late_payment) || 0 : (caseData.custom_data?.late_payment || 0);
   
   // Calculate total payments received including additional payments
   const totalPaymentsReceived = paymentsReceived + Array.from({ length: paymentsReceivedCount - 1 }).reduce((sum, _, index) => {
@@ -234,7 +235,7 @@ ${signatureLink}
         </div>
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
-          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) ? (
+          {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment') ? (
             <Input
               type="text"
               inputMode="decimal"
@@ -249,8 +250,8 @@ ${signatureLink}
             />
           ) : (
             <p 
-              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
-              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_')) && handleFieldClick(fieldName, priceWithoutVat)}
+              className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment') ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
+              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment') && handleFieldClick(fieldName, priceWithoutVat)}
             >
               {formatCurrency(priceWithoutVat)}
             </p>
@@ -849,6 +850,7 @@ ${signatureLink}
           <div className="pt-3 mt-3 border-t border-gray-200">
             {renderPriceRow('סך התשלומים שהתקבלו', null, totalPaymentsReceived)}
             {renderPriceRow('יתרת חוב', null, debtBalance)}
+            {renderPriceRow('תשלום בפיגור', 'late_payment', latePayment)}
           </div>
         </div>
 
