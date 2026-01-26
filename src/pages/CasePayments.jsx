@@ -371,7 +371,7 @@ ${signatureLink}
               }}
             >
               <div 
-                className={`h-full ${isRemainingPayment ? 'bg-gradient-to-l from-red-600 to-red-400' : 'bg-gradient-to-l from-red-600 via-yellow-500 to-green-600'}`}
+                className={`h-full ${isBalanceClear ? 'bg-gradient-to-l from-green-600 to-green-400' : isRemainingPayment ? 'bg-gradient-to-l from-red-600 to-red-400' : 'bg-gradient-to-l from-red-600 via-yellow-500 to-green-600'}`}
                 style={{ 
                   width: (() => {
                     const percent = closingPrice > 0 ? Math.min(Math.round((totalPaymentsReceived / closingPrice) * 100), 100) : 0;
