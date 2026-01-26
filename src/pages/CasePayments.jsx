@@ -285,7 +285,10 @@ ${signatureLink}
                   const remainder = priceAfterDiscount - calculatedValue;
                   if (remainder > 0) {
                     const nextFieldName = `payment_times_${fieldIndex + 1}`;
+                    const nextPercentageFieldName = `payment_times_${fieldIndex + 1}_percentage`;
+                    const nextPercentage = (remainder / priceAfterDiscount) * 100;
                     setEditValues({ ...editValues, [nextFieldName]: remainder });
+                    setPercentages({ ...percentages, [percentageFieldName]: value, [nextPercentageFieldName]: nextPercentage.toFixed(2) });
                     setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
                   }
                 }
