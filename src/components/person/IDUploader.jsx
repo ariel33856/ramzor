@@ -261,37 +261,38 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       אם שדה לא נמצא, השאר אותו ריק. אם לא נמצאו ילדים, החזר מערכים ריקים.`,
         file_urls: [file_url],
         response_json_schema: {
-          type: "object",
-          properties: {
-            document_type: { type: "string" },
-            id_type: { type: "string" },
-            first_name: { type: "string" },
-            last_name: { type: "string" },
-            id_number: { type: "string" },
-            birth_date: { type: "string" },
-            id_issue_date: { type: "string" },
-            id_expiry_date: { type: "string" },
-            gender: { type: "string" },
-            address: { type: "string" },
-            building_number: { type: "string" },
-            city: { type: "string" },
-            entrance: { type: "string" },
-            apartment_number: { type: "string" },
-            num_children: { type: "number" },
-            children_birth_dates: { 
-              type: "array",
-              items: { type: "string" }
-            },
-            children_names: { 
-              type: "array",
-              items: { type: "string" }
-            },
-            israeli_status: { type: "string" }
-          }
+         type: "object",
+         properties: {
+           document_type: { type: "string" },
+           id_type: { type: "string" },
+           has_photo: { type: "boolean" },
+           first_name: { type: "string" },
+           last_name: { type: "string" },
+           id_number: { type: "string" },
+           birth_date: { type: "string" },
+           id_issue_date: { type: "string" },
+           id_expiry_date: { type: "string" },
+           gender: { type: "string" },
+           address: { type: "string" },
+           building_number: { type: "string" },
+           city: { type: "string" },
+           entrance: { type: "string" },
+           apartment_number: { type: "string" },
+           num_children: { type: "number" },
+           children_birth_dates: { 
+             type: "array",
+             items: { type: "string" }
+           },
+           children_names: { 
+             type: "array",
+             items: { type: "string" }
+           },
+           israeli_status: { type: "string" }
+         }
         }
-      });
+        });
 
-      // Detect what was uploaded (if first document not uploaded, update error)
+        // Detect what was uploaded (if first document not uploaded, update error)
       if (!preview && result.document_type === 'id_card') {
         setDetectionResult2('id_card');
         setError('✓ זוהה צד שני - נא להשלים צד ראשון');
