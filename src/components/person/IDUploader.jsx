@@ -31,6 +31,7 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
   const [localFile2, setLocalFile2] = useState(null);
   const [localFile3, setLocalFile3] = useState(null);
   const [autoOpenedUpload, setAutoOpenedUpload] = useState(false);
+  const [detectionResult2, setDetectionResult2] = useState(null);
   const fileInputRef = React.useRef(null);
   const fileInputRef2 = React.useRef(null);
   const fileInputRef3 = React.useRef(null);
