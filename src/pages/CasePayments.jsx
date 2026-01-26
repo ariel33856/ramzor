@@ -270,7 +270,7 @@ ${signatureLink}
 
     return (
       <div className="grid grid-cols-7 gap-3 mb-2 items-stretch">
-        <div className={`text-sm font-semibold flex items-center gap-2 ${isBalanceClear ? 'text-green-900' : isRemainingPayment ? 'text-red-900' : 'text-gray-900'}`}>
+        <div className={`text-sm font-semibold flex items-center gap-2 ${isBalanceClear ? 'text-green-900' : hasDebt ? 'text-red-900' : 'text-gray-900'}`}>
           {label}
           {onDelete && (
             <button
