@@ -310,12 +310,15 @@ export default function CasePayments() {
             <div className="w-32">
               <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
               <Input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 placeholder="₪"
                 value={loanAmount || ''}
                 onChange={(e) => {
-                  const value = parseFloat(e.target.value) || 0;
-                  updatePaymentsMutation.mutate({ loan_amount: value });
+                  const value = e.target.value.replace(/[^\d.]/g, '');
+                  if (value === '' || !isNaN(parseFloat(value))) {
+                    updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
+                  }
                 }}
                 className="h-8 text-sm"
               />
@@ -450,15 +453,18 @@ export default function CasePayments() {
                 <div className="w-32">
                   <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
                   <Input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="₪"
                     value={transaction.loan_amount || ''}
                     onChange={(e) => {
-                      const value = parseFloat(e.target.value) || 0;
-                      const newTransactions = [...extraTransactions];
-                      newTransactions[index] = { ...newTransactions[index], loan_amount: value };
-                      setExtraTransactions(newTransactions);
-                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                      const value = e.target.value.replace(/[^\d.]/g, '');
+                      if (value === '' || !isNaN(parseFloat(value))) {
+                        const newTransactions = [...extraTransactions];
+                        newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
+                        setExtraTransactions(newTransactions);
+                        updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                      }
                     }}
                     className="h-8 text-sm"
                   />
