@@ -600,12 +600,17 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                 </div>
               )}
 
-              <iframe 
-                key={preview}
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
-                className="w-full h-full min-h-[280px] rounded-xl"
-                frameBorder="0"
-              />
+              <div className="flex flex-col h-full">
+                <iframe 
+                  key={preview}
+                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
+                  className="w-full flex-1 min-h-[280px] rounded-xl"
+                  frameBorder="0"
+                />
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  {detectionResult === 'both' ? 'תעודת זהות + ספח' : detectionResult === 'id_card' ? 'תעודת זהות' : 'ספח'}
+                </p>
+              </div>
             </>
           ) : (
             <>
