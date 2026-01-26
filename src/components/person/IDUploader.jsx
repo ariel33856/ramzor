@@ -459,8 +459,12 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
         </div>
       )}
       
-      <div className="grid grid-cols-2 gap-4 overflow-visible">
-        {/* Upload Section 1 */}
+      <div className={`grid gap-4 overflow-visible ${
+        idType === 'ביומטרית' && detectionResult && detectionResult !== 'both' 
+          ? 'grid-cols-3' 
+          : 'grid-cols-2'
+      }`}>
+         {/* Upload Section 1 */}
         <div 
           className="border-2 border-dashed border-blue-300 rounded-xl p-0 bg-blue-50/50 hover:bg-blue-50 transition-colors relative min-h-[300px] cursor-pointer overflow-visible"
           onClick={() => !preview && fileInputRef.current?.click()}
