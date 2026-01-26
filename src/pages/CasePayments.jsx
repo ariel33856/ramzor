@@ -229,7 +229,7 @@ ${signatureLink}
     const displayAmount = isEditing ? (editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) : calculatedAmount) : (caseData.custom_data?.[fieldName] !== undefined ? caseData.custom_data[fieldName] : calculatedAmount);
 
     return (
-      <div className="grid grid-cols-7 gap-3 mb-2 items-center">
+      <div className="grid grid-cols-7 gap-3 mb-2 items-stretch">
         <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
           {label}
           {onDelete && (
@@ -242,10 +242,10 @@ ${signatureLink}
           )}
         </div>
         {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_') || fieldName === 'remaining_payment_times') && (
-          <div className="bg-indigo-50 rounded-lg p-3 text-right">
+          <div className="bg-indigo-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
             <p className="text-xs text-gray-600 mb-1">אחוז %</p>
             {fieldName === 'remaining_payment_times' ? (
-              <p className="text-lg font-bold text-indigo-600 h-9 flex items-center justify-end">
+              <p className="text-lg font-bold text-indigo-600">
                 {priceAfterDiscount > 0 ? ((priceWithoutVat / priceAfterDiscount) * 100).toFixed(1) : '0'}%
               </p>
             ) : (
@@ -268,12 +268,12 @@ ${signatureLink}
                     });
                   }
                 }}
-                className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white"
+                className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white h-9"
               />
             )}
           </div>
         )}
-        <div className="bg-blue-50 rounded-lg p-3 text-right">
+        <div className="bg-blue-50 rounded-lg p-3 text-right flex flex-col justify-center h-[60px]">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
           {isEditing && fieldName !== 'remaining_payment_times' && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
             <Input
