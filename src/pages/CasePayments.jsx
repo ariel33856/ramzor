@@ -750,7 +750,7 @@ ${signatureLink}
                 <span className="font-bold text-green-600 text-base">{formatCurrency(calculatedTotal)}</span>
               </div>
             </div>
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-8">
               <Button
                 onClick={() => window.print()}
                 className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
