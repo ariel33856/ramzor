@@ -831,15 +831,8 @@ ${signatureLink}
                   fieldName, 
                   caseData.custom_data?.[fieldName] || 0,
                   () => {
-                    const newCustomData = { ...caseData.custom_data };
-                    delete newCustomData[fieldName];
-                    const dateFieldName = `${fieldName}_date`;
-                    const methodFieldName = `${fieldName}_payment_method`;
-                    const percentFieldName = `${fieldName}_percentage`;
-                    delete newCustomData[dateFieldName];
-                    delete newCustomData[methodFieldName];
-                    delete newCustomData[percentFieldName];
-                    updatePaymentsMutation.mutate(newCustomData);
+                    const updates = { [fieldName]: undefined };
+                    updatePaymentsMutation.mutate(updates);
                     setPaymentTimesCount(prev => Math.max(2, prev - 1));
                   }
                 );
