@@ -327,7 +327,7 @@ export default function CasePayments() {
                   }}
                   className="h-8 text-sm pl-8"
                 />
-                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">ש״ח</span>
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
               </div>
             </div>
 
@@ -480,7 +480,7 @@ export default function CasePayments() {
                       }}
                       className="h-8 text-sm pl-8"
                     />
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">ש״ח</span>
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
                   </div>
                 </div>
 
