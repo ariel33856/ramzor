@@ -314,13 +314,13 @@ export default function CasePayments() {
                 type="text"
                 inputMode="decimal"
                 placeholder="₪"
-                value={tempLoanAmount !== '' ? tempLoanAmount : (loanAmount || '')}
+                value={tempLoanAmount !== '' ? new Intl.NumberFormat('he-IL').format(tempLoanAmount) : (loanAmount ? new Intl.NumberFormat('he-IL').format(loanAmount) : '')}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/[^\d.]/g, '');
+                  const value = e.target.value.replace(/[^\d]/g, '');
                   setTempLoanAmount(value);
                 }}
                 onBlur={(e) => {
-                  const value = e.target.value.replace(/[^\d.]/g, '');
+                  const value = e.target.value.replace(/[^\d]/g, '');
                   updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
                   setTempLoanAmount('');
                 }}
@@ -460,15 +460,15 @@ export default function CasePayments() {
                     type="text"
                     inputMode="decimal"
                     placeholder="₪"
-                    value={transaction.loan_amount || ''}
+                    value={transaction.loan_amount ? new Intl.NumberFormat('he-IL').format(transaction.loan_amount) : ''}
                     onChange={(e) => {
-                      const value = e.target.value.replace(/[^\d.]/g, '');
+                      const value = e.target.value.replace(/[^\d]/g, '');
                       const newTransactions = [...extraTransactions];
                       newTransactions[index] = { ...newTransactions[index], loan_amount: value };
                       setExtraTransactions(newTransactions);
                     }}
                     onBlur={(e) => {
-                      const value = e.target.value.replace(/[^\d.]/g, '');
+                      const value = e.target.value.replace(/[^\d]/g, '');
                       const newTransactions = [...extraTransactions];
                       newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
                       setExtraTransactions(newTransactions);
