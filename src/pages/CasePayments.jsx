@@ -652,20 +652,14 @@ export default function CasePayments() {
 
           {/* Calculation Summary */}
           <div className="mt-6 pt-4 space-y-2">
-            <div className="flex justify-between items-center gap-4">
-              <div className="flex justify-between flex-1 text-sm">
-                <span className="text-gray-600">מחיר משוקלל לפני מע"מ:</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-600 text-xs">מחיר לפני מע"מ:</span>
                 <span className="font-semibold">{formatCurrency(calculatedBasePrice)}</span>
               </div>
-              <div className="flex justify-between flex-1 text-sm">
-                <span className="text-gray-600">מע"מ (18%):</span>
-                <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center gap-4 mt-2">
-              <div className="flex justify-between flex-1 text-sm">
-                <span className="text-gray-600">הנחה:</span>
-                <div className="relative w-32">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-600 text-xs">הנחה:</span>
+                <div className="relative w-24">
                   <Input
                     type="text"
                     inputMode="decimal"
@@ -682,14 +676,18 @@ export default function CasePayments() {
                         updatePaymentsMutation.mutate({ discount: parseFloat(editValues.discount) || 0 });
                       }
                     }}
-                    className="h-8 text-sm pl-8 text-left font-semibold"
+                    className="h-7 text-xs pl-6 text-left font-semibold"
                   />
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
+                  <span className="absolute left-1 top-1/2 -translate-y-1/2 text-xs text-gray-500">₪</span>
                 </div>
               </div>
-              <div className="flex justify-between flex-1 text-sm">
-                <span className="text-gray-600">לאחר הנחה:</span>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-600 text-xs">לאחר הנחה:</span>
                 <span className="font-semibold">{formatCurrency(priceAfterDiscount)}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-600 text-xs">מע"מ (18%):</span>
+                <span className="font-semibold">{formatCurrency(calculatedVat)}</span>
               </div>
             </div>
             <div className="flex justify-between text-lg font-bold border-t pt-2">
