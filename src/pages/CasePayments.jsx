@@ -846,7 +846,8 @@ ${signatureLink}
               () => setPaymentsReceivedCount(prev => Math.max(1, prev - 1))
             );
           })}
-          <div className="pt-3 mt-3">
+          <div className="pt-3 mt-3 border-t border-gray-200">
+            {renderPriceRow('סך התשלומים שהתקבלו', null, totalPaymentsReceived)}
             {renderPriceRow('יתרת חוב', null, debtBalance)}
           </div>
         </div>
