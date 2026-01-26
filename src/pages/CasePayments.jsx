@@ -750,20 +750,6 @@ ${signatureLink}
                 <span className="font-bold text-green-600 text-base">{formatCurrency(calculatedTotal)}</span>
               </div>
             </div>
-            <div className="flex gap-2 mt-8">
-              <Button
-                onClick={() => window.print()}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-              >
-                הפקת הצעת מחיר
-              </Button>
-              <Button
-                onClick={() => updatePaymentsMutation.mutate({ closing_price: priceAfterDiscount })}
-                className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-              >
-                עדכן מחיר סגירה
-              </Button>
-            </div>
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <h4 className="text-md font-semibold text-gray-900 mb-4">זמני תשלום</h4>
@@ -786,6 +772,21 @@ ${signatureLink}
                 <PlusCircle className="w-4 h-4 ml-2" />
                 הוסף זמן תשלום
               </Button>
+
+              <div className="flex gap-2 mt-6">
+                <Button
+                  onClick={() => window.print()}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                >
+                  הפקת הצעת מחיר
+                </Button>
+                <Button
+                  onClick={() => updatePaymentsMutation.mutate({ closing_price: priceAfterDiscount })}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                >
+                  עדכן מחיר סגירה
+                </Button>
+              </div>
             </div>
           </div>
         </div>
