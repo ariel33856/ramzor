@@ -838,15 +838,6 @@ ${signatureLink}
                 );
               })}
 
-              {/* Payment Times Summary */}
-              {(() => {
-                const totalPaymentTimes = Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
-                  const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
-                  return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
-                }, 0);
-                const remainingBalance = Math.max(0, priceAfterDiscount - totalPaymentTimes);
-                return renderPriceRow('יתרה להזנת זמן תשלום', 'remaining_payment_times', remainingBalance);
-              })()}
               <Button
                 variant="outline"
                 size="sm"
@@ -856,6 +847,16 @@ ${signatureLink}
                 <PlusCircle className="w-4 h-4 ml-2" />
                 הוסף זמן תשלום
               </Button>
+
+              {/* Payment Times Summary */}
+              {(() => {
+                const totalPaymentTimes = Array.from({ length: paymentTimesCount }).reduce((sum, _, index) => {
+                  const fn = index === 0 ? 'payment_times' : `payment_times_${index + 1}`;
+                  return sum + (editValues[fn] !== undefined ? parseFloat(editValues[fn]) || 0 : (caseData.custom_data?.[fn] || 0));
+                }, 0);
+                const remainingBalance = Math.max(0, priceAfterDiscount - totalPaymentTimes);
+                return renderPriceRow('יתרה להזנת זמן תשלום', 'remaining_payment_times', remainingBalance);
+              })()}
 
               <div className="flex gap-2 mt-6">
                 <Button
