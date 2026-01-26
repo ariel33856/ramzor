@@ -200,7 +200,7 @@ ${signatureLink}
   const debtBalance = closingPrice - paymentsReceived;
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount);
+    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
   };
 
   const renderPriceRow = (label, fieldName, priceWithoutVat, onDelete) => {
