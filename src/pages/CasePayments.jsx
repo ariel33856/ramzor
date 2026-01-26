@@ -228,7 +228,7 @@ ${signatureLink}
     const displayAmount = isEditing ? (editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) : calculatedAmount) : calculatedAmount;
 
     return (
-      <div className="grid grid-cols-6 gap-4 mb-2 items-center">
+      <div className="grid grid-cols-7 gap-3 mb-2 items-center">
         <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
           {label}
           {onDelete && (
@@ -240,13 +240,39 @@ ${signatureLink}
             </button>
           )}
         </div>
+        {fieldName && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && (
+          <div className="bg-indigo-50 rounded-lg p-3 text-right">
+            <p className="text-xs text-gray-600 mb-1">אחוז %</p>
+            <Input
+              type="text"
+              inputMode="decimal"
+              placeholder="0"
+              value={percentages[percentageFieldName] !== undefined ? percentages[percentageFieldName] : (caseData.custom_data?.[percentageFieldName] || '')}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^\d.]/g, '');
+                setPercentages({ ...percentages, [percentageFieldName]: value });
+              }}
+              onBlur={() => {
+                if (percentages[percentageFieldName] !== undefined) {
+                  const percentage = parseFloat(percentages[percentageFieldName]) || 0;
+                  const calculatedValue = (priceAfterDiscount * percentage) / 100;
+                  updatePaymentsMutation.mutate({ 
+                    [fieldName]: calculatedValue,
+                    [percentageFieldName]: percentage
+                  });
+                }
+              }}
+              className="text-lg font-bold text-indigo-600 !border-2 !border-indigo-400 !bg-white"
+            />
+          </div>
+        )}
         <div className="bg-blue-50 rounded-lg p-3 text-right">
           <p className="text-xs text-gray-600 mb-1">ללא מע"מ</p>
           {isEditing && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
             <Input
               type="text"
               inputMode="decimal"
-              value={editValues[fieldName] !== undefined ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : new Intl.NumberFormat('he-IL').format(priceWithoutVat)}
+              value={editValues[fieldName] !== undefined ? new Intl.NumberFormat('he-IL').format(editValues[fieldName]) : new Intl.NumberFormat('he-IL').format(displayAmount)}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^\d]/g, '');
                 setEditValues({ ...editValues, [fieldName]: value });
@@ -258,9 +284,9 @@ ${signatureLink}
           ) : (
             <p 
               className={`text-lg font-bold text-blue-600 ${(fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? 'cursor-pointer hover:bg-blue-100 rounded px-2 -mx-2 transition-colors' : ''}`}
-              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && handleFieldClick(fieldName, priceWithoutVat)}
+              onClick={() => (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) && handleFieldClick(fieldName, displayAmount)}
             >
-              {formatCurrency(priceWithoutVat)}
+              {formatCurrency(displayAmount)}
             </p>
           )}
         </div>
