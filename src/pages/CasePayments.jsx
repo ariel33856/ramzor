@@ -619,7 +619,7 @@ ${signatureLink}
                   <div className="h-5 mt-1 flex items-center justify-center">
                     <p className="text-xs text-blue-600 font-semibold">{formatCurrency(transaction.credit_report || 0)}</p>
                   </div>
-                </div>
+                  </div>
 
                 {(transaction.extra_families || []).map((family, fIndex) => (
                   <div key={fIndex} className="w-28">
