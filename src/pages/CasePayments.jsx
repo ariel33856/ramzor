@@ -132,32 +132,7 @@ ${signatureLink}
 
   const handleBlur = (field) => {
     const newValue = parseFloat(editValues[field]) || 0;
-    const updates = { [field]: newValue };
-    
-    // Auto-fill logic for payment times
-    if (field === 'payment_times' || field?.startsWith('payment_times_')) {
-      const fieldIndex = field === 'payment_times' ? 1 : parseInt(field.split('_')[2]);
-      
-      // Calculate total of all payment fields up to and including current
-      let totalPayments = 0;
-      for (let i = 1; i <= fieldIndex; i++) {
-        const fn = i === 1 ? 'payment_times' : `payment_times_${i}`;
-        const val = fn === field ? newValue : (caseData.custom_data?.[fn] || 0);
-        totalPayments += val;
-      }
-      
-      // Calculate remainder
-      const remainder = Math.max(0, priceAfterDiscount - totalPayments);
-      
-      // If there's a remainder, fill the next field
-      if (remainder > 0) {
-        const nextFieldName = `payment_times_${fieldIndex + 1}`;
-        updates[nextFieldName] = remainder;
-        setPaymentTimesCount(prev => Math.max(prev, fieldIndex + 2));
-      }
-    }
-    
-    updatePaymentsMutation.mutate(updates);
+    updatePaymentsMutation.mutate({ [field]: newValue });
   };
 
   if (isLoading) {
