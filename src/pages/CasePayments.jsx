@@ -35,6 +35,7 @@ export default function CasePayments() {
   const [tempLoanAmount, setTempLoanAmount] = useState('');
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const [emailForSignature, setEmailForSignature] = useState('');
+  const [percentages, setPercentages] = useState({});
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -219,6 +220,12 @@ ${signatureLink}
     const isEditing = editingField === fieldName;
     const dateFieldName = fieldName ? `${fieldName}_date` : null;
     const paymentMethodFieldName = fieldName ? `${fieldName}_payment_method` : null;
+    const percentageFieldName = fieldName ? `${fieldName}_percentage` : null;
+    
+    // Calculate amount based on percentage if percentage is set
+    const currentPercentage = percentages[percentageFieldName] !== undefined ? percentages[percentageFieldName] : (caseData.custom_data?.[percentageFieldName] || '');
+    const calculatedAmount = currentPercentage ? (priceAfterDiscount * parseFloat(currentPercentage)) / 100 : priceWithoutVat;
+    const displayAmount = isEditing ? (editValues[fieldName] !== undefined ? parseFloat(editValues[fieldName]) : calculatedAmount) : calculatedAmount;
 
     return (
       <div className="grid grid-cols-6 gap-4 mb-2 items-center">
