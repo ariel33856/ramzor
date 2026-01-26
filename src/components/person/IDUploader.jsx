@@ -841,13 +841,16 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
                 )}
 
                 {!uploading3 && (
-                  <iframe 
-                    key={preview3}
-                    src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
-                    className="w-full h-full min-h-[280px] rounded-xl"
-                    frameBorder="0"
-                  />
-                )}
+                   <div className="flex flex-col h-full">
+                     <iframe 
+                       key={preview3}
+                       src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
+                       className="w-full flex-1 min-h-[280px] rounded-xl"
+                       frameBorder="0"
+                     />
+                     <p className="text-xs text-gray-500 mt-2 text-center">ספח</p>
+                   </div>
+                 )}
               </>
             ) : (
               <>
