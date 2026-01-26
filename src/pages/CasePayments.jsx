@@ -764,12 +764,12 @@ ${signatureLink}
                 עדכן מחיר סגירה
               </Button>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">מחיר סגירה</h3>
-          {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <h4 className="text-md font-semibold text-gray-900 mb-4">מחיר סגירה</h4>
+              {renderPriceRow('מחיר סגירה', 'closing_price', closingPrice)}
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">
