@@ -412,11 +412,44 @@ export default function CasePayments() {
               <PlusCircle className="w-3 h-3 ml-1" />
               הוסף תא משפחתי
             </Button>
-          </div>
+            </div>
+
+            {/* Price Breakdown */}
+            <div className="flex gap-3 flex-wrap text-xs text-gray-600 bg-gray-50 p-3 rounded-lg">
+            {transactionType > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="font-medium">סוג עסקה:</span>
+                <span className="text-blue-600 font-semibold">{formatCurrency(transactionType)}</span>
+              </div>
+            )}
+            {loanAmount > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="font-medium">סכום הלוואה:</span>
+                <span className="text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</span>
+              </div>
+            )}
+            {difficultyLevel > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="font-medium">קושי:</span>
+                <span className="text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</span>
+              </div>
+            )}
+            {creditReport > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="font-medium">אשראי:</span>
+                <span className="text-blue-600 font-semibold">{formatCurrency(creditReport)}</span>
+              </div>
+            )}
+            {extraFamilies.map((family, idx) => (
+              <div key={idx} className="flex items-center gap-1">
+                <span className="font-medium">תא משפחתי {idx + 1}:</span>
+                <span className="text-blue-600 font-semibold">{formatCurrency(family.family_role || 0)}</span>
+              </div>
+            ))}
+            </div>
 
 
-
-          {/* Extra Transactions */}
+            {/* Extra Transactions */}
           {extraTransactions.map((transaction, index) => (
             <div key={index} className="pt-4 mb-4">
               <div className="flex items-center justify-between mb-4">
