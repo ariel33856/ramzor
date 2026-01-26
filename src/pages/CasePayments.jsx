@@ -913,7 +913,11 @@ ${signatureLink}
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPaymentTimesCount(prev => prev + 1)}
+                onClick={() => {
+                  setPaymentTimesCount(prev => prev + 1);
+                  const newFieldName = `payment_times_${paymentTimesCount + 1}`;
+                  updatePaymentsMutation.mutate({ [newFieldName]: 0 });
+                }}
                 className="mb-4 mr-auto bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
               >
                 <PlusCircle className="w-4 h-4 ml-2" />
