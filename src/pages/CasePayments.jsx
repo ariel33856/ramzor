@@ -290,7 +290,7 @@ export default function CasePayments() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">חישוב מחיר</h3>
           
-          <div className="flex gap-2 mb-4 flex-wrap items-end">
+          <div className="flex gap-2 mb-4 flex-wrap items-start">
             <div className="w-32">
               <label className="block text-xs font-medium text-gray-700 mb-1">סוג עסקה</label>
               <Select
@@ -306,9 +306,11 @@ export default function CasePayments() {
                   <SelectItem value="2500">איחוד</SelectItem>
                 </SelectContent>
               </Select>
-              {transactionType > 0 && (
-                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(transactionType)}</p>
-              )}
+              <div className="h-5 mt-1">
+                {transactionType > 0 && (
+                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(transactionType)}</p>
+                )}
+              </div>
             </div>
 
             <div className="w-32">
@@ -332,9 +334,11 @@ export default function CasePayments() {
                 />
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">₪</span>
               </div>
-              {loanAmount > 0 && (
-                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
-              )}
+              <div className="h-5 mt-1">
+                {loanAmount > 0 && (
+                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(Math.max(8500, loanAmount * 0.01))}</p>
+                )}
+              </div>
             </div>
 
             <div className="w-28">
@@ -352,9 +356,11 @@ export default function CasePayments() {
                   <SelectItem value="5000">קשה</SelectItem>
                 </SelectContent>
               </Select>
-              {difficultyLevel > 0 && (
-                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(difficultyLevel)}</p>
-              )}
+              <div className="h-5 mt-1">
+                {difficultyLevel > 0 && (
+                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(difficultyLevel)}</p>
+                )}
+              </div>
             </div>
 
             <div className="w-28">
@@ -372,13 +378,16 @@ export default function CasePayments() {
                   <SelectItem value="6000">מאוד</SelectItem>
                 </SelectContent>
               </Select>
-              {creditReport > 0 && (
-                <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(creditReport)}</p>
-              )}
+              <div className="h-5 mt-1">
+                {creditReport > 0 && (
+                  <p className="text-xs text-blue-600 font-semibold">{formatCurrency(creditReport)}</p>
+                )}
+              </div>
             </div>
 
             {extraFamilies.map((family, index) => (
-              <div key={index}>
+              <div key={index} className="w-28">
+                <label className="block text-xs font-medium text-gray-700 mb-1 invisible">תא</label>
                 <div className="flex items-center gap-1">
                   <Select
                     value={String(family.family_role || 0)}
@@ -410,9 +419,11 @@ export default function CasePayments() {
                     <X className="w-3 h-3" />
                   </Button>
                 </div>
-                {family.family_role > 0 && (
-                  <p className="text-xs text-blue-600 font-semibold mt-1">{formatCurrency(family.family_role)}</p>
-                )}
+                <div className="h-5 mt-1">
+                  {family.family_role > 0 && (
+                    <p className="text-xs text-blue-600 font-semibold">{formatCurrency(family.family_role)}</p>
+                  )}
+                </div>
               </div>
             ))}
 
