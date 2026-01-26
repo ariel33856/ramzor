@@ -613,7 +613,7 @@ ${signatureLink}
                     <SelectContent>
                       <SelectItem value="0">תקין</SelectItem>
                       <SelectItem value="3000">בעייתי</SelectItem>
-                      <SelectItem value="6000">מאוד</SelectItem>
+                      <SelectItem value="6000">אדום</SelectItem>
                     </SelectContent>
                   </Select>
                   <div className="h-5 mt-1 flex items-center justify-center">
