@@ -310,22 +310,25 @@ export default function CasePayments() {
 
             <div className="w-32">
               <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
-              <Input
-                type="text"
-                inputMode="decimal"
-                placeholder="₪"
-                value={tempLoanAmount !== '' ? new Intl.NumberFormat('he-IL').format(tempLoanAmount) : (loanAmount ? new Intl.NumberFormat('he-IL').format(loanAmount) : '')}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^\d]/g, '');
-                  setTempLoanAmount(value);
-                }}
-                onBlur={(e) => {
-                  const value = e.target.value.replace(/[^\d]/g, '');
-                  updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
-                  setTempLoanAmount('');
-                }}
-                className="h-8 text-sm"
-              />
+              <div className="relative">
+                <Input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={tempLoanAmount !== '' ? new Intl.NumberFormat('he-IL').format(tempLoanAmount) : (loanAmount ? new Intl.NumberFormat('he-IL').format(loanAmount) : '')}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^\d]/g, '');
+                    setTempLoanAmount(value);
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value.replace(/[^\d]/g, '');
+                    updatePaymentsMutation.mutate({ loan_amount: parseFloat(value) || 0 });
+                    setTempLoanAmount('');
+                  }}
+                  className="h-8 text-sm pl-8"
+                />
+                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">ש״ח</span>
+              </div>
             </div>
 
             <div className="w-28">
@@ -456,26 +459,29 @@ export default function CasePayments() {
 
                 <div className="w-32">
                   <label className="block text-xs font-medium text-gray-700 mb-1">סכום</label>
-                  <Input
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="₪"
-                    value={transaction.loan_amount ? new Intl.NumberFormat('he-IL').format(transaction.loan_amount) : ''}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^\d]/g, '');
-                      const newTransactions = [...extraTransactions];
-                      newTransactions[index] = { ...newTransactions[index], loan_amount: value };
-                      setExtraTransactions(newTransactions);
-                    }}
-                    onBlur={(e) => {
-                      const value = e.target.value.replace(/[^\d]/g, '');
-                      const newTransactions = [...extraTransactions];
-                      newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
-                      setExtraTransactions(newTransactions);
-                      updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
-                    }}
-                    className="h-8 text-sm"
-                  />
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="0"
+                      value={transaction.loan_amount ? new Intl.NumberFormat('he-IL').format(transaction.loan_amount) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^\d]/g, '');
+                        const newTransactions = [...extraTransactions];
+                        newTransactions[index] = { ...newTransactions[index], loan_amount: value };
+                        setExtraTransactions(newTransactions);
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value.replace(/[^\d]/g, '');
+                        const newTransactions = [...extraTransactions];
+                        newTransactions[index] = { ...newTransactions[index], loan_amount: parseFloat(value) || 0 };
+                        setExtraTransactions(newTransactions);
+                        updatePaymentsMutation.mutate({ extra_transactions: newTransactions });
+                      }}
+                      className="h-8 text-sm pl-8"
+                    />
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">ש״ח</span>
+                  </div>
                 </div>
 
                 <div className="w-28">
