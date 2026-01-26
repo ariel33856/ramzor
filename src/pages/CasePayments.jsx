@@ -313,7 +313,7 @@ ${signatureLink}
             )}
           </div>
         )}
-        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isBalanceClear ? 'bg-green-50' : isRemainingPayment ? 'bg-red-50' : 'bg-blue-50'}`}>
+        <div className={`rounded-lg p-3 text-right flex flex-col justify-center h-[60px] ${isBalanceClear ? 'bg-green-50' : hasDebt ? 'bg-red-50' : 'bg-blue-50'}`}>
           <p className={`text-xs mb-1 ${isBalanceClear ? 'text-green-600' : isRemainingPayment ? 'text-red-600' : 'text-gray-600'}`}>ללא מע"מ</p>
           {isEditing && fieldName !== 'remaining_payment_times' && (fieldName === 'payments_received' || fieldName?.startsWith('payments_received_') || fieldName === 'late_payment' || fieldName === 'payment_times' || fieldName?.startsWith('payment_times_')) ? (
             <Input
