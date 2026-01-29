@@ -1176,6 +1176,7 @@ ${signatureLink}
       {showPrintPreview && (
         <PriceOfferPrint
           caseData={caseData}
+          personData={linkedPersonViaAccounts || caseLinkedPerson || linkedBorrowers[0]?._person}
           onClose={() => setShowPrintPreview(false)}
         />
       )}

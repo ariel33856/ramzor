@@ -1,7 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-export default function PriceOfferPrint({ caseData, onClose }) {
+export default function PriceOfferPrint({ caseData, personData, onClose }) {
   const custom_data = caseData?.custom_data || {};
   
   const transactionType = custom_data.transaction_type || 0;
@@ -53,7 +53,9 @@ export default function PriceOfferPrint({ caseData, onClose }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-600">שם הלקוח</p>
-                <p className="text-lg font-semibold">{caseData.client_name} {caseData.last_name}</p>
+                <p className="text-lg font-semibold">
+                  {personData?.first_name || caseData.client_name || ''} {personData?.last_name || caseData.last_name || ''}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">מספר חשבון</p>
@@ -61,11 +63,11 @@ export default function PriceOfferPrint({ caseData, onClose }) {
               </div>
               <div>
                 <p className="text-sm text-gray-600">טלפון</p>
-                <p className="text-lg font-semibold">{caseData.client_phone}</p>
+                <p className="text-lg font-semibold">{personData?.phone || caseData.client_phone || ''}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">אימייל</p>
-                <p className="text-lg font-semibold">{caseData.client_email}</p>
+                <p className="text-lg font-semibold">{personData?.email || caseData.client_email || ''}</p>
               </div>
             </div>
           </div>
