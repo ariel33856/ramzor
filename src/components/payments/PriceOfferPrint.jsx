@@ -123,10 +123,6 @@ export default function PriceOfferPrint({ caseData, onClose }) {
               <span className="font-bold">סה"כ להצעה:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
             </div>
-            <div className="flex justify-between items-center text-xl pt-2 border-t-2">
-              <span className="font-semibold">מחיר סגירה מקובל:</span>
-              <span className="font-bold text-green-600">{formatCurrency(closingPrice)}</span>
-            </div>
           </div>
 
           {/* Payment Schedule */}
