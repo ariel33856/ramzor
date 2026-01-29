@@ -119,7 +119,7 @@ export default function PriceOfferPrint({ caseData, onClose }) {
               <span className="font-semibold">מע"מ 18%:</span>
               <span className="font-bold">{formatCurrency(vat)}</span>
             </div>
-            <div className="flex justify-between items-center text-2xl bg-blue-600 text-white p-4 rounded border-t-4 border-blue-700">
+            <div className="flex justify-between items-center text-2xl pt-3 border-t-2">
               <span className="font-bold">סה"כ להצעה:</span>
               <span className="font-bold">{formatCurrency(total)}</span>
             </div>
