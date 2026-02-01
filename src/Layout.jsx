@@ -317,6 +317,17 @@ export default function Layout({ children, currentPageName }) {
                         </DropdownMenuItem>
                       </Link>
 
+                      <Link to={createPageUrl('RecordsTable')}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-teal-50 border-2 border-teal-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">טבלת רשומות</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                              <Database className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+
                       {modules.map(module => {
                         const colorGradient = {
                           blue: 'from-blue-500 to-blue-600',
