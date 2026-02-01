@@ -124,6 +124,11 @@ export default function CaseData() {
               <p className="text-gray-500 text-center py-4">לא נמצאו אנשי קשר מקושרים לתיק</p>
             ) : (
               <>
+                <div className="bg-gray-100 p-2 mb-4 text-xs rounded">
+                  <strong>DEBUG:</strong> נמצאו {allLinkedPersons.length} אנשי קשר | 
+                  Linked Borrowers: {linkedBorrowers.length} | 
+                  Person: {person ? '✓' : '✗'}
+                </div>
                 <div className="overflow-x-auto mb-4">
                   <table className="w-full border-collapse">
                     <thead>
