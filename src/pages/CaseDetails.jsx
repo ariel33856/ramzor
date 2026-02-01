@@ -176,7 +176,7 @@ export default function CaseDetails() {
                 מידע אישי
               </button>
               <div className="space-y-3">
-                {tabs.filter(tab => ['personal', 'contact', 'contacts'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['personal', 'contact', 'contacts', 'summary', 'tracking'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
@@ -225,7 +225,7 @@ export default function CaseDetails() {
                 ניהול וארגון
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['summary', 'notes', 'transaction', 'data', 'status', 'workflow', 'calendar', 'tracking', 'documents'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['notes', 'transaction', 'data', 'status', 'workflow', 'calendar', 'documents'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
