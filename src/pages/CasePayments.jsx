@@ -45,6 +45,55 @@ export default function CasePayments() {
     enabled: !!caseId
   });
 
+  const { data: linkedBorrowers = [] } = useQuery({
+    queryKey: ['linked-borrowers', caseData?.linked_borrowers],
+    queryFn: async () => {
+      if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
+      const promises = caseData.linked_borrowers.map(async id => {
+        try {
+          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+          if (borrower?.person_id) {
+            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+            if (person) {
+              return { ...borrower, _person: person };
+            }
+          }
+          return borrower;
+        } catch (e) {
+          return null;
+        }
+      });
+      return (await Promise.all(promises)).filter(b => b !== null);
+    },
+    enabled: !!caseData?.linked_borrowers,
+    retry: 1,
+    staleTime: 30000
+  });
+
+  const { data: caseLinkedPerson } = useQuery({
+    queryKey: ['case-linked-person', caseData?.person_id],
+    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    enabled: !!caseData?.person_id,
+    retry: 1,
+    staleTime: 30000
+  });
+
+  const { data: allPersons = [] } = useQuery({
+    queryKey: ['all-persons'],
+    queryFn: () => base44.entities.Person.list(),
+    enabled: !!caseId,
+    retry: 1,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
+
+  const linkedPersonViaAccounts = React.useMemo(() => {
+    if (!caseId || !allPersons.length) return null;
+    return allPersons.find(person => 
+      person.linked_accounts && person.linked_accounts.includes(caseId)
+    );
+  }, [caseId, allPersons]);
+
   const { data: documents = [] } = useQuery({
     queryKey: ['case-documents', caseId, 'service_agreement'],
     queryFn: () => base44.entities.Document.filter({ 
