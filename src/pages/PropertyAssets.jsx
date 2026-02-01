@@ -157,7 +157,7 @@ export default function PropertyAssets() {
                       type="number"
                       value={formData.size_sqm}
                       onChange={(e) => setFormData({...formData, size_sqm: e.target.value})}
-                      placeholder="שטח במ"ר"
+                      placeholder="שטח במ&quot;ר"
                     />
                   </div>
                   <div>
