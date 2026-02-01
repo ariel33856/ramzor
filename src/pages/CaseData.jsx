@@ -142,13 +142,13 @@ export default function CaseData() {
                   Person: {person ? '✓' : '✗'}
                 </div>
                 <div className="overflow-x-auto mb-4">
-                  <table className="w-full border-collapse">
+                  <table className="w-full border-collapse border border-gray-300">
                     <thead>
                       <tr className="bg-blue-100 border-b-2 border-blue-300">
-                        <th className="text-right p-3 text-sm font-semibold">שם</th>
-                        <th className="text-right p-3 text-sm font-semibold">סוג הכנסה</th>
-                        <th className="text-center p-3 text-sm font-semibold">הכנסה חודשית ממוצעת</th>
-                        <th className="text-center p-3 text-sm font-semibold">סה"כ הכנסות משוקללות</th>
+                        <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
+                        <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג הכנסה</th>
+                        <th className="text-center p-3 text-sm font-semibold border border-gray-300">הכנסה חודשית ממוצעת</th>
+                        <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ הכנסות משוקללות</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -168,9 +168,9 @@ export default function CaseData() {
                         if (incomeSources.length === 0) {
                           return (
                             <tr key={personIndex} className="border-b hover:bg-gray-50">
-                              <td className="p-3 text-sm font-medium">{linkedPerson.first_name} {linkedPerson.last_name}</td>
-                              <td colSpan={2} className="p-3 text-sm text-gray-500 text-center">אין מקורות הכנסה</td>
-                              <td className="p-3 text-center text-sm font-bold">0 ₪</td>
+                              <td className="p-3 text-sm font-medium border border-gray-300">{linkedPerson.first_name} {linkedPerson.last_name}</td>
+                              <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין מקורות הכנסה</td>
+                              <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
                             </tr>
                           );
                         }
@@ -189,19 +189,19 @@ export default function CaseData() {
                           return (
                             <tr key={`${personIndex}-${incomeIndex}`} className="border-b hover:bg-gray-50">
                               {incomeIndex === 0 && (
-                                <td rowSpan={incomeSources.length} className="p-3 text-sm font-medium border-l">
+                                <td rowSpan={incomeSources.length} className="p-3 text-sm font-medium border border-gray-300">
                                   {linkedPerson.first_name} {linkedPerson.last_name}
                                 </td>
                               )}
-                              <td className="p-3 text-sm">
+                              <td className="p-3 text-sm border border-gray-300">
                                 {income.type === 'תלוש משכורת-שכיר' ? 'משכורת' : income.type}
                                 {income.employer_name && <span className="text-xs text-gray-500 block">{income.employer_name}</span>}
                               </td>
-                              <td className="p-3 text-center text-sm font-semibold text-blue-700">
+                              <td className="p-3 text-center text-sm font-semibold text-blue-700 border border-gray-300">
                                 {Math.round(avgIncome).toLocaleString('he-IL')} ₪
                               </td>
                               {incomeIndex === 0 && (
-                                <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold text-green-700 border-r bg-green-50">
+                                <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold text-green-700 border border-gray-300 bg-green-50">
                                   {Math.round(totalIncome).toLocaleString('he-IL')} ₪
                                 </td>
                               )}
@@ -210,8 +210,8 @@ export default function CaseData() {
                         });
                       })}
                       <tr className="bg-green-100 border-t-2 border-green-300">
-                        <td colSpan={3} className="p-3 text-sm font-bold text-right">סך הכל הכנסות משוקללות:</td>
-                        <td className="p-3 text-center text-lg font-bold text-green-700">
+                        <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
+                        <td className="p-3 text-center text-lg font-bold text-green-700 border border-gray-300">
                           {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
                             return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
                               if (income.type === 'תלוש משכורת-שכיר') {
