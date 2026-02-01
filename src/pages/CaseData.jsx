@@ -11,6 +11,7 @@ export default function CaseData() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const [incomeOpen, setIncomeOpen] = useState(false);
+  const [obligationsOpen, setObligationsOpen] = useState(false);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -286,6 +287,87 @@ export default function CaseData() {
                 </>
                 )}
                 </CollapsibleContent>
+        </Collapsible>
+
+        <Collapsible open={obligationsOpen} onOpenChange={setObligationsOpen} className="border rounded-lg bg-white">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-between h-12 hover:bg-gray-50 rounded-none rounded-t-lg">
+              <span className="text-base font-semibold">התחייבויות</span>
+              {obligationsOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="border-t p-4">
+            {allLinkedPersons.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">לא נמצאו אנשי קשר מקושרים לתיק</p>
+            ) : (
+              <div className="overflow-x-auto mb-4">
+                <table className="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-red-100 border-b-2 border-red-300">
+                      <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
+                      <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג התחייבות</th>
+                      <th className="text-center p-3 text-sm font-semibold border border-gray-300">תשלום חודשי</th>
+                      <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ התחייבויות משוקללות</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allLinkedPersons.map((linkedPerson, personIndex) => {
+                      const obligations = linkedPerson.custom_data?.obligations || [];
+                      const totalObligations = obligations.reduce((total, obligation) => {
+                        return total + (parseFloat(obligation.monthly_payment) || 0);
+                      }, 0);
+
+                      if (obligations.length === 0) {
+                        return (
+                          <tr key={personIndex} className="border-b hover:bg-gray-50">
+                            <td className="p-3 text-sm font-medium border border-gray-300">{linkedPerson.first_name} {linkedPerson.last_name}</td>
+                            <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין התחייבויות רשומות</td>
+                            <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
+                          </tr>
+                        );
+                      }
+
+                      return obligations.map((obligation, obligationIndex) => {
+                        const monthlyPayment = parseFloat(obligation.monthly_payment) || 0;
+
+                        return (
+                          <tr key={`${personIndex}-${obligationIndex}`} className="border-b hover:bg-gray-50">
+                            {obligationIndex === 0 && (
+                              <td rowSpan={obligations.length} className="p-3 text-sm font-medium border border-gray-300">
+                                {linkedPerson.first_name} {linkedPerson.last_name}
+                              </td>
+                            )}
+                            <td className="p-3 text-sm border border-gray-300">
+                              {obligation.type || 'התחייבות'}
+                              {obligation.lender && <span className="text-xs text-gray-500 block">{obligation.lender}</span>}
+                            </td>
+                            <td className="p-3 text-center text-sm font-semibold text-red-700 border border-gray-300">
+                              {Math.round(monthlyPayment).toLocaleString('he-IL')} ₪
+                            </td>
+                            {obligationIndex === 0 && (
+                              <td rowSpan={obligations.length} className="p-3 text-center text-sm font-bold text-red-700 border border-gray-300 bg-red-50">
+                                {Math.round(totalObligations).toLocaleString('he-IL')} ₪
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      });
+                    })}
+                    <tr className="bg-red-100 border-t-2 border-red-300">
+                      <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
+                      <td className="p-3 text-center text-lg font-bold text-red-700 border border-gray-300">
+                        {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
+                          return total + (linkedPerson.custom_data?.obligations || []).reduce((sum, obligation) => {
+                            return sum + (parseFloat(obligation.monthly_payment) || 0);
+                          }, 0);
+                        }, 0)).toLocaleString('he-IL')} ₪
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CollapsibleContent>
         </Collapsible>
       </div>
     </div>
