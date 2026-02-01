@@ -175,7 +175,7 @@ export default function PropertyAssets() {
                       type="number"
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
-                      placeholder="מחיר בש"ח"
+                      placeholder="מחיר בשקלים"
                     />
                   </div>
                   <div>
