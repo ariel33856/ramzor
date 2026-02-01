@@ -384,9 +384,14 @@ export default function CaseData() {
               const totalIncome = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
                 const incomeSources = linkedPerson.custom_data?.income_sources || [];
                 const personTotal = incomeSources.reduce((total, income) => {
-                  const months = (income.payslips || []).map(p => parseFloat(p.bruto_amount) || 0);
-                  const avgIncome = months.length > 0 ? months.reduce((a, b) => a + b, 0) / months.length : 0;
-                  return total + avgIncome;
+                  if (income.type === 'תלוש משכורת-שכיר') {
+                    const month1 = parseFloat(income.month_1_salary) || 0;
+                    const month2 = parseFloat(income.month_2_salary) || 0;
+                    const month3 = parseFloat(income.month_3_salary) || 0;
+                    return total + ((month1 + month2 + month3) / 3);
+                  } else {
+                    return total + (parseFloat(income.monthly_amount) || 0);
+                  }
                 }, 0);
                 return grandTotal + personTotal;
               }, 0);
