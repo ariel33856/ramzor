@@ -12,6 +12,7 @@ export default function CaseData() {
   const caseId = urlParams.get('id');
   const [incomeOpen, setIncomeOpen] = useState(false);
   const [obligationsOpen, setObligationsOpen] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -368,8 +369,69 @@ export default function CaseData() {
               </div>
             )}
           </CollapsibleContent>
-        </Collapsible>
-      </div>
-    </div>
-  );
-}
+          </Collapsible>
+
+          <Collapsible open={summaryOpen} onOpenChange={setSummaryOpen} className="border rounded-lg bg-white">
+          <CollapsibleTrigger asChild>
+           <Button variant="ghost" className="w-full justify-between h-12 hover:bg-gray-50 rounded-none rounded-t-lg">
+             <span className="text-base font-semibold">סיכום כלכלי</span>
+             {summaryOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+           </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="border-t p-4">
+           {(() => {
+             const totalIncome = allLinkedPersons.reduce((total, linkedPerson) => {
+               return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
+                 const months = (income.payslips || []).map(p => parseFloat(p.bruto_amount) || 0);
+                 return sum + (months.length > 0 ? months.reduce((a, b) => a + b, 0) / months.length : 0);
+               }, 0);
+             }, 0);
+
+             const totalObligations = allLinkedPersons.reduce((total, linkedPerson) => {
+               return total + (linkedPerson.custom_data?.obligations || []).reduce((sum, obligation) => {
+                 return sum + (parseFloat(obligation.monthly_payment) || 0);
+               }, 0);
+             }, 0);
+
+             const netIncome = totalIncome - totalObligations;
+             const obligationsPercentage = totalIncome > 0 ? (totalObligations / totalIncome) * 100 : 0;
+
+             return (
+               <div className="overflow-x-auto">
+                 <table className="w-full border-collapse border border-gray-300">
+                   <tbody>
+                     <tr className="bg-green-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
+                       <td className="p-4 text-center text-lg font-bold text-green-700 border border-gray-300">
+                         {Math.round(totalIncome).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
+                     <tr className="bg-red-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
+                       <td className="p-4 text-center text-lg font-bold text-red-700 border border-gray-300">
+                         {Math.round(totalObligations).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
+                     <tr className="bg-blue-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">הכנסה נטו (לאחר התחייבויות):</td>
+                       <td className={`p-4 text-center text-lg font-bold border border-gray-300 ${netIncome >= 0 ? 'text-blue-700' : 'text-red-700'}`}>
+                         {Math.round(netIncome).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
+                     <tr className="bg-purple-50">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">אחוז התחייבויות מההכנסה:</td>
+                       <td className={`p-4 text-center text-lg font-bold border border-gray-300 ${obligationsPercentage <= 40 ? 'text-green-700' : obligationsPercentage <= 50 ? 'text-orange-600' : 'text-red-700'}`}>
+                         {obligationsPercentage.toFixed(1)}%
+                       </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div>
+             );
+           })()}
+          </CollapsibleContent>
+          </Collapsible>
+          </div>
+          </div>
+          );
+          }
