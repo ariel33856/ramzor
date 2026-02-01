@@ -20,6 +20,7 @@ import CasePersonal from './CasePersonal';
 import CaseContact from './CaseContact';
 import CaseSummary from './CaseSummary';
 import CaseNotes from './CaseNotes';
+import CaseTransaction from './CaseTransaction';
 import CaseData from './CaseData';
 import CaseWorkflow from './CaseWorkflow';
 import CaseCalendar from './CaseCalendar';
@@ -41,6 +42,7 @@ const pageComponents = {
   contact: CaseContact,
   summary: CaseSummary,
   notes: CaseNotes,
+  transaction: CaseTransaction,
   data: CaseData,
   workflow: CaseWorkflow,
   calendar: CaseCalendar,
@@ -223,7 +225,7 @@ export default function CaseDetails() {
                 ניהול וארגון
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['summary', 'notes', 'status', 'workflow', 'calendar', 'tracking', 'documents', 'data'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['summary', 'notes', 'transaction', 'data', 'status', 'workflow', 'calendar', 'tracking', 'documents'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
