@@ -37,7 +37,42 @@ export default function CaseData() {
     enabled: !!caseData?.person_id
   });
 
+  const { data: linkedBorrowers = [] } = useQuery({
+    queryKey: ['linked-borrowers', caseData?.linked_borrowers],
+    queryFn: async () => {
+      if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
+      const promises = caseData.linked_borrowers.map(async id => {
+        try {
+          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+          if (borrower?.person_id) {
+            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+            if (person) {
+              return { ...borrower, _person: person };
+            }
+          }
+          return null;
+        } catch (e) {
+          return null;
+        }
+      });
+      return (await Promise.all(promises)).filter(b => b !== null);
+    },
+    enabled: !!caseData?.linked_borrowers,
+    retry: 1
+  });
+
   const person = linkedPerson || personById;
+
+  const allLinkedPersons = React.useMemo(() => {
+    const persons = [];
+    if (person) persons.push(person);
+    linkedBorrowers.forEach(borrower => {
+      if (borrower._person && !persons.find(p => p.id === borrower._person.id)) {
+        persons.push(borrower._person);
+      }
+    });
+    return persons;
+  }, [person, linkedBorrowers]);
 
   if (isLoading) {
     return (
@@ -85,11 +120,100 @@ export default function CaseData() {
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="border-t p-4">
-            {!person ? (
-              <p className="text-gray-500 text-center py-4">לא נמצא איש קשר מקושר לתיק</p>
-            ) : !person.custom_data?.income_sources || person.custom_data.income_sources.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">אין מקורות הכנסה רשומים</p>
+            {allLinkedPersons.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">לא נמצאו אנשי קשר מקושרים לתיק</p>
             ) : (
+              <>
+                <div className="overflow-x-auto mb-4">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-blue-100 border-b-2 border-blue-300">
+                        <th className="text-right p-3 text-sm font-semibold">שם</th>
+                        <th className="text-right p-3 text-sm font-semibold">סוג הכנסה</th>
+                        <th className="text-center p-3 text-sm font-semibold">הכנסה חודשית ממוצעת</th>
+                        <th className="text-center p-3 text-sm font-semibold">סה"כ הכנסות משוקללות</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {allLinkedPersons.map((linkedPerson, personIndex) => {
+                        const incomeSources = linkedPerson.custom_data?.income_sources || [];
+                        const totalIncome = incomeSources.reduce((total, income) => {
+                          if (income.type === 'תלוש משכורת-שכיר') {
+                            const month1 = parseFloat(income.month_1_salary) || 0;
+                            const month2 = parseFloat(income.month_2_salary) || 0;
+                            const month3 = parseFloat(income.month_3_salary) || 0;
+                            return total + ((month1 + month2 + month3) / 3);
+                          } else {
+                            return total + (parseFloat(income.monthly_amount) || 0);
+                          }
+                        }, 0);
+
+                        if (incomeSources.length === 0) {
+                          return (
+                            <tr key={personIndex} className="border-b hover:bg-gray-50">
+                              <td className="p-3 text-sm font-medium">{linkedPerson.first_name} {linkedPerson.last_name}</td>
+                              <td colSpan={2} className="p-3 text-sm text-gray-500 text-center">אין מקורות הכנסה</td>
+                              <td className="p-3 text-center text-sm font-bold">0 ₪</td>
+                            </tr>
+                          );
+                        }
+
+                        return incomeSources.map((income, incomeIndex) => {
+                          let avgIncome = 0;
+                          if (income.type === 'תלוש משכורת-שכיר') {
+                            const month1 = parseFloat(income.month_1_salary) || 0;
+                            const month2 = parseFloat(income.month_2_salary) || 0;
+                            const month3 = parseFloat(income.month_3_salary) || 0;
+                            avgIncome = (month1 + month2 + month3) / 3;
+                          } else {
+                            avgIncome = parseFloat(income.monthly_amount) || 0;
+                          }
+
+                          return (
+                            <tr key={`${personIndex}-${incomeIndex}`} className="border-b hover:bg-gray-50">
+                              {incomeIndex === 0 && (
+                                <td rowSpan={incomeSources.length} className="p-3 text-sm font-medium border-l">
+                                  {linkedPerson.first_name} {linkedPerson.last_name}
+                                </td>
+                              )}
+                              <td className="p-3 text-sm">
+                                {income.type === 'תלוש משכורת-שכיר' ? 'משכורת' : income.type}
+                                {income.employer_name && <span className="text-xs text-gray-500 block">{income.employer_name}</span>}
+                              </td>
+                              <td className="p-3 text-center text-sm font-semibold text-blue-700">
+                                {Math.round(avgIncome).toLocaleString('he-IL')} ₪
+                              </td>
+                              {incomeIndex === 0 && (
+                                <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold text-green-700 border-r bg-green-50">
+                                  {Math.round(totalIncome).toLocaleString('he-IL')} ₪
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        });
+                      })}
+                      <tr className="bg-green-100 border-t-2 border-green-300">
+                        <td colSpan={3} className="p-3 text-sm font-bold text-right">סך הכל הכנסות משוקללות:</td>
+                        <td className="p-3 text-center text-lg font-bold text-green-700">
+                          {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
+                            return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
+                              if (income.type === 'תלוש משכורת-שכיר') {
+                                const month1 = parseFloat(income.month_1_salary) || 0;
+                                const month2 = parseFloat(income.month_2_salary) || 0;
+                                const month3 = parseFloat(income.month_3_salary) || 0;
+                                return sum + ((month1 + month2 + month3) / 3);
+                              } else {
+                                return sum + (parseFloat(income.monthly_amount) || 0);
+                              }
+                            }, 0);
+                          }, 0)).toLocaleString('he-IL')} ₪
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {person && person.custom_data?.income_sources && person.custom_data.income_sources.length > 0 && (
               <div className="space-y-4">
                 {person.custom_data.income_sources.map((income, index) => (
                   <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
@@ -140,25 +264,11 @@ export default function CaseData() {
                     )}
                   </div>
                 ))}
-                <div className="flex items-center gap-2 border-2 border-green-300 bg-green-50 rounded-lg px-4 py-2">
-                  <span className="text-sm font-bold whitespace-nowrap">סך ההכנסות המשוקלל:</span>
-                  <span className="text-lg font-bold text-green-700">
-                    {person.custom_data.income_sources.reduce((total, income) => {
-                      if (income.type === 'תלוש משכורת-שכיר') {
-                        const month1 = parseFloat(income.month_1_salary) || 0;
-                        const month2 = parseFloat(income.month_2_salary) || 0;
-                        const month3 = parseFloat(income.month_3_salary) || 0;
-                        const avg = (month1 + month2 + month3) / 3;
-                        return total + avg;
-                      } else {
-                        return total + (parseFloat(income.monthly_amount) || 0);
-                      }
-                    }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
-                  </span>
                 </div>
-              </div>
-            )}
-          </CollapsibleContent>
+                )}
+                </>
+                )}
+                </CollapsibleContent>
         </Collapsible>
       </div>
     </div>
