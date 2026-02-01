@@ -379,24 +379,31 @@ export default function CaseData() {
            </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="border-t p-4">
-           {(() => {
-             const totalIncome = allLinkedPersons.reduce((total, linkedPerson) => {
-               return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
-                 const months = (income.payslips || []).map(p => parseFloat(p.bruto_amount) || 0);
-                 return sum + (months.length > 0 ? months.reduce((a, b) => a + b, 0) / months.length : 0);
-               }, 0);
-             }, 0);
+            {(() => {
+              // Calculate total income using same logic as income table
+              const totalIncome = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
+                const incomeSources = linkedPerson.custom_data?.income_sources || [];
+                const personTotal = incomeSources.reduce((total, income) => {
+                  const months = (income.payslips || []).map(p => parseFloat(p.bruto_amount) || 0);
+                  const avgIncome = months.length > 0 ? months.reduce((a, b) => a + b, 0) / months.length : 0;
+                  return total + avgIncome;
+                }, 0);
+                return grandTotal + personTotal;
+              }, 0);
 
-             const totalObligations = allLinkedPersons.reduce((total, linkedPerson) => {
-               return total + (linkedPerson.custom_data?.obligations || []).reduce((sum, obligation) => {
-                 return sum + (parseFloat(obligation.monthly_payment) || 0);
-               }, 0);
-             }, 0);
+              // Calculate total obligations using same logic as obligations table
+              const totalObligations = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
+                const obligations = linkedPerson.custom_data?.obligations || [];
+                const personTotal = obligations.reduce((total, obligation) => {
+                  return total + (parseFloat(obligation.monthly_payment) || 0);
+                }, 0);
+                return grandTotal + personTotal;
+              }, 0);
 
-             const netIncome = totalIncome - totalObligations;
-             const obligationsPercentage = totalIncome > 0 ? (totalObligations / totalIncome) * 100 : 0;
+              const netIncome = totalIncome - totalObligations;
+              const obligationsPercentage = totalIncome > 0 ? (totalObligations / totalIncome) * 100 : 0;
 
-             return (
+              return (
                <div className="overflow-x-auto">
                  <table className="w-full border-collapse border border-gray-300">
                    <tbody>
