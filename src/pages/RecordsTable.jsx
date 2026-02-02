@@ -433,7 +433,7 @@ export default function RecordsTable() {
                             size="icon"
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleEdit(record);
+                              navigate(createPageUrl('PropertyEdit') + `?id=${record.id}`);
                             }}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                           >
