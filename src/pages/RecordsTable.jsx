@@ -60,55 +60,8 @@ export default function RecordsTable() {
     }
   });
 
-  const resetForm = () => {
-    setFormData({
-      address: '',
-      city: '',
-      property_type: 'דירה',
-      size_sqm: '',
-      rooms: '',
-      floor: '',
-      price: '',
-      owner_name: '',
-      owner_phone: '',
-      status: 'פנוי',
-      notes: ''
-    });
-    setEditingRecord(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      ...formData,
-      size_sqm: formData.size_sqm ? Number(formData.size_sqm) : undefined,
-      rooms: formData.rooms ? Number(formData.rooms) : undefined,
-      floor: formData.floor ? Number(formData.floor) : undefined,
-      price: formData.price ? Number(formData.price) : undefined
-    };
-    if (editingRecord) {
-      updateMutation.mutate({ id: editingRecord.id, data });
-    } else {
-      createMutation.mutate(data);
-    }
-  };
-
   const handleEdit = (record) => {
-    setEditingRecord(record);
-    setFormData({
-      address: record.address || '',
-      city: record.city || '',
-      property_type: record.property_type || 'דירה',
-      size_sqm: record.size_sqm || '',
-      rooms: record.rooms || '',
-      floor: record.floor || '',
-      price: record.price || '',
-      owner_name: record.owner_name || '',
-      owner_phone: record.owner_phone || '',
-      status: record.status || 'פנוי',
-      notes: record.notes || ''
-    });
-    setDialogOpen(true);
+    navigate(createPageUrl('PropertyDetails') + `?id=${record.id}`);
   };
 
   const filteredRecords = records.filter(record =>
