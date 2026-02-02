@@ -283,8 +283,8 @@ export default function RecordsTable() {
                   <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                     ביטול
                   </Button>
-                  <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-                    {editingRecord ? 'עדכן' : 'צור'}
+                  <Button type="submit" disabled={createMutation.isPending}>
+                    צור
                   </Button>
                 </div>
               </form>
