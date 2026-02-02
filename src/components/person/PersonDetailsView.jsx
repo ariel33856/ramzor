@@ -542,7 +542,8 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts
+                        linked_accounts: updatedLinkedAccounts,
+                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
