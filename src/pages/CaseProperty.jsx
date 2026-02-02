@@ -269,11 +269,12 @@ export default function CaseProperty() {
         </DialogContent>
       </Dialog>
 
+      {/* Create Property Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={(open) => {
         setCreateDialogOpen(open);
         if (!open) resetForm();
       }}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>נכס חדש</DialogTitle>
           </DialogHeader>
