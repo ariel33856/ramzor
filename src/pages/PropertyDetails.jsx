@@ -1,9 +1,12 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Home, MapPin, Phone, User, FileText } from 'lucide-react';
+import { Home, MapPin, Phone, User, FileText, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function PropertyDetails() {
+  const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const propertyId = urlParams.get('id');
 
@@ -54,11 +57,14 @@ export default function PropertyDetails() {
               <span className="font-semibold">{property.property_type}</span>
             </div>
             {linkedCase && (
-              <div className="inline-block px-4 py-2 bg-blue-100 border border-blue-300 rounded-lg">
+              <button 
+                onClick={() => navigate(createPageUrl('CaseAccount') + `?id=${linkedCase.id}`)}
+                className="inline-block px-4 py-2 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
+              >
                 <p className="text-sm text-blue-900">
                   <span className="font-semibold">משויך לחשבון:</span> {linkedCase.client_name} {linkedCase.last_name || ''} (מס׳ {linkedCase.account_number})
                 </p>
-              </div>
+              </button>
             )}
           </div>
           {property.status && (
