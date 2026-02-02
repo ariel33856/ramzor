@@ -154,11 +154,12 @@ export default function CaseData() {
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
                       <tr className="bg-blue-100 border-b-2 border-blue-300">
-                        <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
-                        <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג הכנסה</th>
-                        <th className="text-center p-3 text-sm font-semibold border border-gray-300">הכנסה חודשית ממוצעת</th>
-                        <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ הכנסות משוקללות</th>
-                      </tr>
+                         <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
+                         <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג הכנסה</th>
+                         <th className="text-center p-3 text-sm font-semibold border border-gray-300">הכנסה חודשית ממוצעת</th>
+                         <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ הכנסות משוקללות</th>
+                         <th className="text-center p-3 text-sm font-semibold border border-gray-300">סכום בפועל</th>
+                       </tr>
                     </thead>
                     <tbody>
                       {allLinkedPersons.map((linkedPerson, personIndex) => {
@@ -188,6 +189,7 @@ export default function CaseData() {
                                 </span>
                               </td>
                               <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין מקורות הכנסה</td>
+                              <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
                               <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
                             </tr>
                           );
@@ -226,9 +228,14 @@ export default function CaseData() {
                                 {Math.round(avgIncome).toLocaleString('he-IL')} ₪
                               </td>
                               {incomeIndex === 0 && (
-                                <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold text-green-700 border border-gray-300 bg-green-50">
-                                  {Math.round(totalIncome).toLocaleString('he-IL')} ₪
-                                </td>
+                                <>
+                                  <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold text-green-700 border border-gray-300 bg-green-50">
+                                    {Math.round(totalIncome).toLocaleString('he-IL')} ₪
+                                  </td>
+                                  <td rowSpan={incomeSources.length} className="p-3 text-center text-sm font-bold border border-gray-300 bg-blue-50">
+                                    {Math.round(linkedPerson.custom_data?.relationship_type === 'לווה' ? totalIncome : totalIncome * 0.5).toLocaleString('he-IL')} ₪
+                                  </td>
+                                </>
                               )}
                             </tr>
                           );
@@ -328,10 +335,11 @@ export default function CaseData() {
                 <table className="w-full border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-red-100 border-b-2 border-red-300">
-                      <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
-                      <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג התחייבות</th>
-                      <th className="text-center p-3 text-sm font-semibold border border-gray-300">תשלום חודשי</th>
-                      <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ התחייבויות משוקללות</th>
+                     <th className="text-right p-3 text-sm font-semibold border border-gray-300">שם</th>
+                     <th className="text-right p-3 text-sm font-semibold border border-gray-300">סוג התחייבות</th>
+                     <th className="text-center p-3 text-sm font-semibold border border-gray-300">תשלום חודשי</th>
+                     <th className="text-center p-3 text-sm font-semibold border border-gray-300">סה"כ התחייבויות משוקללות</th>
+                     <th className="text-center p-3 text-sm font-semibold border border-gray-300">סכום בפועל</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -343,21 +351,22 @@ export default function CaseData() {
 
                       if (obligations.length === 0) {
                         return (
-                          <tr key={personIndex} className="border-b hover:bg-gray-50">
-                            <td className="p-3 text-sm font-medium border border-gray-300">
-                              <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
-                                linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                                linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
-                                linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
-                                'bg-gradient-to-r from-gray-500 to-gray-600'
-                              }`}>
-                                {linkedPerson.first_name} {linkedPerson.last_name}
-                              </span>
-                            </td>
-                            <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין התחייבויות רשומות</td>
-                            <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
-                          </tr>
-                        );
+                           <tr key={personIndex} className="border-b hover:bg-gray-50">
+                             <td className="p-3 text-sm font-medium border border-gray-300">
+                               <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
+                                 linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                 linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+                                 linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                 'bg-gradient-to-r from-gray-500 to-gray-600'
+                               }`}>
+                                 {linkedPerson.first_name} {linkedPerson.last_name}
+                               </span>
+                             </td>
+                             <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין התחייבויות רשומות</td>
+                             <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
+                             <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
+                           </tr>
+                         );
                       }
 
                       return obligations.map((obligation, obligationIndex) => {
@@ -385,9 +394,14 @@ export default function CaseData() {
                               {Math.round(monthlyPayment).toLocaleString('he-IL')} ₪
                             </td>
                             {obligationIndex === 0 && (
-                              <td rowSpan={obligations.length} className="p-3 text-center text-sm font-bold text-red-700 border border-gray-300 bg-red-50">
-                                {Math.round(totalObligations).toLocaleString('he-IL')} ₪
-                              </td>
+                              <>
+                                <td rowSpan={obligations.length} className="p-3 text-center text-sm font-bold text-red-700 border border-gray-300 bg-red-50">
+                                  {Math.round(totalObligations).toLocaleString('he-IL')} ₪
+                                </td>
+                                <td rowSpan={obligations.length} className="p-3 text-center text-sm font-bold border border-gray-300 bg-orange-50">
+                                  {Math.round(linkedPerson.custom_data?.relationship_type === 'לווה' ? totalObligations : totalObligations * 0.5).toLocaleString('he-IL')} ₪
+                                </td>
+                              </>
                             )}
                           </tr>
                         );
