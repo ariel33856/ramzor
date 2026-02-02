@@ -15,24 +15,9 @@ export default function RecordsTable() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedPropertyForLink, setSelectedPropertyForLink] = useState(null);
   const [linkSearchTerm, setLinkSearchTerm] = useState('');
-  const [editingRecord, setEditingRecord] = useState(null);
-  const [formData, setFormData] = useState({
-    address: '',
-    city: '',
-    property_type: 'דירה',
-    size_sqm: '',
-    rooms: '',
-    floor: '',
-    price: '',
-    owner_name: '',
-    owner_phone: '',
-    status: 'פנוי',
-    notes: ''
-  });
 
   // Load user data
   const { data: user } = useQuery({
