@@ -155,15 +155,6 @@ export default function CaseProperty() {
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden p-1">
-      <div className="flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 p-3 mb-1">
-        <Button 
-          onClick={() => setDialogOpen(true)}
-          className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700"
-        >
-          <Plus className="w-5 h-5 ml-2" />
-          הוסף נכס
-        </Button>
-      </div>
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Search, Trash2, Archive, Link as LinkIcon, ArrowRight } from 'lucide-react';
+import { Plus, Search, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -182,21 +182,9 @@ export default function RecordsTable() {
             setDialogOpen(open);
             if (!open) resetForm();
           }}>
-            <DialogContent className="max-w-none w-screen h-screen max-h-screen overflow-y-auto">
-              <DialogHeader className="flex items-center justify-between">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    setDialogOpen(false);
-                    resetForm();
-                  }}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
                 <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
-                <div className="w-10" />
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
