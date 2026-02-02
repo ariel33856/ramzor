@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Search, Home, MapPin, CheckCircle2, Plus } from 'lucide-react';
+import { Search, Home, Plus, Archive } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 
 export default function CaseProperty() {
   const queryClient = useQueryClient();
@@ -36,8 +38,8 @@ export default function CaseProperty() {
     enabled: !!caseId
   });
 
-  const { data: properties = [] } = useQuery({
-    queryKey: ['property-assets'],
+  const { data: properties = [], isLoading } = useQuery({
+    queryKey: ['property-assets', caseId],
     queryFn: () => base44.entities.PropertyAsset.filter({ case_id: caseId }, '-created_date'),
     enabled: !!caseId,
     staleTime: 5 * 60 * 1000
@@ -48,6 +50,51 @@ export default function CaseProperty() {
     queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
     staleTime: 5 * 60 * 1000
   });
+
+  const allFieldNames = React.useMemo(() => {
+    const fieldNamesSet = new Set(['address', 'city', 'property_type', 'size_sqm', 'rooms', 'floor', 'price', 'owner_name', 'owner_phone', 'status', 'notes']);
+    properties.forEach(prop => {
+      if (prop.custom_data) {
+        Object.keys(prop.custom_data).forEach(key => fieldNamesSet.add(key));
+      }
+    });
+    return Array.from(fieldNamesSet);
+  }, [properties]);
+
+  const getFieldLabel = (fieldName) => {
+    const labels = {
+      address: 'כתובת',
+      city: 'עיר',
+      property_type: 'סוג נכס',
+      size_sqm: 'שטח (מ"ר)',
+      rooms: 'חדרים',
+      floor: 'קומה',
+      price: 'מחיר',
+      owner_name: 'שם בעלים',
+      owner_phone: 'טלפון בעלים',
+      status: 'סטטוס',
+      notes: 'הערות'
+    };
+    return labels[fieldName] || fieldName;
+  };
+
+  const getFieldValue = (property, fieldName) => {
+    const value = property[fieldName] || (property.custom_data && property.custom_data[fieldName]);
+    
+    if (typeof value === 'object' && value !== null) {
+      return '—';
+    }
+    
+    if (fieldName === 'price' && value) {
+      return `₪${parseInt(value).toLocaleString()}`;
+    }
+    
+    if (fieldName === 'size_sqm' && value) {
+      return `${value} מ"ר`;
+    }
+    
+    return value || '—';
+  };
 
   const linkPropertyMutation = useMutation({
     mutationFn: (propertyId) => {
