@@ -401,6 +401,21 @@ export default function PersonDetailsView({ personId }) {
 
   return (
     <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+      {/* Relationship Type Badge */}
+      {person?.custom_data?.relationship_type && linkedAccountsData.length > 0 && (
+        <div className="flex justify-center py-3 border-b border-blue-200 mb-2">
+          <span className={`px-4 py-2 rounded-full text-sm font-bold text-white ${
+            person.custom_data.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+            (person.custom_data.relationship_type === 'ערב' || person.custom_data.relationship_type === 'ערבה') ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+            (person.custom_data.relationship_type === 'ערב ממשכן' || person.custom_data.relationship_type === 'ערבה ממשכנת') ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+            (person.custom_data.relationship_type === 'בן/בת זוג' || person.custom_data.relationship_type === 'בן זוג' || person.custom_data.relationship_type === 'בת זוג') ? 'bg-gradient-to-r from-cyan-400 to-sky-400' :
+            'bg-gradient-to-r from-gray-500 to-gray-600'
+          }`}>
+            {person.custom_data.relationship_type}
+          </span>
+        </div>
+      )}
+
       {/* Action Buttons */}
       <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
         <div className="flex flex-col gap-4">
