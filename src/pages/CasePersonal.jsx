@@ -540,7 +540,7 @@ export default function CasePersonal() {
           </Dialog>
         </div>
       </div>
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 px-4 py-6">
         {sortedContacts.map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
