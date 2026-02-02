@@ -58,7 +58,7 @@ export default function PropertyDetails() {
             </div>
             {linkedCase && (
               <button 
-                onClick={() => navigate(createPageUrl('CaseAccount') + `?id=${linkedCase.id}`)}
+                onClick={() => navigate(createPageUrl('CaseProperty') + `?id=${linkedCase.id}`)}
                 className="inline-block px-4 py-2 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
               >
                 <p className="text-sm text-blue-900">
