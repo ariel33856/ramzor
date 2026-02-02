@@ -170,7 +170,16 @@ export default function CaseData() {
                         if (incomeSources.length === 0) {
                           return (
                             <tr key={personIndex} className="border-b hover:bg-gray-50">
-                              <td className="p-3 text-sm font-medium border border-gray-300">{linkedPerson.first_name} {linkedPerson.last_name}</td>
+                              <td className="p-3 text-sm font-medium border border-gray-300">
+                                <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
+                                  linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                  linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+                                  linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                  'bg-gradient-to-r from-gray-500 to-gray-600'
+                                }`}>
+                                  {linkedPerson.first_name} {linkedPerson.last_name}
+                                </span>
+                              </td>
                               <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין מקורות הכנסה</td>
                               <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
                             </tr>
@@ -192,7 +201,14 @@ export default function CaseData() {
                             <tr key={`${personIndex}-${incomeIndex}`} className="border-b hover:bg-gray-50">
                               {incomeIndex === 0 && (
                                 <td rowSpan={incomeSources.length} className="p-3 text-sm font-medium border border-gray-300">
-                                  {linkedPerson.first_name} {linkedPerson.last_name}
+                                  <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
+                                    linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                    linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+                                    linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                    'bg-gradient-to-r from-gray-500 to-gray-600'
+                                  }`}>
+                                    {linkedPerson.first_name} {linkedPerson.last_name}
+                                  </span>
                                 </td>
                               )}
                               <td className="p-3 text-sm border border-gray-300">
@@ -321,7 +337,16 @@ export default function CaseData() {
                       if (obligations.length === 0) {
                         return (
                           <tr key={personIndex} className="border-b hover:bg-gray-50">
-                            <td className="p-3 text-sm font-medium border border-gray-300">{linkedPerson.first_name} {linkedPerson.last_name}</td>
+                            <td className="p-3 text-sm font-medium border border-gray-300">
+                              <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
+                                linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+                                linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                'bg-gradient-to-r from-gray-500 to-gray-600'
+                              }`}>
+                                {linkedPerson.first_name} {linkedPerson.last_name}
+                              </span>
+                            </td>
                             <td colSpan={2} className="p-3 text-sm text-gray-500 text-center border border-gray-300">אין התחייבויות רשומות</td>
                             <td className="p-3 text-center text-sm font-bold border border-gray-300">0 ₪</td>
                           </tr>
@@ -335,7 +360,14 @@ export default function CaseData() {
                           <tr key={`${personIndex}-${obligationIndex}`} className="border-b hover:bg-gray-50">
                             {obligationIndex === 0 && (
                               <td rowSpan={obligations.length} className="p-3 text-sm font-medium border border-gray-300">
-                                {linkedPerson.first_name} {linkedPerson.last_name}
+                                <span className={`px-3 py-1.5 rounded-lg text-white font-semibold ${
+                                  linkedPerson.custom_data?.relationship_type === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                                  linkedPerson.custom_data?.relationship_type === 'ערב' || linkedPerson.custom_data?.relationship_type === 'ערבה' ? 'bg-gradient-to-r from-pink-500 to-rose-500' :
+                                  linkedPerson.custom_data?.relationship_type === 'ערב ממשכן' || linkedPerson.custom_data?.relationship_type === 'ערבה ממשכנת' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                  'bg-gradient-to-r from-gray-500 to-gray-600'
+                                }`}>
+                                  {linkedPerson.first_name} {linkedPerson.last_name}
+                                </span>
                               </td>
                             )}
                             <td className="p-3 text-sm border border-gray-300">
