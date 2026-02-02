@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Search, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -166,22 +166,16 @@ export default function RecordsTable() {
       {/* Header */}
       <div className="flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 p-3 mb-1">
         <div className="flex flex-col md:flex-row gap-3 items-center">
-          <Button 
-            onClick={() => {
-              setEditingRecord(null);
-              resetForm();
-              setDialogOpen(true);
-            }}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            <Plus className="w-5 h-5 ml-2" />
-            נכס חדש
-          </Button>
-
           <Dialog open={dialogOpen} onOpenChange={(open) => {
             setDialogOpen(open);
             if (!open) resetForm();
           }}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <Plus className="w-5 h-5 ml-2" />
+                נכס חדש
+              </Button>
+            </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
@@ -377,7 +371,7 @@ export default function RecordsTable() {
                       className={`border-b border-gray-100 hover:bg-blue-50 transition-colors cursor-pointer ${
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                       }`}
-                      onClick={() => handleEdit(record)}
+                      onClick={() => navigate(createPageUrl('PropertyDetails') + `?id=${record.id}`)}
                     >
                       <td className="px-6 py-3">
                         <span className="font-semibold text-gray-900">{record.address}</span>
@@ -433,6 +427,17 @@ export default function RecordsTable() {
                             title="שייך לחשבון"
                           >
                             <LinkIcon className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(record);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                          >
+                            <Edit className="w-4 h-4" />
                           </Button>
                           <Button
                             variant="ghost"
