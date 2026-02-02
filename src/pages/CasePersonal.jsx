@@ -338,48 +338,90 @@ export default function CasePersonal() {
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-3">
         <div className="flex items-center gap-2 flex-wrap">
           <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
-          {linkedContacts.length > 0 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-gray-500">|</span>
-              {[...linkedContacts].sort((a, b) => {
+          {linkedContacts.length > 0 && (() => {
+            const couples = [];
+            const displayedIds = new Set();
+
+            // זיהוי זוגות
+            linkedContacts.forEach((contact, idx) => {
+              if (displayedIds.has(contact.id)) return;
+              const relType = contact.custom_data?.relationship_type || 'לווה';
+              if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+                const partner = linkedContacts.find(c => {
+                  if (c.id === contact.id || displayedIds.has(c.id)) return false;
+                  const pRelType = c.custom_data?.relationship_type || 'לווה';
+                  return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
+                });
+                if (partner) {
+                  couples.push({ contact, partner });
+                  displayedIds.add(contact.id);
+                  displayedIds.add(partner.id);
+                }
+              }
+            });
+
+            const otherContacts = linkedContacts.filter(c => !displayedIds.has(c.id))
+              .sort((a, b) => {
                 const aType = a.custom_data?.relationship_type || 'לווה';
                 const bType = b.custom_data?.relationship_type || 'לווה';
                 const typeOrder = { 'לווה': 0, 'ערב': 1, 'ערבה': 1, 'ערב ממשכן': 2, 'ערבה ממשכנת': 2 };
                 return (typeOrder[bType] || 3) - (typeOrder[aType] || 3);
-              }).map((contact, index) => {
-                const relationshipType = contact.custom_data?.relationship_type || 'לווה';
-                console.log('Contact:', contact.first_name, contact.last_name, 'Relationship:', relationshipType, 'Custom Data:', contact.custom_data);
-                
-                let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
-                if (relationshipType === 'לווה') {
-                  buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
-                } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
-                  buttonClass += 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600';
-                } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
-                  buttonClass += 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600';
-                } else if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
-                  buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
-                } else {
-                  buttonClass += 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700';
-                }
-                
-                return (
-                  <React.Fragment key={contact.id}>
-                    <button
-                      onClick={() => moveContactToTop(contact.id)}
-                      className={buttonClass}
-                    >
-                      <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
-                      {relationshipType && (
-                        <span className="text-xs opacity-90 mt-0.5">{relationshipType}</span>
-                      )}
-                    </button>
-                    {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          )}
+              });
+
+            return (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-gray-500">|</span>
+                {couples.map(({ contact, partner }, coupleIdx) => {
+                  const getButtonClass = (rel) => {
+                    let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
+                    const relationshipType = rel.custom_data?.relationship_type || 'לווה';
+                    if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
+                      buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
+                    }
+                    return buttonClass;
+                  };
+
+                  return (
+                    <React.Fragment key={`couple-${contact.id}-${partner.id}`}>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => moveContactToTop(contact.id)} className={getButtonClass(contact)}>
+                          <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                        </button>
+                        <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                        <button onClick={() => moveContactToTop(partner.id)} className={getButtonClass(partner)}>
+                          <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
+                        </button>
+                      </div>
+                      {coupleIdx < couples.length - 1 || otherContacts.length > 0 && <span className="text-gray-400">•</span>}
+                    </React.Fragment>
+                  );
+                })}
+                {otherContacts.map((contact, idx) => {
+                  const relationshipType = contact.custom_data?.relationship_type || 'לווה';
+                  let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
+                  if (relationshipType === 'לווה') {
+                    buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
+                  } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
+                    buttonClass += 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600';
+                  } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
+                    buttonClass += 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600';
+                  } else {
+                    buttonClass += 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700';
+                  }
+
+                  return (
+                    <React.Fragment key={contact.id}>
+                      <button onClick={() => moveContactToTop(contact.id)} className={buttonClass}>
+                        <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                        {relationshipType && <span className="text-xs opacity-90 mt-0.5">{relationshipType}</span>}
+                      </button>
+                      {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            );
+          })()}
           <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="bg-gradient-to-r from-green-400 to-purple-600 hover:from-green-500 hover:to-purple-700 border-green-500 text-white font-medium">
