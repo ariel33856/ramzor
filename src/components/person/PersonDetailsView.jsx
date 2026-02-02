@@ -582,7 +582,8 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts
+                        linked_accounts: updatedLinkedAccounts,
+                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
