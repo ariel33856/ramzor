@@ -4,12 +4,12 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Plus, Search, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { createPageUrl } from '@/utils';
 
 export default function RecordsTable() {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function RecordsTable() {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedPropertyForLink, setSelectedPropertyForLink] = useState(null);
   const [linkSearchTerm, setLinkSearchTerm] = useState('');
+  const [editingRecord, setEditingRecord] = useState(null);
   const [formData, setFormData] = useState({
     address: '',
     city: '',
@@ -62,7 +63,14 @@ export default function RecordsTable() {
     }
   });
 
-
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.PropertyAsset.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
+      setDialogOpen(false);
+      resetForm();
+    }
+  });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.PropertyAsset.delete(id),
@@ -97,6 +105,7 @@ export default function RecordsTable() {
       status: 'פנוי',
       notes: ''
     });
+    setEditingRecord(null);
   };
 
   const handleSubmit = (e) => {
@@ -108,7 +117,29 @@ export default function RecordsTable() {
       floor: formData.floor ? Number(formData.floor) : undefined,
       price: formData.price ? Number(formData.price) : undefined
     };
-    createMutation.mutate(data);
+    if (editingRecord) {
+      updateMutation.mutate({ id: editingRecord.id, data });
+    } else {
+      createMutation.mutate(data);
+    }
+  };
+
+  const handleEdit = (record) => {
+    setEditingRecord(record);
+    setFormData({
+      address: record.address || '',
+      city: record.city || '',
+      property_type: record.property_type || 'דירה',
+      size_sqm: record.size_sqm || '',
+      rooms: record.rooms || '',
+      floor: record.floor || '',
+      price: record.price || '',
+      owner_name: record.owner_name || '',
+      owner_phone: record.owner_phone || '',
+      status: record.status || 'פנוי',
+      notes: record.notes || ''
+    });
+    setDialogOpen(true);
   };
 
   const filteredRecords = records.filter(record =>
@@ -136,7 +167,11 @@ export default function RecordsTable() {
       <div className="flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 p-3 mb-1">
         <div className="flex flex-col md:flex-row gap-3 items-center">
           <Button 
-            onClick={() => setDialogOpen(true)}
+            onClick={() => {
+              setEditingRecord(null);
+              resetForm();
+              setDialogOpen(true);
+            }}
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
             <Plus className="w-5 h-5 ml-2" />
@@ -149,7 +184,7 @@ export default function RecordsTable() {
           }}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>נכס חדש</DialogTitle>
+                <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -282,8 +317,8 @@ export default function RecordsTable() {
                   <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                     ביטול
                   </Button>
-                  <Button type="submit" disabled={createMutation.isPending}>
-                    צור
+                  <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                    {editingRecord ? 'עדכן' : 'צור'}
                   </Button>
                 </div>
               </form>
@@ -342,7 +377,7 @@ export default function RecordsTable() {
                       className={`border-b border-gray-100 hover:bg-blue-50 transition-colors cursor-pointer ${
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                       }`}
-                      onClick={() => navigate(createPageUrl('PropertyAssetDetails') + `?id=${record.id}`)}
+                      onClick={() => handleEdit(record)}
                     >
                       <td className="px-6 py-3">
                         <span className="font-semibold text-gray-900">{record.address}</span>
