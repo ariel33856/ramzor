@@ -341,7 +341,12 @@ export default function CasePersonal() {
           {linkedContacts.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-gray-500">|</span>
-              {linkedContacts.map((contact, index) => {
+              {[...linkedContacts].sort((a, b) => {
+                const aType = a.custom_data?.relationship_type || 'לווה';
+                const bType = b.custom_data?.relationship_type || 'לווה';
+                const typeOrder = { 'לווה': 0, 'ערב': 1, 'ערבה': 1, 'ערב ממשכן': 2, 'ערבה ממשכנת': 2 };
+                return (typeOrder[aType] || 3) - (typeOrder[bType] || 3);
+              }).map((contact, index) => {
                 const relationshipType = contact.custom_data?.relationship_type || 'לווה';
                 console.log('Contact:', contact.first_name, contact.last_name, 'Relationship:', relationshipType, 'Custom Data:', contact.custom_data);
                 
