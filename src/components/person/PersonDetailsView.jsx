@@ -260,7 +260,9 @@ export default function PersonDetailsView({ personId }) {
   };
 
   const handleUnlinkAccount = (accountId) => {
-    const updatedAccounts = linkedAccounts.filter(id => id !== accountId);
+    const updatedAccounts = linkedAccounts.filter(link => 
+      typeof link === 'string' ? link !== accountId : link.case_id !== accountId
+    );
     setLinkedAccounts(updatedAccounts);
     updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
   };
