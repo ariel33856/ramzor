@@ -15,10 +15,17 @@ export default function RecordsTable() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    status: 'active'
+    address: '',
+    city: '',
+    property_type: 'דירה',
+    size_sqm: '',
+    rooms: '',
+    floor: '',
+    price: '',
+    owner_name: '',
+    owner_phone: '',
+    status: 'פנוי',
+    notes: ''
   });
 
   // Load user data
@@ -28,61 +35,51 @@ export default function RecordsTable() {
     staleTime: 60000
   });
 
-  // Create placeholder query - replace with actual entity when created
   const { data: records = [], isLoading } = useQuery({
-    queryKey: ['records'],
-    queryFn: async () => {
-      // TODO: Replace with actual entity fetch
-      // return base44.entities.Record.list();
-      return [];
-    },
+    queryKey: ['property-assets'],
+    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
     enabled: !!user,
     staleTime: 5 * 60 * 1000
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => {
-      // TODO: Replace with actual entity creation
-      // return base44.entities.Record.create(data);
-      return Promise.resolve({ id: Date.now(), ...data });
-    },
+    mutationFn: (data) => base44.entities.PropertyAsset.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['records'] });
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       setDialogOpen(false);
       resetForm();
     }
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => {
-      // TODO: Replace with actual entity update
-      // return base44.entities.Record.update(id, data);
-      return Promise.resolve({ id, ...data });
-    },
+    mutationFn: ({ id, data }) => base44.entities.PropertyAsset.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['records'] });
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       setDialogOpen(false);
       resetForm();
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => {
-      // TODO: Replace with actual entity delete
-      // return base44.entities.Record.delete(id);
-      return Promise.resolve();
-    },
+    mutationFn: (id) => base44.entities.PropertyAsset.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['records'] });
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
     }
   });
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      category: '',
-      status: 'active'
+      address: '',
+      city: '',
+      property_type: 'דירה',
+      size_sqm: '',
+      rooms: '',
+      floor: '',
+      price: '',
+      owner_name: '',
+      owner_phone: '',
+      status: 'פנוי',
+      notes: ''
     });
     setEditingRecord(null);
   };
@@ -99,18 +96,26 @@ export default function RecordsTable() {
   const handleEdit = (record) => {
     setEditingRecord(record);
     setFormData({
-      title: record.title || '',
-      description: record.description || '',
-      category: record.category || '',
-      status: record.status || 'active'
+      address: record.address || '',
+      city: record.city || '',
+      property_type: record.property_type || 'דירה',
+      size_sqm: record.size_sqm || '',
+      rooms: record.rooms || '',
+      floor: record.floor || '',
+      price: record.price || '',
+      owner_name: record.owner_name || '',
+      owner_phone: record.owner_phone || '',
+      status: record.status || 'פנוי',
+      notes: record.notes || ''
     });
     setDialogOpen(true);
   };
 
   const filteredRecords = records.filter(record =>
-    record.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.category?.toLowerCase().includes(searchTerm.toLowerCase())
+    record.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    record.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    record.owner_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    record.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -125,38 +130,141 @@ export default function RecordsTable() {
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 <Plus className="w-5 h-5 ml-2" />
-                רשומה חדשה
+                נכס חדש
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{editingRecord ? 'עריכת רשומה' : 'רשומה חדשה'}</DialogTitle>
+                <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>כתובת *</Label>
+                    <Input
+                      value={formData.address}
+                      onChange={(e) => setFormData({...formData, address: e.target.value})}
+                      required
+                      placeholder="רחוב ומספר בית"
+                    />
+                  </div>
+                  <div>
+                    <Label>עיר *</Label>
+                    <Input
+                      value={formData.city}
+                      onChange={(e) => setFormData({...formData, city: e.target.value})}
+                      required
+                      placeholder="שם העיר"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>סוג נכס *</Label>
+                    <select
+                      value={formData.property_type}
+                      onChange={(e) => setFormData({...formData, property_type: e.target.value})}
+                      className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                      required
+                    >
+                      <option value="דירה">דירה</option>
+                      <option value="בית">בית</option>
+                      <option value="דירת גן">דירת גן</option>
+                      <option value="פנטהאוז">פנטהאוז</option>
+                      <option value="משרד">משרד</option>
+                      <option value="חנות">חנות</option>
+                      <option value="מחסן">מחסן</option>
+                      <option value="קרקע">קרקע</option>
+                      <option value="אחר">אחר</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label>סטטוס</Label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => setFormData({...formData, status: e.target.value})}
+                      className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                    >
+                      <option value="פנוי">פנוי</option>
+                      <option value="תפוס">תפוס</option>
+                      <option value="להשכרה">להשכרה</option>
+                      <option value="למכירה">למכירה</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label>שטח (מ"ר)</Label>
+                    <Input
+                      type="number"
+                      value={formData.size_sqm}
+                      onChange={(e) => setFormData({...formData, size_sqm: e.target.value})}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div>
+                    <Label>מספר חדרים</Label>
+                    <Input
+                      type="number"
+                      step="0.5"
+                      value={formData.rooms}
+                      onChange={(e) => setFormData({...formData, rooms: e.target.value})}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div>
+                    <Label>קומה</Label>
+                    <Input
+                      type="number"
+                      value={formData.floor}
+                      onChange={(e) => setFormData({...formData, floor: e.target.value})}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <Label>כותרת</Label>
+                  <Label>מחיר (₪)</Label>
                   <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    required
+                    type="number"
+                    value={formData.price}
+                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                    placeholder="0"
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>שם בעלים</Label>
+                    <Input
+                      value={formData.owner_name}
+                      onChange={(e) => setFormData({...formData, owner_name: e.target.value})}
+                      placeholder="שם מלא"
+                    />
+                  </div>
+                  <div>
+                    <Label>טלפון בעלים</Label>
+                    <Input
+                      value={formData.owner_phone}
+                      onChange={(e) => setFormData({...formData, owner_phone: e.target.value})}
+                      placeholder="050-1234567"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <Label>תיאור</Label>
+                  <Label>הערות</Label>
                   <Textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    rows={4}
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    rows={3}
+                    placeholder="הערות נוספות על הנכס..."
                   />
                 </div>
-                <div>
-                  <Label>קטגוריה</Label>
-                  <Input
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  />
-                </div>
-                <div className="flex justify-end gap-2">
+
+                <div className="flex justify-end gap-2 pt-4">
                   <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                     ביטול
                   </Button>
@@ -189,8 +297,8 @@ export default function RecordsTable() {
         ) : filteredRecords.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-16 text-center">
             <Archive className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין רשומות להצגה</h3>
-            <p className="text-gray-400">התחל ביצירת רשומה חדשה</p>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין נכסים להצגה</h3>
+            <p className="text-gray-400">התחל ביצירת נכס חדש</p>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -198,9 +306,13 @@ export default function RecordsTable() {
               <table className="w-full">
                 <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">כותרת</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">תיאור</th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">קטגוריה</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">כתובת</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">עיר</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">סוג</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">שטח</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">חדרים</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">מחיר</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">בעלים</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">סטטוס</th>
                     <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700">פעולות</th>
                   </tr>
@@ -217,21 +329,36 @@ export default function RecordsTable() {
                       }`}
                     >
                       <td className="px-6 py-3">
-                        <span className="font-semibold text-gray-900">{record.title}</span>
+                        <span className="font-semibold text-gray-900">{record.address}</span>
                       </td>
                       <td className="px-6 py-3">
-                        <span className="text-gray-600 line-clamp-1">{record.description}</span>
+                        <span className="text-gray-600">{record.city}</span>
                       </td>
                       <td className="px-6 py-3">
-                        <span className="text-gray-600">{record.category}</span>
+                        <span className="text-gray-600">{record.property_type}</span>
+                      </td>
+                      <td className="px-6 py-3">
+                        <span className="text-gray-600">{record.size_sqm ? `${record.size_sqm} מ"ר` : '—'}</span>
+                      </td>
+                      <td className="px-6 py-3">
+                        <span className="text-gray-600">{record.rooms || '—'}</span>
+                      </td>
+                      <td className="px-6 py-3">
+                        <span className="text-gray-900 font-medium">
+                          {record.price ? `₪${parseInt(record.price).toLocaleString()}` : '—'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3">
+                        <span className="text-gray-600">{record.owner_name || '—'}</span>
                       </td>
                       <td className="px-6 py-3">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          record.status === 'active' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
+                          record.status === 'פנוי' ? 'bg-green-100 text-green-800' :
+                          record.status === 'תפוס' ? 'bg-gray-100 text-gray-800' :
+                          record.status === 'להשכרה' ? 'bg-blue-100 text-blue-800' :
+                          'bg-purple-100 text-purple-800'
                         }`}>
-                          {record.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                          {record.status}
                         </span>
                       </td>
                       <td className="px-6 py-3">
@@ -248,7 +375,7 @@ export default function RecordsTable() {
                             variant="ghost"
                             size="icon"
                             onClick={() => {
-                              if (confirm('האם למחוק רשומה זו?')) {
+                              if (confirm('האם למחוק נכס זה?')) {
                                 deleteMutation.mutate(record.id);
                               }
                             }}
