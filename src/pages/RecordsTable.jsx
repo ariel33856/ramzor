@@ -6,9 +6,7 @@ import { Plus, Search, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+
 import { createPageUrl } from '@/utils';
 
 export default function RecordsTable() {
