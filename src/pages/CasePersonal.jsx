@@ -320,8 +320,29 @@ export default function CasePersonal() {
   return (
     <div className="space-y-6 p-6">
       <div className="space-y-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
+          {linkedContacts.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-gray-500">|</span>
+              {linkedContacts.map((contact, index) => (
+                <React.Fragment key={contact.id}>
+                  <button
+                    onClick={() => {
+                      const element = document.getElementById(`contact-${contact.id}`);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }}
+                    className="px-3 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-medium text-blue-700 transition-colors"
+                  >
+                    {contact.first_name} {contact.last_name}
+                  </button>
+                  {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
           <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
@@ -444,7 +465,9 @@ export default function CasePersonal() {
           </Dialog>
         </div>
         {linkedContacts.map((contact) => (
-          <PersonDetailsView key={contact.id} personId={contact.id} />
+          <div key={contact.id} id={`contact-${contact.id}`}>
+            <PersonDetailsView personId={contact.id} />
+          </div>
         ))}
       </div>
 
