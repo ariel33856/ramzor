@@ -294,7 +294,7 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-[140px] p-2 space-y-5 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 duration-200">
                       <Link to={createPageUrl('Dashboard')}>
-                        <DropdownMenuItem className="px-1.5 py-2.5 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
                             <span className="text-sm font-medium">חשבונות</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
