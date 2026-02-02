@@ -343,6 +343,7 @@ export default function CasePersonal() {
               <span className="text-gray-500">|</span>
               {linkedContacts.map((contact, index) => {
                 const relationshipType = contact.custom_data?.relationship_type || '';
+                console.log('Contact:', contact.first_name, contact.last_name, 'Relationship:', relationshipType, 'Custom Data:', contact.custom_data);
                 
                 let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                 if (relationshipType === 'לווה') {
