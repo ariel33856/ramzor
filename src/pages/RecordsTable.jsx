@@ -150,7 +150,7 @@ export default function RecordsTable() {
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
+                <DialogTitle>נכס חדש</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
