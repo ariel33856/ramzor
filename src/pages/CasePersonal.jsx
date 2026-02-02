@@ -476,11 +476,26 @@ export default function CasePersonal() {
         </div>
       </div>
       <div className="space-y-4 p-6">
-        {sortedContacts.map((contact) => (
-          <div key={contact.id} id={`contact-${contact.id}`}>
-            <PersonDetailsView personId={contact.id} />
-          </div>
-        ))}
+        {sortedContacts.map((contact) => {
+          // חפש את הקישור של ה-contact בתוך הלווים כדי להבין איזה סוג זיקה יש לו
+          const linkedBorrower = linkedBorrowers.find(b => b.person_id === contact.id);
+          const relationshipType = linkedBorrower?.custom_data?.relationship_type || 'לא מוגדר';
+          
+          return (
+            <div key={contact.id} id={`contact-${contact.id}`} className="space-y-2">
+              <div className={`inline-block px-3 py-1 rounded-lg text-sm font-semibold ${
+                relationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' :
+                (relationshipType === 'ערב' || relationshipType === 'ערבה') ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white' :
+                (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
+                (relationshipType === 'בן זוג' || relationshipType === 'בת זוג') ? 'bg-gradient-to-r from-cyan-400 to-sky-400 text-white' :
+                'bg-gray-200 text-gray-700'
+              }`}>
+                {relationshipType}
+              </div>
+              <PersonDetailsView personId={contact.id} />
+            </div>
+          );
+        })}
 
         {linkedBorrowers.length > 0 && (
         <div className="space-y-4">
