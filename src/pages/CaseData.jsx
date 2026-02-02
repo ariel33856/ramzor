@@ -261,60 +261,6 @@ export default function CaseData() {
                     </tbody>
                   </table>
                 </div>
-
-                {person && person.custom_data?.income_sources && person.custom_data.income_sources.length > 0 && (
-              <div className="space-y-4">
-                {person.custom_data.income_sources.map((income, index) => (
-                  <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
-                    <h3 className="text-sm font-bold text-gray-900">
-                      {income.type === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${income.type}`}
-                    </h3>
-                    {income.type === 'תלוש משכורת-שכיר' ? (
-                     <div className="space-y-3">
-                       {income.employer_name && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-xs font-medium">מעסיק:</span>
-                           <span className="text-sm">{income.employer_name}</span>
-                         </div>
-                       )}
-                       {(income.month_1_salary || income.month_2_salary || income.month_3_salary) && (
-                         <div className="flex items-center gap-2">
-                           <span className="text-xs font-medium">ממוצע:</span>
-                           <span className="text-sm font-bold text-blue-700">
-                             {Math.round(((parseFloat(income.month_1_salary) || 0) + (parseFloat(income.month_2_salary) || 0) + (parseFloat(income.month_3_salary) || 0)) / 3).toLocaleString('he-IL')} ₪
-                           </span>
-                         </div>
-                       )}
-                       <div className="grid grid-cols-3 gap-3 mt-3">
-                         {[1, 2, 3].map((payslipNum) => (
-                           income[`payslip_${payslipNum}_url`] && (
-                             <div key={payslipNum} className="border-2 border-blue-300 rounded-lg overflow-hidden bg-white">
-                               <div className="text-xs font-semibold bg-blue-100 px-2 py-1 text-center">תלוש {payslipNum}</div>
-                               <img
-                                 src={income[`payslip_${payslipNum}_url`]}
-                                 alt={`תלוש ${payslipNum}`}
-                                 className="w-full h-48 object-contain cursor-pointer hover:opacity-90 transition-opacity"
-                                 onClick={() => window.open(income[`payslip_${payslipNum}_url`], '_blank')}
-                               />
-                             </div>
-                           )
-                         ))}
-                       </div>
-                     </div>
-                    ) : (
-                      <div>
-                        {income.monthly_amount && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium">הכנסה חודשית:</span>
-                            <span className="text-sm font-semibold">{parseFloat(income.monthly_amount).toLocaleString('he-IL')} ₪</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-                </div>
-                )}
                 </>
                 )}
                 </CollapsibleContent>
