@@ -1699,37 +1699,35 @@ export default function PersonDetailsView({ personId }) {
                   <div>
                     <Label className="text-xs">סכום יתרה</Label>
                     <Input 
-                      type="number"
-                      value={obligation.balance || ''}
+                      value={obligation.balance ? parseFloat(obligation.balance).toLocaleString('he-IL') : ''}
                       onChange={(e) => {
+                        const value = e.target.value.replace(/,/g, '');
                         const newObligations = [...obligations];
-                        newObligations[index] = { ...newObligations[index], balance: e.target.value };
+                        newObligations[index] = { ...newObligations[index], balance: value };
                         setObligations(newObligations);
                         updatePersonMutation.mutate({
                           custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
                         });
                       }}
                       placeholder="0"
-                      className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                      style={{ MozAppearance: 'textfield' }}
+                      className="h-8"
                     />
                   </div>
                   <div>
                     <Label className="text-xs">החזר חודשי</Label>
                     <Input 
-                      type="number"
-                      value={obligation.monthly_payment || ''}
+                      value={obligation.monthly_payment ? parseFloat(obligation.monthly_payment).toLocaleString('he-IL') : ''}
                       onChange={(e) => {
+                        const value = e.target.value.replace(/,/g, '');
                         const newObligations = [...obligations];
-                        newObligations[index] = { ...newObligations[index], monthly_payment: e.target.value };
+                        newObligations[index] = { ...newObligations[index], monthly_payment: value };
                         setObligations(newObligations);
                         updatePersonMutation.mutate({
                           custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
                         });
                       }}
                       placeholder="0"
-                      className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                      style={{ MozAppearance: 'textfield' }}
+                      className="h-8"
                     />
                   </div>
                   <div>
