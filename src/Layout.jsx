@@ -352,6 +352,17 @@ export default function Layout({ children, currentPageName }) {
                         );
                       })}
 
+                      <Link to={createPageUrl('ModuleView') + `?moduleId=moshe`}>
+                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-teal-50 border-2 border-teal-200 hover:border-teal-400 hover:bg-teal-100 rounded-lg transition-all">
+                          <div className="flex items-center gap-2 justify-end w-full">
+                            <span className="text-sm font-medium">משה</span>
+                            <div className="w-7 h-7 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                              <span className="text-white text-xs font-bold">מ</span>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </Link>
+
                       <Link to={createPageUrl('ModulesManager')}>
                         <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-2 border-purple-300 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
