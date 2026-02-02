@@ -242,22 +242,39 @@ export default function CaseData() {
                         });
                       })}
                       <tr className="bg-green-100 border-t-2 border-green-300">
-                        <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
-                        <td className="p-3 text-center text-lg font-bold text-green-700 border border-gray-300">
-                          {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
-                            return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
-                              if (income.type === 'תלוש משכורת-שכיר') {
-                                const month1 = parseFloat(income.month_1_salary) || 0;
-                                const month2 = parseFloat(income.month_2_salary) || 0;
-                                const month3 = parseFloat(income.month_3_salary) || 0;
-                                return sum + ((month1 + month2 + month3) / 3);
-                              } else {
-                                return sum + (parseFloat(income.monthly_amount) || 0);
-                              }
-                            }, 0);
-                          }, 0)).toLocaleString('he-IL')} ₪
-                        </td>
-                      </tr>
+                         <td colSpan={2} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
+                         <td className="p-3 text-center text-lg font-bold text-green-700 border border-gray-300">
+                           {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
+                             return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
+                               if (income.type === 'תלוש משכורת-שכיר') {
+                                 const month1 = parseFloat(income.month_1_salary) || 0;
+                                 const month2 = parseFloat(income.month_2_salary) || 0;
+                                 const month3 = parseFloat(income.month_3_salary) || 0;
+                                 return sum + ((month1 + month2 + month3) / 3);
+                               } else {
+                                 return sum + (parseFloat(income.monthly_amount) || 0);
+                               }
+                             }, 0);
+                           }, 0)).toLocaleString('he-IL')} ₪
+                         </td>
+                         <td className="p-3 text-center text-lg font-bold border border-gray-300 bg-blue-50">
+                           {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
+                             const incomeSources = linkedPerson.custom_data?.income_sources || [];
+                             const personTotal = incomeSources.reduce((sum, income) => {
+                               if (income.type === 'תלוש משכורת-שכיר') {
+                                 const month1 = parseFloat(income.month_1_salary) || 0;
+                                 const month2 = parseFloat(income.month_2_salary) || 0;
+                                 const month3 = parseFloat(income.month_3_salary) || 0;
+                                 return sum + ((month1 + month2 + month3) / 3);
+                               } else {
+                                 return sum + (parseFloat(income.monthly_amount) || 0);
+                               }
+                             }, 0);
+                             const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                             return total + (personTotal * weight);
+                           }, 0)).toLocaleString('he-IL')} ₪
+                         </td>
+                       </tr>
                     </tbody>
                   </table>
                 </div>
