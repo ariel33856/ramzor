@@ -19,7 +19,6 @@ export default function RecordsTable() {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [selectedPropertyForLink, setSelectedPropertyForLink] = useState(null);
   const [linkSearchTerm, setLinkSearchTerm] = useState('');
-  const [editingRecord, setEditingRecord] = useState(null);
   const [formData, setFormData] = useState({
     address: '',
     city: '',
