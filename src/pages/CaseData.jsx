@@ -67,25 +67,32 @@ export default function CaseData() {
 
   const allLinkedPersons = React.useMemo(() => {
     const persons = [];
-    
+
     // הוסף את האיש קשר הראשי
     if (person) persons.push(person);
-    
+
     // הוסף אנשי קשר מ-linked_borrowers
     linkedBorrowers.forEach(borrower => {
       if (borrower._person && !persons.find(p => p.id === borrower._person.id)) {
         persons.push(borrower._person);
       }
     });
-    
+
     // הוסף כל אנשי קשר שמשויכים לחשבון הזה דרך linked_accounts
     allPersons.forEach(p => {
       if (p.linked_accounts && p.linked_accounts.includes(caseId) && !persons.find(existing => existing.id === p.id)) {
         persons.push(p);
       }
     });
-    
-    return persons;
+
+    // מיון כך שלווים יהיו בתחילת הרשימה
+    return persons.sort((a, b) => {
+      const aType = a.custom_data?.relationship_type || '';
+      const bType = b.custom_data?.relationship_type || '';
+      if (aType === 'לווה' && bType !== 'לווה') return -1;
+      if (aType !== 'לווה' && bType === 'לווה') return 1;
+      return 0;
+    });
   }, [person, linkedBorrowers, allPersons, caseId]);
 
   if (isLoading) {
