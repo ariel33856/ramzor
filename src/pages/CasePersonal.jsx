@@ -340,17 +340,34 @@ export default function CasePersonal() {
           {linkedContacts.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-gray-500">|</span>
-              {linkedContacts.map((contact, index) => (
-                <React.Fragment key={contact.id}>
-                  <button
-                    onClick={() => moveContactToTop(contact.id)}
-                    className="px-3 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-medium text-blue-700 transition-colors"
-                  >
-                    {contact.first_name} {contact.last_name}
-                  </button>
-                  {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
-                </React.Fragment>
-              ))}
+              {linkedContacts.map((contact, index) => {
+                const relationshipType = contact.custom_data?.relationship_type || '';
+                
+                let buttonClass = 'px-3 py-1 rounded-lg text-sm font-medium transition-colors text-white ';
+                if (relationshipType === 'לווה') {
+                  buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
+                } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
+                  buttonClass += 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600';
+                } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
+                  buttonClass += 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600';
+                } else if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
+                  buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
+                } else {
+                  buttonClass += 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700';
+                }
+                
+                return (
+                  <React.Fragment key={contact.id}>
+                    <button
+                      onClick={() => moveContactToTop(contact.id)}
+                      className={buttonClass}
+                    >
+                      {contact.first_name} {contact.last_name}
+                    </button>
+                    {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
+                  </React.Fragment>
+                );
+              })}
             </div>
           )}
           <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
