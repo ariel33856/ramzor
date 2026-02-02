@@ -14,6 +14,8 @@ export default function CaseProperty() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingProperty, setEditingProperty] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     address: '',
@@ -118,6 +120,17 @@ export default function CaseProperty() {
     }
   });
 
+  const updatePropertyMutation = useMutation({
+    mutationFn: (data) => base44.entities.PropertyAsset.update(editingProperty.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
+      queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
+      setEditDialogOpen(false);
+      setEditingProperty(null);
+      resetForm();
+    }
+  });
+
   const resetForm = () => {
     setFormData({
       address: '',
@@ -132,6 +145,25 @@ export default function CaseProperty() {
       status: 'פנוי',
       notes: ''
     });
+    setEditingProperty(null);
+  };
+
+  const handleEditProperty = (property) => {
+    setEditingProperty(property);
+    setFormData({
+      address: property.address || '',
+      city: property.city || '',
+      property_type: property.property_type || 'דירה',
+      size_sqm: property.size_sqm || '',
+      rooms: property.rooms || '',
+      floor: property.floor || '',
+      price: property.price || '',
+      owner_name: property.owner_name || '',
+      owner_phone: property.owner_phone || '',
+      status: property.status || 'פנוי',
+      notes: property.notes || ''
+    });
+    setEditDialogOpen(true);
   };
 
   const handleSubmit = (e) => {
@@ -143,7 +175,12 @@ export default function CaseProperty() {
       floor: formData.floor ? Number(formData.floor) : undefined,
       price: formData.price ? Number(formData.price) : undefined
     };
-    createPropertyMutation.mutate(data);
+    
+    if (editingProperty) {
+      updatePropertyMutation.mutate(data);
+    } else {
+      createPropertyMutation.mutate(data);
+    }
   };
 
   const filteredProperties = allProperties.filter(prop =>
@@ -210,7 +247,7 @@ export default function CaseProperty() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
                       className="border-b border-gray-100 hover:bg-teal-50 transition-colors cursor-pointer"
-                      onClick={() => window.location.href = createPageUrl(`PropertyDetails?id=${property.id}`)}
+                      onClick={() => handleEditProperty(property)}
                     >
                       {allFieldNames.map(fieldName => (
                         <td key={fieldName} className="px-6 py-4">
@@ -245,7 +282,7 @@ export default function CaseProperty() {
                   className="pr-10"
                 />
               </div>
-              <Button onClick={() => { setDialogOpen(false); setCreateDialogOpen(true); }} className="bg-gradient-to-r from-blue-600 to-purple-600">
+              <Button onClick={() => { setDialogOpen(false); setCreateDialogOpen(true); resetForm(); }} className="bg-gradient-to-r from-blue-600 to-purple-600">
                 <Plus className="w-5 h-5 ml-2" />
                 נכס חדש
               </Button>
@@ -269,14 +306,17 @@ export default function CaseProperty() {
         </DialogContent>
       </Dialog>
 
-      {/* Create Property Dialog */}
-      <Dialog open={createDialogOpen} onOpenChange={(open) => {
-        setCreateDialogOpen(open);
-        if (!open) resetForm();
+      {/* Create/Edit Property Dialog */}
+      <Dialog open={createDialogOpen || editDialogOpen} onOpenChange={(open) => {
+        if (!open) {
+          setCreateDialogOpen(false);
+          setEditDialogOpen(false);
+          resetForm();
+        }
       }}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>נכס חדש</DialogTitle>
+            <DialogTitle>{editingProperty ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -406,11 +446,15 @@ export default function CaseProperty() {
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setCreateDialogOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => {
+                setCreateDialogOpen(false);
+                setEditDialogOpen(false);
+                resetForm();
+              }}>
                 ביטול
               </Button>
-              <Button type="submit" disabled={createPropertyMutation.isPending}>
-                צור ושייך
+              <Button type="submit" disabled={createPropertyMutation.isPending || updatePropertyMutation.isPending}>
+                {editingProperty ? 'עדכן' : 'צור ושייך'}
               </Button>
             </div>
           </form>
