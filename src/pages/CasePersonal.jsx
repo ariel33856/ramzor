@@ -342,7 +342,7 @@ export default function CasePersonal() {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-gray-500">|</span>
               {linkedContacts.map((contact, index) => {
-                const relationshipType = contact.custom_data?.relationship_type || '';
+                const relationshipType = contact.custom_data?.relationship_type || 'לווה';
                 console.log('Contact:', contact.first_name, contact.last_name, 'Relationship:', relationshipType, 'Custom Data:', contact.custom_data);
                 
                 let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
