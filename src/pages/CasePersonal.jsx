@@ -359,15 +359,17 @@ export default function CasePersonal() {
                 
                 return (
                   <React.Fragment key={contact.id}>
-                    <button
-                      onClick={() => moveContactToTop(contact.id)}
-                      className={buttonClass}
-                    >
-                      <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                    <div className="flex flex-col items-center">
+                      <button
+                        onClick={() => moveContactToTop(contact.id)}
+                        className={buttonClass.replace('flex flex-col items-center', 'inline-block')}
+                      >
+                        {contact.first_name} {contact.last_name}
+                      </button>
                       {relationshipType && (
-                        <span className="text-xs opacity-90 mt-0.5">{relationshipType}</span>
+                        <span className="text-xs text-gray-600 mt-1">{relationshipType}</span>
                       )}
-                    </button>
+                    </div>
                     {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
                   </React.Fragment>
                 );
