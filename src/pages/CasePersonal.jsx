@@ -344,7 +344,7 @@ export default function CasePersonal() {
               {linkedContacts.map((contact, index) => {
                 const relationshipType = contact.custom_data?.relationship_type || '';
                 
-                let buttonClass = 'px-3 py-1 rounded-lg text-sm font-medium transition-colors text-white ';
+                let buttonClass = 'px-3 py-2 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                 if (relationshipType === 'לווה') {
                   buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
                 } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
@@ -363,7 +363,10 @@ export default function CasePersonal() {
                       onClick={() => moveContactToTop(contact.id)}
                       className={buttonClass}
                     >
-                      {contact.first_name} {contact.last_name}
+                      <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                      {relationshipType && (
+                        <span className="text-xs opacity-90 mt-0.5">{relationshipType}</span>
+                      )}
                     </button>
                     {index < linkedContacts.length - 1 && <span className="text-gray-400">•</span>}
                   </React.Fragment>
