@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Search, Edit, Trash2, Archive } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -13,6 +13,9 @@ export default function RecordsTable() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+  const [selectedPropertyForLink, setSelectedPropertyForLink] = useState(null);
+  const [linkSearchTerm, setLinkSearchTerm] = useState('');
   const [editingRecord, setEditingRecord] = useState(null);
   const [formData, setFormData] = useState({
     address: '',
@@ -42,6 +45,12 @@ export default function RecordsTable() {
     staleTime: 5 * 60 * 1000
   });
 
+  const { data: allCases = [] } = useQuery({
+    queryKey: ['all-cases'],
+    queryFn: () => base44.entities.MortgageCase.list(),
+    staleTime: 5 * 60 * 1000
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.PropertyAsset.create(data),
     onSuccess: () => {
@@ -64,6 +73,18 @@ export default function RecordsTable() {
     mutationFn: (id) => base44.entities.PropertyAsset.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
+    }
+  });
+
+  const linkPropertyMutation = useMutation({
+    mutationFn: (caseId) => {
+      return base44.entities.PropertyAsset.update(selectedPropertyForLink, { case_id: caseId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
+      setLinkDialogOpen(false);
+      setSelectedPropertyForLink(null);
+      setLinkSearchTerm('');
     }
   });
 
@@ -123,6 +144,18 @@ export default function RecordsTable() {
     record.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.owner_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getLinkedCaseName = (caseId) => {
+    const caseData = allCases.find(c => c.id === caseId);
+    if (!caseData) return 'לא מוצא';
+    return `${caseData.client_name} ${caseData.last_name || ''} (${caseData.account_number})`;
+  };
+
+  const filteredCases = allCases.filter(c => 
+    !c.is_archived &&
+    (c.client_name?.toLowerCase().includes(linkSearchTerm.toLowerCase()) ||
+    c.account_number?.toString().includes(linkSearchTerm))
   );
 
   return (
@@ -316,6 +349,7 @@ export default function RecordsTable() {
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">כתובת</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">עיר</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">סוג</th>
+                    <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">חשבון משויך</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">שטח</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">חדרים</th>
                     <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">מחיר</th>
@@ -343,6 +377,13 @@ export default function RecordsTable() {
                       </td>
                       <td className="px-6 py-3">
                         <span className="text-gray-600">{record.property_type}</span>
+                      </td>
+                      <td className="px-6 py-3 text-sm">
+                        {record.case_id ? (
+                          <span className="text-green-700 font-medium">{getLinkedCaseName(record.case_id)}</span>
+                        ) : (
+                          <span className="text-gray-400 italic">לא משויך</span>
+                        )}
                       </td>
                       <td className="px-6 py-3">
                         <span className="text-gray-600">{record.size_sqm ? `${record.size_sqm} מ"ר` : '—'}</span>
@@ -373,6 +414,18 @@ export default function RecordsTable() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            onClick={() => {
+                              setSelectedPropertyForLink(record.id);
+                              setLinkDialogOpen(true);
+                            }}
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50"
+                            title="שייך לחשבון"
+                          >
+                            <LinkIcon className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => handleEdit(record)}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                           >
@@ -400,6 +453,37 @@ export default function RecordsTable() {
           </div>
         )}
       </div>
+
+      {/* Link Property Dialog */}
+      <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>שייך נכס לחשבון</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              placeholder="חיפוש לפי שם או מספר חשבון..."
+              value={linkSearchTerm}
+              onChange={(e) => setLinkSearchTerm(e.target.value)}
+            />
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {filteredCases.map(caseData => (
+                <div
+                  key={caseData.id}
+                  className="p-4 border rounded-lg hover:bg-green-50 cursor-pointer transition-colors"
+                  onClick={() => linkPropertyMutation.mutate(caseData.id)}
+                >
+                  <p className="font-semibold text-gray-900">{caseData.client_name} {caseData.last_name || ''}</p>
+                  <p className="text-sm text-gray-500">חשבון מס׳ {caseData.account_number}</p>
+                </div>
+              ))}
+              {filteredCases.length === 0 && (
+                <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
