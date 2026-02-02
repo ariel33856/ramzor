@@ -304,7 +304,18 @@ export default function PersonDetailsView({ personId }) {
       });
       
       if (person.linked_accounts) {
-        setLinkedAccounts(person.linked_accounts);
+        // Convert old format (array of IDs) to new format (array of objects)
+        if (Array.isArray(person.linked_accounts) && person.linked_accounts.length > 0) {
+          if (typeof person.linked_accounts[0] === 'string') {
+            // Old format - convert to new format
+            setLinkedAccounts(person.linked_accounts);
+          } else {
+            // New format - just set it
+            setLinkedAccounts(person.linked_accounts);
+          }
+        } else {
+          setLinkedAccounts(person.linked_accounts || []);
+        }
       }
       
       if (person.custom_data) {
