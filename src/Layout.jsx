@@ -741,17 +741,6 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuItem>
                   </Link>
 
-                  <Link to={createPageUrl('PropertyAssets')}>
-                    <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-pink-50 border-2 border-pink-200 hover:border-pink-400 hover:bg-pink-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-2 justify-end w-full">
-                        <span className="text-sm font-medium">נכסים</span>
-                        <div className="w-7 h-7 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center">
-                          <Package className="w-4 h-4 text-white" />
-                        </div>
-                      </div>
-                    </DropdownMenuItem>
-                  </Link>
-
                   <Link to={createPageUrl('ERP')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
