@@ -602,7 +602,8 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts
+                        linked_accounts: updatedLinkedAccounts,
+                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
