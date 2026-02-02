@@ -228,8 +228,9 @@ export default function CaseProperty() {
         )}
       </div>
 
+      {/* Link Property Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh]">
+        <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>בחר נכס</DialogTitle>
           </DialogHeader>
@@ -249,27 +250,15 @@ export default function CaseProperty() {
                 נכס חדש
               </Button>
             </div>
-            <div className="space-y-2 max-h-[500px] overflow-y-auto">
+            <div className="space-y-2 max-h-96 overflow-y-auto">
               {filteredProperties.map(property => (
                 <div
                   key={property.id}
                   className="p-4 border rounded-lg hover:bg-teal-50 cursor-pointer transition-colors"
                   onClick={() => linkPropertyMutation.mutate(property.id)}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Home className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900">{property.address}</p>
-                      <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
-                      <div className="flex gap-3 mt-1 text-xs text-gray-600">
-                        {property.size_sqm && <span>{property.size_sqm} מ"ר</span>}
-                        {property.rooms && <span>{property.rooms} חדרים</span>}
-                        {property.price && <span>₪{parseInt(property.price).toLocaleString()}</span>}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="font-semibold text-gray-900">{property.address}</p>
+                  <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
                 </div>
               ))}
               {filteredProperties.length === 0 && (
