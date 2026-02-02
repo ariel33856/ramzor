@@ -395,6 +395,23 @@ export default function CaseData() {
                 return grandTotal + personTotal;
               }, 0);
 
+              // Calculate total income actual (weighted by relationship type)
+              const totalIncomeActual = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
+                const incomeSources = linkedPerson.custom_data?.income_sources || [];
+                const personTotal = incomeSources.reduce((total, income) => {
+                  if (income.type === 'תלוש משכורת-שכיר') {
+                    const month1 = parseFloat(income.month_1_salary) || 0;
+                    const month2 = parseFloat(income.month_2_salary) || 0;
+                    const month3 = parseFloat(income.month_3_salary) || 0;
+                    return total + ((month1 + month2 + month3) / 3);
+                  } else {
+                    return total + (parseFloat(income.monthly_amount) || 0);
+                  }
+                }, 0);
+                const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                return grandTotal + (personTotal * weight);
+              }, 0);
+
               // Calculate total obligations using same logic as obligations table
               const totalObligations = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
                 const obligations = linkedPerson.custom_data?.obligations || [];
@@ -404,8 +421,20 @@ export default function CaseData() {
                 return grandTotal + personTotal;
               }, 0);
 
+              // Calculate total obligations actual (weighted by relationship type)
+              const totalObligationsActual = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
+                const obligations = linkedPerson.custom_data?.obligations || [];
+                const personTotal = obligations.reduce((total, obligation) => {
+                  return total + (parseFloat(obligation.monthly_payment) || 0);
+                }, 0);
+                const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                return grandTotal + (personTotal * weight);
+              }, 0);
+
               const netIncome = totalIncome - totalObligations;
+              const netIncomeActual = totalIncomeActual - totalObligationsActual;
               const obligationsPercentage = totalIncome > 0 ? (totalObligations / totalIncome) * 100 : 0;
+              const obligationsPercentageActual = totalIncomeActual > 0 ? (totalObligationsActual / totalIncomeActual) * 100 : 0;
 
               return (
                <div className="overflow-x-auto">
@@ -417,10 +446,22 @@ export default function CaseData() {
                          {Math.round(totalIncome).toLocaleString('he-IL')} ₪
                        </td>
                      </tr>
+                     <tr className="bg-blue-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">הכנסות בפועל:</td>
+                       <td className="p-4 text-center text-lg font-bold text-blue-700 border border-gray-300">
+                         {Math.round(totalIncomeActual).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
                      <tr className="bg-red-50 border-b">
                        <td className="p-4 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
                        <td className="p-4 text-center text-lg font-bold text-red-700 border border-gray-300">
                          {Math.round(totalObligations).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
+                     <tr className="bg-orange-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">התחייבויות בפועל:</td>
+                       <td className="p-4 text-center text-lg font-bold text-orange-700 border border-gray-300">
+                         {Math.round(totalObligationsActual).toLocaleString('he-IL')} ₪
                        </td>
                      </tr>
                      <tr className="bg-blue-50 border-b">
@@ -429,16 +470,28 @@ export default function CaseData() {
                          {Math.round(netIncome).toLocaleString('he-IL')} ₪
                        </td>
                      </tr>
+                     <tr className="bg-cyan-50 border-b">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">הכנסה נטו בפועל:</td>
+                       <td className={`p-4 text-center text-lg font-bold border border-gray-300 ${netIncomeActual >= 0 ? 'text-cyan-700' : 'text-red-700'}`}>
+                         {Math.round(netIncomeActual).toLocaleString('he-IL')} ₪
+                       </td>
+                     </tr>
                      <tr className="bg-purple-50">
                        <td className="p-4 text-sm font-bold text-right border border-gray-300">אחוז התחייבויות מההכנסה:</td>
                        <td className={`p-4 text-center text-lg font-bold border border-gray-300 ${obligationsPercentage <= 40 ? 'text-green-700' : obligationsPercentage <= 50 ? 'text-orange-600' : 'text-red-700'}`}>
                          {obligationsPercentage.toFixed(1)}%
                        </td>
                      </tr>
+                     <tr className="bg-purple-100">
+                       <td className="p-4 text-sm font-bold text-right border border-gray-300">אחוז התחייבויות בפועל:</td>
+                       <td className={`p-4 text-center text-lg font-bold border border-gray-300 ${obligationsPercentageActual <= 40 ? 'text-green-700' : obligationsPercentageActual <= 50 ? 'text-orange-600' : 'text-red-700'}`}>
+                         {obligationsPercentageActual.toFixed(1)}%
+                       </td>
+                     </tr>
                    </tbody>
                  </table>
                </div>
-             );
+              );
            })()}
           </CollapsibleContent>
           </Collapsible>
