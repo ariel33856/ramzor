@@ -124,23 +124,7 @@ export default function RecordsTable() {
     }
   };
 
-  const handleEdit = (record) => {
-    setEditingRecord(record);
-    setFormData({
-      address: record.address || '',
-      city: record.city || '',
-      property_type: record.property_type || 'דירה',
-      size_sqm: record.size_sqm || '',
-      rooms: record.rooms || '',
-      floor: record.floor || '',
-      price: record.price || '',
-      owner_name: record.owner_name || '',
-      owner_phone: record.owner_phone || '',
-      status: record.status || 'פנוי',
-      notes: record.notes || ''
-    });
-    setDialogOpen(true);
-  };
+
 
   const filteredRecords = records.filter(record =>
     record.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
