@@ -289,7 +289,9 @@ export default function PersonDetailsView({ personId }) {
   };
 
   const filteredAccounts = accounts.filter(acc => 
-    !linkedAccounts.includes(acc.id) &&
+    !linkedAccounts.some(link => 
+      typeof link === 'string' ? link === acc.id : link.case_id === acc.id
+    ) &&
     (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     acc.account_number?.toString().includes(searchTerm))
   );
