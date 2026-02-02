@@ -354,12 +354,22 @@ export default function CaseData() {
                       });
                     })}
                     <tr className="bg-red-100 border-t-2 border-red-300">
-                      <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
+                      <td colSpan={2} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
                       <td className="p-3 text-center text-lg font-bold text-red-700 border border-gray-300">
                         {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
                           return total + (linkedPerson.custom_data?.obligations || []).reduce((sum, obligation) => {
                             return sum + (parseFloat(obligation.monthly_payment) || 0);
                           }, 0);
+                        }, 0)).toLocaleString('he-IL')} ₪
+                      </td>
+                      <td className="p-3 text-center text-lg font-bold border border-gray-300 bg-orange-50">
+                        {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
+                          const obligations = linkedPerson.custom_data?.obligations || [];
+                          const personTotal = obligations.reduce((sum, obligation) => {
+                            return sum + (parseFloat(obligation.monthly_payment) || 0);
+                          }, 0);
+                          const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                          return total + (personTotal * weight);
                         }, 0)).toLocaleString('he-IL')} ₪
                       </td>
                     </tr>
