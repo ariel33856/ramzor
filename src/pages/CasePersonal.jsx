@@ -333,8 +333,8 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="space-y-4">
+    <div className="relative">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-3">
         <div className="flex items-center gap-2 flex-wrap">
           <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
           {linkedContacts.length > 0 && (
@@ -474,14 +474,15 @@ export default function CasePersonal() {
             </DialogContent>
           </Dialog>
         </div>
+      </div>
+      <div className="space-y-4 p-6">
         {sortedContacts.map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
           </div>
         ))}
-      </div>
 
-      {linkedBorrowers.length > 0 && (
+        {linkedBorrowers.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-gray-900">לווים משויכים ({linkedBorrowers.length})</h3>
           {linkedBorrowers.map((borrower, index) => (
@@ -493,7 +494,8 @@ export default function CasePersonal() {
             />
           ))}
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
