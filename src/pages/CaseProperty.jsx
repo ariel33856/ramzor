@@ -38,30 +38,34 @@ export default function CaseProperty() {
 
   const { data: properties = [] } = useQuery({
     queryKey: ['property-assets'],
+    queryFn: () => base44.entities.PropertyAsset.filter({ case_id: caseId }, '-created_date'),
+    enabled: !!caseId,
+    staleTime: 5 * 60 * 1000
+  });
+
+  const { data: allProperties = [] } = useQuery({
+    queryKey: ['all-property-assets'],
     queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
     staleTime: 5 * 60 * 1000
   });
 
-  const { data: selectedProperty } = useQuery({
-    queryKey: ['selected-property', caseData?.property_id],
-    queryFn: () => base44.entities.PropertyAsset.filter({ id: caseData.property_id }).then(res => res[0]),
-    enabled: !!caseData?.property_id
-  });
-
   const linkPropertyMutation = useMutation({
-    mutationFn: (propertyId) => base44.entities.MortgageCase.update(caseId, { property_id: propertyId }),
+    mutationFn: (propertyId) => {
+      return base44.entities.PropertyAsset.update(propertyId, { case_id: caseId });
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
+      queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
       setDialogOpen(false);
       setSearchTerm('');
     }
   });
 
   const createPropertyMutation = useMutation({
-    mutationFn: (data) => base44.entities.PropertyAsset.create(data),
-    onSuccess: (newProperty) => {
+    mutationFn: (data) => base44.entities.PropertyAsset.create({ ...data, case_id: caseId }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
-      linkPropertyMutation.mutate(newProperty.id);
+      queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
       setCreateDialogOpen(false);
       resetForm();
     }
@@ -95,87 +99,81 @@ export default function CaseProperty() {
     createPropertyMutation.mutate(data);
   };
 
-  const filteredProperties = properties.filter(prop =>
-    prop.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredProperties = allProperties.filter(prop =>
+    !prop.case_id &&
+    (prop.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     prop.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    prop.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
+    prop.property_type?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="space-y-6">
+      {/* Linked Properties */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        {selectedProperty ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-gray-900">נכס משויך</h3>
-              <Button onClick={() => setDialogOpen(true)} variant="outline">
-                שנה נכס
-              </Button>
-            </div>
-            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border-2 border-teal-200">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Home className="w-7 h-7 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-2xl font-bold text-gray-900 mb-2">{selectedProperty.address}</h4>
-                  <div className="flex items-center gap-2 text-gray-600 mb-3">
-                    <MapPin className="w-4 h-4" />
-                    <span>{selectedProperty.city}</span>
-                    <span className="mx-2">•</span>
-                    <span>{selectedProperty.property_type}</span>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                    {selectedProperty.size_sqm && (
-                      <div className="bg-white rounded-lg p-3 border border-teal-200">
-                        <p className="text-xs text-gray-500">שטח</p>
-                        <p className="text-lg font-bold text-gray-900">{selectedProperty.size_sqm} מ"ר</p>
-                      </div>
-                    )}
-                    {selectedProperty.rooms && (
-                      <div className="bg-white rounded-lg p-3 border border-teal-200">
-                        <p className="text-xs text-gray-500">חדרים</p>
-                        <p className="text-lg font-bold text-gray-900">{selectedProperty.rooms}</p>
-                      </div>
-                    )}
-                    {selectedProperty.floor !== undefined && selectedProperty.floor !== null && (
-                      <div className="bg-white rounded-lg p-3 border border-teal-200">
-                        <p className="text-xs text-gray-500">קומה</p>
-                        <p className="text-lg font-bold text-gray-900">{selectedProperty.floor}</p>
-                      </div>
-                    )}
-                    {selectedProperty.price && (
-                      <div className="bg-white rounded-lg p-3 border border-teal-200">
-                        <p className="text-xs text-gray-500">מחיר</p>
-                        <p className="text-lg font-bold text-gray-900">₪{parseInt(selectedProperty.price).toLocaleString()}</p>
-                      </div>
-                    )}
-                  </div>
-                  {selectedProperty.status && (
-                    <div className="mt-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        selectedProperty.status === 'פנוי' ? 'bg-green-100 text-green-800' :
-                        selectedProperty.status === 'תפוס' ? 'bg-gray-100 text-gray-800' :
-                        selectedProperty.status === 'להשכרה' ? 'bg-blue-100 text-blue-800' :
-                        'bg-purple-100 text-purple-800'
-                      }`}>
-                        {selectedProperty.status}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-gray-900">נכסים משויכים</h3>
+          <Button onClick={() => setDialogOpen(true)} className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
+            <Home className="w-5 h-5 ml-2" />
+            הוסף נכס
+          </Button>
+        </div>
+        {properties.length === 0 ? (
           <div className="text-center py-12">
             <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">לא נבחר נכס</h3>
-            <p className="text-gray-500 mb-6">בחר נכס מתוך מודול הנכסים</p>
-            <Button onClick={() => setDialogOpen(true)} className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
-              <Home className="w-5 h-5 ml-2" />
-              בחר נכס
-            </Button>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">אין נכסים משויכים</h3>
+            <p className="text-gray-500">בחר נכס קיים או צור נכס חדש</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {properties.map(property => (
+              <div key={property.id} className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border-2 border-teal-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <Home className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-lg font-bold text-gray-900">{property.address}</h4>
+                    <div className="flex items-center gap-2 text-gray-600 text-sm mt-1">
+                      <MapPin className="w-4 h-4" />
+                      <span>{property.city} • {property.property_type}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-3">
+                      {property.size_sqm && (
+                        <div className="text-xs">
+                          <p className="text-gray-500">שטח</p>
+                          <p className="font-bold text-gray-900">{property.size_sqm} מ"ר</p>
+                        </div>
+                      )}
+                      {property.rooms && (
+                        <div className="text-xs">
+                          <p className="text-gray-500">חדרים</p>
+                          <p className="font-bold text-gray-900">{property.rooms}</p>
+                        </div>
+                      )}
+                      {property.price && (
+                        <div className="text-xs">
+                          <p className="text-gray-500">מחיר</p>
+                          <p className="font-bold text-gray-900">₪{parseInt(property.price).toLocaleString()}</p>
+                        </div>
+                      )}
+                      {property.status && (
+                        <div className="text-xs">
+                          <p className="text-gray-500">סטטוס</p>
+                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                            property.status === 'פנוי' ? 'bg-green-100 text-green-800' :
+                            property.status === 'תפוס' ? 'bg-gray-100 text-gray-800' :
+                            property.status === 'להשכרה' ? 'bg-blue-100 text-blue-800' :
+                            'bg-purple-100 text-purple-800'
+                          }`}>
+                            {property.status}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -205,14 +203,14 @@ export default function CaseProperty() {
               {filteredProperties.map(property => (
                 <div
                   key={property.id}
-                  className="p-4 border rounded-lg hover:bg-teal-50 cursor-pointer transition-colors flex items-center justify-between"
+                  className="p-4 border rounded-lg hover:bg-teal-50 cursor-pointer transition-colors"
                   onClick={() => linkPropertyMutation.mutate(property.id)}
                 >
-                  <div className="flex items-start gap-3 flex-1">
-                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Home className="w-5 h-5 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-gray-900">{property.address}</p>
                       <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
                       <div className="flex gap-3 mt-1 text-xs text-gray-600">
@@ -222,13 +220,10 @@ export default function CaseProperty() {
                       </div>
                     </div>
                   </div>
-                  {selectedProperty?.id === property.id && (
-                    <CheckCircle2 className="w-6 h-6 text-teal-600" />
-                  )}
                 </div>
               ))}
               {filteredProperties.length === 0 && (
-                <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
+                <p className="text-center text-gray-500 py-8">כל הנכסים כבר משויכים לחשבונות</p>
               )}
             </div>
           </div>
