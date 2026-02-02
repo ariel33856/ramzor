@@ -154,73 +154,76 @@ export default function CaseProperty() {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Linked Properties */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900">נכסים משויכים</h3>
-          <Button onClick={() => setDialogOpen(true)} className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
-            <Home className="w-5 h-5 ml-2" />
-            הוסף נכס
-          </Button>
-        </div>
-        {properties.length === 0 ? (
-          <div className="text-center py-12">
-            <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">אין נכסים משויכים</h3>
-            <p className="text-gray-500">בחר נכס קיים או צור נכס חדש</p>
+    <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden p-1">
+      <div className="flex-1 overflow-hidden">
+        {isLoading ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[75vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-teal-50 to-cyan-50">
+                  <tr className="border-b-2 border-gray-200">
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                      <th key={i} className="px-6 py-4 text-right"><div className="h-4 bg-gray-200 rounded w-20 animate-pulse" /></th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <tr key={i} className="border-b border-gray-100">
+                      {[1, 2, 3, 4, 5, 6].map(j => (
+                        <td key={j} className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 animate-pulse" /></td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+        ) : properties.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
+            <Archive className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">אין נכסים משויכים</h3>
+            <p className="text-gray-400">בחר נכס קיים או צור נכס חדש</p>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {properties.map(property => (
-              <div key={property.id} className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border-2 border-teal-200">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                    <Home className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-lg font-bold text-gray-900">{property.address}</h4>
-                    <div className="flex items-center gap-2 text-gray-600 text-sm mt-1">
-                      <MapPin className="w-4 h-4" />
-                      <span>{property.city} • {property.property_type}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 mt-3">
-                      {property.size_sqm && (
-                        <div className="text-xs">
-                          <p className="text-gray-500">שטח</p>
-                          <p className="font-bold text-gray-900">{property.size_sqm} מ"ר</p>
-                        </div>
-                      )}
-                      {property.rooms && (
-                        <div className="text-xs">
-                          <p className="text-gray-500">חדרים</p>
-                          <p className="font-bold text-gray-900">{property.rooms}</p>
-                        </div>
-                      )}
-                      {property.price && (
-                        <div className="text-xs">
-                          <p className="text-gray-500">מחיר</p>
-                          <p className="font-bold text-gray-900">₪{parseInt(property.price).toLocaleString()}</p>
-                        </div>
-                      )}
-                      {property.status && (
-                        <div className="text-xs">
-                          <p className="text-gray-500">סטטוס</p>
-                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                            property.status === 'פנוי' ? 'bg-green-100 text-green-800' :
-                            property.status === 'תפוס' ? 'bg-gray-100 text-gray-800' :
-                            property.status === 'להשכרה' ? 'bg-blue-100 text-blue-800' :
-                            'bg-purple-100 text-purple-800'
-                          }`}>
-                            {property.status}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[75vh]">
+              <table className="w-full">
+                <thead className="sticky top-0 z-40 bg-gradient-to-r from-teal-50 to-cyan-50">
+                  <tr className="border-b-2 border-gray-200">
+                    {allFieldNames.map(fieldName => (
+                      <th key={fieldName} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
+                        {getFieldLabel(fieldName)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {properties.map((property, index) => (
+                    <motion.tr
+                      key={property.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.02 }}
+                      className="border-b border-gray-100 hover:bg-teal-50 transition-colors cursor-pointer"
+                      onClick={() => window.location.href = createPageUrl(`PropertyDetails?id=${property.id}`)}
+                    >
+                      {allFieldNames.map(fieldName => (
+                        <td key={fieldName} className="px-6 py-4">
+                          <span className={fieldName === 'address' ? 'font-semibold text-gray-900' : 'text-gray-600'}>
+                            {getFieldValue(property, fieldName)}
                           </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                        </td>
+                      ))}
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
