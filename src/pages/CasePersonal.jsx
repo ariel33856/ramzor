@@ -34,6 +34,7 @@ export default function CasePersonal() {
     phone: '',
     email: ''
   });
+  const [sortedContacts, setSortedContacts] = useState([]);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -96,6 +97,20 @@ export default function CasePersonal() {
     },
     enabled: !!caseId
   });
+
+  React.useEffect(() => {
+    if (linkedContacts.length > 0) {
+      setSortedContacts(linkedContacts);
+    }
+  }, [linkedContacts]);
+
+  const moveContactToTop = (contactId) => {
+    setSortedContacts(prev => {
+      const contact = prev.find(c => c.id === contactId);
+      const others = prev.filter(c => c.id !== contactId);
+      return contact ? [contact, ...others] : prev;
+    });
+  };
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
     borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -328,12 +343,7 @@ export default function CasePersonal() {
               {linkedContacts.map((contact, index) => (
                 <React.Fragment key={contact.id}>
                   <button
-                    onClick={() => {
-                      const element = document.getElementById(`contact-${contact.id}`);
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }}
+                    onClick={() => moveContactToTop(contact.id)}
                     className="px-3 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-medium text-blue-700 transition-colors"
                   >
                     {contact.first_name} {contact.last_name}
@@ -464,7 +474,7 @@ export default function CasePersonal() {
             </DialogContent>
           </Dialog>
         </div>
-        {linkedContacts.map((contact) => (
+        {sortedContacts.map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
           </div>
