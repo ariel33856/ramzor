@@ -305,7 +305,7 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
 
                       <Link to={createPageUrl('ArchiveAccounts')}>
-                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-slate-50 border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-100 rounded-lg transition-all">
+                        <DropdownMenuItem className="px-1.5 py-2.5 cursor-pointer bg-slate-50 border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
                             <span className="text-sm font-medium">אנשי קשר</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg flex items-center justify-center">
