@@ -182,7 +182,7 @@ export default function RecordsTable() {
             setDialogOpen(open);
             if (!open) resetForm();
           }}>
-            <DialogContent className="fixed inset-0 max-w-none max-h-none w-screen h-screen overflow-y-auto rounded-none">
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
               </DialogHeader>
