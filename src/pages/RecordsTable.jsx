@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Plus, Search, Edit, Trash2, Archive, Link as LinkIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -10,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function RecordsTable() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -365,9 +367,10 @@ export default function RecordsTable() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
-                      className={`border-b border-gray-100 hover:bg-blue-50 transition-colors ${
+                      className={`border-b border-gray-100 hover:bg-blue-50 transition-colors cursor-pointer ${
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                       }`}
+                      onClick={() => navigate(createPageUrl('PropertyDetails') + `?id=${record.id}`)}
                     >
                       <td className="px-6 py-3">
                         <span className="font-semibold text-gray-900">{record.address}</span>

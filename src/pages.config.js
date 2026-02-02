@@ -95,6 +95,7 @@ import PersonDetails from './pages/PersonDetails';
 import RecordsTable from './pages/RecordsTable';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
+import PropertyDetails from './pages/PropertyDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -147,6 +148,7 @@ export const PAGES = {
     "RecordsTable": RecordsTable,
     "Sales": Sales,
     "SearchPage": SearchPage,
+    "PropertyDetails": PropertyDetails,
 }
 
 export const pagesConfig = {
