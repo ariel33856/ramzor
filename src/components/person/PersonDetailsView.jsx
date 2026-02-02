@@ -1462,7 +1462,7 @@ export default function PersonDetailsView({ personId }) {
                         />
                       </div>
                       <div>
-                        <Label className="text-xs">שדה 3</Label>
+                        <Label className="text-xs">תפקיד</Label>
                         <Input 
                           value={income.field_3 || ''}
                           onChange={(e) => {
