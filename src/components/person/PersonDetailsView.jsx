@@ -1498,73 +1498,68 @@ export default function PersonDetailsView({ personId }) {
                       <div>
                         <Label className="text-xs">משכורת חודש ראשון</Label>
                         <Input 
-                          type="number"
-                          value={income.month_1_salary || ''}
+                          value={income.month_1_salary ? parseFloat(income.month_1_salary).toLocaleString('he-IL') : ''}
                           onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, '');
                             const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], month_1_salary: e.target.value };
+                            newSources[index] = { ...newSources[index], month_1_salary: value };
                             setIncomeSources(newSources);
                             updatePersonMutation.mutate({
                               custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
                             });
                           }}
                           placeholder="0"
-                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
+                          className="h-8"
                         />
                       </div>
                       <div>
                         <Label className="text-xs">משכורת חודש שני</Label>
                         <Input 
-                          type="number"
-                          value={income.month_2_salary || ''}
+                          value={income.month_2_salary ? parseFloat(income.month_2_salary).toLocaleString('he-IL') : ''}
                           onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, '');
                             const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], month_2_salary: e.target.value };
+                            newSources[index] = { ...newSources[index], month_2_salary: value };
                             setIncomeSources(newSources);
                             updatePersonMutation.mutate({
                               custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
                             });
                           }}
                           placeholder="0"
-                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
+                          className="h-8"
                         />
                       </div>
                       <div>
                         <Label className="text-xs">משכורת חודש שלישי</Label>
                         <Input 
-                          type="number"
-                          value={income.month_3_salary || ''}
+                          value={income.month_3_salary ? parseFloat(income.month_3_salary).toLocaleString('he-IL') : ''}
                           onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, '');
                             const newSources = [...incomeSources];
-                            newSources[index] = { ...newSources[index], month_3_salary: e.target.value };
+                            newSources[index] = { ...newSources[index], month_3_salary: value };
                             setIncomeSources(newSources);
                             updatePersonMutation.mutate({
                               custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
                             });
                           }}
                           placeholder="0"
-                          className="h-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
+                          className="h-8"
                         />
                       </div>
                       <div>
                         <Label className="text-xs">ממוצע 3 חודשים</Label>
                         <Input 
-                          type="number"
                           value={(() => {
                             const month1 = parseFloat(income.month_1_salary) || 0;
                             const month2 = parseFloat(income.month_2_salary) || 0;
                             const month3 = parseFloat(income.month_3_salary) || 0;
                             if (month1 === 0 && month2 === 0 && month3 === 0) return '';
                             const avg = Math.round((month1 + month2 + month3) / 3);
-                            return avg;
+                            return avg.toLocaleString('he-IL');
                           })()}
                           readOnly
                           placeholder="0"
-                          className="h-8 bg-blue-50 font-bold [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          style={{ MozAppearance: 'textfield' }}
+                          className="h-8 bg-blue-50 font-bold"
                         />
                       </div>
                     </div>
@@ -1574,11 +1569,11 @@ export default function PersonDetailsView({ personId }) {
                     <div>
                       <Label className="text-xs">סכום הכנסה חודשית</Label>
                       <Input 
-                        type="number"
-                        value={income.monthly_amount || ''}
+                        value={income.monthly_amount ? parseFloat(income.monthly_amount).toLocaleString('he-IL') : ''}
                         onChange={(e) => {
+                          const value = e.target.value.replace(/,/g, '');
                           const newSources = [...incomeSources];
-                          newSources[index] = { ...newSources[index], monthly_amount: e.target.value };
+                          newSources[index] = { ...newSources[index], monthly_amount: value };
                           setIncomeSources(newSources);
                           updatePersonMutation.mutate({
                             custom_data: { ...(person?.custom_data || {}), income_sources: newSources }
