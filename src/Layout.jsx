@@ -363,13 +363,7 @@ export default function Layout({ children, currentPageName }) {
                         </DropdownMenuItem>
                       </Link>
 
-                      <Link to={createPageUrl('ModulesManager')}>
-                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-2 border-purple-300 rounded-lg transition-all">
-                          <div className="flex items-center gap-2 justify-end w-full">
-                            <span className="text-sm font-bold text-white">+ הוסף מודול</span>
-                          </div>
-                        </DropdownMenuItem>
-                      </Link>
+
                     </DropdownMenuContent>
                   </DropdownMenu>
                   {currentPageName === 'Dashboard' && (
