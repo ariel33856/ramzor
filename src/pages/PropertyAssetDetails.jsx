@@ -104,8 +104,8 @@ export default function PropertyAssetDetails() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="flex-1 overflow-y-auto">
+        <div className="bg-white h-full border-none p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div>
