@@ -340,7 +340,7 @@ export default function Layout({ children, currentPageName }) {
 
                         return (
                           <Link key={module.id} to={createPageUrl('ModuleView') + `?moduleId=${module.id}`}>
-                            <DropdownMenuItem className={`px-1.5 py-2.5 cursor-pointer bg-${module.color}-50 border-2 border-${module.color}-200 hover:border-${module.color}-400 hover:bg-${module.color}-100 rounded-lg transition-all`}>
+                            <DropdownMenuItem className={`px-1.5 py-1 cursor-pointer bg-${module.color}-50 border-2 border-${module.color}-200 hover:border-${module.color}-400 hover:bg-${module.color}-100 rounded-lg transition-all`}>
                               <div className="flex items-center gap-2 justify-end w-full">
                                 <span className="text-sm font-medium">{module.name}</span>
                                 <div className={`w-7 h-7 bg-gradient-to-br ${colorGradient} rounded-lg flex items-center justify-center`}>
