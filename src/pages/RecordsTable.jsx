@@ -97,7 +97,6 @@ export default function RecordsTable() {
       status: 'פנוי',
       notes: ''
     });
-    setEditingRecord(null);
   };
 
   const handleSubmit = (e) => {
