@@ -382,7 +382,7 @@ export default function CasePersonal() {
           )}
           <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-yellow-500">
+              <Button variant="outline" size="sm" className="bg-gradient-to-r from-yellow-400 to-purple-600 hover:from-yellow-500 hover:to-purple-700 border-yellow-500 text-white font-medium">
                 <LinkIcon className="w-4 h-4 ml-1" />
                 {linkedContacts.length > 0 ? 'הוסף איש קשר' : 'שייך איש קשר'}
               </Button>
