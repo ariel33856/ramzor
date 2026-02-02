@@ -597,6 +597,7 @@ export default function PersonDetailsView({ personId }) {
                             ? { ...acc, relationship_type: newType }
                             : acc
                       );
+                      setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
                         linked_accounts: updatedLinkedAccounts
                       });
