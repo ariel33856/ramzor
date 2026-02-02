@@ -260,7 +260,7 @@ export default function Layout({ children, currentPageName }) {
         <header className="flex-shrink-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-4">
-              {(currentPageName === 'Dashboard' || currentPageName === 'AccountsArchive' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive') && (
+              {(currentPageName === 'Dashboard' || currentPageName === 'AccountsArchive' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'Sales' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive' || currentPageName === 'RecordsTable') && (
                 <>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPageName === 'Dashboard' && 'חשבונות'}
