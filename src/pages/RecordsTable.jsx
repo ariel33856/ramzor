@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { createPageUrl } from '@/utils';
 
 export default function RecordsTable() {
   const navigate = useNavigate();
@@ -417,7 +418,8 @@ export default function RecordsTable() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setSelectedPropertyForLink(record.id);
                               setLinkDialogOpen(true);
                             }}
@@ -429,7 +431,10 @@ export default function RecordsTable() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleEdit(record)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(record);
+                            }}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                           >
                             <Edit className="w-4 h-4" />
@@ -437,7 +442,8 @@ export default function RecordsTable() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               if (confirm('האם למחוק נכס זה?')) {
                                 deleteMutation.mutate(record.id);
                               }
