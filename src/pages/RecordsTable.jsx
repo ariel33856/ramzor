@@ -183,8 +183,20 @@ export default function RecordsTable() {
             if (!open) resetForm();
           }}>
             <DialogContent className="max-w-none w-screen h-screen max-h-screen overflow-y-auto">
-              <DialogHeader>
+              <DialogHeader className="flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setDialogOpen(false);
+                    resetForm();
+                  }}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
                 <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
+                <div className="w-10" />
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
