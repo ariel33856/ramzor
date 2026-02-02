@@ -242,7 +242,7 @@ export default function CaseData() {
                         });
                       })}
                       <tr className="bg-green-100 border-t-2 border-green-300">
-                         <td colSpan={2} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
+                         <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל הכנסות משוקללות:</td>
                          <td className="p-3 text-center text-lg font-bold text-green-700 border border-gray-300">
                            {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
                              return total + (linkedPerson.custom_data?.income_sources || []).reduce((sum, income) => {
@@ -371,7 +371,7 @@ export default function CaseData() {
                       });
                     })}
                     <tr className="bg-red-100 border-t-2 border-red-300">
-                      <td colSpan={2} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
+                      <td colSpan={3} className="p-3 text-sm font-bold text-right border border-gray-300">סך הכל התחייבויות משוקללות:</td>
                       <td className="p-3 text-center text-lg font-bold text-red-700 border border-gray-300">
                         {Math.round(allLinkedPersons.reduce((total, linkedPerson) => {
                           return total + (linkedPerson.custom_data?.obligations || []).reduce((sum, obligation) => {
