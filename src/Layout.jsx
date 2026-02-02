@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
   const casePages = ['CaseDetails', 'CasePersonal', 'CaseContact', 'CaseSummary', 'CaseNotes', 'CaseData', 
                      'CaseWorkflow', 'CaseCalendar', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
                      'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
-                     'CaseInsurance', 'CaseAccount', 'ArchiveCaseDetails'];
+                     'CaseInsurance', 'CaseAccount', 'CaseProperty', 'CaseTransaction', 'ArchiveCaseDetails'];
   const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
   const personId = currentPageName === 'PersonDetails' ? urlParams.get('id') : null;
 
