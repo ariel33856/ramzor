@@ -109,11 +109,7 @@ export default function RecordsTable() {
       floor: formData.floor ? Number(formData.floor) : undefined,
       price: formData.price ? Number(formData.price) : undefined
     };
-    if (editingRecord) {
-      updateMutation.mutate({ id: editingRecord.id, data });
-    } else {
-      createMutation.mutate(data);
-    }
+    createMutation.mutate(data);
   };
 
   const filteredRecords = records.filter(record =>
