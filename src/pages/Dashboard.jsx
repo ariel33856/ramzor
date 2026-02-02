@@ -299,11 +299,13 @@ export default function Dashboard() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Determine which user to filter by
-      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
+      // If filterUser is set and not 'all', filter by that user
+      if (filterUser && filterUser !== 'all') {
+        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+      }
       
-      // Show only cases created by the target user
-      return base44.entities.MortgageCase.filter({ created_by: targetUser }, '-created_date');
+      // Otherwise show all cases
+      return base44.entities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
     retry: 1,
