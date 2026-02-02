@@ -195,7 +195,9 @@ export default function Layout({ children, currentPageName }) {
     'CasePayments': 'תשלומים',
     'CaseInsurance': 'ביטוחים',
     'CaseProducts': 'מוצרי מעטפת',
-    'CaseAccount': 'חשבון'
+    'CaseAccount': 'חשבון',
+    'CaseProperty': 'נכס',
+    'CaseTransaction': 'עסקה'
   };
 
   // Don't show layout for client portal
