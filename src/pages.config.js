@@ -92,7 +92,6 @@ import NewContact from './pages/NewContact';
 import Notifications from './pages/Notifications';
 import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
-import PropertyAssets from './pages/PropertyAssets';
 import RecordsTable from './pages/RecordsTable';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
@@ -145,7 +144,6 @@ export const PAGES = {
     "Notifications": Notifications,
     "PersonDetails": PersonDetails,
     "Products": Products,
-    "PropertyAssets": PropertyAssets,
     "RecordsTable": RecordsTable,
     "Sales": Sales,
     "SearchPage": SearchPage,
