@@ -707,17 +707,6 @@ export default function Layout({ children, currentPageName }) {
                     </DropdownMenuItem>
                   </Link>
 
-                  <Link to={createPageUrl('Sales')}>
-                    <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-purple-50 border-2 border-purple-200 hover:border-purple-400 hover:bg-purple-100 rounded-lg transition-all">
-                      <div className="flex items-center gap-2 justify-end w-full">
-                        <span className="text-sm font-medium">מכירות</span>
-                        <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                          <ShoppingCart className="w-4 h-4 text-white" />
-                        </div>
-                      </div>
-                    </DropdownMenuItem>
-                  </Link>
-
                   <Link to={createPageUrl('Dashboard')}>
                     <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-green-50 border-2 border-green-200 hover:border-green-400 hover:bg-green-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
