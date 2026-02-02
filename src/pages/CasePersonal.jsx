@@ -95,7 +95,8 @@ export default function CasePersonal() {
         person.linked_accounts && person.linked_accounts.includes(caseId)
       );
     },
-    enabled: !!caseId
+    enabled: !!caseId,
+    refetchInterval: 2000
   });
 
   React.useEffect(() => {

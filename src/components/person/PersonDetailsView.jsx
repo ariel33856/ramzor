@@ -364,6 +364,11 @@ export default function PersonDetailsView({ personId }) {
         if (person.custom_data.obligations && Array.isArray(person.custom_data.obligations)) {
           setObligations(person.custom_data.obligations);
         }
+
+        // Load relationship_type from custom_data
+        if (person.custom_data.relationship_type) {
+          setRelationshipType(person.custom_data.relationship_type);
+        }
       }
       }
       }, [person]);
@@ -502,10 +507,34 @@ export default function PersonDetailsView({ personId }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
-                  <DropdownMenuItem onClick={() => setRelationshipType('לווה')} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'ערב' : 'ערבה')} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">{gender === 'male' ? 'ערב' : 'ערבה'}</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת')} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setRelationshipType(gender === 'male' ? 'בן זוג' : 'בת זוג')} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const newType = 'לווה';
+                    setRelationshipType(newType);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                    });
+                  }} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const newType = gender === 'male' ? 'ערב' : 'ערבה';
+                    setRelationshipType(newType);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                    });
+                  }} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">{gender === 'male' ? 'ערב' : 'ערבה'}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const newType = gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת';
+                    setRelationshipType(newType);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                    });
+                  }} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const newType = gender === 'male' ? 'בן זוג' : 'בת זוג';
+                    setRelationshipType(newType);
+                    updatePersonMutation.mutate({
+                      custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                    });
+                  }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               {linkedAccountsData.map(account => (
