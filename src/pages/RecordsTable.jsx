@@ -166,16 +166,22 @@ export default function RecordsTable() {
       {/* Header */}
       <div className="flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 p-3 mb-1">
         <div className="flex flex-col md:flex-row gap-3 items-center">
+          <Button 
+            onClick={() => {
+              setEditingRecord(null);
+              resetForm();
+              setDialogOpen(true);
+            }}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          >
+            <Plus className="w-5 h-5 ml-2" />
+            נכס חדש
+          </Button>
+
           <Dialog open={dialogOpen} onOpenChange={(open) => {
             setDialogOpen(open);
             if (!open) resetForm();
           }}>
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                <Plus className="w-5 h-5 ml-2" />
-                נכס חדש
-              </Button>
-            </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingRecord ? 'עריכת נכס' : 'נכס חדש'}</DialogTitle>
