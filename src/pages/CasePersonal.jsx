@@ -342,17 +342,13 @@ export default function CasePersonal() {
             const couples = [];
             const displayedIds = new Set();
 
-            // זיהוי זוגות
-            linkedContacts.forEach((contact, idx) => {
+            // זיהוי זוגות מ-spouse_id
+            linkedContacts.forEach((contact) => {
               if (displayedIds.has(contact.id)) return;
-              const relType = contact.custom_data?.relationship_type || 'לווה';
-              if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
-                const partner = linkedContacts.find(c => {
-                  if (c.id === contact.id || displayedIds.has(c.id)) return false;
-                  const pRelType = c.custom_data?.relationship_type || 'לווה';
-                  return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
-                });
-                if (partner) {
+              const spouseId = contact.custom_data?.spouse_id;
+              if (spouseId) {
+                const partner = linkedContacts.find(c => c.id === spouseId);
+                if (partner && !displayedIds.has(partner.id)) {
                   couples.push({ contact, partner });
                   displayedIds.add(contact.id);
                   displayedIds.add(partner.id);
