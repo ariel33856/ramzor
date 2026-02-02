@@ -335,20 +335,24 @@ export default function CasePersonal() {
 
   return (
     <div className="relative">
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-3 overflow-x-auto">
-        <div className="flex items-center gap-2 flex-wrap min-w-max">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-3">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
           {linkedContacts.length > 0 && (() => {
             const couples = [];
             const displayedIds = new Set();
 
-            // זיהוי זוגות מ-spouse_id
-            linkedContacts.forEach((contact) => {
+            // זיהוי זוגות
+            linkedContacts.forEach((contact, idx) => {
               if (displayedIds.has(contact.id)) return;
-              const spouseId = contact.custom_data?.spouse_id;
-              if (spouseId) {
-                const partner = linkedContacts.find(c => c.id === spouseId);
-                if (partner && !displayedIds.has(partner.id)) {
+              const relType = contact.custom_data?.relationship_type || 'לווה';
+              if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+                const partner = linkedContacts.find(c => {
+                  if (c.id === contact.id || displayedIds.has(c.id)) return false;
+                  const pRelType = c.custom_data?.relationship_type || 'לווה';
+                  return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
+                });
+                if (partner) {
                   couples.push({ contact, partner });
                   displayedIds.add(contact.id);
                   displayedIds.add(partner.id);
@@ -540,7 +544,7 @@ export default function CasePersonal() {
           </Dialog>
         </div>
       </div>
-      <div className="space-y-4 px-4 py-6">
+      <div className="space-y-4 p-6">
         {sortedContacts.map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
