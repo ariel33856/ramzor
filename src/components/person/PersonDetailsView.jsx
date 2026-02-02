@@ -247,8 +247,11 @@ export default function PersonDetailsView({ personId }) {
   };
 
   const handleLinkToAccount = (accountId) => {
-    if (!linkedAccounts.includes(accountId)) {
-      const updatedAccounts = [...linkedAccounts, accountId];
+    const isAlreadyLinked = linkedAccounts.some(link => 
+      typeof link === 'string' ? link === accountId : link.case_id === accountId
+    );
+    if (!isAlreadyLinked) {
+      const updatedAccounts = [...linkedAccounts, { case_id: accountId, relationship_type: 'לווה' }];
       setLinkedAccounts(updatedAccounts);
       updatePersonMutation.mutate({ linked_accounts: updatedAccounts });
       setDialogOpen(false);
