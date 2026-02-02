@@ -86,10 +86,17 @@ export default function RecordsTable() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const data = {
+      ...formData,
+      size_sqm: formData.size_sqm ? Number(formData.size_sqm) : undefined,
+      rooms: formData.rooms ? Number(formData.rooms) : undefined,
+      floor: formData.floor ? Number(formData.floor) : undefined,
+      price: formData.price ? Number(formData.price) : undefined
+    };
     if (editingRecord) {
-      updateMutation.mutate({ id: editingRecord.id, data: formData });
+      updateMutation.mutate({ id: editingRecord.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
   };
 
