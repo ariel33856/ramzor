@@ -62,14 +62,7 @@ export default function RecordsTable() {
     }
   });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.PropertyAsset.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['property-assets'] });
-      setDialogOpen(false);
-      resetForm();
-    }
-  });
+
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.PropertyAsset.delete(id),
