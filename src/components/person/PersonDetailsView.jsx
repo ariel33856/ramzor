@@ -93,6 +93,7 @@ export default function PersonDetailsView({ personId }) {
   const [uploadingPayslip, setUploadingPayslip] = useState(null);
   const [obligations, setObligations] = useState([]);
   const [isCollapsedObligations, setIsCollapsedObligations] = useState(false);
+  const obligationsTimeoutRef = React.useRef(null);
 
 
   const { data: person, isLoading } = useQuery({
@@ -1683,9 +1684,15 @@ export default function PersonDetailsView({ personId }) {
                         const newObligations = [...obligations];
                         newObligations[index] = { ...newObligations[index], institution_name: e.target.value };
                         setObligations(newObligations);
-                        updatePersonMutation.mutate({
-                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
-                        });
+                        
+                        if (obligationsTimeoutRef.current) {
+                          clearTimeout(obligationsTimeoutRef.current);
+                        }
+                        obligationsTimeoutRef.current = setTimeout(() => {
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                          });
+                        }, 1000);
                       }}
                       placeholder="שם הבנק/מוסד"
                       className="h-8"
@@ -1700,9 +1707,15 @@ export default function PersonDetailsView({ personId }) {
                         const newObligations = [...obligations];
                         newObligations[index] = { ...newObligations[index], balance: value };
                         setObligations(newObligations);
-                        updatePersonMutation.mutate({
-                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
-                        });
+                        
+                        if (obligationsTimeoutRef.current) {
+                          clearTimeout(obligationsTimeoutRef.current);
+                        }
+                        obligationsTimeoutRef.current = setTimeout(() => {
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                          });
+                        }, 1000);
                       }}
                       placeholder="0"
                       className="h-8"
@@ -1717,9 +1730,15 @@ export default function PersonDetailsView({ personId }) {
                         const newObligations = [...obligations];
                         newObligations[index] = { ...newObligations[index], monthly_payment: value };
                         setObligations(newObligations);
-                        updatePersonMutation.mutate({
-                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
-                        });
+                        
+                        if (obligationsTimeoutRef.current) {
+                          clearTimeout(obligationsTimeoutRef.current);
+                        }
+                        obligationsTimeoutRef.current = setTimeout(() => {
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                          });
+                        }, 1000);
                       }}
                       placeholder="0"
                       className="h-8"
@@ -1733,9 +1752,15 @@ export default function PersonDetailsView({ personId }) {
                         const newObligations = [...obligations];
                         newObligations[index] = { ...newObligations[index], notes: e.target.value };
                         setObligations(newObligations);
-                        updatePersonMutation.mutate({
-                          custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
-                        });
+                        
+                        if (obligationsTimeoutRef.current) {
+                          clearTimeout(obligationsTimeoutRef.current);
+                        }
+                        obligationsTimeoutRef.current = setTimeout(() => {
+                          updatePersonMutation.mutate({
+                            custom_data: { ...(person?.custom_data || {}), obligations: newObligations }
+                          });
+                        }, 1000);
                       }}
                       placeholder="הערות"
                       className="h-8"
