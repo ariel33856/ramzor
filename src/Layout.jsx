@@ -353,7 +353,7 @@ export default function Layout({ children, currentPageName }) {
                       })}
 
                       <Link to={createPageUrl('ModuleView') + `?moduleId=moshe`}>
-                        <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-yellow-50 border-2 border-yellow-200 hover:border-yellow-400 hover:bg-yellow-100 rounded-lg transition-all">
+                        <DropdownMenuItem className="px-1.5 py-2.5 cursor-pointer bg-yellow-50 border-2 border-yellow-200 hover:border-yellow-400 hover:bg-yellow-100 rounded-lg transition-all">
                           <div className="flex items-center gap-2 justify-end w-full">
                             <span className="text-sm font-medium">משה</span>
                             <div className="w-7 h-7 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
