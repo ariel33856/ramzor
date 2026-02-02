@@ -74,7 +74,7 @@ export default function PropertyAssetDetails() {
   }
 
   return (
-    <div className="h-screen w-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-gray-50 flex flex-col overflow-hidden">
       {/* Top Bar */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
