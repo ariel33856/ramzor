@@ -378,7 +378,7 @@ export default function RecordsTable() {
                       className={`border-b border-gray-100 hover:bg-blue-50 transition-colors cursor-pointer ${
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                       }`}
-                      onClick={() => handleEdit(record)}
+                      onClick={() => navigate(createPageUrl('PropertyAssetDetails') + `?id=${record.id}`)}
                     >
                       <td className="px-6 py-3">
                         <span className="font-semibold text-gray-900">{record.address}</span>
