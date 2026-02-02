@@ -73,7 +73,6 @@ import CaseProfiles from './pages/CaseProfiles';
 import CaseStatus from './pages/CaseStatus';
 import CaseSummary from './pages/CaseSummary';
 import CaseTracking from './pages/CaseTracking';
-import CaseTransaction from './pages/CaseTransaction';
 import CaseWorkflow from './pages/CaseWorkflow';
 import ClientPortal from './pages/ClientPortal';
 import Communication from './pages/Communication';
@@ -92,10 +91,11 @@ import NewContact from './pages/NewContact';
 import Notifications from './pages/Notifications';
 import PersonDetails from './pages/PersonDetails';
 import Products from './pages/Products';
-import PropertyAssets from './pages/PropertyAssets';
-import RecordsTable from './pages/RecordsTable';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
+import CaseTransaction from './pages/CaseTransaction';
+import PropertyAssets from './pages/PropertyAssets';
+import RecordsTable from './pages/RecordsTable';
 import __Layout from './Layout.jsx';
 
 
@@ -126,7 +126,6 @@ export const PAGES = {
     "CaseStatus": CaseStatus,
     "CaseSummary": CaseSummary,
     "CaseTracking": CaseTracking,
-    "CaseTransaction": CaseTransaction,
     "CaseWorkflow": CaseWorkflow,
     "ClientPortal": ClientPortal,
     "Communication": Communication,
@@ -145,10 +144,11 @@ export const PAGES = {
     "Notifications": Notifications,
     "PersonDetails": PersonDetails,
     "Products": Products,
-    "PropertyAssets": PropertyAssets,
-    "RecordsTable": RecordsTable,
     "Sales": Sales,
     "SearchPage": SearchPage,
+    "CaseTransaction": CaseTransaction,
+    "PropertyAssets": PropertyAssets,
+    "RecordsTable": RecordsTable,
 }
 
 export const pagesConfig = {
