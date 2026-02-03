@@ -110,6 +110,13 @@ export default function CasePersonal() {
     }
   }, [linkedContacts]);
 
+  React.useEffect(() => {
+    if (contactDialogOpen) {
+      setShowNewContactForm(false);
+      setContactSearchTerm('');
+    }
+  }, [contactDialogOpen]);
+
   const moveContactToTop = (contactId) => {
     setSortedContacts(prev => {
       const contact = prev.find(c => c.id === contactId);
