@@ -695,10 +695,10 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 );
                 })}
-                {linkedAccountsData.filter(account => {
-                  const currentCaseId = new URLSearchParams(window.location.search).get('id');
-                  return account.id !== currentCaseId;
-                }).map(account => {
+              {linkedAccountsData.filter(account => {
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                return account.id !== currentCaseId;
+              }).map(account => {
                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
                 const isCurrentAccount = account.id === currentCaseId;
                 return (
