@@ -116,6 +116,14 @@ export default function CasePersonal() {
       const others = prev.filter(c => c.id !== contactId);
       return contact ? [contact, ...others] : prev;
     });
+    
+    // גלילה לאיש הקשר לאחר שהוא עבר לראש הרשימה
+    setTimeout(() => {
+      const element = document.getElementById(`contact-${contactId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
