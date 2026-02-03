@@ -118,20 +118,11 @@ export default function CasePersonal() {
   }, [contactDialogOpen]);
 
   const moveContactToTop = (contactId) => {
-    setSortedContacts(prev => {
-      const contact = prev.find(c => c.id === contactId);
-      const others = prev.filter(c => c.id !== contactId);
-      return contact ? [contact, ...others] : prev;
-    });
-    
-    // גלילה לאיש הקשר לאחר שהוא עבר לראש הרשימה
+    // גלילה לאיש הקשר
     setTimeout(() => {
       const element = document.getElementById(`contact-${contactId}`);
       if (element) {
-        const container = element.closest('main');
-        if (container) {
-          container.scrollTop = element.offsetTop - 10;
-        }
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
   };
