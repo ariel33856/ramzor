@@ -107,7 +107,9 @@ export default function Layout({ children, currentPageName }) {
   const linkedPersonViaAccounts = React.useMemo(() => {
     if (!caseId || !allPersons.length) return null;
     return allPersons.find(person => 
-      person.linked_accounts && person.linked_accounts.includes(caseId)
+      person.linked_accounts && person.linked_accounts.some(link =>
+        typeof link === 'string' ? link === caseId : link.case_id === caseId
+      )
     );
   }, [caseId, allPersons]);
 
