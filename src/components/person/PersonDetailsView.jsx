@@ -676,7 +676,7 @@ export default function PersonDetailsView({ personId }) {
                 const accountRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : 'לווה';
 
                 return (
-                <div key={account.id} className="flex items-center gap-0 border-4 border-blue-300 rounded-lg p-1 shadow-lg bg-white">
+                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-300 rounded-lg p-3 shadow-lg bg-white">
                   <div className="text-xs font-bold px-2 py-1 bg-blue-100 text-blue-700 rounded-none">
                     {accountRelationshipType}
                   </div>
