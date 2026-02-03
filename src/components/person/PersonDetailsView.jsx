@@ -695,6 +695,7 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 );
                 })}
+                </div>
               {linkedAccountsData.filter(account => {
                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
                 return account.id !== currentCaseId;
