@@ -395,6 +395,21 @@ export default function CasePersonal() {
               }
             });
 
+            // פונקציה להצגת סוג הזיקה עם התאמה למין
+            const getDisplayRelationshipType = (contact) => {
+              const relType = getRelationshipType(contact);
+              const gender = contact.custom_data?.gender || 'male';
+              
+              if (relType === 'ערב' || relType === 'ערבה') {
+                return gender === 'female' ? 'ערבה' : 'ערב';
+              } else if (relType === 'ערב ממשכן' || relType === 'ערבה ממשכנת') {
+                return gender === 'female' ? 'ערבה ממשכנת' : 'ערב ממשכן';
+              } else if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+                return gender === 'female' ? 'בת זוג' : 'בן זוג';
+              }
+              return relType;
+            };
+
             const otherContacts = linkedContacts.filter(c => !displayedIds.has(c.id))
               .sort((a, b) => {
                 const aType = getRelationshipType(a);
@@ -433,6 +448,7 @@ export default function CasePersonal() {
                 })}
                 {otherContacts.map((contact, idx) => {
                   const relationshipType = getRelationshipType(contact);
+                  const displayRelType = getDisplayRelationshipType(contact);
                   let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                   if (relationshipType === 'לווה') {
                     buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
@@ -448,7 +464,7 @@ export default function CasePersonal() {
                     <React.Fragment key={contact.id}>
                       <button onClick={() => moveContactToTop(contact.id)} className={buttonClass}>
                         <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
-                        {relationshipType && <span className="text-xs opacity-90 mt-0.5">{relationshipType}</span>}
+                        {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
                       </button>
                       {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
                     </React.Fragment>
