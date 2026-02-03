@@ -365,14 +365,26 @@ export default function CasePersonal() {
             const couples = [];
             const displayedIds = new Set();
 
+            // פונקציה לשליפת סוג הזיקה הספציפי לחשבון הנוכחי
+            const getRelationshipType = (contact) => {
+              if (!contact.linked_accounts) return 'לווה';
+              const currentLink = contact.linked_accounts.find(acc => 
+                typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
+              );
+              if (currentLink && typeof currentLink === 'object') {
+                return currentLink.relationship_type || 'לווה';
+              }
+              return 'לווה';
+            };
+
             // זיהוי זוגות
             linkedContacts.forEach((contact, idx) => {
               if (displayedIds.has(contact.id)) return;
-              const relType = contact.custom_data?.relationship_type || 'לווה';
+              const relType = getRelationshipType(contact);
               if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
                 const partner = linkedContacts.find(c => {
                   if (c.id === contact.id || displayedIds.has(c.id)) return false;
-                  const pRelType = c.custom_data?.relationship_type || 'לווה';
+                  const pRelType = getRelationshipType(c);
                   return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
                 });
                 if (partner) {
@@ -385,8 +397,8 @@ export default function CasePersonal() {
 
             const otherContacts = linkedContacts.filter(c => !displayedIds.has(c.id))
               .sort((a, b) => {
-                const aType = a.custom_data?.relationship_type || 'לווה';
-                const bType = b.custom_data?.relationship_type || 'לווה';
+                const aType = getRelationshipType(a);
+                const bType = getRelationshipType(b);
                 const typeOrder = { 'לווה': 0, 'ערב': 1, 'ערבה': 1, 'ערב ממשכן': 2, 'ערבה ממשכנת': 2 };
                 return (typeOrder[bType] || 3) - (typeOrder[aType] || 3);
               });
@@ -397,7 +409,7 @@ export default function CasePersonal() {
                 {couples.map(({ contact, partner }, coupleIdx) => {
                   const getButtonClass = (rel) => {
                     let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
-                    const relationshipType = rel.custom_data?.relationship_type || 'לווה';
+                    const relationshipType = getRelationshipType(rel);
                     if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
                       buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
                     }
@@ -420,7 +432,7 @@ export default function CasePersonal() {
                   );
                 })}
                 {otherContacts.map((contact, idx) => {
-                  const relationshipType = contact.custom_data?.relationship_type || 'לווה';
+                  const relationshipType = getRelationshipType(contact);
                   let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                   if (relationshipType === 'לווה') {
                     buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
