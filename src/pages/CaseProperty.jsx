@@ -229,115 +229,141 @@ export default function CaseProperty() {
             <p className="text-gray-400">בחר נכס קיים או צור נכס חדש</p>
           </motion.div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <div className="overflow-x-auto max-h-[75vh]">
-              <table className="w-full">
-                <thead className="sticky top-0 z-40 bg-gradient-to-r from-teal-50 to-cyan-50">
-                  <tr className="border-b-2 border-gray-200">
-                    {allFieldNames.map(fieldName => (
-                      <th key={fieldName} className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-                        {getFieldLabel(fieldName)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {properties.map((property, index) => {
-                    const updateField = (fieldName, value) => {
-                      const data = { [fieldName]: value };
-                      if (['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName)) {
-                        data[fieldName] = value ? Number(value) : undefined;
-                      }
-                      updatePropertyMutation.mutate({ id: property.id, data });
-                    };
+          <div className="space-y-4">
+            {properties.map((property, index) => {
+              const updateField = (fieldName, value) => {
+                const data = { [fieldName]: value };
+                if (['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName)) {
+                  data[fieldName] = value ? Number(value) : undefined;
+                }
+                updatePropertyMutation.mutate({ id: property.id, data });
+              };
 
-                    return (
-                      <motion.tr
-                        key={property.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.02 }}
-                        className="border-b border-gray-100"
+              return (
+                <motion.div
+                  key={property.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.02 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>כתובת</Label>
+                      <Input
+                        value={property.address || ''}
+                        onChange={(e) => updateField('address', e.target.value)}
+                        className="font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <Label>עיר</Label>
+                      <Input
+                        value={property.city || ''}
+                        onChange={(e) => updateField('city', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Label>סוג נכס</Label>
+                      <select
+                        value={property.property_type || 'דירה'}
+                        onChange={(e) => updateField('property_type', e.target.value)}
+                        className="w-full h-9 px-3 rounded-md border border-input bg-background"
                       >
-                        {allFieldNames.map(fieldName => {
-                          const value = property[fieldName] || (property.custom_data && property.custom_data[fieldName]) || '';
-                          
-                          if (fieldName === 'property_type') {
-                            return (
-                              <td key={fieldName} className="px-6 py-4">
-                                <select
-                                  value={value}
-                                  onChange={(e) => updateField(fieldName, e.target.value)}
-                                  className="w-full h-8 px-2 rounded-md border border-input bg-background text-sm"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <option value="דירה">דירה</option>
-                                  <option value="בית">בית</option>
-                                  <option value="דירת גן">דירת גן</option>
-                                  <option value="פנטהאוז">פנטהאוז</option>
-                                  <option value="משרד">משרד</option>
-                                  <option value="חנות">חנות</option>
-                                  <option value="מחסן">מחסן</option>
-                                  <option value="קרקע">קרקע</option>
-                                  <option value="אחר">אחר</option>
-                                </select>
-                              </td>
-                            );
-                          }
-                          
-                          if (fieldName === 'status') {
-                            return (
-                              <td key={fieldName} className="px-6 py-4">
-                                <select
-                                  value={value}
-                                  onChange={(e) => updateField(fieldName, e.target.value)}
-                                  className="w-full h-8 px-2 rounded-md border border-input bg-background text-sm"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <option value="פנוי">פנוי</option>
-                                  <option value="תפוס">תפוס</option>
-                                  <option value="להשכרה">להשכרה</option>
-                                  <option value="למכירה">למכירה</option>
-                                </select>
-                              </td>
-                            );
-                          }
-                          
-                          if (fieldName === 'notes') {
-                            return (
-                              <td key={fieldName} className="px-6 py-4">
-                                <textarea
-                                  value={value}
-                                  onChange={(e) => updateField(fieldName, e.target.value)}
-                                  className="w-full h-8 px-2 py-1 rounded-md border border-input bg-background text-sm resize-none"
-                                  onClick={(e) => e.stopPropagation()}
-                                  rows={1}
-                                />
-                              </td>
-                            );
-                          }
-                          
-                          const isNumeric = ['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName);
-                          
-                          return (
-                            <td key={fieldName} className="px-6 py-4">
-                              <Input
-                                type={isNumeric ? 'number' : 'text'}
-                                step={fieldName === 'rooms' ? '0.5' : undefined}
-                                value={value}
-                                onChange={(e) => updateField(fieldName, e.target.value)}
-                                className={`h-8 text-sm ${fieldName === 'address' ? 'font-semibold' : ''}`}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            </td>
-                          );
-                        })}
-                      </motion.tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        <option value="דירה">דירה</option>
+                        <option value="בית">בית</option>
+                        <option value="דירת גן">דירת גן</option>
+                        <option value="פנטהאוז">פנטהאוז</option>
+                        <option value="משרד">משרד</option>
+                        <option value="חנות">חנות</option>
+                        <option value="מחסן">מחסן</option>
+                        <option value="קרקע">קרקע</option>
+                        <option value="אחר">אחר</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>סטטוס</Label>
+                      <select
+                        value={property.status || 'פנוי'}
+                        onChange={(e) => updateField('status', e.target.value)}
+                        className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                      >
+                        <option value="פנוי">פנוי</option>
+                        <option value="תפוס">תפוס</option>
+                        <option value="להשכרה">להשכרה</option>
+                        <option value="למכירה">למכירה</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    <div>
+                      <Label>שטח (מ"ר)</Label>
+                      <Input
+                        type="number"
+                        value={property.size_sqm || ''}
+                        onChange={(e) => updateField('size_sqm', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>מספר חדרים</Label>
+                      <Input
+                        type="number"
+                        step="0.5"
+                        value={property.rooms || ''}
+                        onChange={(e) => updateField('rooms', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>קומה</Label>
+                      <Input
+                        type="number"
+                        value={property.floor || ''}
+                        onChange={(e) => updateField('floor', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <Label>מחיר (₪)</Label>
+                    <Input
+                      type="number"
+                      value={property.price || ''}
+                      onChange={(e) => updateField('price', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Label>שם בעלים</Label>
+                      <Input
+                        value={property.owner_name || ''}
+                        onChange={(e) => updateField('owner_name', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>טלפון בעלים</Label>
+                      <Input
+                        value={property.owner_phone || ''}
+                        onChange={(e) => updateField('owner_phone', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <Label>הערות</Label>
+                    <Textarea
+                      value={property.notes || ''}
+                      onChange={(e) => updateField('notes', e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
