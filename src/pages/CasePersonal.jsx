@@ -91,9 +91,14 @@ export default function CasePersonal() {
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
       const allPersons = await base44.entities.Person.list();
-      return allPersons.filter(person => 
-        person.linked_accounts && person.linked_accounts.includes(caseId)
-      );
+      return allPersons.filter(person => {
+        if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
+        
+        // תמיכה במבנה ישן (מערך של מחרוזות) וחדש (מערך של אובייקטים)
+        return person.linked_accounts.some(acc => 
+          typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
+        );
+      });
     },
     enabled: !!caseId,
     refetchInterval: 2000
