@@ -230,8 +230,15 @@ export default function CasePersonal() {
     mutationFn: async (contactId) => {
       const contact = await base44.entities.Person.filter({ id: contactId }).then(res => res[0]);
       const currentAccounts = contact.linked_accounts || [];
+      
+      // יצירת אובייקט זיקה חדש
+      const newLink = {
+        case_id: caseId,
+        relationship_type: 'לווה'
+      };
+      
       await base44.entities.Person.update(contactId, {
-        linked_accounts: [...currentAccounts, caseId]
+        linked_accounts: [...currentAccounts, newLink]
       });
     },
     onSuccess: () => {
