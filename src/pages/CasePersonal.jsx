@@ -277,7 +277,10 @@ export default function CasePersonal() {
         ...contactData,
         type: 'איש קשר',
         is_archived: false,
-        linked_accounts: [caseId]
+        linked_accounts: [{
+          case_id: caseId,
+          relationship_type: 'לווה'
+        }]
       });
       return newContact;
     },
