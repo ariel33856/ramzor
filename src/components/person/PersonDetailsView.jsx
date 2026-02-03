@@ -677,21 +677,21 @@ export default function PersonDetailsView({ personId }) {
 
                 return (
                 <div key={account.id} className="flex items-center gap-3 border-4 border-blue-300 rounded-lg p-3 shadow-lg bg-white">
-                  <div className="text-xs font-bold px-2 py-1 bg-blue-100 text-blue-700 rounded-none">
-                    {accountRelationshipType}
+                  <div className="text-sm font-bold px-3 py-1 bg-blue-100 text-blue-700 rounded-l-lg">
+                    זיקה: {accountRelationshipType}
                   </div>
                   <Button 
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="whitespace-nowrap rounded-none cursor-pointer bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-gray-700"
+                    className="whitespace-nowrap rounded-r-none cursor-pointer bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-gray-700"
                   >
-                    {account.client_name} {account.account_number}
+                    חשבון משויך: {account.client_name} {account.account_number}
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-none"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-r-lg"
                         title="בטל שיוך"
                       >
                         <Trash2 className="w-4 h-4" />
