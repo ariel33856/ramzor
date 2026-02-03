@@ -630,16 +630,16 @@ export default function PersonDetailsView({ personId }) {
                   </DropdownMenu>
                   <Button 
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="whitespace-nowrap rounded-none cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    className="whitespace-nowrap rounded-r-none cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
-                    {account.client_name} {account.account_number}
+                    חשבון משויך: {account.client_name} {account.account_number}
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-none"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-r-lg"
                         title="בטל שיוך"
                       >
                         <Trash2 className="w-4 h-4" />
