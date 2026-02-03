@@ -746,6 +746,7 @@ export default function PersonDetailsView({ personId }) {
               </div>
               );
               })}
+            </div>
             ) : (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
