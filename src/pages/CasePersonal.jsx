@@ -121,7 +121,10 @@ export default function CasePersonal() {
     setTimeout(() => {
       const element = document.getElementById(`contact-${contactId}`);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const container = element.closest('main');
+        if (container) {
+          container.scrollTop = element.offsetTop - 10;
+        }
       }
     }, 100);
   };
