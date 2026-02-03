@@ -552,8 +552,8 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
-            <>
-              <div className="flex items-center gap-2 border-4 border-blue-500 rounded-lg p-1 shadow-lg bg-white">
+            <div className="flex items-center gap-2 border-4 border-blue-500 rounded-lg p-1 shadow-lg bg-white">
+              <div className="flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button className={`whitespace-nowrap ${
