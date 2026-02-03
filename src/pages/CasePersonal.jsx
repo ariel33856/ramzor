@@ -253,13 +253,12 @@ export default function CasePersonal() {
         relationship_type: 'לווה'
       };
       
-      return await base44.entities.Person.update(contactId, {
+      await base44.entities.Person.update(contactId, {
         linked_accounts: [...currentAccounts, newLink]
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
       setContactDialogOpen(false);
       setContactSearchTerm('');
     }
