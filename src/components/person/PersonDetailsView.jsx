@@ -567,14 +567,14 @@ export default function PersonDetailsView({ personId }) {
                 <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button className={`whitespace-nowrap rounded-none ${
+                      <Button className={`whitespace-nowrap rounded-l-lg ${
                         currentRelationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' :
                         (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') ? 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600' :
                         (currentRelationshipType === 'ערב ממשכן' || currentRelationshipType === 'ערבה ממשכנת') ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
                         (currentRelationshipType === 'בן/בת זוג' || currentRelationshipType === 'בן זוג' || currentRelationshipType === 'בת זוג') ? 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500' :
                         'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
                       }`}>
-                        {currentRelationshipType ? `זיקה: ${currentRelationshipType}` : 'זיקה לחשבון'}
+                        {currentRelationshipType ? `זיקה לחשבון: ${currentRelationshipType}` : 'זיקה לחשבון'}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
