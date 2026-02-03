@@ -519,10 +519,10 @@ export default function PersonDetailsView({ personId }) {
         </div>
         <div className="mr-auto flex items-center gap-2">
           {linkedAccountsData.length > 0 ? (
-            <>
+            <div className="flex items-center gap-2 border-4 border-blue-500 rounded-lg p-1 shadow-lg bg-white">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className={`whitespace-nowrap border-4 border-blue-500 shadow-lg ${
+                  <Button className={`whitespace-nowrap ${
                     relationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' :
                     (relationshipType === 'ערב' || relationshipType === 'ערבה') ? 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600' :
                     (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
@@ -620,7 +620,7 @@ export default function PersonDetailsView({ personId }) {
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
                     className={`whitespace-nowrap rounded-l-none cursor-pointer ${
                       isCurrentAccount 
-                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-4 border-blue-500 shadow-lg' 
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' 
                         : 'bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-gray-700'
                     }`}
                   >
@@ -658,6 +658,7 @@ export default function PersonDetailsView({ personId }) {
                 </div>
               );
               })}
+            </div>
             </>
           ) : (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
