@@ -564,7 +564,7 @@ export default function PersonDetailsView({ personId }) {
                 const currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
 
                 return (
-                <div key={account.id} className="flex items-center gap-0 border-4 border-blue-500 rounded-lg p-1 shadow-lg bg-white">
+                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className={`whitespace-nowrap rounded-none ${
