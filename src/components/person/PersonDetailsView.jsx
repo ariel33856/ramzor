@@ -345,6 +345,11 @@ export default function PersonDetailsView({ personId }) {
           setSpouseId(person.custom_data.spouse_id);
         }
 
+        // Load gender from custom_data
+        if (person.custom_data.gender) {
+          setGender(person.custom_data.gender);
+        }
+
         // Load num_siblings from custom_data
         if (person.custom_data.num_siblings) {
           setNumSiblings(person.custom_data.num_siblings);
@@ -1016,7 +1021,14 @@ export default function PersonDetailsView({ personId }) {
                 if (data.city) updates.residential_city = data.city;
                 
                 setBasicData(prev => ({ ...prev, ...updates }));
-                if (data.gender) setGender(data.gender);
+                if (data.gender) {
+                  setGender(data.gender);
+                  // Save gender to custom_data
+                  updates.custom_data = {
+                    ...(person?.custom_data || {}),
+                    gender: data.gender
+                  };
+                }
                 
                 // Update children data
                 if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
@@ -1030,10 +1042,12 @@ export default function PersonDetailsView({ personId }) {
                 }
                 
                 const customData = { 
-                  ...(person?.custom_data || {}), 
+                  ...(person?.custom_data || {}),
+                  ...(updates.custom_data || {}),
                   id_upload_data: data,
                   birth_date: data.birth_date || person?.custom_data?.birth_date
                 };
+                delete updates.custom_data;
                 updatePersonMutation.mutate({ ...updates, custom_data: customData });
               }}
             />
@@ -1098,7 +1112,12 @@ export default function PersonDetailsView({ personId }) {
                 />
 
                 <Label className="text-sm whitespace-nowrap">מין</Label>
-                <Select value={gender} onValueChange={setGender}>
+                <Select value={gender} onValueChange={(value) => {
+                  setGender(value);
+                  updatePersonMutation.mutate({
+                    custom_data: { ...(person?.custom_data || {}), gender: value }
+                  });
+                }}>
                   <SelectTrigger className="h-8 bg-white w-auto min-w-20">
                     <SelectValue placeholder="בחר"/>
                   </SelectTrigger>
