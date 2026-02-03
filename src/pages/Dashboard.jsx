@@ -318,11 +318,14 @@ export default function Dashboard() {
     const map = {};
     allPersons.forEach(person => {
       if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
-        person.linked_accounts.forEach(caseId => {
-          if (!map[caseId]) {
-            map[caseId] = [];
+        person.linked_accounts.forEach(link => {
+          const caseId = typeof link === 'string' ? link : link.case_id;
+          if (caseId) {
+            if (!map[caseId]) {
+              map[caseId] = [];
+            }
+            map[caseId].push(person);
           }
-          map[caseId].push(person);
         });
       }
     });
