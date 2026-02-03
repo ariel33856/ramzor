@@ -518,26 +518,24 @@ export default function CasePersonal() {
                           contact.phone?.includes(contactSearchTerm))
                         )
                         .map(contact => (
-                          <button
+                          <div
                             key={contact.id}
-                            className="w-full text-right p-4 border rounded-lg hover:bg-green-50 hover:border-green-400 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full text-right p-4 border rounded-lg hover:bg-green-50 hover:border-green-400 cursor-pointer transition-colors"
                             onClick={async () => {
+                              console.log('Linking contact:', contact.id);
                               try {
                                 await linkContactToAccountMutation.mutateAsync(contact.id);
+                                console.log('Contact linked successfully');
                               } catch (error) {
                                 console.error('Error linking contact:', error);
                               }
                             }}
-                            disabled={linkContactToAccountMutation.isPending}
                           >
                             <p className="font-semibold text-gray-900">
                               {contact.first_name} {contact.last_name}
                             </p>
                             <p className="text-sm text-gray-500">{contact.phone}</p>
-                            {linkContactToAccountMutation.isPending && (
-                              <Loader2 className="w-4 h-4 animate-spin mx-auto mt-2" />
-                            )}
-                          </button>
+                          </div>
                         ))}
                       {allContacts.filter(contact => 
                         !linkedContacts.some(lc => lc.id === contact.id) &&
