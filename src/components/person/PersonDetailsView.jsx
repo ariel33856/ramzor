@@ -692,10 +692,11 @@ export default function PersonDetailsView({ personId }) {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                </div>
-              );
-              })}
-              </div>
+                  </div>
+                  );
+                  })}
+                  </div>
+                  </div>
               {linkedAccountsData.filter(account => {
               const currentCaseId = new URLSearchParams(window.location.search).get('id');
               return account.id !== currentCaseId;
