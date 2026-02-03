@@ -509,7 +509,7 @@ export default function CasePersonal() {
                           contact.phone?.includes(contactSearchTerm))
                         )
                         .map(contact => (
-                          <button
+                          <div
                             key={contact.id}
                             className="w-full text-right p-4 border rounded-lg hover:bg-green-50 hover:border-green-400 cursor-pointer transition-colors"
                             onClick={() => {
@@ -520,7 +520,7 @@ export default function CasePersonal() {
                               {contact.first_name} {contact.last_name}
                             </p>
                             <p className="text-sm text-gray-500">{contact.phone}</p>
-                          </button>
+                          </div>
                         ))}
                       {allContacts.filter(contact => 
                         !linkedContacts.some(lc => lc.id === contact.id) &&
