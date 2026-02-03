@@ -254,6 +254,13 @@ export default function CasePersonal() {
       const contact = await base44.entities.Person.filter({ id: contactId }).then(res => res[0]);
       const currentAccounts = contact.linked_accounts || [];
       
+      // המרת כל הקישורים הישנים (מחרוזות) לפורמט החדש (אובייקטים)
+      const normalizedAccounts = currentAccounts.map(acc => 
+        typeof acc === 'string' 
+          ? { case_id: acc, relationship_type: 'לווה' }
+          : acc
+      );
+      
       // יצירת אובייקט זיקה חדש
       const newLink = {
         case_id: caseId,
@@ -261,7 +268,7 @@ export default function CasePersonal() {
       };
       
       return base44.entities.Person.update(contactId, {
-        linked_accounts: [...currentAccounts, newLink]
+        linked_accounts: [...normalizedAccounts, newLink]
       });
     },
     onSuccess: () => {
