@@ -121,13 +121,15 @@ export default function CaseProperty() {
   });
 
   const updatePropertyMutation = useMutation({
-    mutationFn: (data) => base44.entities.PropertyAsset.update(editingProperty.id, data),
+    mutationFn: ({ id, data }) => base44.entities.PropertyAsset.update(id || editingProperty?.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
-      setEditDialogOpen(false);
-      setEditingProperty(null);
-      resetForm();
+      if (editDialogOpen) {
+        setEditDialogOpen(false);
+        setEditingProperty(null);
+        resetForm();
+      }
     }
   });
 
@@ -240,24 +242,99 @@ export default function CaseProperty() {
                   </tr>
                 </thead>
                 <tbody>
-                  {properties.map((property, index) => (
-                    <motion.tr
-                      key={property.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.02 }}
-                      className="border-b border-gray-100 hover:bg-teal-50 transition-colors cursor-pointer"
-                      onClick={() => handleEditProperty(property)}
-                    >
-                      {allFieldNames.map(fieldName => (
-                        <td key={fieldName} className="px-6 py-4">
-                          <span className={fieldName === 'address' ? 'font-semibold text-gray-900' : 'text-gray-600'}>
-                            {getFieldValue(property, fieldName)}
-                          </span>
-                        </td>
-                      ))}
-                    </motion.tr>
-                  ))}
+                  {properties.map((property, index) => {
+                    const updateField = (fieldName, value) => {
+                      const data = { [fieldName]: value };
+                      if (['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName)) {
+                        data[fieldName] = value ? Number(value) : undefined;
+                      }
+                      updatePropertyMutation.mutate({ id: property.id, data });
+                    };
+
+                    return (
+                      <motion.tr
+                        key={property.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.02 }}
+                        className="border-b border-gray-100"
+                      >
+                        {allFieldNames.map(fieldName => {
+                          const value = property[fieldName] || (property.custom_data && property.custom_data[fieldName]) || '';
+                          
+                          if (fieldName === 'property_type') {
+                            return (
+                              <td key={fieldName} className="px-6 py-4">
+                                <select
+                                  value={value}
+                                  onChange={(e) => updateField(fieldName, e.target.value)}
+                                  className="w-full h-8 px-2 rounded-md border border-input bg-background text-sm"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <option value="דירה">דירה</option>
+                                  <option value="בית">בית</option>
+                                  <option value="דירת גן">דירת גן</option>
+                                  <option value="פנטהאוז">פנטהאוז</option>
+                                  <option value="משרד">משרד</option>
+                                  <option value="חנות">חנות</option>
+                                  <option value="מחסן">מחסן</option>
+                                  <option value="קרקע">קרקע</option>
+                                  <option value="אחר">אחר</option>
+                                </select>
+                              </td>
+                            );
+                          }
+                          
+                          if (fieldName === 'status') {
+                            return (
+                              <td key={fieldName} className="px-6 py-4">
+                                <select
+                                  value={value}
+                                  onChange={(e) => updateField(fieldName, e.target.value)}
+                                  className="w-full h-8 px-2 rounded-md border border-input bg-background text-sm"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <option value="פנוי">פנוי</option>
+                                  <option value="תפוס">תפוס</option>
+                                  <option value="להשכרה">להשכרה</option>
+                                  <option value="למכירה">למכירה</option>
+                                </select>
+                              </td>
+                            );
+                          }
+                          
+                          if (fieldName === 'notes') {
+                            return (
+                              <td key={fieldName} className="px-6 py-4">
+                                <textarea
+                                  value={value}
+                                  onChange={(e) => updateField(fieldName, e.target.value)}
+                                  className="w-full h-8 px-2 py-1 rounded-md border border-input bg-background text-sm resize-none"
+                                  onClick={(e) => e.stopPropagation()}
+                                  rows={1}
+                                />
+                              </td>
+                            );
+                          }
+                          
+                          const isNumeric = ['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName);
+                          
+                          return (
+                            <td key={fieldName} className="px-6 py-4">
+                              <Input
+                                type={isNumeric ? 'number' : 'text'}
+                                step={fieldName === 'rooms' ? '0.5' : undefined}
+                                value={value}
+                                onChange={(e) => updateField(fieldName, e.target.value)}
+                                className={`h-8 text-sm ${fieldName === 'address' ? 'font-semibold' : ''}`}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </td>
+                          );
+                        })}
+                      </motion.tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
