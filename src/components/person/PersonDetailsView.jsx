@@ -155,8 +155,6 @@ export default function PersonDetailsView({ personId }) {
     )
   );
 
-  const properties = allProperties.filter(p => !p.case_id);
-
   const linkedPropertiesData = allProperties.filter(prop => 
     linkedProperties.includes(prop.id)
   );
@@ -311,6 +309,14 @@ export default function PersonDetailsView({ personId }) {
     ) &&
     (acc.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     acc.account_number?.toString().includes(searchTerm))
+  );
+
+  const availableProperties = allProperties.filter(p => !p.case_id);
+  
+  const filteredProperties = availableProperties.filter(prop =>
+    !linkedProperties.includes(prop.id) &&
+    (prop.address?.toLowerCase().includes(propertySearchTerm.toLowerCase()) ||
+    prop.city?.toLowerCase().includes(propertySearchTerm.toLowerCase()))
   );
 
   React.useEffect(() => {
