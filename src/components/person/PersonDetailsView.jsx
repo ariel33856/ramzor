@@ -644,11 +644,11 @@ export default function PersonDetailsView({ personId }) {
                     }
                   }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-              {linkedAccountsData.filter(account => {
+                </DropdownMenu>
+                {linkedAccountsData.filter(account => {
                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
                 return account.id === currentCaseId;
-              }).map(account => {
+                }).map(account => {
                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
                 const isCurrentAccount = account.id === currentCaseId;
                 return (
