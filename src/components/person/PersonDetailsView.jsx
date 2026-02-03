@@ -385,9 +385,15 @@ export default function PersonDetailsView({ personId }) {
           setObligations(person.custom_data.obligations);
         }
 
-        // Load relationship_type from custom_data
-        if (person.custom_data.relationship_type) {
-          setRelationshipType(person.custom_data.relationship_type);
+        // Load relationship_type from linked_accounts based on current case
+        const currentCaseId = new URLSearchParams(window.location.search).get('id');
+        if (currentCaseId && person.linked_accounts) {
+          const currentLink = person.linked_accounts.find(acc => 
+            typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
+          );
+          if (currentLink && typeof currentLink === 'object' && currentLink.relationship_type) {
+            setRelationshipType(currentLink.relationship_type);
+          }
         }
       }
       }
@@ -542,8 +548,7 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts,
-                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                        linked_accounts: updatedLinkedAccounts
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
@@ -562,8 +567,7 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts,
-                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                        linked_accounts: updatedLinkedAccounts
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">{gender === 'male' ? 'ערב' : 'ערבה'}</DropdownMenuItem>
@@ -582,8 +586,7 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts,
-                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                        linked_accounts: updatedLinkedAccounts
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
@@ -602,8 +605,7 @@ export default function PersonDetailsView({ personId }) {
                       );
                       setLinkedAccounts(updatedLinkedAccounts);
                       updatePersonMutation.mutate({
-                        linked_accounts: updatedLinkedAccounts,
-                        custom_data: { ...(person?.custom_data || {}), relationship_type: newType }
+                        linked_accounts: updatedLinkedAccounts
                       });
                     }
                   }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
