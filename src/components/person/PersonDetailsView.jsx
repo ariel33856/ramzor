@@ -345,9 +345,10 @@ export default function PersonDetailsView({ personId }) {
           setSpouseId(person.custom_data.spouse_id);
         }
 
-        // Load gender from custom_data
-        if (person.custom_data.gender) {
-          setGender(person.custom_data.gender);
+        // Load gender from custom_data or id_upload_data
+        const savedGender = person.custom_data?.gender || person.custom_data?.id_upload_data?.gender;
+        if (savedGender) {
+          setGender(savedGender);
         }
 
         // Load num_siblings from custom_data
