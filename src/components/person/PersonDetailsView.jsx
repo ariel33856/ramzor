@@ -611,11 +611,18 @@ export default function PersonDetailsView({ personId }) {
                   }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {linkedAccountsData.map(account => (
+              {linkedAccountsData.map(account => {
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                const isCurrentAccount = account.id === currentCaseId;
+                return (
                 <div key={account.id} className="flex items-center gap-0">
                   <Button 
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap rounded-l-none cursor-pointer"
+                    className={`whitespace-nowrap rounded-l-none cursor-pointer ${
+                      isCurrentAccount 
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' 
+                        : 'bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-gray-700'
+                    }`}
                   >
                     חשבון משויך: {account.client_name} {account.account_number}
                   </Button>
@@ -649,7 +656,8 @@ export default function PersonDetailsView({ personId }) {
                     </AlertDialogContent>
                   </AlertDialog>
                 </div>
-              ))}
+              );
+              })}
             </>
           ) : (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
