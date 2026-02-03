@@ -695,14 +695,15 @@ export default function PersonDetailsView({ personId }) {
                 </div>
                 );
                 })}
+              </div>
               {linkedAccountsData.filter(account => {
                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
                 return account.id !== currentCaseId;
               }).map(account => {
-              const currentCaseId = new URLSearchParams(window.location.search).get('id');
-              const isCurrentAccount = account.id === currentCaseId;
-              return (
-              <div key={account.id} className="flex items-center gap-0">
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                const isCurrentAccount = account.id === currentCaseId;
+                return (
+                <div key={account.id} className="border-4 border-blue-300 rounded-lg p-1 shadow-lg bg-white flex items-center gap-0">
                 <Button 
                   onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
                   className={`whitespace-nowrap rounded-l-none cursor-pointer ${
