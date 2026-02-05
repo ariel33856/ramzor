@@ -425,7 +425,17 @@ export default function PersonDetailsView({ personId }) {
             typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
           );
           if (currentLink && typeof currentLink === 'object' && currentLink.relationship_type) {
-            setRelationshipType(currentLink.relationship_type);
+            let relType = currentLink.relationship_type;
+            // התאם את סוג הזיקה למין
+            const savedGender = person.custom_data?.gender || person.custom_data?.id_upload_data?.gender || gender;
+            if (relType === 'ערב' || relType === 'ערבה') {
+              relType = savedGender === 'male' ? 'ערב' : 'ערבה';
+            } else if (relType === 'ערב ממשכן' || relType === 'ערבה ממשכנת') {
+              relType = savedGender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת';
+            } else if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+              relType = savedGender === 'male' ? 'בן זוג' : 'בת זוג';
+            }
+            setRelationshipType(relType);
           }
         }
       }
