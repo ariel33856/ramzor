@@ -143,7 +143,7 @@ export default function PriceOfferPrint({ caseData, personData, onClose }) {
                 <tbody>
                   <tr className="border-b hover:bg-gray-50">
                     <td className="border p-2">תשלום ראשון</td>
-                    <td className="border p-2 text-center">{formatCurrency(custom_data.payment_times)}</td>
+                    <td className="border p-2 text-center">{formatCurrency((custom_data.payment_times || 0) * 1.18)}</td>
                     <td className="border p-2 text-center">{custom_data.payment_times_date || '-'}</td>
                     <td className="border p-2 text-center">{custom_data.payment_times_payment_method || '-'}</td>
                   </tr>
