@@ -571,7 +571,16 @@ export default function PersonDetailsView({ personId }) {
                 const currentLink = linkedAccounts.find(acc => 
                   typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
                 );
-                const currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
+                let currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
+                
+                // התאם את סוג הזיקה המוצג למין
+                if (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') {
+                  currentRelationshipType = gender === 'male' ? 'ערב' : 'ערבה';
+                } else if (currentRelationshipType === 'ערב ממשכן' || currentRelationshipType === 'ערבה ממשכנת') {
+                  currentRelationshipType = gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת';
+                } else if (currentRelationshipType === 'בן זוג' || currentRelationshipType === 'בת זוג' || currentRelationshipType === 'בן/בת זוג') {
+                  currentRelationshipType = gender === 'male' ? 'בן זוג' : 'בת זוג';
+                }
 
                 return (
                 <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
