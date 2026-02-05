@@ -653,7 +653,7 @@ export default function PersonDetailsView({ personId }) {
                   </DropdownMenu>
                   <Button 
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="whitespace-nowrap rounded-r-none cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-l-lg"
                   >
                     חשבון משויך: {account.client_name} {account.account_number}
                   </Button>
