@@ -80,8 +80,24 @@ export default function CaseData() {
 
     // הוסף כל אנשי קשר שמשויכים לחשבון הזה דרך linked_accounts
     allPersons.forEach(p => {
-      if (p.linked_accounts && p.linked_accounts.includes(caseId) && !persons.find(existing => existing.id === p.id)) {
-        persons.push(p);
+      if (p.linked_accounts && !persons.find(existing => existing.id === p.id)) {
+        const isLinked = p.linked_accounts.some(link => 
+          typeof link === 'string' ? link === caseId : link.case_id === caseId
+        );
+        if (isLinked) {
+          // שמור את ה-relationship_type מתוך linked_accounts
+          const linkData = p.linked_accounts.find(link => 
+            typeof link === 'string' ? link === caseId : link.case_id === caseId
+          );
+          const relationshipType = typeof linkData === 'object' ? linkData.relationship_type : null;
+          persons.push({
+            ...p,
+            custom_data: {
+              ...(p.custom_data || {}),
+              relationship_type: relationshipType || p.custom_data?.relationship_type
+            }
+          });
+        }
       }
     });
 
