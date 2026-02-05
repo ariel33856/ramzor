@@ -406,7 +406,7 @@ export default function CaseData() {
           </CollapsibleTrigger>
           <CollapsibleContent className="border-t p-4">
             {(() => {
-              // Calculate total income using same logic as income table
+              // Calculate total income (weighted - borrowers 100%, guarantors 50%)
               const totalIncome = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
                 const incomeSources = linkedPerson.custom_data?.income_sources || [];
                 const personTotal = incomeSources.reduce((total, income) => {
@@ -419,7 +419,8 @@ export default function CaseData() {
                     return total + (parseFloat(income.monthly_amount) || 0);
                   }
                 }, 0);
-                return grandTotal + personTotal;
+                const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                return grandTotal + (personTotal * weight);
               }, 0);
 
               // Calculate total income actual (weighted by relationship type)
@@ -439,13 +440,14 @@ export default function CaseData() {
                 return grandTotal + (personTotal * weight);
               }, 0);
 
-              // Calculate total obligations using same logic as obligations table
+              // Calculate total obligations (weighted - borrowers 100%, guarantors 50%)
               const totalObligations = allLinkedPersons.reduce((grandTotal, linkedPerson) => {
                 const obligations = linkedPerson.custom_data?.obligations || [];
                 const personTotal = obligations.reduce((total, obligation) => {
                   return total + (parseFloat(obligation.monthly_payment) || 0);
                 }, 0);
-                return grandTotal + personTotal;
+                const weight = linkedPerson.custom_data?.relationship_type === 'לווה' ? 1 : 0.5;
+                return grandTotal + (personTotal * weight);
               }, 0);
 
               // Calculate total obligations actual (weighted by relationship type)
