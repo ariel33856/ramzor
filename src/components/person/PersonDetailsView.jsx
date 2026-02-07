@@ -1125,6 +1125,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
       </div>
       </div>
+      </div>
         )}
 
         {/* Tab Content: Identity */}
