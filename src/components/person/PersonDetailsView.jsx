@@ -1119,7 +1119,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-white border-t border-gray-200">
+          <div className="p-6 space-y-6 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
@@ -1627,7 +1627,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Income */}
         {activeTab === 'income' && (
-          <div className="p-6 space-y-4 bg-white border-t border-gray-200">
+          <div className="p-6 space-y-4 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -1952,7 +1952,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Obligations */}
         {activeTab === 'obligations' && (
-          <div className="p-6 space-y-4 bg-white border-t border-gray-200">
+          <div className="p-6 space-y-4 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
             {obligations.map((obligation, index) => (
               <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -2107,7 +2107,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="p-6 bg-white border-t border-gray-200">
+          <div className="p-6 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
