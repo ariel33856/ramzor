@@ -543,7 +543,7 @@ export default function PersonDetailsView({ personId }) {
         .folder-tabs-container {
           position: relative;
           display: flex;
-          padding: 0 12px;
+          padding: 0;
         }
         .folder-tab-li {
           position: relative;
@@ -566,13 +566,17 @@ export default function PersonDetailsView({ personId }) {
           cursor: pointer;
         }
         .folder-tab-li:not(.active) .folder-tab {
-          opacity: 1;
+          opacity: 0.7;
         }
         .folder-tab-li:not(.active):hover .folder-tab {
           opacity: 1;
         }
         .folder-tab-li.active {
           z-index: 3;
+        }
+        .folder-tab-li.active .folder-tab {
+          border: 2px solid var(--tab-border-color);
+          border-bottom: none;
         }
 
         /* Pseudo elements for curved corners */
@@ -631,6 +635,12 @@ export default function PersonDetailsView({ personId }) {
         }
         .folder-tab-li .folder-tab:after {
           left: -20px;
+        }
+        .folder-tab-content-bordered {
+          border: 2px solid var(--content-border-color);
+          border-top: none;
+          border-bottom-left-radius: 12px;
+          border-bottom-right-radius: 12px;
         }
       `}</style>
       <div>
