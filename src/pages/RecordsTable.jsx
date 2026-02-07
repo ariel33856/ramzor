@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -52,6 +52,12 @@ export default function RecordsTable() {
     queryFn: () => base44.entities.MortgageCase.list(),
     staleTime: 5 * 60 * 1000
   });
+
+  // Debug logs
+  useEffect(() => {
+    console.log('🔍 Records loaded:', records);
+    console.log('🔍 Total records count:', records.length);
+  }, [records]);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.PropertyAsset.create(data),
@@ -119,6 +125,13 @@ export default function RecordsTable() {
     record.owner_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Debug filtered records
+  useEffect(() => {
+    console.log('🔍 Search term:', searchTerm);
+    console.log('🔍 Filtered records:', filteredRecords);
+    console.log('🔍 Filtered count:', filteredRecords.length);
+  }, [filteredRecords, searchTerm]);
 
   const getLinkedCaseName = (caseId) => {
     const caseData = allCases.find(c => c.id === caseId);
@@ -407,7 +420,9 @@ export default function RecordsTable() {
                               navigate(createPageUrl('PropertyEdit') + `?id=${record.id}`);
                             }}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            title="ערוך נכס"
                           >
+                            <Edit className="w-4 h-4" />
                           </Button>
                           <Button
                             variant="ghost"
@@ -419,6 +434,7 @@ export default function RecordsTable() {
                               }
                             }}
                             className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                            title="מחק נכס"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
