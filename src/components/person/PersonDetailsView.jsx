@@ -544,6 +544,7 @@ export default function PersonDetailsView({ personId }) {
           position: relative;
           display: flex;
           padding: 0 12px;
+          margin: 0;
         }
         .folder-tab-li {
           position: relative;
@@ -561,12 +562,13 @@ export default function PersonDetailsView({ personId }) {
           font-weight: 600;
           font-size: 14px;
           transition: all 0.2s;
-          border: none;
           width: 100%;
           cursor: pointer;
+          border: none;
+          background: transparent;
         }
         .folder-tab-li:not(.active) .folder-tab {
-          opacity: 1;
+          opacity: 0.75;
         }
         .folder-tab-li:not(.active):hover .folder-tab {
           opacity: 1;
@@ -574,8 +576,14 @@ export default function PersonDetailsView({ personId }) {
         .folder-tab-li.active {
           z-index: 3;
         }
+        /* Active tab: top + side borders, no bottom border */
+        .folder-tab-li.active .folder-tab {
+          border: 2px solid var(--tab-border-color);
+          border-bottom: none;
+          opacity: 1;
+        }
 
-        /* Pseudo elements for curved corners */
+        /* === Curved corner pseudo-elements === */
         .folder-tab-li:before, .folder-tab-li:after,
         .folder-tab-li .folder-tab:before, .folder-tab-li .folder-tab:after {
           position: absolute;
@@ -607,17 +615,15 @@ export default function PersonDetailsView({ personId }) {
           width: 20px;
           height: 20px;
           border-radius: 10px;
-          background: #f9fafb;
           z-index: 2;
         }
         .folder-tab-li.active .folder-tab:before {
           background: var(--right-circle-color);
-          opacity: 0.8;
         }
         .folder-tab-li.active .folder-tab:after {
           background: var(--left-circle-color);
-          opacity: 0.8;
         }
+        /* Hide outer curves on first/last active tabs */
         .folder-tab-li.first-active:before,
         .folder-tab-li.first-active .folder-tab:before {
           display: none !important;
@@ -631,6 +637,64 @@ export default function PersonDetailsView({ personId }) {
         }
         .folder-tab-li .folder-tab:after {
           left: -20px;
+        }
+
+        /* === Border line that continues from tab to content === */
+        /* Right side connector */
+        .folder-tab-li.active::before {
+          border-bottom: 2px solid var(--tab-border-color);
+          border-right: 2px solid var(--tab-border-color);
+          border-bottom-right-radius: 12px;
+          background: transparent !important;
+          width: 12px;
+          height: 12px;
+          right: -12px;
+        }
+        /* Left side connector */
+        .folder-tab-li.active::after {
+          border-bottom: 2px solid var(--tab-border-color);
+          border-left: 2px solid var(--tab-border-color);
+          border-bottom-left-radius: 12px;
+          background: transparent !important;
+          width: 12px;
+          height: 12px;
+          left: -12px;
+        }
+        /* Hide the circle masks for active - we use border connectors instead */
+        .folder-tab-li.active .folder-tab:before,
+        .folder-tab-li.active .folder-tab:after {
+          display: none !important;
+        }
+
+        /* Content area border */
+        .tab-content-bordered {
+          border: 2px solid var(--content-border-color);
+          border-top: none;
+          border-radius: 0 0 12px 12px;
+          margin: 0 12px;
+          position: relative;
+        }
+        /* Top border line on content - goes from left edge to left connector, and from right connector to right edge */
+        .tab-content-bordered::before {
+          content: "";
+          position: absolute;
+          top: -2px;
+          right: 0;
+          left: 0;
+          height: 2px;
+          background: var(--content-border-color);
+          z-index: 1;
+        }
+        /* Mask out the border where the active tab sits */
+        .tab-content-bordered::after {
+          content: "";
+          position: absolute;
+          top: -2px;
+          right: var(--tab-start);
+          width: var(--tab-width);
+          height: 2px;
+          background: var(--tab-bg-color);
+          z-index: 2;
         }
       `}</style>
       <div>
