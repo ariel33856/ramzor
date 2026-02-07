@@ -97,8 +97,6 @@ import PropertyEdit from './pages/PropertyEdit';
 import RecordsTable from './pages/RecordsTable';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import NewMosheRecord from './pages/NewMosheRecord';
-import MosheRecordDetails from './pages/MosheRecordDetails';
 import TransactionDetails from './pages/TransactionDetails';
 import __Layout from './Layout.jsx';
 
@@ -154,8 +152,6 @@ export const PAGES = {
     "RecordsTable": RecordsTable,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "NewMosheRecord": NewMosheRecord,
-    "MosheRecordDetails": MosheRecordDetails,
     "TransactionDetails": TransactionDetails,
 }
 

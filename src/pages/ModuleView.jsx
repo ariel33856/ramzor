@@ -120,9 +120,6 @@ export default function ModuleView() {
     queryKey: ['module', moduleId],
     queryFn: async () => {
       // Special modules that don't exist in Module entity
-      if (moduleId === 'moshe') {
-        return { id: 'moshe', name: 'משה', color: 'yellow', order: 999 };
-      }
       if (moduleId === 'transactions') {
         return { id: 'transactions', name: 'עסקאות', color: 'purple', order: 998 };
       }
