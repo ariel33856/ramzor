@@ -179,6 +179,7 @@ export default function PersonDetailsView({ personId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['all-properties'] });
     }
   });
 
