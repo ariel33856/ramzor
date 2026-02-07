@@ -171,7 +171,7 @@ export default function ModuleView() {
     return matchesSearch && matchesStatus && matchesUrgency;
   });
 
-  if (!module) {
+  if (!module || isLoading || !user) {
     return <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
       <p>טוען מודול...</p>
     </div>;
