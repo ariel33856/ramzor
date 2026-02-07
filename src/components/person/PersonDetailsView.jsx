@@ -674,7 +674,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
-          <div className="p-4 bg-blue-50" style={{ minHeight: '80vh' }}>
+          <div className="p-4 bg-blue-50 folder-tab-content-bordered" style={{ minHeight: '80vh', '--content-border-color': '#93c5fd' }}>
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
