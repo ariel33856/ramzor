@@ -192,10 +192,9 @@ export default function CaseProperty() {
   };
 
   const filteredProperties = allProperties.filter(prop =>
-    !prop.case_id &&
-    (prop.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    prop.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     prop.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    prop.property_type?.toLowerCase().includes(searchTerm.toLowerCase()))
+    prop.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
