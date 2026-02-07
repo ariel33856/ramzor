@@ -9,21 +9,20 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-export default function Insurance() {
+export default function Transactions() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
   const [formData, setFormData] = useState({
-    policy_number: '',
-    insurance_type: 'life',
-    company_name: '',
-    insured_name: '',
-    premium_amount: '',
-    coverage_amount: '',
-    start_date: '',
-    end_date: '',
-    status: 'active',
+    property_id: '',
+    transaction_type: 'purchase',
+    transaction_date: '',
+    amount: '',
+    buyer_name: '',
+    seller_name: '',
+    status: 'pending',
+    commission: '',
     notes: ''
   });
 
@@ -33,46 +32,51 @@ export default function Insurance() {
     staleTime: 60000
   });
 
+  const { data: properties = [] } = useQuery({
+    queryKey: ['properties'],
+    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    enabled: !!user
+  });
+
   const { data: records = [] } = useQuery({
-    queryKey: ['insurance-records'],
-    queryFn: () => base44.entities.Insurance.list('-created_date'),
+    queryKey: ['transaction-records'],
+    queryFn: () => base44.entities.Transaction.list('-created_date'),
     enabled: !!user
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Insurance.create(data),
+    mutationFn: (data) => base44.entities.Transaction.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['insurance-records']);
+      queryClient.invalidateQueries(['transaction-records']);
       setDialogOpen(false);
       resetForm();
     }
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Insurance.update(id, data),
+    mutationFn: ({ id, data }) => base44.entities.Transaction.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['insurance-records']);
+      queryClient.invalidateQueries(['transaction-records']);
       setDialogOpen(false);
       resetForm();
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Insurance.delete(id),
-    onSuccess: () => queryClient.invalidateQueries(['insurance-records'])
+    mutationFn: (id) => base44.entities.Transaction.delete(id),
+    onSuccess: () => queryClient.invalidateQueries(['transaction-records'])
   });
 
   const resetForm = () => {
     setFormData({
-      policy_number: '',
-      insurance_type: 'life',
-      company_name: '',
-      insured_name: '',
-      premium_amount: '',
-      coverage_amount: '',
-      start_date: '',
-      end_date: '',
-      status: 'active',
+      property_id: '',
+      transaction_type: 'purchase',
+      transaction_date: '',
+      amount: '',
+      buyer_name: '',
+      seller_name: '',
+      status: 'pending',
+      commission: '',
       notes: ''
     });
     setEditingRecord(null);
@@ -82,8 +86,8 @@ export default function Insurance() {
     e.preventDefault();
     const data = {
       ...formData,
-      premium_amount: formData.premium_amount ? parseFloat(formData.premium_amount) : null,
-      coverage_amount: formData.coverage_amount ? parseFloat(formData.coverage_amount) : null
+      amount: formData.amount ? parseFloat(formData.amount) : null,
+      commission: formData.commission ? parseFloat(formData.commission) : null
     };
 
     if (editingRecord) {
@@ -96,38 +100,44 @@ export default function Insurance() {
   const handleEdit = (record) => {
     setEditingRecord(record);
     setFormData({
-      policy_number: record.policy_number || '',
-      insurance_type: record.insurance_type || 'life',
-      company_name: record.company_name || '',
-      insured_name: record.insured_name || '',
-      premium_amount: record.premium_amount || '',
-      coverage_amount: record.coverage_amount || '',
-      start_date: record.start_date || '',
-      end_date: record.end_date || '',
-      status: record.status || 'active',
+      property_id: record.property_id || '',
+      transaction_type: record.transaction_type || 'purchase',
+      transaction_date: record.transaction_date || '',
+      amount: record.amount || '',
+      buyer_name: record.buyer_name || '',
+      seller_name: record.seller_name || '',
+      status: record.status || 'pending',
+      commission: record.commission || '',
       notes: record.notes || ''
     });
     setDialogOpen(true);
   };
 
-  const filteredRecords = records.filter(record => 
-    record.insured_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.policy_number?.includes(searchTerm) ||
-    record.company_name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const getPropertyDisplay = (propertyId) => {
+    const property = properties.find(p => p.id === propertyId);
+    if (!property) return '—';
+    return `${property.address}, ${property.city}`;
+  };
+
+  const filteredRecords = records.filter(record => {
+    const property = properties.find(p => p.id === record.property_id);
+    const propertyText = property ? `${property.address} ${property.city}` : '';
+    return record.buyer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.seller_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      propertyText.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const typeLabels = {
-    life: 'ביטוח חיים',
-    health: 'ביטוח בריאות',
-    home: 'ביטוח דירה',
-    car: 'ביטוח רכב',
-    pension: 'ביטוח פנסיוני',
+    purchase: 'רכישה',
+    sale: 'מכירה',
+    rent: 'השכרה',
+    lease: 'חכירה',
     other: 'אחר'
   };
 
   const statusLabels = {
-    active: 'פעיל',
-    expired: 'פג תוקף',
+    pending: 'בתהליך',
+    completed: 'הושלם',
     cancelled: 'בוטל'
   };
 
@@ -143,7 +153,7 @@ export default function Insurance() {
             className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
           >
             <Plus className="w-4 h-4 ml-2" />
-            ביטוח חדש
+            עסקה חדשה
           </Button>
 
           <div className="flex-1 relative">
@@ -163,12 +173,13 @@ export default function Insurance() {
           <table className="w-full">
             <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100">
               <tr className="border-b-2 border-blue-200">
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">מספר פוליסה</th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">מבוטח</th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">חברה</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">נכס</th>
                 <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">סוג</th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">פרמיה</th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">כיסוי</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">תאריך</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">קונה</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">מוכר</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">סכום</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">עמלה</th>
                 <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">סטטוס</th>
                 <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">פעולות</th>
               </tr>
@@ -176,32 +187,35 @@ export default function Insurance() {
             <tbody>
               {filteredRecords.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="text-center py-12 text-gray-400">
-                    אין רשומות להצגה
+                  <td colSpan="9" className="text-center py-12 text-gray-400">
+                    אין עסקאות להצגה
                   </td>
                 </tr>
               ) : (
                 filteredRecords.map((record) => (
                   <tr key={record.id} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-gray-900">{record.policy_number}</td>
-                    <td className="px-4 py-3 text-gray-700">{record.insured_name}</td>
-                    <td className="px-4 py-3 text-gray-700">{record.company_name}</td>
+                    <td className="px-4 py-3 text-gray-700">{getPropertyDisplay(record.property_id)}</td>
                     <td className="px-4 py-3">
                       <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                        {typeLabels[record.insurance_type]}
+                        {typeLabels[record.transaction_type]}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-700">
-                      {record.premium_amount ? `₪${record.premium_amount.toLocaleString()}` : '—'}
+                      {record.transaction_date ? new Date(record.transaction_date).toLocaleDateString('he-IL') : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-gray-700">{record.buyer_name || '—'}</td>
+                    <td className="px-4 py-3 text-gray-700">{record.seller_name || '—'}</td>
+                    <td className="px-4 py-3 text-gray-700 font-medium">
+                      {record.amount ? `₪${record.amount.toLocaleString()}` : '—'}
                     </td>
                     <td className="px-4 py-3 text-gray-700">
-                      {record.coverage_amount ? `₪${record.coverage_amount.toLocaleString()}` : '—'}
+                      {record.commission ? `₪${record.commission.toLocaleString()}` : '—'}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        record.status === 'active' ? 'bg-green-100 text-green-800' :
-                        record.status === 'expired' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
+                        record.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        record.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-yellow-100 text-yellow-800'
                       }`}>
                         {statusLabels[record.status]}
                       </span>
@@ -220,7 +234,7 @@ export default function Insurance() {
                           variant="ghost"
                           size="icon"
                           onClick={() => {
-                            if (confirm('האם למחוק רשומה זו?')) {
+                            if (confirm('האם למחוק עסקה זו?')) {
                               deleteMutation.mutate(record.id);
                             }
                           }}
@@ -241,32 +255,29 @@ export default function Insurance() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingRecord ? 'עריכת ביטוח' : 'ביטוח חדש'}</DialogTitle>
+            <DialogTitle>{editingRecord ? 'עריכת עסקה' : 'עסקה חדשה'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>מספר פוליסה *</Label>
-                <Input
-                  value={formData.policy_number}
-                  onChange={(e) => setFormData({ ...formData, policy_number: e.target.value })}
-                  required
-                />
-              </div>
-              <div>
-                <Label>שם מבוטח *</Label>
-                <Input
-                  value={formData.insured_name}
-                  onChange={(e) => setFormData({ ...formData, insured_name: e.target.value })}
-                  required
-                />
-              </div>
+            <div>
+              <Label>נכס</Label>
+              <Select value={formData.property_id} onValueChange={(val) => setFormData({ ...formData, property_id: val })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר נכס" />
+                </SelectTrigger>
+                <SelectContent>
+                  {properties.map(property => (
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.address}, {property.city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>סוג ביטוח</Label>
-                <Select value={formData.insurance_type} onValueChange={(val) => setFormData({ ...formData, insurance_type: val })}>
+                <Label>סוג עסקה *</Label>
+                <Select value={formData.transaction_type} onValueChange={(val) => setFormData({ ...formData, transaction_type: val })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -278,48 +289,48 @@ export default function Insurance() {
                 </Select>
               </div>
               <div>
-                <Label>חברת ביטוח</Label>
+                <Label>תאריך עסקה *</Label>
                 <Input
-                  value={formData.company_name}
-                  onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                  type="date"
+                  value={formData.transaction_date}
+                  onChange={(e) => setFormData({ ...formData, transaction_date: e.target.value })}
+                  required
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>פרמיה חודשית</Label>
+                <Label>שם קונה</Label>
                 <Input
-                  type="number"
-                  value={formData.premium_amount}
-                  onChange={(e) => setFormData({ ...formData, premium_amount: e.target.value })}
+                  value={formData.buyer_name}
+                  onChange={(e) => setFormData({ ...formData, buyer_name: e.target.value })}
                 />
               </div>
               <div>
-                <Label>סכום כיסוי</Label>
+                <Label>שם מוכר</Label>
                 <Input
-                  type="number"
-                  value={formData.coverage_amount}
-                  onChange={(e) => setFormData({ ...formData, coverage_amount: e.target.value })}
+                  value={formData.seller_name}
+                  onChange={(e) => setFormData({ ...formData, seller_name: e.target.value })}
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>תאריך התחלה</Label>
+                <Label>סכום עסקה</Label>
                 <Input
-                  type="date"
-                  value={formData.start_date}
-                  onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                  type="number"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                 />
               </div>
               <div>
-                <Label>תאריך סיום</Label>
+                <Label>עמלה</Label>
                 <Input
-                  type="date"
-                  value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                  type="number"
+                  value={formData.commission}
+                  onChange={(e) => setFormData({ ...formData, commission: e.target.value })}
                 />
               </div>
             </div>

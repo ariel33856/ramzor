@@ -341,8 +341,8 @@ export default function Layout({ children, currentPageName }) {
                           indigo: 'from-indigo-500 to-indigo-600'
                         }[module.color] || 'from-blue-500 to-blue-600';
 
-                        const pageUrl = module.name === 'ביטוחים' 
-                          ? createPageUrl('Insurance')
+                        const pageUrl = module.name === 'עסקאות' 
+                          ? createPageUrl('Transactions')
                           : createPageUrl('ModuleView') + `?moduleId=${module.id}`;
 
                         return (
