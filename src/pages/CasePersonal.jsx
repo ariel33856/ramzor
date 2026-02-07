@@ -430,9 +430,7 @@ export default function CasePersonal() {
                 <span className="text-gray-500">|</span>
                 {couples.map(({ contact, partner }, coupleIdx) => {
                   const getButtonClass = (rel) => {
-                    const isActive = rel.id === activeContactId;
-                    let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-white flex flex-col items-center ';
-                    if (!isActive) buttonClass += 'opacity-40 hover:opacity-70 ';
+                    let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                     const relationshipType = getRelationshipType(rel);
                     if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
                       buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
@@ -458,9 +456,7 @@ export default function CasePersonal() {
                 {otherContacts.map((contact, idx) => {
                   const relationshipType = getRelationshipType(contact);
                   const displayRelType = getDisplayRelationshipType(contact);
-                  const isActive = contact.id === activeContactId;
-                  let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-white flex flex-col items-center ';
-                  if (!isActive) buttonClass += 'opacity-40 hover:opacity-70 ';
+                  let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                   if (relationshipType === 'לווה') {
                     buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
                   } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
