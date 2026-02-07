@@ -542,24 +542,7 @@ export default function PersonDetailsView({ personId }) {
       <style>{`
         .folder-tab { position: relative; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 10px 10px 0 0; z-index: 2; }
         .folder-tab.active { z-index: 10; }
-        .folder-tab.active::before,
-        .folder-tab.active::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          width: 12px;
-          height: 12px;
-        }
-        .folder-tab.active::before {
-          right: -12px;
-          background: radial-gradient(circle at 0 0, transparent 12px, var(--tab-color) 12px);
-          transform: rotate(90deg);
-        }
-        .folder-tab.active::after {
-          left: -12px;
-          background: radial-gradient(circle at 100% 0, transparent 12px, var(--tab-color) 12px);
-          transform: rotate(90deg);
-        }
+
         .folder-tab:not(.active) { border-color: transparent; opacity: 0.6; }
         .folder-tab:not(.active):hover { opacity: 0.85; }
       `}</style>
