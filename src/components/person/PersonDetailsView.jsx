@@ -1640,7 +1640,7 @@ export default function PersonDetailsView({ personId }) {
         {activeTab === 'income' && (
           <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {incomeSources.map((income, index) => (
-              <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
+              <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-gray-900">
                     {income.type === 'תלוש משכורת-שכיר' ? 'הכנסה בתלוש שכר' : `הכנסה מ-${income.type}`}
