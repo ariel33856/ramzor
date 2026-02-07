@@ -161,7 +161,7 @@ export default function PersonDetailsView({ personId }) {
   });
 
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
-  const properties = allProperties.filter(p => !p.case_id);
+  const properties = allProperties;
 
   const linkedAccountsData = allAccounts.filter(acc => 
     linkedAccounts.some(link => 
