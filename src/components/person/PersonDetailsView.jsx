@@ -1801,7 +1801,7 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder=""
-                          className="h-8"
+                          className="h-8 bg-white"
                         />
                       </div>
                       <div>
@@ -1817,7 +1817,7 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder=""
-                          className="h-8"
+                          className="h-8 bg-white"
                         />
                       </div>
                     </div>
