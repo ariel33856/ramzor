@@ -160,6 +160,13 @@ export default function PersonDetailsView({ personId }) {
     enabled: !!spouseId
   });
 
+  const { data: allTransactions = [] } = useQuery({
+    queryKey: ['all-transactions'],
+    queryFn: () => base44.entities.Transaction.list('-transaction_date'),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
+
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
   const properties = allProperties;
 
@@ -2298,6 +2305,81 @@ export default function PersonDetailsView({ personId }) {
                       rows={3}
                     />
                   </div>
+
+                  {/* Transactions for this property */}
+                  {(() => {
+                    const propertyTransactions = allTransactions.filter(t => t.property_id === property.id);
+                    const typeLabels = {
+                      purchase: 'רכישה',
+                      sale: 'מכירה',
+                      rent: 'השכרה',
+                      lease: 'חכירה',
+                      other: 'אחר'
+                    };
+                    const statusLabels = {
+                      pending: 'ממתין',
+                      completed: 'הושלם',
+                      cancelled: 'בוטל'
+                    };
+
+                    if (propertyTransactions.length === 0) return null;
+
+                    return (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <h4 className="text-sm font-bold text-gray-900 mb-3">עסקאות משויכות לנכס</h4>
+                        <div className="space-y-2">
+                          {propertyTransactions.map((transaction) => (
+                            <div key={transaction.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                              <div className="grid grid-cols-4 gap-3 text-sm">
+                                <div>
+                                  <span className="font-semibold text-gray-700">סוג: </span>
+                                  <span className="text-gray-900">{typeLabels[transaction.transaction_type]}</span>
+                                </div>
+                                <div>
+                                  <span className="font-semibold text-gray-700">תאריך: </span>
+                                  <span className="text-gray-900">
+                                    {transaction.transaction_date ? new Date(transaction.transaction_date).toLocaleDateString('he-IL') : '—'}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="font-semibold text-gray-700">סכום: </span>
+                                  <span className="text-gray-900">
+                                    {transaction.amount ? `₪${transaction.amount.toLocaleString()}` : '—'}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="font-semibold text-gray-700">סטטוס: </span>
+                                  <span className={`font-medium ${
+                                    transaction.status === 'completed' ? 'text-green-700' :
+                                    transaction.status === 'cancelled' ? 'text-red-700' :
+                                    'text-yellow-700'
+                                  }`}>
+                                    {statusLabels[transaction.status]}
+                                  </span>
+                                </div>
+                              </div>
+                              {(transaction.buyer_name || transaction.seller_name) && (
+                                <div className="grid grid-cols-2 gap-3 text-sm mt-2">
+                                  {transaction.buyer_name && (
+                                    <div>
+                                      <span className="font-semibold text-gray-700">קונה: </span>
+                                      <span className="text-gray-900">{transaction.buyer_name}</span>
+                                    </div>
+                                  )}
+                                  {transaction.seller_name && (
+                                    <div>
+                                      <span className="font-semibold text-gray-700">מוכר: </span>
+                                      <span className="text-gray-900">{transaction.seller_name}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </motion.div>
               );
             })}
