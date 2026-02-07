@@ -1239,7 +1239,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-amber-50" style={{ minHeight: '80vh' }}>
+          <div className="p-6 space-y-6 bg-amber-50 folder-tab-content-bordered" style={{ minHeight: '80vh', '--content-border-color': '#fcd34d' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
