@@ -1,3 +1,4 @@
+
 import { 
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
@@ -10,7 +11,6 @@ export const tabs = [
   { id: 'contact', label: 'צור קשר', icon: Phone, gradient: 'from-green-500 to-emerald-600', bg: 'bg-green-50', border: 'border-green-200' },
   { id: 'summary', label: 'תקציר התיק', icon: FileText, gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
   { id: 'notes', label: 'הערות מיוחדות', icon: MessageSquare, gradient: 'from-amber-500 to-orange-600', bg: 'bg-amber-50', border: 'border-amber-200' },
-  { id: 'transaction', label: 'עסקה', icon: Briefcase, gradient: 'from-gray-500 to-gray-600', bg: 'bg-gray-50', border: 'border-gray-200' },
   { id: 'property', label: 'נכס', icon: Home, gradient: 'from-stone-500 to-stone-600', bg: 'bg-stone-50', border: 'border-stone-200' },
   { id: 'data', label: 'נתונים', icon: Database, gradient: 'from-cyan-500 to-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-200' },
   { id: 'workflow', label: 'תהליך עבודה', icon: Workflow, gradient: 'from-indigo-500 to-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200' },
@@ -34,7 +34,6 @@ export const pageMapping = {
   'contact': 'CaseContact',
   'summary': 'CaseSummary',
   'notes': 'CaseNotes',
-  'transaction': 'CaseTransaction',
   'data': 'CaseData',
   'workflow': 'CaseWorkflow',
   'calendar': 'CaseCalendar',
