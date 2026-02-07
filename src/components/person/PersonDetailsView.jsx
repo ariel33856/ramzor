@@ -1804,7 +1804,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Income */}
         {activeTab === 'income' && (
-          <div className="p-6 space-y-4 bg-green-50" style={{ minHeight: '80vh' }}>
+          <div className="tab-content-bordered p-6 space-y-4 bg-green-50" style={{ minHeight: '80vh', '--content-border-color': '#bbf7d0', '--tab-bg-color': '#f0fdf4', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='income')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
                 <div className="flex items-center justify-between">
