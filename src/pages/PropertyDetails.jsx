@@ -28,11 +28,16 @@ export default function PropertyDetails() {
     queryKey: ['property-transactions', propertyId],
     queryFn: async () => {
       const results = await base44.entities.Transaction.list('-created_date');
+      console.log('🔍 Property ID:', propertyId);
+      console.log('🔍 All Transactions:', results);
+      console.log('🔍 Filtered:', results.filter(t => t.property_id === propertyId));
       return results.filter(t => t.property_id === propertyId);
     },
     enabled: !!propertyId,
     staleTime: 5 * 60 * 1000
   });
+
+  console.log('✅ Transactions loaded:', transactions);
 
   if (isLoading) {
     return (
