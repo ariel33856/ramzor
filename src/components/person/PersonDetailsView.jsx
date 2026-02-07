@@ -94,7 +94,6 @@ export default function PersonDetailsView({ personId }) {
   const [incomeSources, setIncomeSources] = useState([]);
   const [uploadingPayslip, setUploadingPayslip] = useState(null);
   const [obligations, setObligations] = useState([]);
-  const [isCollapsedObligations, setIsCollapsedObligations] = useState(false);
   const obligationsTimeoutRef = React.useRef(null);
   const [createPropertyDialogOpen, setCreatePropertyDialogOpen] = useState(false);
   const [propertyFormData, setPropertyFormData] = useState({
