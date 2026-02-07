@@ -699,20 +699,23 @@ export default function PersonDetailsView({ personId }) {
       `}</style>
       <div>
         {/* Tab Headers */}
-        <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: '0 12px' }}>
+        <ul className="folder-tabs-container" ref={tabsRef}>
           {tabDefs.map((tab, index) => {
+            const isActive = activeTab === tab.id;
             const prevTab = tabDefs[index - 1];
             const nextTab = tabDefs[index + 1];
-            const isActive = activeTab === tab.id;
-            // Right circle (::before on .folder-tab) should be color of previous tab (or page bg if first)
             const rightCircleColor = isActive ? (prevTab ? prevTab.color : '#f9fafb') : '#f9fafb';
-            // Left circle (::after on .folder-tab) should be color of next tab (or page bg if last)
             const leftCircleColor = isActive ? (nextTab ? nextTab.color : '#f9fafb') : '#f9fafb';
             return (
             <li
               key={tab.id}
               className={`folder-tab-li ${isActive ? 'active' : ''} ${isActive && index === 0 ? 'first-active' : ''} ${isActive && index === tabDefs.length - 1 ? 'last-active' : ''}`}
-              style={{ '--tab-color': tab.color, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
+              style={{ 
+                '--tab-color': tab.color, 
+                '--tab-border-color': tab.borderColor,
+                '--right-circle-color': rightCircleColor, 
+                '--left-circle-color': leftCircleColor 
+              }}
             >
               <button
                 onClick={() => setActiveTab(tab.id)}
