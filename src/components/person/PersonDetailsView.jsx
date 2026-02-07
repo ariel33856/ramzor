@@ -628,18 +628,23 @@ export default function PersonDetailsView({ personId }) {
       `}</style>
       <div>
         {/* Tab Headers */}
-        <div className="flex" ref={tabsRef} style={{ paddingLeft: 12, paddingRight: 12 }}>
+        <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: '0 12px' }}>
           {tabDefs.map((tab) => (
-            <button
+            <li
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`folder-tab flex-1 py-3 px-4 text-sm font-semibold transition-all ${tab.textClass} ${activeTab === tab.id ? 'active' : ''}`}
-              style={{ backgroundColor: tab.color, '--tab-color': tab.color, marginBottom: activeTab === tab.id ? '-1px' : '0' }}
+              className={`folder-tab-li ${activeTab === tab.id ? 'active' : ''}`}
+              style={{ '--tab-color': tab.color }}
             >
-              {tab.label}
-            </button>
+              <button
+                onClick={() => setActiveTab(tab.id)}
+                className={`folder-tab ${tab.textClass}`}
+                style={{ backgroundColor: tab.color }}
+              >
+                {tab.label}
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
