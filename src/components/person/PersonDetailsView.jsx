@@ -530,11 +530,11 @@ export default function PersonDetailsView({ personId }) {
   }
 
   const tabDefs = [
-    { id: 'general', label: 'כללי', color: '#eff6ff', textClass: 'text-blue-700', borderColor: '#bfdbfe' },
-    { id: 'identity', label: 'תעודת זהות', color: '#fffbeb', textClass: 'text-amber-700', borderColor: '#fde68a' },
-    { id: 'income', label: 'הכנסות', color: '#f0fdf4', textClass: 'text-green-700', borderColor: '#bbf7d0' },
-    { id: 'obligations', label: 'התחייבויות', color: '#fff1f2', textClass: 'text-rose-700', borderColor: '#fecdd3' },
-    { id: 'properties', label: 'נכסים', color: '#faf5ff', textClass: 'text-purple-700', borderColor: '#e9d5ff' },
+    { id: 'general', label: 'כללי', color: '#eff6ff', textClass: 'text-blue-700' },
+    { id: 'identity', label: 'תעודת זהות', color: '#fffbeb', textClass: 'text-amber-700' },
+    { id: 'income', label: 'הכנסות', color: '#f0fdf4', textClass: 'text-green-700' },
+    { id: 'obligations', label: 'התחייבויות', color: '#fff1f2', textClass: 'text-rose-700' },
+    { id: 'properties', label: 'נכסים', color: '#faf5ff', textClass: 'text-purple-700' },
   ];
 
   return (
@@ -544,7 +544,6 @@ export default function PersonDetailsView({ personId }) {
           position: relative;
           display: flex;
           padding: 0 12px;
-          margin: 0;
         }
         .folder-tab-li {
           position: relative;
@@ -562,13 +561,12 @@ export default function PersonDetailsView({ personId }) {
           font-weight: 600;
           font-size: 14px;
           transition: all 0.2s;
+          border: none;
           width: 100%;
           cursor: pointer;
-          border: none;
-          background: transparent;
         }
         .folder-tab-li:not(.active) .folder-tab {
-          opacity: 0.75;
+          opacity: 1;
         }
         .folder-tab-li:not(.active):hover .folder-tab {
           opacity: 1;
@@ -576,14 +574,8 @@ export default function PersonDetailsView({ personId }) {
         .folder-tab-li.active {
           z-index: 3;
         }
-        /* Active tab: top + side borders, no bottom border */
-        .folder-tab-li.active .folder-tab {
-          border: 2px solid var(--tab-border-color);
-          border-bottom: none;
-          opacity: 1;
-        }
 
-        /* === Curved corner pseudo-elements === */
+        /* Pseudo elements for curved corners */
         .folder-tab-li:before, .folder-tab-li:after,
         .folder-tab-li .folder-tab:before, .folder-tab-li .folder-tab:after {
           position: absolute;
@@ -615,15 +607,17 @@ export default function PersonDetailsView({ personId }) {
           width: 20px;
           height: 20px;
           border-radius: 10px;
+          background: #f9fafb;
           z-index: 2;
         }
         .folder-tab-li.active .folder-tab:before {
           background: var(--right-circle-color);
+          opacity: 0.8;
         }
         .folder-tab-li.active .folder-tab:after {
           background: var(--left-circle-color);
+          opacity: 0.8;
         }
-        /* Hide outer curves on first/last active tabs */
         .folder-tab-li.first-active:before,
         .folder-tab-li.first-active .folder-tab:before {
           display: none !important;
@@ -638,84 +632,23 @@ export default function PersonDetailsView({ personId }) {
         .folder-tab-li .folder-tab:after {
           left: -20px;
         }
-
-        /* === Border line that continues from tab to content === */
-        /* Right side connector */
-        .folder-tab-li.active::before {
-          border-bottom: 2px solid var(--tab-border-color);
-          border-right: 2px solid var(--tab-border-color);
-          border-bottom-right-radius: 12px;
-          background: transparent !important;
-          width: 12px;
-          height: 12px;
-          right: -12px;
-        }
-        /* Left side connector */
-        .folder-tab-li.active::after {
-          border-bottom: 2px solid var(--tab-border-color);
-          border-left: 2px solid var(--tab-border-color);
-          border-bottom-left-radius: 12px;
-          background: transparent !important;
-          width: 12px;
-          height: 12px;
-          left: -12px;
-        }
-        /* Hide the circle masks for active - we use border connectors instead */
-        .folder-tab-li.active .folder-tab:before,
-        .folder-tab-li.active .folder-tab:after {
-          display: none !important;
-        }
-
-        /* Content area border */
-        .tab-content-bordered {
-          border: 2px solid var(--content-border-color);
-          border-top: none;
-          border-radius: 0 0 12px 12px;
-          margin: 0 12px;
-          position: relative;
-        }
-        /* Top border line on content - goes from left edge to left connector, and from right connector to right edge */
-        .tab-content-bordered::before {
-          content: "";
-          position: absolute;
-          top: -2px;
-          right: 0;
-          left: 0;
-          height: 2px;
-          background: var(--content-border-color);
-          z-index: 1;
-        }
-        /* Mask out the border where the active tab sits */
-        .tab-content-bordered::after {
-          content: "";
-          position: absolute;
-          top: -2px;
-          right: var(--tab-start);
-          width: var(--tab-width);
-          height: 2px;
-          background: var(--tab-bg-color);
-          z-index: 2;
-        }
       `}</style>
       <div>
         {/* Tab Headers */}
-        <ul className="folder-tabs-container" ref={tabsRef}>
+        <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: '0 12px' }}>
           {tabDefs.map((tab, index) => {
-            const isActive = activeTab === tab.id;
             const prevTab = tabDefs[index - 1];
             const nextTab = tabDefs[index + 1];
+            const isActive = activeTab === tab.id;
+            // Right circle (::before on .folder-tab) should be color of previous tab (or page bg if first)
             const rightCircleColor = isActive ? (prevTab ? prevTab.color : '#f9fafb') : '#f9fafb';
+            // Left circle (::after on .folder-tab) should be color of next tab (or page bg if last)
             const leftCircleColor = isActive ? (nextTab ? nextTab.color : '#f9fafb') : '#f9fafb';
             return (
             <li
               key={tab.id}
               className={`folder-tab-li ${isActive ? 'active' : ''} ${isActive && index === 0 ? 'first-active' : ''} ${isActive && index === tabDefs.length - 1 ? 'last-active' : ''}`}
-              style={{ 
-                '--tab-color': tab.color, 
-                '--tab-border-color': tab.borderColor,
-                '--right-circle-color': rightCircleColor, 
-                '--left-circle-color': leftCircleColor 
-              }}
+              style={{ '--tab-color': tab.color, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
             >
               <button
                 onClick={() => setActiveTab(tab.id)}
@@ -731,7 +664,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
-          <div className="tab-content-bordered p-4 bg-blue-50" style={{ minHeight: '80vh', '--content-border-color': '#bfdbfe', '--tab-bg-color': '#eff6ff', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='general')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
+          <div className="p-4 bg-blue-50" style={{ minHeight: '80vh' }}>
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
@@ -1296,7 +1229,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="tab-content-bordered p-6 space-y-6 bg-amber-50" style={{ minHeight: '80vh', '--content-border-color': '#fde68a', '--tab-bg-color': '#fffbeb', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='identity')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
+          <div className="p-6 space-y-6 bg-amber-50" style={{ minHeight: '80vh' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
@@ -1804,7 +1737,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Income */}
         {activeTab === 'income' && (
-          <div className="tab-content-bordered p-6 space-y-4 bg-green-50" style={{ minHeight: '80vh', '--content-border-color': '#bbf7d0', '--tab-bg-color': '#f0fdf4', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='income')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
+          <div className="p-6 space-y-4 bg-green-50" style={{ minHeight: '80vh' }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -2129,7 +2062,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Obligations */}
         {activeTab === 'obligations' && (
-          <div className="tab-content-bordered p-6 space-y-4 bg-rose-50" style={{ minHeight: '80vh', '--content-border-color': '#fecdd3', '--tab-bg-color': '#fff1f2', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='obligations')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
+          <div className="p-6 space-y-4 bg-rose-50" style={{ minHeight: '80vh' }}>
             {obligations.map((obligation, index) => (
               <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -2284,7 +2217,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="tab-content-bordered p-6 bg-purple-50" style={{ minHeight: '80vh', '--content-border-color': '#e9d5ff', '--tab-bg-color': '#faf5ff', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='properties')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
+          <div className="p-6 bg-purple-50" style={{ minHeight: '80vh' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
