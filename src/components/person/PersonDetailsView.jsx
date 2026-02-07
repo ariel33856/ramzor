@@ -1620,11 +1620,11 @@ export default function PersonDetailsView({ personId }) {
                    }
                  }}
                  className="w-12 text-center h-8 bg-white" 
-               />
-              </div>
-              </div>
-              </div>
-              )}
+                  />
+                 </div>
+                 </div>
+                 </div>
+                 )}
 
         {/* Tab Content: Income */}
         {activeTab === 'income' && (
