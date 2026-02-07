@@ -635,7 +635,7 @@ export default function PersonDetailsView({ personId }) {
       `}</style>
       <div>
         {/* Tab Headers */}
-        <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: '0 12px' }}>
+        <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: 0 }}>
           {tabDefs.map((tab, index) => {
             const prevTab = tabDefs[index - 1];
             const nextTab = tabDefs[index + 1];
