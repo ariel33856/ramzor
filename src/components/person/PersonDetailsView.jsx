@@ -530,8 +530,7 @@ export default function PersonDetailsView({ personId }) {
   }
 
   return (
-    <div className="px-10 py-6">
-      {/* Tabbed Card */}
+    <div>
       <div>
         {/* Tab Headers */}
         <div className="flex" ref={tabsRef}>
