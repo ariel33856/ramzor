@@ -1296,7 +1296,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-amber-50" style={{ minHeight: '80vh' }}>
+          <div className="tab-content-bordered p-6 space-y-6 bg-amber-50" style={{ minHeight: '80vh', '--content-border-color': '#fde68a', '--tab-bg-color': '#fffbeb', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='identity')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
