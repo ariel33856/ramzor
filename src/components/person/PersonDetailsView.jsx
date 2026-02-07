@@ -1951,25 +1951,9 @@ export default function PersonDetailsView({ personId }) {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Obligations Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Collapsible Header */}
-        <button
-          onClick={() => setIsCollapsedObligations(!isCollapsedObligations)}
-          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
-        >
-          {isCollapsedObligations ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          )}
-          <h2 className="text-lg font-bold text-gray-900">התחייבויות</h2>
-        </button>
-
-        {/* Content */}
-        {!isCollapsedObligations && (
+        {/* Tab Content: Obligations */}
+        {activeTab === 'obligations' && (
           <div className="p-6 space-y-4">
             {obligations.map((obligation, index) => (
               <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
