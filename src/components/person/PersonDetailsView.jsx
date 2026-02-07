@@ -639,7 +639,7 @@ export default function PersonDetailsView({ personId }) {
             return (
             <li
               key={tab.id}
-              className={`folder-tab-li ${isActive ? 'active' : ''}`}
+              className={`folder-tab-li ${isActive ? 'active' : ''} ${isActive && index === 0 ? 'first-active' : ''} ${isActive && index === tabDefs.length - 1 ? 'last-active' : ''}`}
               style={{ '--tab-color': tab.color, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
             >
               <button
