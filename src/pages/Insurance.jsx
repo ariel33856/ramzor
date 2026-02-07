@@ -132,8 +132,8 @@ export default function Insurance() {
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-gray-50/50 overflow-hidden flex flex-col p-3">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-3">
+    <div className="fixed inset-0 top-[64px] bg-gray-50/50 flex flex-col">
+      <div className="bg-white shadow-sm border-b border-gray-100 p-3">
         <div className="flex gap-3">
           <Button 
             onClick={() => {
@@ -158,8 +158,8 @@ export default function Insurance() {
         </div>
       </div>
 
-      <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="h-full overflow-auto">
+      <div className="flex-1 bg-white overflow-hidden">
+        <div className="h-full overflow-y-auto">
           <table className="w-full">
             <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100">
               <tr className="border-b-2 border-blue-200">
