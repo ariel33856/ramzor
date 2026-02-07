@@ -575,52 +575,22 @@ export default function PersonDetailsView({ personId }) {
           z-index: 3;
         }
 
-        /* Pseudo elements for curved corners */
-        .folder-tab-li:before, .folder-tab-li:after,
-        .folder-tab-li .folder-tab:before, .folder-tab-li .folder-tab:after {
+        /* Curved corners using radial-gradient on active tab only */
+        .folder-tab-li.active .folder-tab::before,
+        .folder-tab-li.active .folder-tab::after {
+          content: "";
           position: absolute;
           bottom: 0;
+          width: 12px;
+          height: 12px;
         }
-        /* Only active tab gets pseudo elements */
-        .folder-tab-li.active:after, .folder-tab-li.active:before,
-        .folder-tab-li.active .folder-tab:after, .folder-tab-li.active .folder-tab:before {
-          content: "";
+        .folder-tab-li.active .folder-tab::before {
+          right: -12px;
+          background: radial-gradient(circle at 0 0, transparent 12px, var(--tab-color) 12px);
         }
-        /* Squares behind circles - same color as active tab */
-        .folder-tab-li.active:before, .folder-tab-li.active:after {
-          background: var(--tab-color);
-          z-index: 1;
-        }
-        /* Square dimensions and position */
-        .folder-tab-li:before, .folder-tab-li:after {
-          width: 10px;
-          height: 10px;
-        }
-        .folder-tab-li:before {
-          right: -10px;
-        }
-        .folder-tab-li:after {
-          left: -10px;
-        }
-        /* Circles that mask the squares */
-        .folder-tab-li .folder-tab:after, .folder-tab-li .folder-tab:before {
-          width: 20px;
-          height: 20px;
-          border-radius: 10px;
-          background: #f9fafb;
-          z-index: 2;
-        }
-        .folder-tab-li.active .folder-tab:before {
-          background: var(--right-circle-color);
-        }
-        .folder-tab-li.active .folder-tab:after {
-          background: var(--left-circle-color);
-        }
-        .folder-tab-li .folder-tab:before {
-          right: -20px;
-        }
-        .folder-tab-li .folder-tab:after {
-          left: -20px;
+        .folder-tab-li.active .folder-tab::after {
+          left: -12px;
+          background: radial-gradient(circle at 100% 0, transparent 12px, var(--tab-color) 12px);
         }
       `}</style>
       <div>
