@@ -35,6 +35,7 @@ export default function CasePersonal() {
     email: ''
   });
   const [sortedContacts, setSortedContacts] = useState([]);
+  const [activeContactId, setActiveContactId] = useState(null);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -107,6 +108,9 @@ export default function CasePersonal() {
   React.useEffect(() => {
     if (linkedContacts.length > 0) {
       setSortedContacts(linkedContacts);
+      if (!activeContactId || !linkedContacts.find(c => c.id === activeContactId)) {
+        setActiveContactId(linkedContacts[0].id);
+      }
     }
   }, [linkedContacts]);
 
@@ -118,12 +122,7 @@ export default function CasePersonal() {
   }, [contactDialogOpen]);
 
   const moveContactToTop = (contactId) => {
-    setSortedContacts(prev => {
-      const idx = prev.findIndex(c => c.id === contactId);
-      if (idx <= 0) return prev; // already first or not found
-      const contact = prev[idx];
-      return [contact, ...prev.filter(c => c.id !== contactId)];
-    });
+    setActiveContactId(contactId);
   };
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
@@ -612,7 +611,7 @@ export default function CasePersonal() {
         </div>
       </div>
       <div className="space-y-4 p-1">
-        {sortedContacts.map((contact) => (
+        {sortedContacts.filter(c => c.id === activeContactId).map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
           </div>
