@@ -133,17 +133,6 @@ export default function ModuleView() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Special handling for Moshe module
-      if (moduleId === 'moshe') {
-        if (user.role === 'admin') {
-          if (filterUser !== 'all') {
-            return base44.entities.MosheRecord.filter({ created_by: filterUser, is_archived: false }, '-created_date');
-          }
-          return base44.entities.MosheRecord.filter({ is_archived: false }, '-created_date');
-        }
-        return base44.entities.MosheRecord.filter({ created_by: user.email, is_archived: false }, '-created_date');
-      }
-      
       // Special handling for transactions module
       if (moduleId === 'transactions') {
         if (user.role === 'admin') {
@@ -211,14 +200,6 @@ export default function ModuleView() {
   };
 
   const filteredCases = allCases.filter(c => {
-    if (moduleId === 'moshe') {
-      const matchesSearch = !searchTerm || 
-        c.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.description?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    }
-    
     if (moduleId === 'transactions') {
       const matchesSearch = !searchTerm || 
         c.name?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -264,7 +245,7 @@ export default function ModuleView() {
                 עסקה חדשה
               </Button>
             ) : (
-              <Link to={moduleId === 'moshe' ? createPageUrl('NewMosheRecord') : createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
+              <Link to={createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
                 <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
                   <Plus className="w-5 h-5 ml-2" />
                   רשומה חדשה
@@ -290,21 +271,13 @@ export default function ModuleView() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">כל הסטטוסים</SelectItem>
-                {moduleId === 'moshe' ? (
-                  <>
-                    <SelectItem value="פעיל">פעיל</SelectItem>
-                    <SelectItem value="בהמתנה">בהמתנה</SelectItem>
-                    <SelectItem value="הושלם">הושלם</SelectItem>
-                  </>
-                ) : (
-                  Object.entries(statusLabels).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>{label}</SelectItem>
-                  ))
-                )}
+                {Object.entries(statusLabels).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>{label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
-            {moduleId !== 'moshe' && (
+            {moduleId !== 'transactions' && (
               <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
                 <SelectTrigger className="w-full md:w-48">
                   <SelectValue placeholder="דחיפות" />
@@ -358,13 +331,7 @@ export default function ModuleView() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    {moduleId === 'moshe' ? (
-                      <>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">כותרת</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תיאור</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
-                      </>
-                    ) : moduleId === 'transactions' ? (
+                    {moduleId === 'transactions' ? (
                       <>
                         <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>
                         <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום</th>
@@ -387,32 +354,12 @@ export default function ModuleView() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => window.location.href = moduleId === 'moshe' 
-                        ? createPageUrl(`MosheRecordDetails?id=${caseData.id}`)
-                        : moduleId === 'transactions'
+                      onClick={() => window.location.href = moduleId === 'transactions'
                         ? createPageUrl(`TransactionDetails?id=${caseData.id}`)
                         : createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)
                       }
                     >
-                      {moduleId === 'moshe' ? (
-                        <>
-                          <td className="px-6 py-4">
-                            <div className="font-semibold text-gray-900">{caseData.title}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-600">{caseData.description || '—'}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              caseData.status === 'פעיל' ? 'bg-green-100 text-green-800' :
-                              caseData.status === 'בהמתנה' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-blue-100 text-blue-800'
-                            }`}>
-                              {caseData.status}
-                            </span>
-                          </td>
-                        </>
-                      ) : moduleId === 'transactions' ? (
+                      {moduleId === 'transactions' ? (
                         <>
                           <td className="px-6 py-4">
                             <div className="font-semibold text-gray-900">{caseData.name}</div>
