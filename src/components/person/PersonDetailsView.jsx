@@ -540,11 +540,15 @@ export default function PersonDetailsView({ personId }) {
             { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700' },
             { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700' },
             { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700' },
-          ].map((tab) => (
+          ].map((tab, index, arr) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all border border-b-0 ${
+                index === 0 ? 'rounded-tl-none rounded-tr-lg' : 
+                index === arr.length - 1 ? 'rounded-tr-none rounded-tl-lg' : 
+                'rounded-t-lg'
+              } ${
                 activeTab === tab.id
                   ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
                   : `${tab.activeText} ${tab.activeBg} opacity-60 hover:opacity-80 border-transparent`
