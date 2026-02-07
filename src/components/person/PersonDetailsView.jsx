@@ -1092,9 +1092,9 @@ export default function PersonDetailsView({ personId }) {
       </div>
 
       {/* Tabbed Card */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Tab Headers */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex">
           {[
             { id: 'identity', label: 'תעודת זהות' },
             { id: 'income', label: 'הכנסות' },
@@ -1104,16 +1104,14 @@ export default function PersonDetailsView({ personId }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all relative ${
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
                 activeTab === tab.id
-                  ? 'text-blue-700 bg-blue-50/60'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  ? 'text-blue-700 bg-white border-gray-200 relative z-10'
+                  : 'text-gray-500 hover:text-gray-700 bg-gray-100 border-transparent'
               }`}
+              style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
             >
               {tab.label}
-              {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 rounded-t-full" />
-              )}
             </button>
           ))}
         </div>
