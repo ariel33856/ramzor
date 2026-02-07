@@ -553,7 +553,7 @@ export default function PersonDetailsView({ personId }) {
                     ? `${tab.activeText} ${tab.activeBg} ${tab.borderColor} border-b-0 relative z-10`
                     : `${tab.activeText} ${tab.activeBg} ${tab.borderColor} ${activeBottomBorder}`
                 }`}
-                style={activeTab === tab.id ? { marginBottom: '-2px', paddingBottom: 'calc(0.75rem + 2px)' } : {}}
+                style={activeTab === tab.id ? { marginBottom: '-2px', paddingBottom: 'calc(0.75rem + 2px)' } : { marginBottom: '-2px', paddingBottom: 'calc(0.75rem + 2px)' }}
               >
                 {tab.label}
               </button>
