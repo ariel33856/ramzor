@@ -167,6 +167,25 @@ export default function PersonDetailsView({ personId }) {
     refetchOnWindowFocus: false
   });
 
+  const createTransactionMutation = useMutation({
+    mutationFn: (data) => base44.entities.Transaction.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['all-transactions']);
+    }
+  });
+
+  const updateTransactionMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Transaction.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['all-transactions']);
+    }
+  });
+
+  const deleteTransactionMutation = useMutation({
+    mutationFn: (id) => base44.entities.Transaction.delete(id),
+    onSuccess: () => queryClient.invalidateQueries(['all-transactions'])
+  });
+
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
   const properties = allProperties;
 
@@ -2317,65 +2336,191 @@ export default function PersonDetailsView({ personId }) {
                       other: 'אחר'
                     };
                     const statusLabels = {
-                      pending: 'ממתין',
+                      pending: 'בתהליך',
                       completed: 'הושלם',
                       cancelled: 'בוטל'
                     };
 
-                    if (propertyTransactions.length === 0) return null;
-
                     return (
                       <div className="mt-4 pt-4 border-t border-gray-200">
-                        <h4 className="text-sm font-bold text-gray-900 mb-3">עסקאות משויכות לנכס</h4>
-                        <div className="space-y-2">
-                          {propertyTransactions.map((transaction) => (
-                            <div key={transaction.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                              <div className="grid grid-cols-4 gap-3 text-sm">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-bold text-gray-900">עסקאות</h4>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              createTransactionMutation.mutate({
+                                property_id: property.id,
+                                transaction_type: 'purchase',
+                                transaction_date: new Date().toISOString().split('T')[0],
+                                amount: null,
+                                buyer_name: '',
+                                seller_name: '',
+                                status: 'pending',
+                                commission: null,
+                                notes: ''
+                              });
+                            }}
+                            className="h-7 text-xs bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Plus className="w-3 h-3 ml-1" />
+                            עסקה חדשה
+                          </Button>
+                        </div>
+                        <div className="space-y-3">
+                          {propertyTransactions.map((transaction, index) => (
+                            <div key={transaction.id} className="p-3 bg-gradient-to-br from-blue-50/50 to-white border-2 border-blue-200 rounded-xl">
+                              <div className="flex items-center justify-between mb-3">
+                                <h5 className="text-xs font-semibold text-gray-700">עסקה #{index + 1} - {typeLabels[transaction.transaction_type]}</h5>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    if (confirm('האם למחוק עסקה זו?')) {
+                                      deleteTransactionMutation.mutate(transaction.id);
+                                    }
+                                  }}
+                                  className="h-6 w-6 text-red-600 hover:text-red-800 hover:bg-red-100"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                              <div className="grid grid-cols-3 gap-3">
                                 <div>
-                                  <span className="font-semibold text-gray-700">סוג: </span>
-                                  <span className="text-gray-900">{typeLabels[transaction.transaction_type]}</span>
+                                  <Label className="text-xs">סוג עסקה</Label>
+                                  <Select 
+                                    value={transaction.transaction_type} 
+                                    onValueChange={(val) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, transaction_type: val }
+                                      });
+                                    }}
+                                  >
+                                    <SelectTrigger className="h-8">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {Object.entries(typeLabels).map(([key, label]) => (
+                                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
                                 </div>
                                 <div>
-                                  <span className="font-semibold text-gray-700">תאריך: </span>
-                                  <span className="text-gray-900">
-                                    {transaction.transaction_date ? new Date(transaction.transaction_date).toLocaleDateString('he-IL') : '—'}
-                                  </span>
+                                  <Label className="text-xs">תאריך</Label>
+                                  <Input
+                                    type="date"
+                                    className="h-8"
+                                    value={transaction.transaction_date || ''}
+                                    onChange={(e) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, transaction_date: e.target.value }
+                                      });
+                                    }}
+                                  />
                                 </div>
                                 <div>
-                                  <span className="font-semibold text-gray-700">סכום: </span>
-                                  <span className="text-gray-900">
-                                    {transaction.amount ? `₪${transaction.amount.toLocaleString()}` : '—'}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="font-semibold text-gray-700">סטטוס: </span>
-                                  <span className={`font-medium ${
-                                    transaction.status === 'completed' ? 'text-green-700' :
-                                    transaction.status === 'cancelled' ? 'text-red-700' :
-                                    'text-yellow-700'
-                                  }`}>
-                                    {statusLabels[transaction.status]}
-                                  </span>
+                                  <Label className="text-xs">סטטוס</Label>
+                                  <Select 
+                                    value={transaction.status} 
+                                    onValueChange={(val) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, status: val }
+                                      });
+                                    }}
+                                  >
+                                    <SelectTrigger className="h-8">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {Object.entries(statusLabels).map(([key, label]) => (
+                                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
                                 </div>
                               </div>
-                              {(transaction.buyer_name || transaction.seller_name) && (
-                                <div className="grid grid-cols-2 gap-3 text-sm mt-2">
-                                  {transaction.buyer_name && (
-                                    <div>
-                                      <span className="font-semibold text-gray-700">קונה: </span>
-                                      <span className="text-gray-900">{transaction.buyer_name}</span>
-                                    </div>
-                                  )}
-                                  {transaction.seller_name && (
-                                    <div>
-                                      <span className="font-semibold text-gray-700">מוכר: </span>
-                                      <span className="text-gray-900">{transaction.seller_name}</span>
-                                    </div>
-                                  )}
+                              <div className="grid grid-cols-2 gap-3 mt-3">
+                                <div>
+                                  <Label className="text-xs">קונה</Label>
+                                  <Input
+                                    className="h-8"
+                                    value={transaction.buyer_name || ''}
+                                    onChange={(e) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, buyer_name: e.target.value }
+                                      });
+                                    }}
+                                  />
                                 </div>
-                              )}
+                                <div>
+                                  <Label className="text-xs">מוכר</Label>
+                                  <Input
+                                    className="h-8"
+                                    value={transaction.seller_name || ''}
+                                    onChange={(e) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, seller_name: e.target.value }
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-2 gap-3 mt-3">
+                                <div>
+                                  <Label className="text-xs">סכום</Label>
+                                  <Input
+                                    className="h-8"
+                                    type="number"
+                                    value={transaction.amount || ''}
+                                    onChange={(e) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, amount: e.target.value ? parseFloat(e.target.value) : null }
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <Label className="text-xs">עמלה</Label>
+                                  <Input
+                                    className="h-8"
+                                    type="number"
+                                    value={transaction.commission || ''}
+                                    onChange={(e) => {
+                                      updateTransactionMutation.mutate({ 
+                                        id: transaction.id, 
+                                        data: { ...transaction, commission: e.target.value ? parseFloat(e.target.value) : null }
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="mt-3">
+                                <Label className="text-xs">הערות</Label>
+                                <Textarea
+                                  className="text-sm"
+                                  value={transaction.notes || ''}
+                                  onChange={(e) => {
+                                    updateTransactionMutation.mutate({ 
+                                      id: transaction.id, 
+                                      data: { ...transaction, notes: e.target.value }
+                                    });
+                                  }}
+                                  rows={2}
+                                />
+                              </div>
                             </div>
                           ))}
+                          {propertyTransactions.length === 0 && (
+                            <div className="text-center py-6 text-gray-400 text-sm">
+                              אין עסקאות - לחץ על "עסקה חדשה" כדי להתחיל
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
