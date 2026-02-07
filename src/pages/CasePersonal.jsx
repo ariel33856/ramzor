@@ -430,9 +430,7 @@ export default function CasePersonal() {
                 <span className="text-gray-500">|</span>
                 {couples.map(({ contact, partner }, coupleIdx) => {
                   const getButtonClass = (rel) => {
-                    const isActive = rel.id === activeContactId;
-                    let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-white flex flex-col items-center ';
-                    if (isActive) buttonClass += 'ring-2 ring-offset-2 ring-white shadow-lg scale-105 ';
+                    let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                     const relationshipType = getRelationshipType(rel);
                     if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
                       buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
@@ -458,9 +456,7 @@ export default function CasePersonal() {
                 {otherContacts.map((contact, idx) => {
                   const relationshipType = getRelationshipType(contact);
                   const displayRelType = getDisplayRelationshipType(contact);
-                  const isActive = contact.id === activeContactId;
-                  let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all text-white flex flex-col items-center ';
-                  if (isActive) buttonClass += 'ring-2 ring-offset-2 ring-white shadow-lg scale-105 ';
+                  let buttonClass = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white flex flex-col items-center ';
                   if (relationshipType === 'לווה') {
                     buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
                   } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
@@ -614,9 +610,9 @@ export default function CasePersonal() {
           </Dialog>
         </div>
       </div>
-      <div className="space-y-4 p-2">
+      <div className="space-y-4 p-1">
         {sortedContacts.filter(c => c.id === activeContactId).map((contact) => (
-          <div key={contact.id} id={`contact-${contact.id}`} className="border-2 border-indigo-300 bg-indigo-50/30 rounded-xl shadow-md p-3">
+          <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
           </div>
         ))}
