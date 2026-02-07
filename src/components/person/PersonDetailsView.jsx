@@ -530,7 +530,7 @@ export default function PersonDetailsView({ personId }) {
   }
 
   return (
-    <div>
+    <>
       <div>
         {/* Tab Headers */}
         <div className="flex" ref={tabsRef}>
