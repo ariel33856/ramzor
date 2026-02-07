@@ -558,7 +558,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
-          <div className="p-4 bg-blue-50 border-2 border-blue-400 border-t-0 rounded-b-lg" style={{ minHeight: '80vh' }}>
+          <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
@@ -1123,7 +1123,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-amber-50 border-2 border-amber-400 border-t-0 rounded-b-lg" style={{ minHeight: '80vh' }}>
+          <div className="p-6 space-y-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
@@ -1631,7 +1631,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Income */}
         {activeTab === 'income' && (
-          <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 border-t-0 rounded-b-lg" style={{ minHeight: '80vh' }}>
+          <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -1956,7 +1956,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Obligations */}
         {activeTab === 'obligations' && (
-          <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 border-t-0 rounded-b-lg" style={{ minHeight: '80vh' }}>
+          <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {obligations.map((obligation, index) => (
               <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -2111,7 +2111,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="p-6 bg-purple-50 border-2 border-purple-400 border-t-0 rounded-b-lg" style={{ minHeight: '80vh' }}>
+          <div className="p-6 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
