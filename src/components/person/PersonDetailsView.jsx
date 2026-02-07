@@ -530,7 +530,7 @@ export default function PersonDetailsView({ personId }) {
   }
 
   return (
-    <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+    <div className="border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
       {/* Tabbed Card */}
       <div className="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Tab Headers */}
