@@ -731,7 +731,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
-          <div className="p-4 bg-blue-50" style={{ minHeight: '80vh' }}>
+          <div className="tab-content-bordered p-4 bg-blue-50" style={{ minHeight: '80vh', '--content-border-color': '#bfdbfe', '--tab-bg-color': '#eff6ff', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='general')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
