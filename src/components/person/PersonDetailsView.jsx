@@ -553,10 +553,12 @@ export default function PersonDetailsView({ personId }) {
         .folder-tab.active::before {
           right: -12px;
           background: radial-gradient(circle at 0 0, transparent 12px, var(--tab-color) 12px);
+          transform: rotate(90deg);
         }
         .folder-tab.active::after {
           left: -12px;
           background: radial-gradient(circle at 100% 0, transparent 12px, var(--tab-color) 12px);
+          transform: rotate(90deg);
         }
         .folder-tab:not(.active) { border-color: transparent; opacity: 0.6; }
         .folder-tab:not(.active):hover { opacity: 0.85; }
