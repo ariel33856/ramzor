@@ -6,7 +6,7 @@ export default function PersonDetails() {
   const personId = urlParams.get('id');
 
   return (
-    <div className="h-full bg-gray-50/50">
+    <div className="h-full">
       <PersonDetailsView personId={personId} />
     </div>
   );
