@@ -118,7 +118,16 @@ export default function ModuleView() {
 
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
-    queryFn: () => base44.entities.Module.filter({ id: moduleId }).then(res => res[0]),
+    queryFn: async () => {
+      // Special modules that don't exist in Module entity
+      if (moduleId === 'moshe') {
+        return { id: 'moshe', name: 'משה', color: 'yellow', order: 999 };
+      }
+      if (moduleId === 'transactions') {
+        return { id: 'transactions', name: 'עסקאות', color: 'purple', order: 998 };
+      }
+      return base44.entities.Module.filter({ id: moduleId }).then(res => res[0]);
+    },
     enabled: !!moduleId
   });
 
