@@ -1951,7 +1951,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Obligations */}
         {activeTab === 'obligations' && (
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4 bg-white border-t border-gray-200">
             {obligations.map((obligation, index) => (
               <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
                 <div className="flex items-center justify-between">
