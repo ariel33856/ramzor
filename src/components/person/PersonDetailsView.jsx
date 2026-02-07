@@ -629,11 +629,19 @@ export default function PersonDetailsView({ personId }) {
       <div>
         {/* Tab Headers */}
         <ul className="folder-tabs-container" ref={tabsRef} style={{ margin: 0, padding: '0 12px' }}>
-          {tabDefs.map((tab) => (
+          {tabDefs.map((tab, index) => {
+            const prevTab = tabDefs[index - 1];
+            const nextTab = tabDefs[index + 1];
+            const isActive = activeTab === tab.id;
+            // Right circle (::before on .folder-tab) should be color of previous tab (or page bg if first)
+            const rightCircleColor = isActive ? (prevTab ? prevTab.color : '#f9fafb') : '#f9fafb';
+            // Left circle (::after on .folder-tab) should be color of next tab (or page bg if last)
+            const leftCircleColor = isActive ? (nextTab ? nextTab.color : '#f9fafb') : '#f9fafb';
+            return (
             <li
               key={tab.id}
-              className={`folder-tab-li ${activeTab === tab.id ? 'active' : ''}`}
-              style={{ '--tab-color': tab.color }}
+              className={`folder-tab-li ${isActive ? 'active' : ''}`}
+              style={{ '--tab-color': tab.color, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
             >
               <button
                 onClick={() => setActiveTab(tab.id)}
@@ -643,7 +651,8 @@ export default function PersonDetailsView({ personId }) {
                 {tab.label}
               </button>
             </li>
-          ))}
+            );
+          })}
         </ul>
 
         {/* Tab Content: General */}
