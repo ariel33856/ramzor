@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -52,6 +52,12 @@ export default function CaseProperty() {
     queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
     staleTime: 5 * 60 * 1000
   });
+
+  // Debug logs
+  useEffect(() => {
+    console.log('🔍 Properties for this case:', properties);
+    console.log('🔍 All properties:', allProperties);
+  }, [properties, allProperties]);
 
   const allFieldNames = React.useMemo(() => {
     const fieldNamesSet = new Set(['address', 'city', 'property_type', 'size_sqm', 'rooms', 'floor', 'price', 'owner_name', 'owner_phone', 'status', 'notes']);
@@ -179,7 +185,7 @@ export default function CaseProperty() {
     };
     
     if (editingProperty) {
-      updatePropertyMutation.mutate(data);
+      updatePropertyMutation.mutate({ data });
     } else {
       createPropertyMutation.mutate(data);
     }
@@ -226,7 +232,17 @@ export default function CaseProperty() {
           >
             <Archive className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">אין נכסים משויכים</h3>
-            <p className="text-gray-400">בחר נכס קיים או צור נכס חדש</p>
+            <p className="text-gray-400 mb-6">בחר נכס קיים או צור נכס חדש</p>
+            <div className="flex justify-center gap-4">
+              <Button onClick={() => setDialogOpen(true)} variant="outline">
+                <Search className="w-5 h-5 ml-2" />
+                בחר נכס קיים
+              </Button>
+              <Button onClick={() => setCreateDialogOpen(true)} className="bg-gradient-to-r from-blue-600 to-purple-600">
+                <Plus className="w-5 h-5 ml-2" />
+                נכס חדש
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <div className="space-y-4">
@@ -402,7 +418,7 @@ export default function CaseProperty() {
                 </div>
               ))}
               {filteredProperties.length === 0 && (
-                <p className="text-center text-gray-500 py-8">כל הנכסים כבר משויכים לחשבונות</p>
+                <p className="text-center text-gray-500 py-8">לא נמצאו נכסים זמינים</p>
               )}
             </div>
           </div>
