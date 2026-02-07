@@ -2284,7 +2284,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="p-6 bg-purple-50" style={{ minHeight: '80vh' }}>
+          <div className="tab-content-bordered p-6 bg-purple-50" style={{ minHeight: '80vh', '--content-border-color': '#e9d5ff', '--tab-bg-color': '#faf5ff', '--tab-start': `calc(${tabDefs.findIndex(t=>t.id==='properties')} * (100% / ${tabDefs.length}) + 12px)`, '--tab-width': `calc(100% / ${tabDefs.length} - 24px)` }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
