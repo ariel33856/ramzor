@@ -618,6 +618,14 @@ export default function PersonDetailsView({ personId }) {
           background: var(--left-circle-color);
           opacity: 0.8;
         }
+        .folder-tab-li.first-active:before,
+        .folder-tab-li.first-active .folder-tab:before {
+          display: none !important;
+        }
+        .folder-tab-li.last-active:after,
+        .folder-tab-li.last-active .folder-tab:after {
+          display: none !important;
+        }
         .folder-tab-li .folder-tab:before {
           right: -20px;
         }
