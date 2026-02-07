@@ -658,7 +658,7 @@ export default function PersonDetailsView({ personId }) {
             <li
               key={tab.id}
               className={`folder-tab-li ${isActive ? 'active' : ''} ${isActive && index === 0 ? 'first-active' : ''} ${isActive && index === tabDefs.length - 1 ? 'last-active' : ''}`}
-              style={{ '--tab-color': tab.color, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
+              style={{ '--tab-color': tab.color, '--tab-border-color': tab.borderColor, '--right-circle-color': rightCircleColor, '--left-circle-color': leftCircleColor }}
             >
               <button
                 onClick={() => setActiveTab(tab.id)}
