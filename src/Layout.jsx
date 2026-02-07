@@ -341,8 +341,12 @@ export default function Layout({ children, currentPageName }) {
                           indigo: 'from-indigo-500 to-indigo-600'
                         }[module.color] || 'from-blue-500 to-blue-600';
 
+                        const pageUrl = module.name === 'ביטוחים' 
+                          ? createPageUrl('Insurance')
+                          : createPageUrl('ModuleView') + `?moduleId=${module.id}`;
+
                         return (
-                          <Link key={module.id} to={createPageUrl('ModuleView') + `?moduleId=${module.id}`}>
+                          <Link key={module.id} to={pageUrl}>
                             <DropdownMenuItem className={`px-1.5 py-1 mb-1 cursor-pointer bg-${module.color}-50 border-2 border-${module.color}-200 hover:border-${module.color}-400 hover:bg-${module.color}-100 rounded-lg transition-all`}>
                               <div className="flex items-center gap-2 justify-end w-full">
                                 <span className="text-sm font-medium">{module.name}</span>
