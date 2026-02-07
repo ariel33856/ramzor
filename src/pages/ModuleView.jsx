@@ -28,13 +28,7 @@ export default function ModuleView() {
     return 'all';
   });
   
-  // Transaction dialog state
-  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
-  const [transactionFormData, setTransactionFormData] = useState({
-    name: '',
-    amount: '',
-    property_id: ''
-  });
+
 
   const defaultVisibleColumns = {
     client_name: true,
@@ -119,10 +113,6 @@ export default function ModuleView() {
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
     queryFn: async () => {
-      // Special modules that don't exist in Module entity
-      if (moduleId === 'transactions') {
-        return { id: 'transactions', name: 'עסקאות', color: 'purple', order: 998 };
-      }
       return base44.entities.Module.filter({ id: moduleId }).then(res => res[0]);
     },
     enabled: !!moduleId
@@ -132,17 +122,6 @@ export default function ModuleView() {
     queryKey: ['module-cases', moduleId, user?.role, user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
-      
-      // Special handling for transactions module
-      if (moduleId === 'transactions') {
-        if (user.role === 'admin') {
-          if (filterUser !== 'all') {
-            return base44.entities.Transaction.filter({ created_by: filterUser, is_archived: false }, '-created_date');
-          }
-          return base44.entities.Transaction.filter({ is_archived: false }, '-created_date');
-        }
-        return base44.entities.Transaction.filter({ created_by: user.email, is_archived: false }, '-created_date');
-      }
       
       const baseFilter = { module_id: moduleId };
       
@@ -158,23 +137,7 @@ export default function ModuleView() {
     enabled: !!moduleId && !!user
   });
 
-  const { data: allProperties = [] } = useQuery({
-    queryKey: ['all-properties-transactions'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
-    enabled: moduleId === 'transactions' && transactionDialogOpen
-  });
 
-  const createTransactionMutation = useMutation({
-    mutationFn: (data) => base44.entities.Transaction.create({
-      ...data,
-      amount: data.amount ? Number(data.amount) : undefined
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['module-cases'] });
-      setTransactionDialogOpen(false);
-      setTransactionFormData({ name: '', amount: '', property_id: '' });
-    }
-  });
 
   const statusLabels = {
     new: 'חדש',
@@ -200,12 +163,6 @@ export default function ModuleView() {
   };
 
   const filteredCases = allCases.filter(c => {
-    if (moduleId === 'transactions') {
-      const matchesSearch = !searchTerm || 
-        c.name?.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesSearch;
-    }
-    
     const matchesSearch = !searchTerm || 
       c.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.client_id?.includes(searchTerm);
@@ -236,22 +193,12 @@ export default function ModuleView() {
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
-            {moduleId === 'transactions' ? (
-              <Button 
-                onClick={() => setTransactionDialogOpen(true)}
-                className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}
-              >
+            <Link to={createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
+              <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
                 <Plus className="w-5 h-5 ml-2" />
-                עסקה חדשה
+                רשומה חדשה
               </Button>
-            ) : (
-              <Link to={createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
-                <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
-                  <Plus className="w-5 h-5 ml-2" />
-                  רשומה חדשה
-                </Button>
-              </Link>
-            )}
+            </Link>
 
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -277,19 +224,17 @@ export default function ModuleView() {
               </SelectContent>
             </Select>
 
-            {moduleId !== 'transactions' && (
-              <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="דחיפות" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">כל הדחיפויות</SelectItem>
-                  {Object.entries(urgencyLabels).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>{label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+            <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="דחיפות" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">כל הדחיפויות</SelectItem>
+                {Object.entries(urgencyLabels).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <Popover>
               <PopoverTrigger asChild>
@@ -331,19 +276,9 @@ export default function ModuleView() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    {moduleId === 'transactions' ? (
-                      <>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום</th>
-                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">נכס משויך</th>
-                      </>
-                    ) : (
-                      <>
-                        {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>}
-                        {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
-                        {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
-                      </>
-                    )}
+                    {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>}
+                    {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
+                    {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -354,59 +289,31 @@ export default function ModuleView() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => window.location.href = moduleId === 'transactions'
-                        ? createPageUrl(`TransactionDetails?id=${caseData.id}`)
-                        : createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)
-                      }
+                      onClick={() => window.location.href = createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)}
                     >
-                      {moduleId === 'transactions' ? (
-                        <>
-                          <td className="px-6 py-4">
-                            <div className="font-semibold text-gray-900">{caseData.name}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900">
-                              {caseData.amount ? formatCurrency(caseData.amount) : '—'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-600">
-                              {caseData.property_id ? (
-                                (() => {
-                                  const prop = allProperties.find(p => p.id === caseData.property_id);
-                                  return prop ? `${prop.address}, ${prop.city}` : '—';
-                                })()
-                              ) : '—'}
-                            </div>
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          {visibleColumns.client_name && (
-                            <td className="px-6 py-4">
-                              <div className="font-semibold text-gray-900">{caseData.client_name}</div>
-                            </td>
-                          )}
-                          {visibleColumns.status && (
-                            <td className="px-6 py-4">
-                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                {statusLabels[caseData.status] || caseData.status}
-                              </span>
-                            </td>
-                          )}
-                          {visibleColumns.urgency && (
-                            <td className="px-6 py-4">
-                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
-                                caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
-                                caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-green-100 text-green-800'
-                              }`}>
-                                {urgencyLabels[caseData.urgency] || caseData.urgency}
-                              </span>
-                            </td>
-                          )}
-                        </>
+                      {visibleColumns.client_name && (
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-gray-900">{caseData.client_name}</div>
+                        </td>
+                      )}
+                      {visibleColumns.status && (
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {statusLabels[caseData.status] || caseData.status}
+                          </span>
+                        </td>
+                      )}
+                      {visibleColumns.urgency && (
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                            caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
+                            caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
+                            caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {urgencyLabels[caseData.urgency] || caseData.urgency}
+                          </span>
+                        </td>
                       )}
                     </motion.tr>
                   ))}
@@ -417,71 +324,7 @@ export default function ModuleView() {
         )}
       </div>
 
-      {/* Transaction Dialog */}
-      <Dialog open={transactionDialogOpen} onOpenChange={setTransactionDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>עסקה חדשה</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            createTransactionMutation.mutate(transactionFormData);
-          }} className="space-y-4">
-            <div>
-              <Label>שם *</Label>
-              <Input
-                value={transactionFormData.name}
-                onChange={(e) => setTransactionFormData({...transactionFormData, name: e.target.value})}
-                required
-                placeholder="הזן שם עסקה"
-              />
-            </div>
 
-            <div>
-              <Label>סכום</Label>
-              <Input
-                type="number"
-                value={transactionFormData.amount}
-                onChange={(e) => setTransactionFormData({...transactionFormData, amount: e.target.value})}
-                placeholder="0"
-              />
-            </div>
-
-            <div>
-              <Label>שיוך לנכס</Label>
-              <Select 
-                value={transactionFormData.property_id} 
-                onValueChange={(value) => setTransactionFormData({...transactionFormData, property_id: value})}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="בחר נכס" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={null}>ללא שיוך</SelectItem>
-                  {allProperties.map(property => (
-                    <SelectItem key={property.id} value={property.id}>
-                      {property.address}, {property.city}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-4 justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setTransactionDialogOpen(false)}
-              >
-                ביטול
-              </Button>
-              <Button type="submit" disabled={createTransactionMutation.isPending}>
-                צור עסקה
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -74,7 +74,6 @@ import CaseProperty from './pages/CaseProperty';
 import CaseStatus from './pages/CaseStatus';
 import CaseSummary from './pages/CaseSummary';
 import CaseTracking from './pages/CaseTracking';
-import CaseTransaction from './pages/CaseTransaction';
 import CaseWorkflow from './pages/CaseWorkflow';
 import ClientPortal from './pages/ClientPortal';
 import Communication from './pages/Communication';
@@ -97,7 +96,6 @@ import PropertyEdit from './pages/PropertyEdit';
 import RecordsTable from './pages/RecordsTable';
 import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
-import TransactionDetails from './pages/TransactionDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -129,7 +127,6 @@ export const PAGES = {
     "CaseStatus": CaseStatus,
     "CaseSummary": CaseSummary,
     "CaseTracking": CaseTracking,
-    "CaseTransaction": CaseTransaction,
     "CaseWorkflow": CaseWorkflow,
     "ClientPortal": ClientPortal,
     "Communication": Communication,
@@ -152,7 +149,6 @@ export const PAGES = {
     "RecordsTable": RecordsTable,
     "Sales": Sales,
     "SearchPage": SearchPage,
-    "TransactionDetails": TransactionDetails,
 }
 
 export const pagesConfig = {
