@@ -540,11 +540,91 @@ export default function PersonDetailsView({ personId }) {
   return (
     <>
       <style>{`
-        .folder-tab { position: relative; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 10px 10px 0 0; z-index: 2; }
-        .folder-tab.active { z-index: 10; }
+        .folder-tabs-container {
+          position: relative;
+          display: flex;
+          padding: 0 12px;
+        }
+        .folder-tab-li {
+          position: relative;
+          flex: 1;
+          list-style: none;
+        }
+        .folder-tab {
+          display: block;
+          padding: 10px 16px;
+          text-align: center;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+          position: relative;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          transition: all 0.2s;
+          border: none;
+          width: 100%;
+          cursor: pointer;
+        }
+        .folder-tab-li:not(.active) .folder-tab {
+          opacity: 0.55;
+        }
+        .folder-tab-li:not(.active):hover .folder-tab {
+          opacity: 0.8;
+        }
+        .folder-tab-li.active {
+          z-index: 3;
+        }
 
-        .folder-tab:not(.active) { border-color: transparent; opacity: 0.6; }
-        .folder-tab:not(.active):hover { opacity: 0.85; }
+        /* Pseudo elements for curved corners */
+        .folder-tab-li:before, .folder-tab-li:after,
+        .folder-tab-li .folder-tab:before, .folder-tab-li .folder-tab:after {
+          position: absolute;
+          bottom: 0;
+        }
+        /* Only active tab gets pseudo elements */
+        .folder-tab-li.active:after, .folder-tab-li.active:before,
+        .folder-tab-li.active .folder-tab:after, .folder-tab-li.active .folder-tab:before {
+          content: "";
+        }
+        /* Squares behind circles - same color as active tab */
+        .folder-tab-li.active:before, .folder-tab-li.active:after {
+          background: var(--tab-color);
+          z-index: 1;
+        }
+        /* Square dimensions and position */
+        .folder-tab-li:before, .folder-tab-li:after {
+          width: 10px;
+          height: 10px;
+        }
+        .folder-tab-li:before {
+          right: -10px;
+        }
+        .folder-tab-li:after {
+          left: -10px;
+        }
+        /* Circles that mask the squares */
+        .folder-tab-li .folder-tab:after, .folder-tab-li .folder-tab:before {
+          width: 20px;
+          height: 20px;
+          border-radius: 10px;
+          background: #f9fafb;
+          z-index: 2;
+        }
+        .folder-tab-li.active .folder-tab:after,
+        .folder-tab-li.active .folder-tab:before {
+          background: #f9fafb;
+        }
+        .folder-tab-li .folder-tab:before {
+          right: -20px;
+        }
+        .folder-tab-li .folder-tab:after {
+          left: -20px;
+        }
+        /* First and last active tabs - outer circles use page bg */
+        .folder-tab-li:first-child.active .folder-tab:after,
+        .folder-tab-li:last-child.active .folder-tab:before {
+          background: #f9fafb;
+        }
       `}</style>
       <div>
         {/* Tab Headers */}
