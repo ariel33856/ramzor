@@ -130,6 +130,7 @@ export default function PersonDetailsView({ personId }) {
   const { data: allProperties = [] } = useQuery({
     queryKey: ['all-properties'],
     queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    enabled: propertyDialogOpen || createPropertyDialogOpen,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
