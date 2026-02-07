@@ -2066,6 +2066,119 @@ export default function PersonDetailsView({ personId }) {
           </div>
         )}
       </div>
+
+      {/* Properties Card */}
+      {linkedPropertiesData.length > 0 ? (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">נכסים</h2>
+          <div className="space-y-4">
+            {linkedPropertiesData.map(property => (
+              <div key={property.id} className="border-2 border-teal-200 rounded-lg p-4 bg-teal-50/30">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">{property.address}</h3>
+                    <p className="text-sm text-gray-600">{property.city}</p>
+                  </div>
+                  <Button
+                    onClick={() => window.location.href = createPageUrl('PropertyDetails') + `?id=${property.id}`}
+                    className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700"
+                  >
+                    פרטים מלאים
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-xs text-gray-600">סוג נכס</Label>
+                    <p className="font-semibold">{property.property_type}</p>
+                  </div>
+                  {property.size_sqm && (
+                    <div>
+                      <Label className="text-xs text-gray-600">שטח (מ"ר)</Label>
+                      <p className="font-semibold">{property.size_sqm}</p>
+                    </div>
+                  )}
+                  {property.rooms && (
+                    <div>
+                      <Label className="text-xs text-gray-600">חדרים</Label>
+                      <p className="font-semibold">{property.rooms}</p>
+                    </div>
+                  )}
+                  {property.floor !== undefined && property.floor !== null && (
+                    <div>
+                      <Label className="text-xs text-gray-600">קומה</Label>
+                      <p className="font-semibold">{property.floor}</p>
+                    </div>
+                  )}
+                  {property.price && (
+                    <div>
+                      <Label className="text-xs text-gray-600">מחיר</Label>
+                      <p className="font-semibold">{parseFloat(property.price).toLocaleString('he-IL')} ₪</p>
+                    </div>
+                  )}
+                  {property.status && (
+                    <div>
+                      <Label className="text-xs text-gray-600">סטטוס</Label>
+                      <p className="font-semibold">{property.status}</p>
+                    </div>
+                  )}
+                </div>
+                {property.notes && (
+                  <div className="mt-3 pt-3 border-t">
+                    <Label className="text-xs text-gray-600">הערות</Label>
+                    <p className="text-sm">{property.notes}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">נכסים</h2>
+          <p className="text-gray-500 mb-4">לא קיימים נכסים משוייכים לאיש קשר זה</p>
+          <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
+                <Plus className="w-4 h-4 ml-2" />
+                הוסף נכס
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>בחר נכס לשיוך</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="חיפוש לפי כתובת או עיר..."
+                  value={propertySearchTerm}
+                  onChange={(e) => setPropertySearchTerm(e.target.value)}
+                />
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {filteredProperties.map(property => (
+                    <div
+                      key={property.id}
+                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      onClick={() => {
+                        const updatedProperties = [...linkedProperties, property.id];
+                        setLinkedProperties(updatedProperties);
+                        updatePersonMutation.mutate({ linked_properties: updatedProperties });
+                        setPropertyDialogOpen(false);
+                        setPropertySearchTerm('');
+                      }}
+                    >
+                      <p className="font-semibold text-gray-900">{property.address}</p>
+                      <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
+                    </div>
+                  ))}
+                  {filteredProperties.length === 0 && (
+                    <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
     </div>
   );
 }
