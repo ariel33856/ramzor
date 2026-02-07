@@ -2105,130 +2105,204 @@ export default function PersonDetailsView({ personId }) {
       </div>
 
       {/* Properties Card */}
-      {linkedPropertiesData.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">נכסים</h2>
-          <div className="space-y-4">
-            {linkedPropertiesData.map(property => (
-              <div key={property.id} className="border-2 border-teal-200 rounded-lg p-4 bg-teal-50/30">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-base font-bold text-gray-900">{property.address}</h3>
-                    <p className="text-sm text-gray-600">{property.city}</p>
-                  </div>
-                  <Button
-                    onClick={() => window.location.href = createPageUrl('PropertyDetails') + `?id=${property.id}`}
-                    className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700"
-                  >
-                    פרטים מלאים
-                  </Button>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label className="text-xs text-gray-600">סוג נכס</Label>
-                    <p className="font-semibold">{property.property_type}</p>
-                  </div>
-                  {property.size_sqm && (
-                    <div>
-                      <Label className="text-xs text-gray-600">שטח (מ"ר)</Label>
-                      <p className="font-semibold">{property.size_sqm}</p>
-                    </div>
-                  )}
-                  {property.rooms && (
-                    <div>
-                      <Label className="text-xs text-gray-600">חדרים</Label>
-                      <p className="font-semibold">{property.rooms}</p>
-                    </div>
-                  )}
-                  {property.floor !== undefined && property.floor !== null && (
-                    <div>
-                      <Label className="text-xs text-gray-600">קומה</Label>
-                      <p className="font-semibold">{property.floor}</p>
-                    </div>
-                  )}
-                  {property.price && (
-                    <div>
-                      <Label className="text-xs text-gray-600">מחיר</Label>
-                      <p className="font-semibold">{parseFloat(property.price).toLocaleString('he-IL')} ₪</p>
-                    </div>
-                  )}
-                  {property.status && (
-                    <div>
-                      <Label className="text-xs text-gray-600">סטטוס</Label>
-                      <p className="font-semibold">{property.status}</p>
-                    </div>
-                  )}
-                </div>
-                {property.notes && (
-                  <div className="mt-3 pt-3 border-t">
-                    <Label className="text-xs text-gray-600">הערות</Label>
-                    <p className="text-sm">{property.notes}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">נכסים</h2>
-          <p className="text-gray-500 mb-4">לא קיימים נכסים משוייכים לאיש קשר זה</p>
-          <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
-                <Plus className="w-4 h-4 ml-2" />
-                הוסף נכס
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[80vh]">
-              <DialogHeader>
-                <DialogTitle>בחר נכס לשיוך</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="flex gap-2">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
+          <div className="flex gap-2">
+            <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="border-teal-200 hover:border-teal-400">
+                  <LinkIcon className="w-4 h-4 ml-2" />
+                  שייך נכס קיים
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר נכס לשיוך</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
                   <Input
                     placeholder="חיפוש לפי כתובת או עיר..."
                     value={propertySearchTerm}
                     onChange={(e) => setPropertySearchTerm(e.target.value)}
-                    className="flex-1"
                   />
-                  <Button 
-                    onClick={() => { 
-                      setPropertyDialogOpen(false); 
-                      setCreatePropertyDialogOpen(true); 
-                    }} 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                  >
-                    <Plus className="w-4 h-4 ml-2" />
-                    נכס חדש
-                  </Button>
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredProperties.map(property => (
+                      <div
+                        key={property.id}
+                        className="p-4 border rounded-lg hover:bg-teal-50 cursor-pointer transition-colors"
+                        onClick={() => {
+                          const updatedProperties = [...linkedProperties, property.id];
+                          setLinkedProperties(updatedProperties);
+                          updatePersonMutation.mutate({ linked_properties: updatedProperties });
+                          setPropertyDialogOpen(false);
+                          setPropertySearchTerm('');
+                        }}
+                      >
+                        <p className="font-semibold text-gray-900">{property.address}</p>
+                        <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
+                      </div>
+                    ))}
+                    {filteredProperties.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {filteredProperties.map(property => (
-                    <div
-                      key={property.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                      onClick={() => {
-                        const updatedProperties = [...linkedProperties, property.id];
-                        setLinkedProperties(updatedProperties);
-                        updatePersonMutation.mutate({ linked_properties: updatedProperties });
-                        setPropertyDialogOpen(false);
-                        setPropertySearchTerm('');
-                      }}
-                    >
-                      <p className="font-semibold text-gray-900">{property.address}</p>
-                      <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
-                    </div>
-                  ))}
-                  {filteredProperties.length === 0 && (
-                    <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
-                  )}
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+            <Button 
+              onClick={() => setCreatePropertyDialogOpen(true)} 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              <Plus className="w-4 h-4 ml-2" />
+              נכס חדש
+            </Button>
+          </div>
         </div>
-      )}
+        
+        {linkedPropertiesData.length === 0 ? (
+          <p className="text-center text-gray-500 py-8">אין נכסים משויכים</p>
+        ) : (
+          <div className="space-y-4">
+            {linkedPropertiesData.map((property, index) => {
+              const updateField = (fieldName, value) => {
+                const data = { [fieldName]: value };
+                if (['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName)) {
+                  data[fieldName] = value ? Number(value) : undefined;
+                }
+                base44.entities.PropertyAsset.update(property.id, data).then(() => {
+                  queryClient.invalidateQueries({ queryKey: ['all-properties'] });
+                });
+              };
+
+              return (
+                <motion.div
+                  key={property.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.02 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>כתובת</Label>
+                      <Input
+                        value={property.address || ''}
+                        onChange={(e) => updateField('address', e.target.value)}
+                        className="font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <Label>עיר</Label>
+                      <Input
+                        value={property.city || ''}
+                        onChange={(e) => updateField('city', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Label>סוג נכס</Label>
+                      <select
+                        value={property.property_type || 'דירה'}
+                        onChange={(e) => updateField('property_type', e.target.value)}
+                        className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                      >
+                        <option value="דירה">דירה</option>
+                        <option value="בית">בית</option>
+                        <option value="דירת גן">דירת גן</option>
+                        <option value="פנטהאוז">פנטהאוז</option>
+                        <option value="משרד">משרד</option>
+                        <option value="חנות">חנות</option>
+                        <option value="מחסן">מחסן</option>
+                        <option value="קרקע">קרקע</option>
+                        <option value="אחר">אחר</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>סטטוס</Label>
+                      <select
+                        value={property.status || 'פנוי'}
+                        onChange={(e) => updateField('status', e.target.value)}
+                        className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                      >
+                        <option value="פנוי">פנוי</option>
+                        <option value="תפוס">תפוס</option>
+                        <option value="להשכרה">להשכרה</option>
+                        <option value="למכירה">למכירה</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    <div>
+                      <Label>שטח (מ"ר)</Label>
+                      <Input
+                        type="number"
+                        value={property.size_sqm || ''}
+                        onChange={(e) => updateField('size_sqm', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>מספר חדרים</Label>
+                      <Input
+                        type="number"
+                        step="0.5"
+                        value={property.rooms || ''}
+                        onChange={(e) => updateField('rooms', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>קומה</Label>
+                      <Input
+                        type="number"
+                        value={property.floor || ''}
+                        onChange={(e) => updateField('floor', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <Label>מחיר (₪)</Label>
+                    <Input
+                      type="number"
+                      value={property.price || ''}
+                      onChange={(e) => updateField('price', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Label>שם בעלים</Label>
+                      <Input
+                        value={property.owner_name || ''}
+                        onChange={(e) => updateField('owner_name', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label>טלפון בעלים</Label>
+                      <Input
+                        value={property.owner_phone || ''}
+                        onChange={(e) => updateField('owner_phone', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <Label>הערות</Label>
+                    <Textarea
+                      value={property.notes || ''}
+                      onChange={(e) => updateField('notes', e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Create Property Dialog */}
       <Dialog open={createPropertyDialogOpen} onOpenChange={setCreatePropertyDialogOpen}>
