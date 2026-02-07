@@ -53,6 +53,7 @@ export default function PropertyEdit() {
   const { data: transactions = [] } = useQuery({
     queryKey: ['property-transactions', propertyId],
     queryFn: async () => {
+      if (!propertyId) return [];
       const results = await base44.entities.Transaction.list('-created_date');
       return results.filter(t => t.property_id === propertyId);
     },
