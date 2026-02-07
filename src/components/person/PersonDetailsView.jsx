@@ -53,10 +53,7 @@ export default function PersonDetailsView({ personId }) {
   const [linkedProperties, setLinkedProperties] = useState([]);
   const [propertyDialogOpen, setPropertyDialogOpen] = useState(false);
   const [propertySearchTerm, setPropertySearchTerm] = useState('');
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isCollapsed1_5, setIsCollapsed1_5] = useState(false);
-  const [isCollapsed2, setIsCollapsed2] = useState(false);
-  const [isCollapsed3, setIsCollapsed3] = useState(false);
+  const [activeTab, setActiveTab] = useState('identity');
   const [relationshipType, setRelationshipType] = useState('לווה');
   const [gender, setGender] = useState('male');
   const [spouseDialogOpen, setSpouseDialogOpen] = useState(false);
