@@ -529,27 +529,47 @@ export default function PersonDetailsView({ personId }) {
     );
   }
 
+  const tabDefs = [
+    { id: 'general', label: 'כללי', color: '#eff6ff', textClass: 'text-blue-700' },
+    { id: 'identity', label: 'תעודת זהות', color: '#fffbeb', textClass: 'text-amber-700' },
+    { id: 'income', label: 'הכנסות', color: '#f0fdf4', textClass: 'text-green-700' },
+    { id: 'obligations', label: 'התחייבויות', color: '#fff1f2', textClass: 'text-rose-700' },
+    { id: 'properties', label: 'נכסים', color: '#faf5ff', textClass: 'text-purple-700' },
+  ];
+
   return (
     <>
+      <style>{`
+        .folder-tab { position: relative; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 10px 10px 0 0; z-index: 2; }
+        .folder-tab.active { z-index: 10; }
+        .folder-tab.active::before,
+        .folder-tab.active::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 12px;
+          height: 12px;
+        }
+        .folder-tab.active::before {
+          right: -12px;
+          background: radial-gradient(circle at 0 0, transparent 12px, var(--tab-color) 12px);
+        }
+        .folder-tab.active::after {
+          left: -12px;
+          background: radial-gradient(circle at 100% 0, transparent 12px, var(--tab-color) 12px);
+        }
+        .folder-tab:not(.active) { border-color: transparent; opacity: 0.6; }
+        .folder-tab:not(.active):hover { opacity: 0.85; }
+      `}</style>
       <div>
         {/* Tab Headers */}
-        <div className="flex" ref={tabsRef}>
-          {[
-            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700' },
-            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700' },
-            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700' },
-            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700' },
-            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700' },
-          ].map((tab) => (
+        <div className="flex" ref={tabsRef} style={{ paddingLeft: 12, paddingRight: 12 }}>
+          {tabDefs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all border ${
-                activeTab === tab.id
-                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 border-b-0 rounded-t-xl relative z-10 shadow-sm`
-                  : `${tab.activeText} ${tab.activeBg} opacity-60 hover:opacity-80 border-transparent rounded-xl`
-              }`}
-              style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
+              className={`folder-tab flex-1 py-3 px-4 text-sm font-semibold transition-all ${tab.textClass} ${activeTab === tab.id ? 'active' : ''}`}
+              style={{ backgroundColor: tab.color, '--tab-color': tab.color, marginBottom: activeTab === tab.id ? '-1px' : '0' }}
             >
               {tab.label}
             </button>
