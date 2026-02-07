@@ -450,14 +450,14 @@ export default function CasePersonal() {
                           <button onClick={() => moveContactToTop(contact.id)} className={getButtonClass(contact)}>
                             <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                           </button>
-                          {activeContactId === contact.id && <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]" />}
+                          <div className={`w-full h-[3px] rounded-full transition-all duration-300 ${activeContactId === contact.id ? 'bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]' : 'bg-transparent'}`} />
                         </div>
                         <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                         <div className="flex flex-col items-center">
                           <button onClick={() => moveContactToTop(partner.id)} className={getButtonClass(partner)}>
                             <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
                           </button>
-                          {activeContactId === partner.id && <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]" />}
+                          <div className={`w-full h-[3px] rounded-full transition-all duration-300 ${activeContactId === partner.id ? 'bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]' : 'bg-transparent'}`} />
                         </div>
                       </div>
                       {coupleIdx < couples.length - 1 || otherContacts.length > 0 && <span className="text-gray-400">•</span>}
@@ -489,7 +489,7 @@ export default function CasePersonal() {
                           <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                           {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
                         </button>
-                        {activeContactId === contact.id && <div className="w-full h-[3px] rounded-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]" />}
+                        <div className={`w-full h-[3px] rounded-full transition-all duration-300 ${activeContactId === contact.id ? 'bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 shadow-[0_0_8px_2px_rgba(59,130,246,0.5)]' : 'bg-transparent'}`} />
                       </div>
                       {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
                     </React.Fragment>
