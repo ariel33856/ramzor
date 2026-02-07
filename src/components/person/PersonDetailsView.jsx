@@ -566,10 +566,10 @@ export default function PersonDetailsView({ personId }) {
           cursor: pointer;
         }
         .folder-tab-li:not(.active) .folder-tab {
-          opacity: 0.55;
+          opacity: 1;
         }
         .folder-tab-li:not(.active):hover .folder-tab {
-          opacity: 0.8;
+          opacity: 1;
         }
         .folder-tab-li.active {
           z-index: 3;
