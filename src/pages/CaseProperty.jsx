@@ -197,6 +197,13 @@ export default function CaseProperty() {
     prop.property_type?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Debug logs
+  useEffect(() => {
+    console.log('🔍 Total properties in DB:', allProperties.length);
+    console.log('🔍 Filtered properties:', filteredProperties.length);
+    console.log('🔍 Search term:', searchTerm);
+  }, [allProperties, filteredProperties, searchTerm]);
+
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden p-1">
       <div className="flex-1 overflow-hidden">
