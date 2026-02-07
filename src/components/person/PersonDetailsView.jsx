@@ -558,7 +558,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: General */}
         {activeTab === 'general' && (
-          <div className="p-4 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
+          <div className="p-4 bg-blue-50 border-t border-gray-200" style={{ minHeight: '80vh' }}>
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
@@ -1123,7 +1123,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
+          <div className="p-6 space-y-6 bg-amber-50 border-t border-gray-200" style={{ minHeight: '80vh' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
@@ -2111,7 +2111,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="p-6 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
+          <div className="p-6 bg-purple-50 border-t border-gray-200" style={{ minHeight: '80vh' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
