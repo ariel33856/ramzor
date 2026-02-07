@@ -535,21 +535,21 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Headers */}
         <div className="flex" ref={tabsRef}>
           {[
-            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700' },
-            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700' },
-            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700' },
-            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700' },
-            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700' },
+            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400' },
+            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', borderColor: 'border-amber-400' },
+            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700', borderColor: 'border-green-400' },
+            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400' },
+            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', borderColor: 'border-purple-400' },
           ].map((tab, index, arr) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all border border-b-0 rounded-t-lg ${
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all border-2 border-b-0 rounded-t-lg ${
                 activeTab === tab.id
-                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
-                  : `${tab.activeText} ${tab.activeBg} border-gray-200 border-b`
+                  ? `${tab.activeText} ${tab.activeBg} ${tab.borderColor} relative z-10`
+                  : `${tab.activeText} ${tab.activeBg} border-transparent`
               }`}
-              style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
+              style={activeTab === tab.id ? { marginBottom: '-2px' } : {}}
             >
               {tab.label}
             </button>
