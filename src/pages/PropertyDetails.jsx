@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Home, MapPin, Phone, User, FileText, ArrowLeft } from 'lucide-react';
+import { Home, MapPin, Phone, User, FileText, ArrowLeft, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -21,6 +21,13 @@ export default function PropertyDetails() {
     queryKey: ['linked-case', property?.case_id],
     queryFn: () => base44.entities.MortgageCase.filter({ id: property.case_id }).then(res => res[0]),
     enabled: !!property?.case_id,
+    staleTime: 5 * 60 * 1000
+  });
+
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['property-transactions', propertyId],
+    queryFn: () => base44.entities.Transaction.filter({ property_id: propertyId }, '-created_date'),
+    enabled: !!propertyId,
     staleTime: 5 * 60 * 1000
   });
 
@@ -149,6 +156,82 @@ export default function PropertyDetails() {
             <h3 className="text-lg font-bold text-gray-900">הערות</h3>
           </div>
           <p className="text-gray-700 whitespace-pre-wrap">{property.notes}</p>
+        </div>
+      )}
+
+      {/* Transactions */}
+      {transactions.length > 0 && (
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mx-8">
+          <div className="flex items-center gap-3 mb-6">
+            <TrendingUp className="w-5 h-5 text-gray-500" />
+            <h3 className="text-lg font-bold text-gray-900">עסקאות</h3>
+          </div>
+          <div className="space-y-4">
+            {transactions.map((transaction) => {
+              const typeLabels = {
+                purchase: 'רכישה',
+                sale: 'מכירה',
+                rent: 'השכרה',
+                lease: 'חכירה',
+                other: 'אחר'
+              };
+              const statusLabels = {
+                pending: 'בתהליך',
+                completed: 'הושלם',
+                cancelled: 'בוטל'
+              };
+              return (
+                <div key={transaction.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                        {typeLabels[transaction.transaction_type]}
+                      </span>
+                      <p className="text-sm text-gray-500 mt-2">
+                        {transaction.transaction_date ? new Date(transaction.transaction_date).toLocaleDateString('he-IL') : '—'}
+                      </p>
+                    </div>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      transaction.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                      'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {statusLabels[transaction.status]}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    {transaction.buyer_name && (
+                      <div>
+                        <p className="text-gray-500">קונה</p>
+                        <p className="font-semibold text-gray-900">{transaction.buyer_name}</p>
+                      </div>
+                    )}
+                    {transaction.seller_name && (
+                      <div>
+                        <p className="text-gray-500">מוכר</p>
+                        <p className="font-semibold text-gray-900">{transaction.seller_name}</p>
+                      </div>
+                    )}
+                    {transaction.amount && (
+                      <div>
+                        <p className="text-gray-500">סכום</p>
+                        <p className="font-bold text-gray-900">₪{transaction.amount.toLocaleString()}</p>
+                      </div>
+                    )}
+                    {transaction.commission && (
+                      <div>
+                        <p className="text-gray-500">עמלה</p>
+                        <p className="font-semibold text-gray-900">₪{transaction.commission.toLocaleString()}</p>
+                      </div>
+                    )}
+                  </div>
+                  {transaction.notes && (
+                    <p className="mt-3 text-sm text-gray-600 border-t border-gray-200 pt-3">{transaction.notes}</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
