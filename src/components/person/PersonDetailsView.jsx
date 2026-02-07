@@ -350,9 +350,7 @@ export default function PersonDetailsView({ personId }) {
     acc.account_number?.toString().includes(searchTerm))
   );
 
-  const availableProperties = allProperties.filter(p => !p.case_id);
-  
-  const filteredProperties = availableProperties.filter(prop =>
+  const filteredProperties = allProperties.filter(prop =>
     !linkedProperties.includes(prop.id) &&
     (prop.address?.toLowerCase().includes(propertySearchTerm.toLowerCase()) ||
     prop.city?.toLowerCase().includes(propertySearchTerm.toLowerCase()))
