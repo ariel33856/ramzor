@@ -1746,7 +1746,7 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="שם החברה"
-                          className="h-8"
+                          className="h-8 bg-white"
                         />
                       </div>
                       <div>
@@ -1765,7 +1765,7 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="DD/MM/YYYY"
-                          className="h-8"
+                          className="h-8 bg-white"
                           maxLength={10}
                         />
                       </div>
@@ -1836,11 +1836,11 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">משכורת חודש שני</Label>
+                          className="h-8 bg-white"
+                          />
+                          </div>
+                          <div>
+                          <Label className="text-xs">משכורת חודש שני</Label>
                         <Input 
                           value={income.month_2_salary ? parseFloat(income.month_2_salary).toLocaleString('he-IL') : ''}
                           onChange={(e) => {
@@ -1853,11 +1853,11 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">משכורת חודש שלישי</Label>
+                          className="h-8 bg-white"
+                          />
+                          </div>
+                          <div>
+                          <Label className="text-xs">משכורת חודש שלישי</Label>
                         <Input 
                           value={income.month_3_salary ? parseFloat(income.month_3_salary).toLocaleString('he-IL') : ''}
                           onChange={(e) => {
@@ -1870,11 +1870,11 @@ export default function PersonDetailsView({ personId }) {
                             });
                           }}
                           placeholder="0"
-                          className="h-8"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">ממוצע 3 חודשים</Label>
+                          className="h-8 bg-white"
+                          />
+                          </div>
+                          <div>
+                          <Label className="text-xs">ממוצע 3 חודשים</Label>
                         <Input 
                           value={(() => {
                             const month1 = parseFloat(income.month_1_salary) || 0;
@@ -1907,15 +1907,15 @@ export default function PersonDetailsView({ personId }) {
                           });
                         }}
                         placeholder="0"
-                        className="h-8"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            <div className="flex items-center gap-4">
+                        className="h-8 bg-white"
+                        />
+                        </div>
+                        </div>
+                        )}
+                        </div>
+                        ))}
+
+                        <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 border-2 border-green-300 bg-green-50 rounded-lg px-4 py-2">
                 <Label className="text-sm font-bold whitespace-nowrap">סך ההכנסות המשוקלל:</Label>
                 <span className="text-lg font-bold text-green-700">
@@ -2005,7 +2005,7 @@ export default function PersonDetailsView({ personId }) {
                         }, 1000);
                       }}
                       placeholder="שם הבנק/מוסד"
-                      className="h-8"
+                      className="h-8 bg-white"
                     />
                   </div>
                   <div>
@@ -2028,11 +2028,11 @@ export default function PersonDetailsView({ personId }) {
                         }, 1000);
                       }}
                       placeholder="0"
-                      className="h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">החזר חודשי</Label>
+                      className="h-8 bg-white"
+                      />
+                      </div>
+                      <div>
+                      <Label className="text-xs">החזר חודשי</Label>
                     <Input 
                       value={obligation.monthly_payment ? parseFloat(obligation.monthly_payment).toLocaleString('he-IL') : ''}
                       onChange={(e) => {
@@ -2051,11 +2051,11 @@ export default function PersonDetailsView({ personId }) {
                         }, 1000);
                       }}
                       placeholder="0"
-                      className="h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">הערות</Label>
+                      className="h-8 bg-white"
+                      />
+                      </div>
+                      <div>
+                      <Label className="text-xs">הערות</Label>
                     <Input 
                       value={obligation.notes || ''}
                       onChange={(e) => {
@@ -2073,7 +2073,7 @@ export default function PersonDetailsView({ personId }) {
                         }, 1000);
                       }}
                       placeholder="הערות"
-                      className="h-8"
+                      className="h-8 bg-white"
                     />
                   </div>
                 </div>
