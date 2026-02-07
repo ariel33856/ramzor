@@ -2217,7 +2217,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Properties */}
         {activeTab === 'properties' && (
-          <div className="p-6 bg-purple-50 border-t border-gray-200" style={{ minHeight: '80vh' }}>
+          <div className="p-6 bg-purple-50" style={{ minHeight: '80vh' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
