@@ -1092,23 +1092,35 @@ export default function PersonDetailsView({ personId }) {
         </div>
       </div>
 
-      {/* ID Upload Card */}
+      {/* Tabbed Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Collapsible Header */}
-        <button
-          onClick={() => setIsCollapsed3(!isCollapsed3)}
-          className="w-full flex items-center gap-2 p-4 hover:bg-gray-50 transition-colors border-b"
-        >
-          {isCollapsed3 ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          )}
-          <h2 className="text-lg font-bold text-gray-900">תעודת זהות</h2>
-        </button>
+        {/* Tab Headers */}
+        <div className="flex border-b border-gray-200">
+          {[
+            { id: 'identity', label: 'תעודת זהות' },
+            { id: 'income', label: 'הכנסות' },
+            { id: 'obligations', label: 'התחייבויות' },
+            { id: 'properties', label: 'נכסים' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all relative ${
+                activeTab === tab.id
+                  ? 'text-blue-700 bg-blue-50/60'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 rounded-t-full" />
+              )}
+            </button>
+          ))}
+        </div>
 
-        {/* Content */}
-        {!isCollapsed3 && (
+        {/* Tab Content: Identity */}
+        {activeTab === 'identity' && (
           <div className="p-6 space-y-6">
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
