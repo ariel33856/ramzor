@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Plus, Search, Columns, Briefcase } from 'lucide-react';
@@ -10,11 +10,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 export default function ModuleView() {
   const urlParams = new URLSearchParams(window.location.search);
   const moduleId = urlParams.get('moduleId');
 
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [urgencyFilter, setUrgencyFilter] = useState('all');
@@ -23,6 +26,14 @@ export default function ModuleView() {
       return localStorage.getItem('globalFilterUser') || 'all';
     }
     return 'all';
+  });
+  
+  // Transaction dialog state
+  const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
+  const [transactionFormData, setTransactionFormData] = useState({
+    name: '',
+    amount: '',
+    property_id: ''
   });
 
   const defaultVisibleColumns = {
@@ -127,6 +138,17 @@ export default function ModuleView() {
         return base44.entities.MosheRecord.filter({ created_by: user.email, is_archived: false }, '-created_date');
       }
       
+      // Special handling for transactions module
+      if (moduleId === 'transactions') {
+        if (user.role === 'admin') {
+          if (filterUser !== 'all') {
+            return base44.entities.Transaction.filter({ created_by: filterUser, is_archived: false }, '-created_date');
+          }
+          return base44.entities.Transaction.filter({ is_archived: false }, '-created_date');
+        }
+        return base44.entities.Transaction.filter({ created_by: user.email, is_archived: false }, '-created_date');
+      }
+      
       const baseFilter = { module_id: moduleId };
       
       if (user.role === 'admin') {
@@ -139,6 +161,24 @@ export default function ModuleView() {
       return base44.entities.MortgageCase.filter({ ...baseFilter, created_by: user.email }, '-created_date');
     },
     enabled: !!moduleId && !!user
+  });
+
+  const { data: allProperties = [] } = useQuery({
+    queryKey: ['all-properties-transactions'],
+    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    enabled: moduleId === 'transactions' && transactionDialogOpen
+  });
+
+  const createTransactionMutation = useMutation({
+    mutationFn: (data) => base44.entities.Transaction.create({
+      ...data,
+      amount: data.amount ? Number(data.amount) : undefined
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['module-cases'] });
+      setTransactionDialogOpen(false);
+      setTransactionFormData({ name: '', amount: '', property_id: '' });
+    }
   });
 
   const statusLabels = {
@@ -173,6 +213,12 @@ export default function ModuleView() {
       return matchesSearch && matchesStatus;
     }
     
+    if (moduleId === 'transactions') {
+      const matchesSearch = !searchTerm || 
+        c.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSearch;
+    }
+    
     const matchesSearch = !searchTerm || 
       c.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.client_id?.includes(searchTerm);
@@ -203,12 +249,22 @@ export default function ModuleView() {
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
-            <Link to={moduleId === 'moshe' ? createPageUrl('NewMosheRecord') : createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
-              <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
+            {moduleId === 'transactions' ? (
+              <Button 
+                onClick={() => setTransactionDialogOpen(true)}
+                className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}
+              >
                 <Plus className="w-5 h-5 ml-2" />
-                רשומה חדשה
+                עסקה חדשה
               </Button>
-            </Link>
+            ) : (
+              <Link to={moduleId === 'moshe' ? createPageUrl('NewMosheRecord') : createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
+                <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
+                  <Plus className="w-5 h-5 ml-2" />
+                  רשומה חדשה
+                </Button>
+              </Link>
+            )}
 
             <div className="flex-1 relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -302,6 +358,12 @@ export default function ModuleView() {
                         <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תיאור</th>
                         <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
                       </>
+                    ) : moduleId === 'transactions' ? (
+                      <>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סכום</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">נכס משויך</th>
+                      </>
                     ) : (
                       <>
                         {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>}
@@ -321,6 +383,8 @@ export default function ModuleView() {
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                       onClick={() => window.location.href = moduleId === 'moshe' 
                         ? createPageUrl(`MosheRecordDetails?id=${caseData.id}`)
+                        : moduleId === 'transactions'
+                        ? createPageUrl(`TransactionDetails?id=${caseData.id}`)
                         : createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)
                       }
                     >
@@ -340,6 +404,27 @@ export default function ModuleView() {
                             }`}>
                               {caseData.status}
                             </span>
+                          </td>
+                        </>
+                      ) : moduleId === 'transactions' ? (
+                        <>
+                          <td className="px-6 py-4">
+                            <div className="font-semibold text-gray-900">{caseData.name}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-900">
+                              {caseData.amount ? formatCurrency(caseData.amount) : '—'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-600">
+                              {caseData.property_id ? (
+                                (() => {
+                                  const prop = allProperties.find(p => p.id === caseData.property_id);
+                                  return prop ? `${prop.address}, ${prop.city}` : '—';
+                                })()
+                              ) : '—'}
+                            </div>
                           </td>
                         </>
                       ) : (
@@ -378,6 +463,72 @@ export default function ModuleView() {
           </div>
         )}
       </div>
+
+      {/* Transaction Dialog */}
+      <Dialog open={transactionDialogOpen} onOpenChange={setTransactionDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>עסקה חדשה</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            createTransactionMutation.mutate(transactionFormData);
+          }} className="space-y-4">
+            <div>
+              <Label>שם *</Label>
+              <Input
+                value={transactionFormData.name}
+                onChange={(e) => setTransactionFormData({...transactionFormData, name: e.target.value})}
+                required
+                placeholder="הזן שם עסקה"
+              />
+            </div>
+
+            <div>
+              <Label>סכום</Label>
+              <Input
+                type="number"
+                value={transactionFormData.amount}
+                onChange={(e) => setTransactionFormData({...transactionFormData, amount: e.target.value})}
+                placeholder="0"
+              />
+            </div>
+
+            <div>
+              <Label>שיוך לנכס</Label>
+              <Select 
+                value={transactionFormData.property_id} 
+                onValueChange={(value) => setTransactionFormData({...transactionFormData, property_id: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר נכס" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>ללא שיוך</SelectItem>
+                  {allProperties.map(property => (
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.address}, {property.city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex gap-4 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setTransactionDialogOpen(false)}
+              >
+                ביטול
+              </Button>
+              <Button type="submit" disabled={createTransactionMutation.isPending}>
+                צור עסקה
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

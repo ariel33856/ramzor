@@ -99,6 +99,7 @@ import Sales from './pages/Sales';
 import SearchPage from './pages/SearchPage';
 import NewMosheRecord from './pages/NewMosheRecord';
 import MosheRecordDetails from './pages/MosheRecordDetails';
+import TransactionDetails from './pages/TransactionDetails';
 import __Layout from './Layout.jsx';
 
 
@@ -155,6 +156,7 @@ export const PAGES = {
     "SearchPage": SearchPage,
     "NewMosheRecord": NewMosheRecord,
     "MosheRecordDetails": MosheRecordDetails,
+    "TransactionDetails": TransactionDetails,
 }
 
 export const pagesConfig = {
