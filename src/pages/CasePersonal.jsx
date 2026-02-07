@@ -612,7 +612,7 @@ export default function CasePersonal() {
           </Dialog>
         </div>
       </div>
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-1">
         {sortedContacts.map((contact) => (
           <div key={contact.id} id={`contact-${contact.id}`}>
             <PersonDetailsView personId={contact.id} />
