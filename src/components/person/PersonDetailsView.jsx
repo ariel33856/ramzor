@@ -530,11 +530,11 @@ export default function PersonDetailsView({ personId }) {
   }
 
   const tabDefs = [
-    { id: 'general', label: 'כללי', color: '#eff6ff', textClass: 'text-blue-700' },
-    { id: 'identity', label: 'תעודת זהות', color: '#fffbeb', textClass: 'text-amber-700' },
-    { id: 'income', label: 'הכנסות', color: '#f0fdf4', textClass: 'text-green-700' },
-    { id: 'obligations', label: 'התחייבויות', color: '#fff1f2', textClass: 'text-rose-700' },
-    { id: 'properties', label: 'נכסים', color: '#faf5ff', textClass: 'text-purple-700' },
+    { id: 'general', label: 'כללי', color: '#eff6ff', textClass: 'text-blue-700', borderColor: '#93c5fd' },
+    { id: 'identity', label: 'תעודת זהות', color: '#fffbeb', textClass: 'text-amber-700', borderColor: '#fcd34d' },
+    { id: 'income', label: 'הכנסות', color: '#f0fdf4', textClass: 'text-green-700', borderColor: '#86efac' },
+    { id: 'obligations', label: 'התחייבויות', color: '#fff1f2', textClass: 'text-rose-700', borderColor: '#fda4af' },
+    { id: 'properties', label: 'נכסים', color: '#faf5ff', textClass: 'text-purple-700', borderColor: '#d8b4fe' },
   ];
 
   return (
