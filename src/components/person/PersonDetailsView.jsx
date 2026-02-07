@@ -610,20 +610,17 @@ export default function PersonDetailsView({ personId }) {
           background: #f9fafb;
           z-index: 2;
         }
-        .folder-tab-li.active .folder-tab:after,
         .folder-tab-li.active .folder-tab:before {
-          background: #f9fafb;
+          background: var(--right-circle-color);
+        }
+        .folder-tab-li.active .folder-tab:after {
+          background: var(--left-circle-color);
         }
         .folder-tab-li .folder-tab:before {
           right: -20px;
         }
         .folder-tab-li .folder-tab:after {
           left: -20px;
-        }
-        /* First and last active tabs - outer circles use page bg */
-        .folder-tab-li:first-child.active .folder-tab:after,
-        .folder-tab-li:last-child.active .folder-tab:before {
-          background: #f9fafb;
         }
       `}</style>
       <div>
