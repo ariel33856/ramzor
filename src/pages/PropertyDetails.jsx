@@ -26,7 +26,10 @@ export default function PropertyDetails() {
 
   const { data: transactions = [] } = useQuery({
     queryKey: ['property-transactions', propertyId],
-    queryFn: () => base44.entities.Transaction.filter({ property_id: propertyId }, '-created_date'),
+    queryFn: async () => {
+      const results = await base44.entities.Transaction.list('-created_date');
+      return results.filter(t => t.property_id === propertyId);
+    },
     enabled: !!propertyId,
     staleTime: 5 * 60 * 1000
   });
