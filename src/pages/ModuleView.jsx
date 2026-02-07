@@ -116,6 +116,17 @@ export default function ModuleView() {
     queryFn: async () => {
       if (!user) return [];
       
+      // Special handling for Moshe module
+      if (moduleId === 'moshe') {
+        if (user.role === 'admin') {
+          if (filterUser !== 'all') {
+            return base44.entities.MosheRecord.filter({ created_by: filterUser, is_archived: false }, '-created_date');
+          }
+          return base44.entities.MosheRecord.filter({ is_archived: false }, '-created_date');
+        }
+        return base44.entities.MosheRecord.filter({ created_by: user.email, is_archived: false }, '-created_date');
+      }
+      
       const baseFilter = { module_id: moduleId };
       
       if (user.role === 'admin') {
@@ -154,6 +165,14 @@ export default function ModuleView() {
   };
 
   const filteredCases = allCases.filter(c => {
+    if (moduleId === 'moshe') {
+      const matchesSearch = !searchTerm || 
+        c.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    }
+    
     const matchesSearch = !searchTerm || 
       c.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.client_id?.includes(searchTerm);
@@ -184,7 +203,7 @@ export default function ModuleView() {
       <div className="sticky top-[64px] z-50 bg-white p-4 shadow-sm border-b border-gray-100 mb-0 -mt-px">
         <div className="mx-auto px-2 md:px-3">
           <div className="flex flex-col md:flex-row gap-4">
-            <Link to={createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
+            <Link to={moduleId === 'moshe' ? createPageUrl('NewMosheRecord') : createPageUrl('NewCase') + `?moduleId=${moduleId}`}>
               <Button className={`bg-gradient-to-r ${colorGradient} hover:opacity-90 shadow-lg`}>
                 <Plus className="w-5 h-5 ml-2" />
                 רשומה חדשה
@@ -209,23 +228,33 @@ export default function ModuleView() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">כל הסטטוסים</SelectItem>
-                {Object.entries(statusLabels).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>{label}</SelectItem>
-                ))}
+                {moduleId === 'moshe' ? (
+                  <>
+                    <SelectItem value="פעיל">פעיל</SelectItem>
+                    <SelectItem value="בהמתנה">בהמתנה</SelectItem>
+                    <SelectItem value="הושלם">הושלם</SelectItem>
+                  </>
+                ) : (
+                  Object.entries(statusLabels).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
 
-            <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="דחיפות" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">כל הדחיפויות</SelectItem>
-                {Object.entries(urgencyLabels).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>{label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {moduleId !== 'moshe' && (
+              <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
+                <SelectTrigger className="w-full md:w-48">
+                  <SelectValue placeholder="דחיפות" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל הדחיפויות</SelectItem>
+                  {Object.entries(urgencyLabels).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
             <Popover>
               <PopoverTrigger asChild>
@@ -267,9 +296,19 @@ export default function ModuleView() {
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
-                    {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>}
-                    {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
-                    {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
+                    {moduleId === 'moshe' ? (
+                      <>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">כותרת</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">תיאור</th>
+                        <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>
+                      </>
+                    ) : (
+                      <>
+                        {visibleColumns.client_name && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">שם</th>}
+                        {visibleColumns.status && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">סטטוס</th>}
+                        {visibleColumns.urgency && <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">דחיפות</th>}
+                      </>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -280,31 +319,56 @@ export default function ModuleView() {
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.02 }}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => window.location.href = createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)}
+                      onClick={() => window.location.href = moduleId === 'moshe' 
+                        ? createPageUrl(`MosheRecordDetails?id=${caseData.id}`)
+                        : createPageUrl(`ModuleCaseDetails?id=${caseData.id}&moduleId=${moduleId}`)
+                      }
                     >
-                      {visibleColumns.client_name && (
-                        <td className="px-6 py-4">
-                          <div className="font-semibold text-gray-900">{caseData.client_name}</div>
-                        </td>
-                      )}
-                      {visibleColumns.status && (
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {statusLabels[caseData.status] || caseData.status}
-                          </span>
-                        </td>
-                      )}
-                      {visibleColumns.urgency && (
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
-                            caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
-                            caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
-                            {urgencyLabels[caseData.urgency] || caseData.urgency}
-                          </span>
-                        </td>
+                      {moduleId === 'moshe' ? (
+                        <>
+                          <td className="px-6 py-4">
+                            <div className="font-semibold text-gray-900">{caseData.title}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-600">{caseData.description || '—'}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                              caseData.status === 'פעיל' ? 'bg-green-100 text-green-800' :
+                              caseData.status === 'בהמתנה' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-blue-100 text-blue-800'
+                            }`}>
+                              {caseData.status}
+                            </span>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          {visibleColumns.client_name && (
+                            <td className="px-6 py-4">
+                              <div className="font-semibold text-gray-900">{caseData.client_name}</div>
+                            </td>
+                          )}
+                          {visibleColumns.status && (
+                            <td className="px-6 py-4">
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {statusLabels[caseData.status] || caseData.status}
+                              </span>
+                            </td>
+                          )}
+                          {visibleColumns.urgency && (
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                caseData.urgency === 'critical' ? 'bg-red-100 text-red-800' :
+                                caseData.urgency === 'high' ? 'bg-orange-100 text-orange-800' :
+                                caseData.urgency === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                              }`}>
+                                {urgencyLabels[caseData.urgency] || caseData.urgency}
+                              </span>
+                            </td>
+                          )}
+                        </>
                       )}
                     </motion.tr>
                   ))}
