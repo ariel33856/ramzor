@@ -531,8 +531,36 @@ export default function PersonDetailsView({ personId }) {
 
   return (
     <div className="space-y-4 border-2 border-blue-200 rounded-2xl px-10 py-6 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
-      {/* Action Buttons */}
-      <div className="flex items-start gap-2 flex-wrap border-2 border-gray-200 rounded-xl p-4 bg-white shadow-sm">
+      {/* Tabbed Card */}
+      <div className="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Tab Headers */}
+        <div className="flex" ref={tabsRef}>
+          {[
+            { id: 'general', label: 'כללי' },
+            { id: 'identity', label: 'תעודת זהות' },
+            { id: 'income', label: 'הכנסות' },
+            { id: 'obligations', label: 'התחייבויות' },
+            { id: 'properties', label: 'נכסים' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
+                activeTab === tab.id
+                  ? 'text-blue-700 bg-white border-gray-200 relative z-10'
+                  : 'text-gray-500 hover:text-gray-700 bg-gray-100 border-transparent'
+              }`}
+              style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content: General */}
+        {activeTab === 'general' && (
+          <div className="p-4 bg-white border-t border-gray-200" style={{ minHeight: '80vh' }}>
+      <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
             <div className="flex items-center gap-2">
