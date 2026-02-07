@@ -535,25 +535,36 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Headers */}
         <div className="flex" ref={tabsRef}>
           {[
-            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700' },
-            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700' },
-            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700' },
-            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700' },
-            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700' },
-          ].map((tab, index, arr) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all border border-b-0 rounded-t-lg ${
-                activeTab === tab.id
-                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
-                  : `${tab.activeText} ${tab.activeBg} border-transparent`
-              }`}
-              style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
-            >
-              {tab.label}
-            </button>
-          ))}
+            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700', bgColor: '#eff6ff' },
+            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', bgColor: '#fffbeb' },
+            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700', bgColor: '#f0fdf4' },
+            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700', bgColor: '#fff1f2' },
+            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', bgColor: '#faf5ff' },
+          ].map((tab, index, arr) => {
+            const isActive = activeTab === tab.id;
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return (
+            <div key={tab.id} className="flex-1 flex flex-col">
+              <button
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full py-3 px-4 text-sm font-semibold transition-all border border-b-0 rounded-t-lg ${
+                  isFirst ? 'rounded-tr-none' : ''
+                } ${isLast ? 'rounded-tl-none' : ''} ${
+                  isActive
+                    ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
+                    : `${tab.activeText} ${tab.activeBg} border-transparent`
+                }`}
+                style={isActive ? { marginBottom: '-1px' } : {}}
+              >
+                {tab.label}
+              </button>
+              {!isActive && (
+                <div className="h-2" style={{ backgroundColor: tab.bgColor }}></div>
+              )}
+            </div>
+            );
+          })}
         </div>
 
         {/* Tab Content: General */}
