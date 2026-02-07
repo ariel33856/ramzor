@@ -612,9 +612,11 @@ export default function PersonDetailsView({ personId }) {
         }
         .folder-tab-li.active .folder-tab:before {
           background: var(--right-circle-color);
+          opacity: 0.8;
         }
         .folder-tab-li.active .folder-tab:after {
           background: var(--left-circle-color);
+          opacity: 0.8;
         }
         .folder-tab-li .folder-tab:before {
           right: -20px;
