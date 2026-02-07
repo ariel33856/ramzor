@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User, Save, Link as LinkIcon, Heart } from 'lucide-react';
+import { Loader2, User, Save, Link as LinkIcon, Heart, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
@@ -441,13 +441,19 @@ export default function CasePersonal() {
                   return (
                     <React.Fragment key={`couple-${contact.id}-${partner.id}`}>
                       <div className="flex items-center gap-1">
-                        <button onClick={() => moveContactToTop(contact.id)} className={getButtonClass(contact)}>
-                          <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
-                        </button>
+                        <div className="flex flex-col items-center">
+                          <button onClick={() => moveContactToTop(contact.id)} className={getButtonClass(contact)}>
+                            <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                          </button>
+                          {activeContactId === contact.id && <ChevronDown className="w-5 h-5 text-cyan-500 animate-bounce" />}
+                        </div>
                         <Heart className="w-4 h-4 text-red-500 fill-red-500" />
-                        <button onClick={() => moveContactToTop(partner.id)} className={getButtonClass(partner)}>
-                          <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
-                        </button>
+                        <div className="flex flex-col items-center">
+                          <button onClick={() => moveContactToTop(partner.id)} className={getButtonClass(partner)}>
+                            <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
+                          </button>
+                          {activeContactId === partner.id && <ChevronDown className="w-5 h-5 text-cyan-500 animate-bounce" />}
+                        </div>
                       </div>
                       {coupleIdx < couples.length - 1 || otherContacts.length > 0 && <span className="text-gray-400">•</span>}
                     </React.Fragment>
@@ -467,12 +473,19 @@ export default function CasePersonal() {
                     buttonClass += 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700';
                   }
 
+                  const arrowColor = relationshipType === 'לווה' ? 'text-orange-500' :
+                    (relationshipType === 'ערב' || relationshipType === 'ערבה') ? 'text-rose-500' :
+                    (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') ? 'text-purple-500' : 'text-gray-500';
+
                   return (
                     <React.Fragment key={contact.id}>
-                      <button onClick={() => moveContactToTop(contact.id)} className={buttonClass}>
-                        <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
-                        {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
-                      </button>
+                      <div className="flex flex-col items-center">
+                        <button onClick={() => moveContactToTop(contact.id)} className={buttonClass}>
+                          <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
+                          {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
+                        </button>
+                        {activeContactId === contact.id && <ChevronDown className={`w-5 h-5 ${arrowColor} animate-bounce`} />}
+                      </div>
                       {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
                     </React.Fragment>
                   );
