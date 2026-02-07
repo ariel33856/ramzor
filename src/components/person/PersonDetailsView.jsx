@@ -1095,7 +1095,7 @@ export default function PersonDetailsView({ personId }) {
       {/* Tabbed Card */}
       <div className="rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Tab Headers */}
-        <div className="flex">
+        <div className="flex" ref={tabsRef}>
           {[
             { id: 'identity', label: 'תעודת זהות' },
             { id: 'income', label: 'הכנסות' },
@@ -1104,7 +1104,12 @@ export default function PersonDetailsView({ personId }) {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setTimeout(() => {
+                  tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 0);
+              }}
               className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
                 activeTab === tab.id
                   ? 'text-blue-700 bg-white border-gray-200 relative z-10'
