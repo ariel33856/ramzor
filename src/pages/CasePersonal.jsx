@@ -107,7 +107,12 @@ export default function CasePersonal() {
 
   React.useEffect(() => {
     if (linkedContacts.length > 0) {
-      setSortedContacts(linkedContacts);
+      // עדכן רק אם השתנה מספר אנשי הקשר או ה-IDs שלהם
+      const currentIds = sortedContacts.map(c => c.id).sort().join(',');
+      const newIds = linkedContacts.map(c => c.id).sort().join(',');
+      if (currentIds !== newIds) {
+        setSortedContacts(linkedContacts);
+      }
       if (!activeContactId || !linkedContacts.find(c => c.id === activeContactId)) {
         setActiveContactId(linkedContacts[0].id);
       }
