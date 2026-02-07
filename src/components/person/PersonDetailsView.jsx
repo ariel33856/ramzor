@@ -54,6 +54,7 @@ export default function PersonDetailsView({ personId }) {
   const [propertyDialogOpen, setPropertyDialogOpen] = useState(false);
   const [propertySearchTerm, setPropertySearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('identity');
+  const tabsRef = React.useRef(null);
   const [relationshipType, setRelationshipType] = useState('לווה');
   const [gender, setGender] = useState('male');
   const [spouseDialogOpen, setSpouseDialogOpen] = useState(false);
