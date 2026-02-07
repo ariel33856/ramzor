@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2, Loader2, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -97,6 +98,18 @@ export default function PersonDetailsView({ personId }) {
   const [obligations, setObligations] = useState([]);
   const [isCollapsedObligations, setIsCollapsedObligations] = useState(false);
   const obligationsTimeoutRef = React.useRef(null);
+  const [createPropertyDialogOpen, setCreatePropertyDialogOpen] = useState(false);
+  const [propertyFormData, setPropertyFormData] = useState({
+    address: '',
+    city: '',
+    property_type: 'דירה',
+    size_sqm: '',
+    rooms: '',
+    floor: '',
+    price: '',
+    status: 'פנוי',
+    notes: ''
+  });
 
 
   const { data: person, isLoading } = useQuery({
@@ -164,6 +177,31 @@ export default function PersonDetailsView({ personId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
+    }
+  });
+
+  const createPropertyMutation = useMutation({
+    mutationFn: async (data) => {
+      const newProperty = await base44.entities.PropertyAsset.create(data);
+      const updatedProperties = [...linkedProperties, newProperty.id];
+      await base44.entities.Person.update(personId, { linked_properties: updatedProperties });
+      return newProperty;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      queryClient.invalidateQueries({ queryKey: ['all-properties'] });
+      setCreatePropertyDialogOpen(false);
+      setPropertyFormData({
+        address: '',
+        city: '',
+        property_type: 'דירה',
+        size_sqm: '',
+        rooms: '',
+        floor: '',
+        price: '',
+        status: 'פנוי',
+        notes: ''
+      });
     }
   });
 
@@ -2148,11 +2186,24 @@ export default function PersonDetailsView({ personId }) {
                 <DialogTitle>בחר נכס לשיוך</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <Input
-                  placeholder="חיפוש לפי כתובת או עיר..."
-                  value={propertySearchTerm}
-                  onChange={(e) => setPropertySearchTerm(e.target.value)}
-                />
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="חיפוש לפי כתובת או עיר..."
+                    value={propertySearchTerm}
+                    onChange={(e) => setPropertySearchTerm(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={() => { 
+                      setPropertyDialogOpen(false); 
+                      setCreatePropertyDialogOpen(true); 
+                    }} 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <Plus className="w-4 h-4 ml-2" />
+                    נכס חדש
+                  </Button>
+                </div>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {filteredProperties.map(property => (
                     <div
@@ -2179,6 +2230,141 @@ export default function PersonDetailsView({ personId }) {
           </Dialog>
         </div>
       )}
+
+      {/* Create Property Dialog */}
+      <Dialog open={createPropertyDialogOpen} onOpenChange={setCreatePropertyDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>נכס חדש</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const data = {
+              ...propertyFormData,
+              size_sqm: propertyFormData.size_sqm ? Number(propertyFormData.size_sqm) : undefined,
+              rooms: propertyFormData.rooms ? Number(propertyFormData.rooms) : undefined,
+              floor: propertyFormData.floor ? Number(propertyFormData.floor) : undefined,
+              price: propertyFormData.price ? Number(propertyFormData.price) : undefined
+            };
+            createPropertyMutation.mutate(data);
+          }} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>כתובת *</Label>
+                <Input
+                  value={propertyFormData.address}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, address: e.target.value})}
+                  required
+                  placeholder="רחוב ומספר בית"
+                />
+              </div>
+              <div>
+                <Label>עיר *</Label>
+                <Input
+                  value={propertyFormData.city}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, city: e.target.value})}
+                  required
+                  placeholder="שם העיר"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>סוג נכס *</Label>
+                <select
+                  value={propertyFormData.property_type}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, property_type: e.target.value})}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                  required
+                >
+                  <option value="דירה">דירה</option>
+                  <option value="בית">בית</option>
+                  <option value="דירת גן">דירת גן</option>
+                  <option value="פנטהאוז">פנטהאוז</option>
+                  <option value="משרד">משרד</option>
+                  <option value="חנות">חנות</option>
+                  <option value="מחסן">מחסן</option>
+                  <option value="קרקע">קרקע</option>
+                  <option value="אחר">אחר</option>
+                </select>
+              </div>
+              <div>
+                <Label>סטטוס</Label>
+                <select
+                  value={propertyFormData.status}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, status: e.target.value})}
+                  className="w-full h-9 px-3 rounded-md border border-input bg-background"
+                >
+                  <option value="פנוי">פנוי</option>
+                  <option value="תפוס">תפוס</option>
+                  <option value="להשכרה">להשכרה</option>
+                  <option value="למכירה">למכירה</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label>שטח (מ"ר)</Label>
+                <Input
+                  type="number"
+                  value={propertyFormData.size_sqm}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, size_sqm: e.target.value})}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label>מספר חדרים</Label>
+                <Input
+                  type="number"
+                  step="0.5"
+                  value={propertyFormData.rooms}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, rooms: e.target.value})}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label>קומה</Label>
+                <Input
+                  type="number"
+                  value={propertyFormData.floor}
+                  onChange={(e) => setPropertyFormData({...propertyFormData, floor: e.target.value})}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>מחיר (₪)</Label>
+              <Input
+                type="number"
+                value={propertyFormData.price}
+                onChange={(e) => setPropertyFormData({...propertyFormData, price: e.target.value})}
+                placeholder="0"
+              />
+            </div>
+
+            <div>
+              <Label>הערות</Label>
+              <Input
+                value={propertyFormData.notes}
+                onChange={(e) => setPropertyFormData({...propertyFormData, notes: e.target.value})}
+                placeholder="הערות נוספות על הנכס..."
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setCreatePropertyDialogOpen(false)}>
+                ביטול
+              </Button>
+              <Button type="submit" disabled={createPropertyMutation.isPending}>
+                צור ושייך
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
