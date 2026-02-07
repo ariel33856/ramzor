@@ -383,7 +383,7 @@ export default function PropertyEdit() {
                 {transactions.map((transaction, index) => (
                   <div key={transaction.id} className="p-4 bg-gradient-to-br from-blue-50/50 to-white border-2 border-blue-200 rounded-xl">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-sm font-semibold text-gray-700">עסקה #{index + 1}</h4>
+                      <h4 className="text-sm font-semibold text-gray-700">עסקה #{index + 1} - {typeLabels[transaction.transaction_type]}</h4>
                       <Button
                         variant="ghost"
                         size="icon"
