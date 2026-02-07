@@ -118,13 +118,12 @@ export default function CasePersonal() {
   }, [contactDialogOpen]);
 
   const moveContactToTop = (contactId) => {
-    // גלילה לאיש הקשר
-    setTimeout(() => {
-      const element = document.getElementById(`contact-${contactId}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    setSortedContacts(prev => {
+      const idx = prev.findIndex(c => c.id === contactId);
+      if (idx <= 0) return prev; // already first or not found
+      const contact = prev[idx];
+      return [contact, ...prev.filter(c => c.id !== contactId)];
+    });
   };
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
