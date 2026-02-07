@@ -535,18 +535,18 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Headers */}
         <div className="flex" ref={tabsRef}>
           {[
-            { id: 'general', label: 'כללי' },
-            { id: 'identity', label: 'תעודת זהות' },
-            { id: 'income', label: 'הכנסות' },
-            { id: 'obligations', label: 'התחייבויות' },
-            { id: 'properties', label: 'נכסים' },
+            { id: 'general', label: 'כללי', activeBg: 'bg-blue-50', activeText: 'text-blue-700' },
+            { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700' },
+            { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700' },
+            { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700' },
+            { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
                 activeTab === tab.id
-                  ? 'text-blue-700 bg-white border-gray-200 relative z-10'
+                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
                   : 'text-gray-500 hover:text-gray-700 bg-gray-100 border-transparent'
               }`}
               style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
