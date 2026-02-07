@@ -2521,8 +2521,6 @@ export default function PersonDetailsView({ personId }) {
       </div>
 
       {/* Create Property Dialog */}
-      </>,
-      <React.Fragment key="property-dialog">
       <Dialog open={createPropertyDialogOpen} onOpenChange={setCreatePropertyDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
