@@ -544,9 +544,9 @@ export default function PersonDetailsView({ personId }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-lg border border-b-0 ${
+              className={`flex-1 py-3 px-4 text-sm font-semibold transition-all rounded-t-xl border border-b-0 ${
                 activeTab === tab.id
-                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10`
+                  ? `${tab.activeText} ${tab.activeBg} border-gray-200 relative z-10 shadow-sm`
                   : `${tab.activeText} ${tab.activeBg} opacity-60 hover:opacity-80 border-transparent`
               }`}
               style={activeTab === tab.id ? { marginBottom: '-1px' } : {}}
