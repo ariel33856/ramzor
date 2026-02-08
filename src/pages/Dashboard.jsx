@@ -14,7 +14,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
@@ -414,42 +413,6 @@ export default function Dashboard() {
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
-      {/* Stats Cards */}
-      <div className="flex-shrink-0 p-3 bg-white border-b border-gray-100 shadow-sm">
-        <div className="mx-auto px-2 md:px-3">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <StatsCard 
-              title="סה״כ חשבונות" 
-              value={stats.total} 
-              icon={Briefcase}
-              color="bg-blue-50"
-              iconColor="text-blue-600"
-            />
-            <StatsCard 
-              title="בהמתנה למסמכים" 
-              value={stats.pending} 
-              icon={FileCheck}
-              color="bg-yellow-50"
-              iconColor="text-yellow-600"
-            />
-            <StatsCard 
-              title="דחופים" 
-              value={stats.critical} 
-              icon={AlertTriangle}
-              color="bg-red-50"
-              iconColor="text-red-600"
-            />
-            <StatsCard 
-              title="אושרו" 
-              value={stats.approved} 
-              icon={TrendingUp}
-              color="bg-green-50"
-              iconColor="text-green-600"
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Filters */}
       <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
         <div className="mx-auto px-2 md:px-3">
@@ -552,17 +515,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col p-1">
-        {/* Tabs */}
-        <Tabs defaultValue="table" className="flex flex-col flex-1 overflow-hidden">
-          <TabsList className="bg-white border-b border-gray-200 rounded-none w-full justify-start pl-3">
-            <TabsTrigger value="table">טבלה</TabsTrigger>
-            <TabsTrigger value="cards">כרטיסיות</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="table" className="flex-1 overflow-hidden">
-         {/* Cases Content */}
-         {isLoading ? (
+      <div className="flex-1 overflow-hidden p-1">
+        {/* Cases Content */}
+        {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="overflow-x-auto max-h-[75vh]">
               <table className="w-full">
@@ -596,8 +551,8 @@ export default function Dashboard() {
             <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
           </motion.div>
         ) : (
-             <div className="bg-white rounded-xl shadow-sm border border-gray-100 h-full">
-               <div className="overflow-x-auto h-full">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto max-h-[100vh]">
               <table className="w-full">
                 <thead className="sticky top-0 z-40 bg-gradient-to-r from-blue-50 to-purple-50">
                   <tr className="border-b-2 border-gray-200">
@@ -826,87 +781,10 @@ export default function Dashboard() {
                   })}
                 </tbody>
               </table>
-               </div>
-              </div>
-              )}
-              </TabsContent>
-
-            <TabsContent value="cards" className="flex-1 overflow-hidden">
-            <div className="overflow-y-auto h-full p-4">
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="h-48 bg-gray-200 rounded-lg animate-pulse" />
-                ))}
-              </div>
-            ) : filteredCases.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-16"
-              >
-                <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">אין תיקים להצגה</h3>
-                <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
-              </motion.div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCases.map((caseData, index) => {
-                  const linkedPersons = caseToPersonMap[caseData.id] || [];
-                  const linkedPerson = linkedPersons[0];
-
-                  return (
-                    <motion.div
-                      key={caseData.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.02 }}
-                      onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
-                      className="bg-white rounded-lg border-2 border-blue-200 p-4 cursor-pointer hover:shadow-lg hover:border-blue-400 transition-all"
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="text-xs text-gray-500">חשבון מס׳</p>
-                          <p className="text-lg font-bold text-blue-600">{caseData.account_number}</p>
-                        </div>
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          caseData.status === 'approved' ? 'bg-green-100 text-green-700' :
-                          caseData.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                          caseData.status === 'completed' ? 'bg-blue-100 text-blue-700' :
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {statusLabels[caseData.status]}
-                        </span>
-                      </div>
-                      <div className="border-t border-gray-200 pt-3">
-                        <p className="text-sm font-semibold text-gray-900 mb-1">
-                          {linkedPerson?.last_name} {linkedPerson?.first_name}
-                        </p>
-                        <p className="text-xs text-gray-600 mb-3">{linkedPerson?.phone}</p>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-gray-600 pt-2 border-t border-gray-100">
-                        <span>דחיפות: <span className={`font-bold ${caseData.urgency === 'critical' ? 'text-red-600' : caseData.urgency === 'high' ? 'text-orange-600' : 'text-gray-600'}`}>{urgencyLabels[caseData.urgency]}</span></span>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            archiveMutation.mutate(caseData.id);
-                          }}
-                          className="text-gray-500 hover:text-orange-600 hover:bg-orange-50 -m-2"
-                        >
-                          <Archive className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
             </div>
-            </TabsContent>
-            </Tabs>
-            </div>
-            </div>
-            );
-            }
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
