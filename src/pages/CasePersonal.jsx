@@ -521,7 +521,6 @@ export default function CasePersonal() {
                       <div className="flex flex-col items-center">
                         <button onClick={() => moveContactToTop(contact.id)} className={`${buttonClass} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                           <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
-                          {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
                         </button>
                       </div>
                       {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
