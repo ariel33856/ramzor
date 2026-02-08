@@ -2384,8 +2384,30 @@ export default function PersonDetailsView({ personId }) {
         {linkedPropertiesData.length === 0 ? (
           <p className="text-center text-gray-500 py-8">אין נכסים משויכים</p>
         ) : (
-          <div className="space-y-4">
-            {linkedPropertiesData.map((property, index) => {
+          <div>
+            {/* Property Tabs */}
+            <div className="flex mb-0">
+              {linkedPropertiesData.map((property, index) => {
+                const isActiveProperty = (activePropertyIndex ?? 0) === index;
+                return (
+                  <button
+                    key={property.id}
+                    onClick={() => setActivePropertyIndex(index)}
+                    className={`px-4 py-2 text-sm font-semibold rounded-t-lg border-2 border-b-0 transition-all ${
+                      isActiveProperty
+                        ? 'bg-white text-purple-700 border-purple-400 relative z-10'
+                        : 'bg-purple-100 text-purple-500 border-purple-200 hover:bg-purple-50'
+                    }`}
+                    style={isActiveProperty ? { marginBottom: '-2px' } : { marginBottom: '-2px' }}
+                  >
+                    נכס {index + 1}: {property.address || 'ללא כתובת'}, {property.city || ''}
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Active Property Content */}
+            {linkedPropertiesData.filter((_, index) => index === (activePropertyIndex ?? 0)).map((property, index) => {
               const updateField = (fieldName, value) => {
                 const data = { [fieldName]: value };
                 if (['size_sqm', 'rooms', 'floor', 'price'].includes(fieldName)) {
