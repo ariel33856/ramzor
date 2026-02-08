@@ -620,8 +620,26 @@ export default function Layout({ children, currentPageName }) {
                             </Link>
                           );
                         })}
+                        {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (
+                          <>
+                            <DropdownMenuSeparator className="my-2" />
+                            <div className="px-3 py-2 text-xs font-semibold text-gray-600 mb-2">אנשי קשר משויכים</div>
+                            {linkedContacts.map((contact) => (
+                              <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
+                                <DropdownMenuItem className="px-3 py-2 mb-1 cursor-pointer bg-gray-50 border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-100 rounded-lg transition-all">
+                                  <div className="flex items-center gap-3 justify-end w-full">
+                                    <span className="text-sm font-medium">{contact.first_name} {contact.last_name}</span>
+                                    <div className="w-8 h-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">
+                                      <User className="w-4 h-4 text-white" />
+                                    </div>
+                                  </div>
+                                </DropdownMenuItem>
+                              </Link>
+                            ))}
+                          </>
+                        )}
 
-                      </DropdownMenuContent>
+                        </DropdownMenuContent>
                     </DropdownMenu>
                   </>
                   );
