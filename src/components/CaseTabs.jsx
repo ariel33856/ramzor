@@ -1,3 +1,4 @@
+
 import { 
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
@@ -22,7 +23,6 @@ export const tabs = [
   { id: 'submissions', label: 'הגשות', icon: Send, gradient: 'from-rose-500 to-pink-600', bg: 'bg-rose-50', border: 'border-rose-200' },
   { id: 'documents', label: 'מסמכים', icon: FolderOpen, gradient: 'from-sky-500 to-sky-600', bg: 'bg-sky-50', border: 'border-sky-200' },
   { id: 'tracking', label: 'תיעוד התקשרות', icon: MessageCircle, gradient: 'from-lime-500 to-lime-600', bg: 'bg-lime-50', border: 'border-lime-200' },
-  { id: 'contacts', label: 'אנשי קשר', icon: Contact, gradient: 'from-fuchsia-500 to-fuchsia-600', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
   { id: 'calculator', label: 'מחשבון', icon: Calculator, gradient: 'from-slate-500 to-slate-600', bg: 'bg-slate-50', border: 'border-slate-200' },
   { id: 'payments', label: 'תשלומים', icon: CreditCard, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
   { id: 'insurance', label: 'ביטוחים', icon: Shield, gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
@@ -44,12 +44,10 @@ export const pageMapping = {
   'submissions': 'CaseSubmissions',
   'documents': 'CaseDocuments',
   'tracking': 'CaseTracking',
-  'contacts': 'CaseContacts',
   'calculator': 'CaseCalculator',
   'payments': 'CasePayments',
   'insurance': 'CaseInsurance',
   'products': 'CaseProducts',
-
   'property': 'CaseProperty',
   'transactions': 'CaseTransactions',
 };
