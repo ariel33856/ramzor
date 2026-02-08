@@ -582,7 +582,10 @@ export default function Layout({ children, currentPageName }) {
                           <div className={`w-6 h-6 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
                             <Icon className="w-3 h-3 text-white" />
                           </div>
-                          <span className="text-sm font-semibold text-gray-900">{casePageTitles[currentPageName]}</span>
+                          <span className="text-sm font-semibold text-gray-900">
+                            {casePageTitles[currentPageName]}
+                            {currentPageName === 'CasePersonal' && caseData?.linked_borrowers && ` (${caseData.linked_borrowers.length})`}
+                          </span>
                           <ChevronDown className="w-4 h-4 text-gray-500" />
                         </Button>
                       </DropdownMenuTrigger>
