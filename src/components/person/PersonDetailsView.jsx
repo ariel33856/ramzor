@@ -2547,10 +2547,10 @@ export default function PersonDetailsView({ personId }) {
                     const propertyTransactions = allTransactions.filter(t => t.property_id === property.id);
                     const typeLabels = {
                       purchase: 'רכישה',
-                      sale: 'מכירה',
-                      rent: 'השכרה',
-                      lease: 'חכירה',
-                      other: 'אחר'
+                      renovation: 'שיפוץ',
+                      expansion: 'הרחבה',
+                      loan_consolidation: 'איחוד הלוואות',
+                      general_purpose: 'כל מטרה'
                     };
                     const statusLabels = {
                       pending: 'בתהליך',
