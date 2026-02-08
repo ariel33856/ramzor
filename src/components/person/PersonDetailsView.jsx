@@ -329,7 +329,7 @@ export default function PersonDetailsView({ personId }) {
     updatedFields.forEach(field => {
       customData[field.name] = field.value;
     });
-    updatePersonMutation.mutate({ custom_data: customData });
+    saveCustomData(customData);
   };
 
   const handleBasicDataChange = (field, value) => {
