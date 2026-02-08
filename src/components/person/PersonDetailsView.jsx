@@ -1687,10 +1687,10 @@ export default function PersonDetailsView({ personId }) {
             להצגה במודול אנשי קשר
           </Button>
         </div>
-      </div>
-      </div>
-      </div>
-        )}
+        </div>
+        </div>
+            </div>
+          )}
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
