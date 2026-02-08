@@ -494,7 +494,6 @@ export default function CasePersonal() {
                           </button>
                         </div>
                       </div>
-                      {(coupleIdx < couples.length - 1 || otherContacts.length > 0) && <span className="text-gray-400">•</span>}
                     </div>
                   );
                 })}
@@ -523,7 +522,6 @@ export default function CasePersonal() {
                           <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                         </button>
                       </div>
-                      {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
                     </div>
                   );
                 })}
