@@ -148,6 +148,7 @@ export default function CaseDashboards() {
   return (
     <div className="p-2" dir="rtl">
       {scores && (
+        <>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* דירוג כולל */}
           <div className={`rounded-2xl border-2 ${scores.labelBg} p-6 flex flex-col items-center justify-center gap-3`}>
