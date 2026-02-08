@@ -1212,12 +1212,53 @@ export default function PersonDetailsView({ personId }) {
             להצגה במודול אנשי קשר
           </Button>
         </div>
-      </div>
-      </div>
-      </div>
-        )}
+        </div>
 
-        {/* Tab Content: Identity */}
+        <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium whitespace-nowrap">מס׳ ילדים</Label>
+                <Input
+                  type="number"
+                  value={basicData.num_children || ''}
+                  onChange={(e) => handleBasicDataChange('num_children', e.target.value)}
+                  placeholder="0"
+                  className="w-24 h-9 bg-white"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium whitespace-nowrap">סטטוס עבודה</Label>
+                <Select defaultValue="" onValueChange={(value) => handleBasicDataChange('employment_status', value)}>
+                  <SelectTrigger className="w-40 h-9 bg-white">
+                    <SelectValue placeholder="בחר" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="מועסק">מועסק</SelectItem>
+                    <SelectItem value="עצמאי">עצמאי</SelectItem>
+                    <SelectItem value="אבטלה">אבטלה</SelectItem>
+                    <SelectItem value="פנסיונר">פנסיונר</SelectItem>
+                    <SelectItem value="סטודנט">סטודנט</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">הערות כלליות</Label>
+              <Input
+                value={basicData.notes || ''}
+                onChange={(e) => handleBasicDataChange('notes', e.target.value)}
+                placeholder="הערות נוספות"
+                className="flex-1 bg-white"
+              />
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+          )}
+
+          {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
           <div className="p-6 space-y-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             <IDUploader 
