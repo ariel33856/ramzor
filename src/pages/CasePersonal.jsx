@@ -412,7 +412,10 @@ export default function CasePersonal() {
               if (spouseId) {
                 const partner = linkedContacts.find(c => c.id === spouseId && !displayedIds.has(c.id));
                 if (partner) {
-                  couples.push({ contact, partner });
+                  // ודא שהגבר מוצג ראשון
+                  const male = contact.custom_data?.gender === 'male' ? contact : partner;
+                  const female = contact.custom_data?.gender === 'male' ? partner : contact;
+                  couples.push({ contact: male, partner: female });
                   displayedIds.add(contact.id);
                   displayedIds.add(partner.id);
                   return;
@@ -428,7 +431,10 @@ export default function CasePersonal() {
                   return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
                 });
                 if (partner) {
-                  couples.push({ contact, partner });
+                  // ודא שהגבר מוצג ראשון
+                  const male = contact.custom_data?.gender === 'male' ? contact : partner;
+                  const female = contact.custom_data?.gender === 'male' ? partner : contact;
+                  couples.push({ contact: male, partner: female });
                   displayedIds.add(contact.id);
                   displayedIds.add(partner.id);
                 }
