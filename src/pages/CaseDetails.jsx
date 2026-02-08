@@ -423,20 +423,38 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <div 
-                onClick={() => window.location.href = createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}
-                className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}
-              >
-                <div className={`
-                  w-14 h-14 rounded-xl flex items-center justify-center
-                  bg-gradient-to-br ${activeTabData.gradient} shadow-lg
-                `}>
-                  {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
+              <div className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all flex-wrap`}>
+                <div 
+                  onClick={() => window.location.href = createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}
+                  className="flex items-center gap-3 cursor-pointer"
+                >
+                  <div className={`
+                    w-14 h-14 rounded-xl flex items-center justify-center
+                    bg-gradient-to-br ${activeTabData.gradient} shadow-lg
+                  `}>
+                    {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {activeTabData.label}
+                    {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
+                  </h2>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {activeTabData.label}
-                  {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
-                </h2>
+                {activeTab === 'personal' && linkedContacts.length > 0 && (
+                  <>
+                    <span className="text-gray-400">|</span>
+                    <ContactButtons
+                      linkedContacts={linkedContacts}
+                      caseId={caseId}
+                      activeContactId={activeContactId}
+                      onContactClick={(contactId) => {
+                        setActiveContactId(contactId);
+                        if (window.changeCaseContact) {
+                          window.changeCaseContact(contactId);
+                        }
+                      }}
+                    />
+                  </>
+                )}
               </div>
 
               {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
