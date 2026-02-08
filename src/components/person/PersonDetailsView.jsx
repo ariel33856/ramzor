@@ -2162,14 +2162,6 @@ export default function PersonDetailsView({ personId }) {
             ))}
             
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 border-2 border-red-300 bg-red-50 rounded-lg px-4 py-2">
-                <Label className="text-sm font-bold whitespace-nowrap">סך התחייבויות חודשיות:</Label>
-                <span className="text-lg font-bold text-red-700">
-                  {obligations.reduce((total, obligation) => {
-                    return total + (parseFloat(obligation.monthly_payment) || 0);
-                  }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
-                </span>
-              </div>
               <Label className="text-sm font-medium whitespace-nowrap">הוסף התחייבות</Label>
               <Select onValueChange={(value) => {
                 const newObligation = { type: value };
@@ -2193,6 +2185,15 @@ export default function PersonDetailsView({ personId }) {
                   <SelectItem value="אחר">אחר</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center gap-2 border-2 border-red-300 bg-red-50 rounded-lg px-4 py-2">
+              <Label className="text-sm font-bold whitespace-nowrap">סך התחייבויות חודשיות:</Label>
+              <span className="text-lg font-bold text-red-700">
+                {obligations.reduce((total, obligation) => {
+                  return total + (parseFloat(obligation.monthly_payment) || 0);
+                }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
+              </span>
             </div>
           </div>
         )}
