@@ -666,59 +666,77 @@ export default function PersonDetailsView({ personId }) {
             placeholder={personFields.phone}
             className="text-xl font-bold w-40"
           />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
+          <Input
+            value={basicData.email}
+            onChange={(e) => handleBasicDataChange('email', e.target.value)}
+            placeholder={personFields.email}
+            className="text-xl font-bold w-40"
+          />
+        </div>
+      </div>
+      
+      {additionalPhones.length > 0 && (
+        <div className="flex gap-4 items-center flex-wrap mt-4">
+          {additionalPhones.map((phone, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">טלפון {index + 2}</Label>
+              <Input
+                value={phone}
+                onChange={(e) => {
+                  const newPhones = [...additionalPhones];
+                  newPhones[index] = e.target.value;
+                  setAdditionalPhones(newPhones);
+                  saveCustomData({ additional_phones: newPhones });
+                }}
+                placeholder="טלפון נוסף"
+                className="text-xl font-bold w-40"
+              />
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 text-red-500 hover:text-red-600"
                 onClick={() => {
-                  const newPhones = [...additionalPhones, ''];
+                  const newPhones = additionalPhones.filter((_, i) => i !== index);
                   setAdditionalPhones(newPhones);
                   saveCustomData({ additional_phones: newPhones });
                 }}
               >
-                <Plus className="w-4 h-4" />
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
-            {additionalPhones.map((phone, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Label className="text-sm font-medium whitespace-nowrap">טלפון {index + 2}</Label>
-                <Input
-                  value={phone}
-                  onChange={(e) => {
-                    const newPhones = [...additionalPhones];
-                    newPhones[index] = e.target.value;
-                    setAdditionalPhones(newPhones);
-                    saveCustomData({ additional_phones: newPhones });
-                  }}
-                  placeholder="טלפון נוסף"
-                  className="text-xl font-bold w-40"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-red-500 hover:text-red-600"
-                  onClick={() => {
-                    const newPhones = additionalPhones.filter((_, i) => i !== index);
-                    setAdditionalPhones(newPhones);
-                    saveCustomData({ additional_phones: newPhones });
-                  }}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <div className="flex items-center gap-2">
-              <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
-              <Input
-                value={basicData.email}
-                onChange={(e) => handleBasicDataChange('email', e.target.value)}
-                placeholder={personFields.email}
-                className="text-xl font-bold w-40"
-              />
-            </div>
-          </div>
-          </div>
-          </div>
+          ))}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => {
+              const newPhones = [...additionalPhones, ''];
+              setAdditionalPhones(newPhones);
+              saveCustomData({ additional_phones: newPhones });
+            }}
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
+      
+      <div className="flex gap-4 items-center mt-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => {
+            const newPhones = [...additionalPhones, ''];
+            setAdditionalPhones(newPhones);
+            saveCustomData({ additional_phones: newPhones });
+          }}
+        >
+          <Plus className="w-4 h-4" />
+        </Button>
+      </div>
           </div>
 
       <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
