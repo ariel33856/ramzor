@@ -403,9 +403,23 @@ export default function CasePersonal() {
               return 'לווה';
             };
 
-            // זיהוי זוגות
+            // זיהוי זוגות - לפי spouse_id או לפי relationship_type
             linkedContacts.forEach((contact, idx) => {
               if (displayedIds.has(contact.id)) return;
+              
+              // בדיקה אם יש spouse_id ב-custom_data
+              const spouseId = contact.custom_data?.spouse_id;
+              if (spouseId) {
+                const partner = linkedContacts.find(c => c.id === spouseId && !displayedIds.has(c.id));
+                if (partner) {
+                  couples.push({ contact, partner });
+                  displayedIds.add(contact.id);
+                  displayedIds.add(partner.id);
+                  return;
+                }
+              }
+              
+              // בדיקה לפי relationship_type
               const relType = getRelationshipType(contact);
               if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
                 const partner = linkedContacts.find(c => {
