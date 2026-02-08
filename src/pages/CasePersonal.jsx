@@ -21,6 +21,12 @@ export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    if (caseId) {
+      localStorage.setItem('lastOpenedCaseId', caseId);
+    }
+  }, [caseId]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
