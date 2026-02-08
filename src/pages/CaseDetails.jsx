@@ -417,7 +417,6 @@ export default function CaseDetails() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {activeTabData.label}
-                  {activeTab === 'personal' && caseData?.linked_borrowers && ` (${caseData.linked_borrowers.length})`}
                 </h2>
               </div>
 
