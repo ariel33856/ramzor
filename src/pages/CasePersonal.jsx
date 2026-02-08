@@ -21,18 +21,6 @@ export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
-
-  React.useEffect(() => {
-    if (caseId) {
-      localStorage.setItem('lastOpenedCaseId', caseId);
-    }
-  }, [caseId]);
-
-  React.useEffect(() => {
-    if (activeContactId) {
-      localStorage.setItem('lastOpenedPersonId', activeContactId);
-    }
-  }, [activeContactId]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
@@ -126,30 +114,11 @@ export default function CasePersonal() {
       if (currentIds !== newIds) {
         setSortedContacts(linkedContacts);
       }
-      // אם אין activeContactId או הוא לא קיים ברשימה
       if (!activeContactId || !linkedContacts.find(c => c.id === activeContactId)) {
-        // בדוק אם יש lastPersonId שתקף
-        const lastPersonId = localStorage.getItem('lastOpenedPersonId');
-        const validContact = lastPersonId && linkedContacts.find(c => c.id === lastPersonId);
-        
-        if (validContact) {
-          setActiveContactId(validContact.id);
-        } else {
-          // אחרת תשתמש ב-אחרון בעדיפות ל-לווה הראשי
-          const mainBorrower = linkedBorrowers.length > 0 ? linkedBorrowers[0] : null;
-          if (mainBorrower?._person) {
-            const mainBorrowerId = mainBorrower._person.id;
-            if (linkedContacts.find(c => c.id === mainBorrowerId)) {
-              setActiveContactId(mainBorrowerId);
-              return;
-            }
-          }
-          // אם אין לווה ראשי, בחר את הראשון בעדיפות
-          setActiveContactId(linkedContacts[0]?.id);
-        }
+        setActiveContactId(linkedContacts[0].id);
       }
     }
-  }, [linkedContacts, linkedBorrowers]);
+  }, [linkedContacts]);
 
   React.useEffect(() => {
     if (contactDialogOpen) {
