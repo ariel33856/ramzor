@@ -549,6 +549,9 @@ export default function PersonDetailsView({ personId }) {
         if (person.custom_data.education) {
           setEducation(person.custom_data.education);
         }
+        if (person.custom_data.credit_indicator) {
+          setCreditIndicator(person.custom_data.credit_indicator);
+        }
 
         // Load relationship_type from linked_accounts based on current case
         const currentCaseId = new URLSearchParams(window.location.search).get('id');
