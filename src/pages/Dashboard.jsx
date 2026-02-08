@@ -826,10 +826,10 @@ export default function Dashboard() {
                   })}
                 </tbody>
               </table>
-            </div>
-            </div>
-            )}
-            </TabsContent>
+               </div>
+              </div>
+              )}
+              </TabsContent>
 
             <TabsContent value="cards" className="flex-1 overflow-hidden">
             <div className="overflow-y-auto h-full p-4">
