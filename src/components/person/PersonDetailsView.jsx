@@ -95,6 +95,8 @@ export default function PersonDetailsView({ personId }) {
   const [incomeSources, setIncomeSources] = useState([]);
   const [uploadingPayslip, setUploadingPayslip] = useState(null);
   const [obligations, setObligations] = useState([]);
+  const [healthStatus, setHealthStatus] = useState('');
+  const [education, setEducation] = useState('');
   const obligationsTimeoutRef = React.useRef(null);
   const basicDataTimeoutRef = React.useRef(null);
   const customDataTimeoutRef = React.useRef(null);
