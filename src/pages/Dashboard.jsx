@@ -416,7 +416,7 @@ export default function Dashboard() {
       {/* Filters */}
       <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-2 shadow-sm border-b border-gray-200">
         <div className="px-2">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-2">
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
                 <Plus className="w-5 h-5 ml-2" />
