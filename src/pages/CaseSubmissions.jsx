@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Plus, Send } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import SubmissionForm from '../components/submissions/SubmissionForm';
 import SubmissionCard from '../components/submissions/SubmissionCard';
 
@@ -57,15 +56,28 @@ export default function CaseSubmissions() {
 
   return (
     <div className="p-2" dir="rtl">
-      <div className="flex items-center justify-between mb-3">
-        <Button
-          onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
-          className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-lg"
-        >
-          <Plus className="w-5 h-5 ml-2" />
-          הגשה חדשה
-        </Button>
-      </div>
+      {!formOpen && (
+        <div className="flex items-center justify-between mb-3">
+          <Button
+            onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
+            className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-lg"
+          >
+            <Plus className="w-5 h-5 ml-2" />
+            הגשה חדשה
+          </Button>
+        </div>
+      )}
+
+      {formOpen && (
+        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-3">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{editingSubmission ? 'עריכת הגשה' : 'הגשה חדשה לבנק'}</h3>
+          <SubmissionForm
+            initialData={editingSubmission}
+            onSubmit={handleSubmit}
+            onCancel={() => { setFormOpen(false); setEditingSubmission(null); }}
+          />
+        </div>
+      )}
 
       {isLoading ? (
         <div className="space-y-3">
@@ -76,7 +88,7 @@ export default function CaseSubmissions() {
             </div>
           ))}
         </div>
-      ) : submissions.length === 0 ? (
+      ) : submissions.length === 0 && !formOpen ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <Send className="w-12 h-12 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500">טרם נוספו הגשות לחשבון זה</p>
@@ -94,19 +106,6 @@ export default function CaseSubmissions() {
           ))}
         </div>
       )}
-
-      <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingSubmission ? 'עריכת הגשה' : 'הגשה חדשה לבנק'}</DialogTitle>
-          </DialogHeader>
-          <SubmissionForm
-            initialData={editingSubmission}
-            onSubmit={handleSubmit}
-            onCancel={() => { setFormOpen(false); setEditingSubmission(null); }}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
