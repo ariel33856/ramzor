@@ -465,7 +465,7 @@ export default function CasePersonal() {
                             <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                           </button>
                         </div>
-                        <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                        <Heart className="w-5 h-5 text-green-500 fill-green-500" />
                         <div className="flex flex-col items-center">
                           <button onClick={() => moveContactToTop(partner.id)} className={`${getButtonClass(partner)} ${activeContactId === partner.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                             <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
