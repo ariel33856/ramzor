@@ -415,9 +415,6 @@ export default function CaseDetails() {
                 `}>
                   {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {activeTabData.label}
-                </h2>
               </div>
 
               {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
