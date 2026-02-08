@@ -424,7 +424,17 @@ export default function PersonDetailsView({ personId }) {
         };
       }
       
-      await base44.entities.Person.update(personId, { custom_data: mergedCustomData });
+      // Normalize linked_accounts to prevent validation errors
+      const updateData = { custom_data: mergedCustomData };
+      if (freshPerson?.linked_accounts && Array.isArray(freshPerson.linked_accounts)) {
+        updateData.linked_accounts = freshPerson.linked_accounts.map(acc => 
+          typeof acc === 'string' 
+            ? { case_id: acc, relationship_type: 'לווה' }
+            : acc
+        );
+      }
+      
+      await base44.entities.Person.update(personId, updateData);
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       latestCustomDataRef.current = null;
     }, 300);
@@ -1315,9 +1325,18 @@ export default function PersonDetailsView({ personId }) {
                   setGender(value);
                   // Save immediately without debounce
                   const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
-                  await base44.entities.Person.update(personId, { 
+                  const updateData = { 
                     custom_data: { ...(freshPerson?.custom_data || {}), gender: value }
-                  });
+                  };
+                  // Normalize linked_accounts to prevent validation errors
+                  if (freshPerson?.linked_accounts && Array.isArray(freshPerson.linked_accounts)) {
+                    updateData.linked_accounts = freshPerson.linked_accounts.map(acc => 
+                      typeof acc === 'string' 
+                        ? { case_id: acc, relationship_type: 'לווה' }
+                        : acc
+                    );
+                  }
+                  await base44.entities.Person.update(personId, updateData);
                   queryClient.invalidateQueries({ queryKey: ['person', personId] });
                 }}>
                   <SelectTrigger className="h-8 bg-white w-auto min-w-20">
