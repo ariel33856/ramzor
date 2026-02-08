@@ -668,12 +668,13 @@ export default function CasePersonal() {
           </Dialog>
         </div>
       </div>
-      <div className="space-y-4 p-1">
+      <div className="flex-1 overflow-y-auto p-4">
         {sortedContacts.map((contact) => (
           <div 
             key={contact.id} 
             id={`contact-${contact.id}`}
             style={{ display: contact.id === activeContactId ? 'block' : 'none' }}
+            className="h-full"
           >
             <PersonDetailsView personId={contact.id} />
           </div>
