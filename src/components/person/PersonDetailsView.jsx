@@ -197,7 +197,20 @@ export default function PersonDetailsView({ personId }) {
   );
 
   const updatePersonMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.update(personId, data),
+    mutationFn: async (data) => {
+      // If updating custom_data, fetch fresh person data first to avoid overwriting
+      if (data.custom_data) {
+        const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+        data = {
+          ...data,
+          custom_data: {
+            ...(freshPerson?.custom_data || {}),
+            ...data.custom_data
+          }
+        };
+      }
+      return base44.entities.Person.update(personId, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
