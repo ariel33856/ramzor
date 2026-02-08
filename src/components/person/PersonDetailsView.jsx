@@ -2314,6 +2314,17 @@ export default function PersonDetailsView({ personId }) {
                       }, 0).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
                     </span>
                   </div>
+
+                  <div className="flex items-center gap-2 border-2 border-purple-400 bg-purple-100 rounded-lg px-4 py-2 mt-4">
+                    <Label className="text-sm font-bold whitespace-nowrap">סך התחייבויות חודשיות של שניכם יחד:</Label>
+                    <span className="text-lg font-bold text-purple-800">
+                      {(obligations.reduce((total, obligation) => {
+                        return total + (parseFloat(obligation.monthly_payment) || 0);
+                      }, 0) + linkedSpouse.custom_data.obligations.reduce((total, obligation) => {
+                        return total + (parseFloat(obligation.monthly_payment) || 0);
+                      }, 0)).toLocaleString('he-IL', { maximumFractionDigits: 0 })} ₪
+                    </span>
+                  </div>
                 </div>
               </>
             )}
