@@ -1246,7 +1246,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
-          <div className="p-6 space-y-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          <div className="p-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
