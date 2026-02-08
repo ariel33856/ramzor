@@ -2089,11 +2089,14 @@ export default function PersonDetailsView({ personId }) {
         {activeTab === 'obligations' && (
           <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {spouseId && linkedSpouse && (
-              <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+              <button
+                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
+                className="w-full bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4 hover:bg-blue-100 transition-colors cursor-pointer text-left"
+              >
                 <p className="text-sm font-semibold text-blue-900">
-                  ⚠️ <span className="ml-2">{gender === 'male' ? 'לבת הזוג' : 'לבן הזוג'} {linkedSpouse.first_name} {linkedSpouse.last_name} יש התחייבויות. אנא בדוק בעמוד שלו לפרטים נוספים.</span>
+                  ⚠️ <span className="ml-2">{gender === 'male' ? 'לבת הזוג' : 'לבן הזוג'} {linkedSpouse.first_name} {linkedSpouse.last_name} יש התחייבויות. לחץ כאן לצפיה בפרטים.</span>
                 </p>
-              </div>
+              </button>
             )}
             {obligations.map((obligation, index) => (
              <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
