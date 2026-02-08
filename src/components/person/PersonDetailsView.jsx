@@ -1229,7 +1229,7 @@ export default function PersonDetailsView({ personId }) {
             placeholder="דוח אשראי"
             className="text-xl font-bold w-40"
           />
-          <Label className="text-sm font-medium whitespace-nowrap">שדה נוסף</Label>
+          <Label className="text-sm font-medium whitespace-nowrap">השכלה</Label>
           <Input
             value={basicData.additional_field || ''}
             onChange={(e) => handleBasicDataChange('additional_field', e.target.value)}
