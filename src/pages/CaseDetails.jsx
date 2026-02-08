@@ -183,6 +183,7 @@ export default function CaseDetails() {
                     <motion.button
                       key={tab.id}
                       onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onDoubleClick={() => window.open(createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`, '_blank')}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
@@ -282,6 +283,7 @@ export default function CaseDetails() {
                     <motion.button
                       key={tab.id}
                       onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onDoubleClick={() => window.open(createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`, '_blank')}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
