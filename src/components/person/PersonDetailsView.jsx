@@ -1311,9 +1311,14 @@ export default function PersonDetailsView({ personId }) {
                 />
 
                 <Label className="text-sm whitespace-nowrap">מין</Label>
-                <Select value={gender} onValueChange={(value) => {
+                <Select value={gender} onValueChange={async (value) => {
                   setGender(value);
-                  saveCustomData({ gender: value });
+                  // Save immediately without debounce
+                  const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+                  await base44.entities.Person.update(personId, { 
+                    custom_data: { ...(freshPerson?.custom_data || {}), gender: value }
+                  });
+                  queryClient.invalidateQueries({ queryKey: ['person', personId] });
                 }}>
                   <SelectTrigger className="h-8 bg-white w-auto min-w-20">
                     <SelectValue placeholder="בחר"/>
