@@ -31,7 +31,7 @@ import CaseMetrics from './CaseMetrics';
 import CaseDashboards from './CaseDashboards';
 import CaseDocuments from './CaseDocuments';
 import CaseTracking from './CaseTracking';
-import CaseContacts from './CaseContacts';
+
 import CaseCalculator from './CaseCalculator';
 import CasePayments from './CasePayments';
 import CaseInsurance from './CaseInsurance';
@@ -53,7 +53,7 @@ const pageComponents = {
   dashboards: CaseDashboards,
   documents: CaseDocuments,
   tracking: CaseTracking,
-  contacts: CaseContacts,
+
   calculator: CaseCalculator,
   payments: CasePayments,
   insurance: CaseInsurance,
@@ -195,7 +195,7 @@ export default function CaseDetails() {
                 מידע אישי
               </button>
               <div className="space-y-3">
-                {tabs.filter(tab => ['personal', 'contact', 'contacts', 'summary', 'tracking'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['personal', 'contact', 'summary', 'tracking'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
