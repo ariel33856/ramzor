@@ -593,57 +593,49 @@ export default function Layout({ children, currentPageName }) {
                         </h1>
                       </div>
                     </Link>
-                    <DropdownMenu>
-                       <DropdownMenuTrigger asChild>
-                         <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
-                           <div className={`w-6 h-6 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
-                             <Icon className="w-3 h-3 text-white" />
-                           </div>
-                           <span className="text-sm font-semibold text-gray-900">{casePageTitles[currentPageName]}</span>
-                           {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (
-                             <span className="text-xs text-gray-500">({linkedContacts.length})</span>
-                           )}
-                           <ChevronDown className="w-4 h-4 text-gray-500" />
-                         </Button>
-                       </DropdownMenuTrigger>
-                       <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
-                         {tabs.map((tab) => {
-                           const TabIcon = tab.icon;
-                           const pageName = pageMapping[tab.id];
-                           return (
-                             <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
-                               <DropdownMenuItem className={`px-3 py-2 mb-1 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all`}>
-                                 <div className="flex items-center gap-3 justify-end w-full">
-                                   <span className="text-sm font-medium">{tab.label}</span>
-                                   <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
-                                     <TabIcon className="w-4 h-4 text-white" />
-                                   </div>
-                                 </div>
-                               </DropdownMenuItem>
-                             </Link>
-                           );
-                         })}
-                         {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (
-                           <>
-                             <DropdownMenuSeparator className="my-2" />
-                             <div className="px-3 py-2 text-xs font-semibold text-gray-600 mb-2">אנשי קשר משויכים</div>
-                             {linkedContacts.map((contact) => (
-                               <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
-                                 <DropdownMenuItem className="px-3 py-2 mb-1 cursor-pointer bg-gray-50 border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-100 rounded-lg transition-all">
+                    <div className="flex items-center gap-2">
+                      <DropdownMenu>
+                         <DropdownMenuTrigger asChild>
+                           <Button className={`flex items-center gap-2 ${currentTab.bg} border-2 ${currentTab.border} hover:shadow-lg`}>
+                             <div className={`w-6 h-6 bg-gradient-to-br ${currentTab.gradient} rounded-lg flex items-center justify-center`}>
+                               <Icon className="w-3 h-3 text-white" />
+                             </div>
+                             <span className="text-sm font-semibold text-gray-900">{casePageTitles[currentPageName]}</span>
+                             <ChevronDown className="w-4 h-4 text-gray-500" />
+                           </Button>
+                         </DropdownMenuTrigger>
+                         <DropdownMenuContent align="start" className="w-auto min-w-[200px] p-2 max-h-[500px] overflow-y-auto">
+                           {tabs.map((tab) => {
+                             const TabIcon = tab.icon;
+                             const pageName = pageMapping[tab.id];
+                             return (
+                               <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
+                                 <DropdownMenuItem className={`px-3 py-2 mb-1 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all`}>
                                    <div className="flex items-center gap-3 justify-end w-full">
-                                     <span className="text-sm font-medium">{contact.first_name} {contact.last_name}</span>
-                                     <div className="w-8 h-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">
-                                       <User className="w-4 h-4 text-white" />
+                                     <span className="text-sm font-medium">{tab.label}</span>
+                                     <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
+                                       <TabIcon className="w-4 h-4 text-white" />
                                      </div>
                                    </div>
                                  </DropdownMenuItem>
                                </Link>
-                             ))}
-                           </>
-                         )}
-
+                             );
+                           })}
                          </DropdownMenuContent>
-                     </DropdownMenu>
+                       </DropdownMenu>
+                      {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          {linkedContacts.map((contact) => (
+                            <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
+                              <Button className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white text-xs h-9 px-2.5">
+                                <User className="w-3.5 h-3.5 ml-1.5" />
+                                {contact.first_name} {contact.last_name}
+                              </Button>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </>
                   );
                   })()}
