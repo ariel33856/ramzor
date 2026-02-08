@@ -623,18 +623,41 @@ export default function Layout({ children, currentPageName }) {
                            })}
                          </DropdownMenuContent>
                        </DropdownMenu>
-                      {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (
-                        <div className="flex items-center gap-1.5">
-                          {linkedContacts.map((contact) => (
-                            <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
-                              <Button className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white text-xs h-9 px-2.5">
-                                <User className="w-3.5 h-3.5 ml-1.5" />
-                                {contact.first_name} {contact.last_name}
-                              </Button>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
+                      {currentPageName === 'CasePersonal' && linkedContacts.length > 0 && (() => {
+                        const getButtonClass = (contact) => {
+                          const linkedAccounts = contact.linked_accounts || [];
+                          const currentLink = linkedAccounts.find(acc => 
+                            typeof acc === 'string' ? acc === urlParams.get('id') : acc.case_id === urlParams.get('id')
+                          );
+                          const relationshipType = currentLink?.relationship_type || 'לווה';
+                          
+                          let baseClass = 'text-white text-xs h-9 px-2.5 flex items-center gap-1.5';
+                          
+                          if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג') {
+                            return baseClass + ' bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
+                          } else if (relationshipType === 'לווה') {
+                            return baseClass + ' bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
+                          } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
+                            return baseClass + ' bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600';
+                          } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
+                            return baseClass + ' bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600';
+                          }
+                          return baseClass + ' bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700';
+                        };
+
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {linkedContacts.map((contact) => (
+                              <Link key={contact.id} to={createPageUrl('PersonDetails') + `?id=${contact.id}`}>
+                                <Button className={getButtonClass(contact)}>
+                                  <User className="w-3.5 h-3.5" />
+                                  {contact.first_name} {contact.last_name}
+                                </Button>
+                              </Link>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </>
                   );
