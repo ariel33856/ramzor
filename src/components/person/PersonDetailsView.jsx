@@ -1269,10 +1269,12 @@ export default function PersonDetailsView({ personId }) {
                 />
 
                 <Label className="text-sm whitespace-nowrap">מין</Label>
-                <Select value={gender} onValueChange={(value) => {
+                <Select value={gender} onValueChange={async (value) => {
                   setGender(value);
-                  updatePersonMutation.mutate({
-                    custom_data: { ...(person?.custom_data || {}), gender: value }
+                  // Fetch fresh person data to avoid overwriting other custom_data
+                  const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+                  await updatePersonMutation.mutateAsync({
+                    custom_data: { ...(freshPerson?.custom_data || {}), gender: value }
                   });
                 }}>
                   <SelectTrigger className="h-8 bg-white w-auto min-w-20">
