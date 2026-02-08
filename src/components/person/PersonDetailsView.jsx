@@ -2719,6 +2719,17 @@ export default function PersonDetailsView({ personId }) {
                                 </div>
                               </div>
                               <div className="mt-3">
+                                <ExternalContacts
+                                  contacts={transaction.external_contacts || []}
+                                  onChange={(contacts) => {
+                                    updateTransactionMutation.mutate({
+                                      id: transaction.id,
+                                      data: { ...transaction, external_contacts: contacts }
+                                    });
+                                  }}
+                                />
+                              </div>
+                              <div className="mt-3">
                                 <Label className="text-xs">הערות</Label>
                                 <Textarea
                                   className="text-sm"
@@ -2995,6 +3006,18 @@ export default function PersonDetailsView({ personId }) {
                               }}
                             />
                           </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <ExternalContacts
+                            contacts={transaction.external_contacts || []}
+                            onChange={(contacts) => {
+                              updateTransactionMutation.mutate({
+                                id: transaction.id,
+                                data: { ...transaction, external_contacts: contacts }
+                              });
+                            }}
+                          />
                         </div>
 
                         <div className="mt-4">
