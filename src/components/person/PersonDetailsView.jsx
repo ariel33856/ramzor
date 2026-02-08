@@ -1225,6 +1225,13 @@ export default function PersonDetailsView({ personId }) {
             placeholder="שדה 2"
             className="text-xl font-bold w-40"
           />
+          <Label className="text-sm font-medium whitespace-nowrap">דוח אשראי</Label>
+          <Input
+            value={basicData.credit_report || ''}
+            onChange={(e) => handleBasicDataChange('credit_report', e.target.value)}
+            placeholder="דוח אשראי"
+            className="text-xl font-bold w-40"
+          />
           </div>
           </div>
           </div>
