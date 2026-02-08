@@ -613,6 +613,7 @@ export default function PersonDetailsView({ personId }) {
               { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400', bottomBorderColor: 'border-b-rose-400' },
               { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', borderColor: 'border-purple-400', bottomBorderColor: 'border-b-purple-400' },
               { id: 'health', label: 'מסמכים', activeBg: 'bg-cyan-50', activeText: 'text-cyan-700', borderColor: 'border-cyan-400', bottomBorderColor: 'border-b-cyan-400' },
+              { id: 'documentation', label: 'תיעוד התקשרות', activeBg: 'bg-teal-50', activeText: 'text-teal-700', borderColor: 'border-teal-400', bottomBorderColor: 'border-b-teal-400' },
               { id: 'transactions', label: 'עסקאות', activeBg: 'bg-amber-50', activeText: 'text-black', borderColor: 'border-black', bottomBorderColor: 'border-b-black' },
             ];
             const activeTabDef = tabDefs.find(t => t.id === activeTab);
