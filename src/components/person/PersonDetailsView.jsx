@@ -1211,11 +1211,24 @@ export default function PersonDetailsView({ personId }) {
           >
             להצגה במודול אנשי קשר
           </Button>
-        </div>
-      </div>
-      </div>
-      </div>
-        )}
+          </div>
+          </div>
+          </div>
+
+          {/* Field 2 Panel */}
+          <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
+          <div className="flex items-center gap-2 flex-wrap">
+          <Label className="text-sm font-medium whitespace-nowrap">שדה 2</Label>
+          <Input
+            value={basicData.field_2 || ''}
+            onChange={(e) => handleBasicDataChange('field_2', e.target.value)}
+            placeholder="שדה 2"
+            className="text-xl font-bold w-40"
+          />
+          </div>
+          </div>
+          </div>
+          )}
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
