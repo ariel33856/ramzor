@@ -2046,7 +2046,7 @@ export default function PersonDetailsView({ personId }) {
         {activeTab === 'obligations' && (
           <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {obligations.map((obligation, index) => (
-              <div key={index} className="border-2 border-red-200 rounded-lg p-4 bg-red-50/30 space-y-3">
+             <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-gray-900">
                     {obligation.type}
