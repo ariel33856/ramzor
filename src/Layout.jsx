@@ -590,11 +590,15 @@ export default function Layout({ children, currentPageName }) {
                         {tabs.map((tab) => {
                           const TabIcon = tab.icon;
                           const pageName = pageMapping[tab.id];
+                          let displayLabel = tab.label;
+                          if (tab.id === 'personal' && caseData?.linked_borrowers) {
+                            displayLabel = `${tab.label} (${caseData.linked_borrowers.length})`;
+                          }
                           return (
                             <Link key={tab.id} to={createPageUrl(pageName) + `?id=${caseId}`}>
                               <DropdownMenuItem className={`px-3 py-2 mb-1 cursor-pointer ${tab.bg} border-2 ${tab.border} hover:${tab.border} hover:shadow-md rounded-lg transition-all`}>
                                 <div className="flex items-center gap-3 justify-end w-full">
-                                  <span className="text-sm font-medium">{tab.label}</span>
+                                  <span className="text-sm font-medium">{displayLabel}</span>
                                   <div className={`w-8 h-8 bg-gradient-to-br ${tab.gradient} rounded-lg flex items-center justify-center`}>
                                     <TabIcon className="w-4 h-4 text-white" />
                                   </div>
