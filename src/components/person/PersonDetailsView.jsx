@@ -593,8 +593,11 @@ export default function PersonDetailsView({ personId }) {
   return (
     <>
       <div>
+        {/* Basic Info Card */}
+        <BasicInfoCard basicData={basicData} onBasicDataChange={handleBasicDataChange} />
+
         {/* Tab Headers */}
-        <div className="flex" ref={tabsRef}>
+        <div className="flex mt-4" ref={tabsRef}>
           {(() => {
             const tabDefs = [
               { id: 'general', label: 'פרטים אישיים', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400', bottomBorderColor: 'border-b-blue-400' },
