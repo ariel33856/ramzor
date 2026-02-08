@@ -467,6 +467,14 @@ export default function CasePersonal() {
                     const relationshipType = getRelationshipType(rel);
                     if (relationshipType === 'בן זוג' || relationshipType === 'בת זוג' || relationshipType === 'בן/בת זוג') {
                       buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
+                    } else if (relationshipType === 'לווה') {
+                      buttonClass += 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600';
+                    } else if (relationshipType === 'ערב' || relationshipType === 'ערבה') {
+                      buttonClass += 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600';
+                    } else if (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') {
+                      buttonClass += 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600';
+                    } else {
+                      buttonClass += 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500';
                     }
                     return buttonClass;
                   };
