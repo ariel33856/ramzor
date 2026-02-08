@@ -2584,8 +2584,7 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Content: Transactions */}
         {activeTab === 'transactions' && (
           <div className="p-6 bg-pink-50 border-2 border-pink-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">עסקאות</h2>
+            <div className="flex items-center justify-end mb-4">
               <Button
                 onClick={() => {
                   if (linkedPropertiesData.length === 0) {
