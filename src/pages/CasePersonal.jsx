@@ -190,6 +190,10 @@ export default function CasePersonal() {
     <div className="relative">
       {isFullPage && (
         <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-2 flex items-center gap-2 flex-wrap">
+          <h2 className="text-2xl font-bold text-gray-900">
+            אנשי קשר משויכים לחשבון <span className="text-gray-600 text-lg font-normal">({linkedContacts.length})</span>
+          </h2>
+          <span className="text-gray-400">|</span>
           {linkedContacts.length > 0 && (
             <ContactButtons
               linkedContacts={linkedContacts}
