@@ -282,6 +282,7 @@ export default function CaseDashboards() {
             </div>
           </div>
         )}
+        </>
       )}
     </div>
   );
