@@ -631,8 +631,12 @@ export default function CasePersonal() {
         </div>
       </div>
       <div className="space-y-4 p-1">
-        {sortedContacts.filter(c => c.id === activeContactId).map((contact) => (
-          <div key={contact.id} id={`contact-${contact.id}`}>
+        {sortedContacts.map((contact) => (
+          <div 
+            key={contact.id} 
+            id={`contact-${contact.id}`}
+            style={{ display: contact.id === activeContactId ? 'block' : 'none' }}
+          >
             <PersonDetailsView personId={contact.id} />
           </div>
         ))}
