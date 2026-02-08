@@ -2846,10 +2846,10 @@ export default function PersonDetailsView({ personId }) {
                     const property = linkedPropertiesData.find(p => p.id === transaction.property_id);
                     const typeLabels = {
                       purchase: 'רכישה',
-                      sale: 'מכירה',
-                      rent: 'השכרה',
-                      lease: 'חכירה',
-                      other: 'אחר'
+                      renovation: 'שיפוץ',
+                      expansion: 'הרחבה',
+                      loan_consolidation: 'איחוד הלוואות',
+                      general_purpose: 'כל מטרה'
                     };
                     const statusLabels = {
                       pending: 'בתהליך',
