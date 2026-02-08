@@ -1199,7 +1199,7 @@ export default function PersonDetailsView({ personId }) {
       </div>
       </div>
 
-      <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
+      <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
       <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 items-center">
