@@ -16,7 +16,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
 import IDUploader from './IDUploader';
-import BasicInfoCard from './BasicInfoCard';
 import { Upload } from 'lucide-react';
 
 
@@ -593,11 +592,8 @@ export default function PersonDetailsView({ personId }) {
   return (
     <>
       <div>
-        {/* Basic Info Card */}
-        <BasicInfoCard basicData={basicData} onBasicDataChange={handleBasicDataChange} />
-
         {/* Tab Headers */}
-        <div className="flex mt-4" ref={tabsRef}>
+        <div className="flex" ref={tabsRef}>
           {(() => {
             const tabDefs = [
               { id: 'general', label: 'פרטים אישיים', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400', bottomBorderColor: 'border-b-blue-400' },
@@ -629,8 +625,29 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Content: General */}
         {activeTab === 'general' && (
           <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
-        <div className="flex items-start gap-2 flex-wrap">
+      <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
+      <div className="flex items-start gap-2 flex-wrap">
         <div className="flex flex-col gap-4">
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
+              <Input
+                value={basicData.first_name}
+                onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                placeholder={personFields.first_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
+              <Input
+                value={basicData.last_name}
+                onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                placeholder={personFields.last_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+          </div>
           <div className="flex gap-4 items-center flex-wrap">
             <div className="flex items-center gap-2">
               <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
@@ -681,7 +698,16 @@ export default function PersonDetailsView({ personId }) {
                 </Button>
               </div>
             ))}
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
+              <Input
+                value={basicData.email}
+                onChange={(e) => handleBasicDataChange('email', e.target.value)}
+                placeholder={personFields.email}
+                className="text-xl font-bold w-40"
+              />
             </div>
+          </div>
         </div>
         <div className="mr-auto flex items-center gap-2 flex-wrap">
           {linkedAccountsData.length > 0 ? (
@@ -1169,8 +1195,11 @@ export default function PersonDetailsView({ personId }) {
           >
             להצגה במודול אנשי קשר
           </Button>
-          </div>
-          )}
+        </div>
+      </div>
+      </div>
+      </div>
+        )}
 
         {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
@@ -2918,6 +2947,6 @@ export default function PersonDetailsView({ personId }) {
           </form>
         </DialogContent>
       </Dialog>
-      </>
-      );
-      }
+    </>
+  );
+}
