@@ -1267,15 +1267,13 @@ export default function PersonDetailsView({ personId }) {
                   value={person?.custom_data?.id_upload_data?.birth_date || person?.custom_data?.birth_date || ''} 
                   onChange={(e) => {
                     const value = e.target.value;
-                    const customData = { 
-                      ...(person?.custom_data || {}), 
+                    saveCustomData({ 
                       birth_date: value,
                       id_upload_data: {
                         ...(person?.custom_data?.id_upload_data || {}),
                         birth_date: value
                       }
-                    };
-                    updatePersonMutation.mutate({ custom_data: customData });
+                    });
                   }}
                   placeholder="DD-MM-YYYY"
                   className="bg-white w-32 h-8"
