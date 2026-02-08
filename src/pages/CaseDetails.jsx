@@ -381,7 +381,10 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <Link to={createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`} className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}>
+              <div 
+                onClick={() => window.location.href = createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}
+                className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all cursor-pointer`}
+              >
                 <div className={`
                   w-14 h-14 rounded-xl flex items-center justify-center
                   bg-gradient-to-br ${activeTabData.gradient} shadow-lg
@@ -391,7 +394,7 @@ export default function CaseDetails() {
                 <h2 className="text-2xl font-bold text-gray-900">
                   {activeTabData.label}
                 </h2>
-              </Link>
+              </div>
 
               {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
             </motion.div>
