@@ -721,7 +721,7 @@ export default function PersonDetailsView({ personId }) {
                   typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
                 );
                 let currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
-                
+
                 // התאם את סוג הזיקה המוצג למין
                 if (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') {
                   currentRelationshipType = gender === 'male' ? 'ערב' : 'ערבה';
@@ -998,12 +998,586 @@ export default function PersonDetailsView({ personId }) {
                 onClick={() => {
                   // Get current case ID
                   const currentCaseId = new URLSearchParams(window.location.search).get('id');
-                  
+
                   // Check if spouse is linked to the current account
                   const isLinkedToCurrentAccount = linkedSpouse.linked_accounts?.some(link => 
                     typeof link === 'string' ? link === currentCaseId : link.case_id === currentCaseId
                   );
-                  
+
+                  if (isLinkedToCurrentAccount && currentCaseId) {
+                    // Navigate within CasePersonal - trigger contact change
+                    if (window.changeCaseContact) {
+                      window.changeCaseContact(spouseId);
+                    }
+                  } else {
+                    // Navigate to PersonDetails (contacts module)
+                    window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`;
+                  }
+                }}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap cursor-pointer rounded-l-none"
+              >
+                {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-purple-500 rounded-r-none"
+                    title="בטל שיוך"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                      <span>?</span>
+                      <span>האם לבטל את שיוך בן/בת הזוג</span>
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex justify-center gap-4">
+                    <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר משויך</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleUnlinkSpouse}
+                      className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                    >
+                      כן, לבטל
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          ) : (maritalStatus === 'married' || maritalStatus === 'separated' || maritalStatus === 'common_law') ? (
+            <Dialog open={spouseDialogOpen} onOpenChange={setSpouseDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap">
+                  {gender === 'male' ? 'שדך בת זוג' : 'שדך בן זוג'}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר בן/בת זוג</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  {!showNewSpouseForm ? (
+                    <>
+                      <Button 
+                        onClick={() => setShowNewSpouseForm(true)}
+                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                      >
+                        <Plus className="w-4 h-4 ml-2" />
+                        הוסף איש קשר חדש
+                      </Button>
+                      <Input
+                        placeholder="חיפוש איש קשר..."
+                        value={spouseSearchTerm}
+                        onChange={(e) => setSpouseSearchTerm(e.target.value)}
+                      />
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {allContacts
+                          .filter(contact => 
+                            contact.id !== personId &&
+                            (contact.first_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                            contact.last_name?.toLowerCase().includes(spouseSearchTerm.toLowerCase()) ||
+                            contact.phone?.includes(spouseSearchTerm))
+                          )
+                          .map(contact => {
+                            const isAlreadyLinked = contact.custom_data?.spouse_id;
+                            return (
+                              <div
+                                key={contact.id}
+                                className={`p-4 border rounded-lg transition-colors ${
+                                  isAlreadyLinked 
+                                    ? 'bg-gray-100 border-gray-300 cursor-not-allowed opacity-60' 
+                                    : 'hover:bg-gray-50 cursor-pointer'
+                                }`}
+                                onClick={async () => {
+                                  if (isAlreadyLinked) return;
+                                  // Update both persons with spouse_id
+                                  await updatePersonMutation.mutateAsync({ 
+                                    custom_data: { ...(person?.custom_data || {}), spouse_id: contact.id }
+                                  });
+                                  await base44.entities.Person.update(contact.id, {
+                                    custom_data: { ...(contact.custom_data || {}), spouse_id: personId }
+                                  });
+                                  setSpouseId(contact.id);
+                                  setSpouseDialogOpen(false);
+                                  setSpouseSearchTerm('');
+                                }}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-semibold text-gray-900">
+                                      {contact.first_name} {contact.last_name}
+                                    </p>
+                                    <p className="text-sm text-gray-500">{contact.phone}</p>
+                                  </div>
+                                  {isAlreadyLinked && (
+                                    <span className="text-xs font-medium text-red-600 bg-red-100 px-2 py-1 rounded">
+                                      משויך כבר
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="space-y-4">
+                      <Button 
+                        onClick={() => setShowNewSpouseForm(false)}
+                        variant="outline"
+                        className="mb-4"
+                      >
+                        חזרה לרשימה
+                      </Button>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label>{personFields.first_name}</Label>
+                          <Input
+                            value={newSpouseData.first_name}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, first_name: e.target.value})}
+                            placeholder={personFields.first_name}
+                          />
+                        </div>
+                        <div>
+                          <Label>{personFields.last_name}</Label>
+                          <Input
+                            value={newSpouseData.last_name}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, last_name: e.target.value})}
+                            placeholder={personFields.last_name}
+                          />
+                        </div>
+                        <div>
+                          <Label>{personFields.id_number}</Label>
+                          <Input
+                            value={newSpouseData.id_number}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, id_number: e.target.value})}
+                            placeholder={personFields.id_number}
+                          />
+                        </div>
+                        <div>
+                          <Label>{personFields.phone}</Label>
+                          <Input
+                            value={newSpouseData.phone}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, phone: e.target.value})}
+                            placeholder={personFields.phone}
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <Label>{personFields.email}</Label>
+                          <Input
+                            type="email"
+                            value={newSpouseData.email}
+                            onChange={(e) => setNewSpouseData({...newSpouseData, email: e.target.value})}
+                            placeholder={personFields.email}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => createSpouseMutation.mutate(newSpouseData)}
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                        disabled={!newSpouseData.first_name || !newSpouseData.last_name}
+                      >
+                        צור איש קשר
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : null}
+          <Button 
+            onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${personId}`}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 whitespace-nowrap w-full"
+          >
+            להצגה במודול אנשי קשר
+          </Button>
+        </div>
+      </div>
+      </div>
+
+      <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
+      <div className="flex items-start gap-2 flex-wrap">
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
+              <Input
+                value={basicData.first_name}
+                onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                placeholder={personFields.first_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
+              <Input
+                value={basicData.last_name}
+                onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                placeholder={personFields.last_name}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+          </div>
+          <div className="flex gap-4 items-center flex-wrap">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
+              <Input
+                value={basicData.phone}
+                onChange={(e) => handleBasicDataChange('phone', e.target.value)}
+                placeholder={personFields.phone}
+                className="text-xl font-bold w-40"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => {
+                  const newPhones = [...additionalPhones, ''];
+                  setAdditionalPhones(newPhones);
+                  saveCustomData({ additional_phones: newPhones });
+                }}
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+            {additionalPhones.map((phone, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Label className="text-sm font-medium whitespace-nowrap">טלפון {index + 2}</Label>
+                <Input
+                  value={phone}
+                  onChange={(e) => {
+                    const newPhones = [...additionalPhones];
+                    newPhones[index] = e.target.value;
+                    setAdditionalPhones(newPhones);
+                    saveCustomData({ additional_phones: newPhones });
+                  }}
+                  placeholder="טלפון נוסף"
+                  className="text-xl font-bold w-40"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-red-500 hover:text-red-600"
+                  onClick={() => {
+                    const newPhones = additionalPhones.filter((_, i) => i !== index);
+                    setAdditionalPhones(newPhones);
+                    saveCustomData({ additional_phones: newPhones });
+                  }}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <div className="flex items-center gap-2">
+              <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
+              <Input
+                value={basicData.email}
+                onChange={(e) => handleBasicDataChange('email', e.target.value)}
+                placeholder={personFields.email}
+                className="text-xl font-bold w-40"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mr-auto flex items-center gap-2 flex-wrap">
+          {linkedAccountsData.length > 0 ? (
+            <>
+              {linkedAccountsData.filter(account => {
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                return account.id === currentCaseId;
+              }).map(account => {
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                const currentLink = linkedAccounts.find(acc => 
+                  typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
+                );
+                let currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
+
+                // התאם את סוג הזיקה המוצג למין
+                if (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') {
+                  currentRelationshipType = gender === 'male' ? 'ערב' : 'ערבה';
+                } else if (currentRelationshipType === 'ערב ממשכן' || currentRelationshipType === 'ערבה ממשכנת') {
+                  currentRelationshipType = gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת';
+                } else if (currentRelationshipType === 'בן זוג' || currentRelationshipType === 'בת זוג' || currentRelationshipType === 'בן/בת זוג') {
+                  currentRelationshipType = gender === 'male' ? 'בן זוג' : 'בת זוג';
+                }
+
+                return (
+                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
+                  <Button 
+                    onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
+                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-l-lg"
+                  >
+                    חשבון משויך: {account.client_name} {account.account_number}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className={`whitespace-nowrap rounded-l-lg ${
+                        currentRelationshipType === 'לווה' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' :
+                        (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') ? 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600' :
+                        (currentRelationshipType === 'ערב ממשכן' || currentRelationshipType === 'ערבה ממשכנת') ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600' :
+                        (currentRelationshipType === 'בן/בת זוג' || currentRelationshipType === 'בן זוג' || currentRelationshipType === 'בת זוג') ? 'bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-500 hover:to-sky-500' :
+                        'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
+                      }`}>
+                        {currentRelationshipType ? `זיקה לחשבון: ${currentRelationshipType}` : 'זיקה לחשבון'}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="text-center" style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}>
+                      <DropdownMenuItem onClick={() => {
+                        const newType = 'לווה';
+                        const updatedLinkedAccounts = linkedAccounts.map(acc => 
+                          typeof acc === 'string' 
+                            ? { case_id: acc, relationship_type: newType }
+                            : acc.case_id === currentCaseId 
+                              ? { ...acc, relationship_type: newType }
+                              : acc
+                        );
+                        setLinkedAccounts(updatedLinkedAccounts);
+                        setRelationshipType(newType);
+                        updatePersonMutation.mutate({ linked_accounts: updatedLinkedAccounts });
+                      }} className="justify-center bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 mb-1">לווה</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
+                        const newType = gender === 'male' ? 'ערב' : 'ערבה';
+                        const updatedLinkedAccounts = linkedAccounts.map(acc => 
+                          typeof acc === 'string' 
+                            ? { case_id: acc, relationship_type: newType }
+                            : acc.case_id === currentCaseId 
+                              ? { ...acc, relationship_type: newType }
+                              : acc
+                        );
+                        setLinkedAccounts(updatedLinkedAccounts);
+                        setRelationshipType(newType);
+                        updatePersonMutation.mutate({ linked_accounts: updatedLinkedAccounts });
+                      }} className="justify-center bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 mb-1">{gender === 'male' ? 'ערב' : 'ערבה'}</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
+                        const newType = gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת';
+                        const updatedLinkedAccounts = linkedAccounts.map(acc => 
+                          typeof acc === 'string' 
+                            ? { case_id: acc, relationship_type: newType }
+                            : acc.case_id === currentCaseId 
+                              ? { ...acc, relationship_type: newType }
+                              : acc
+                        );
+                        setLinkedAccounts(updatedLinkedAccounts);
+                        setRelationshipType(newType);
+                        updatePersonMutation.mutate({ linked_accounts: updatedLinkedAccounts });
+                      }} className="justify-center bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 mb-1">{gender === 'male' ? 'ערב ממשכן' : 'ערבה ממשכנת'}</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
+                        const newType = gender === 'male' ? 'בן זוג' : 'בת זוג';
+                        const updatedLinkedAccounts = linkedAccounts.map(acc => 
+                          typeof acc === 'string' 
+                            ? { case_id: acc, relationship_type: newType }
+                            : acc.case_id === currentCaseId 
+                              ? { ...acc, relationship_type: newType }
+                              : acc
+                        );
+                        setLinkedAccounts(updatedLinkedAccounts);
+                        setRelationshipType(newType);
+                        updatePersonMutation.mutate({ linked_accounts: updatedLinkedAccounts });
+                      }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-r-lg"
+                        title="בטל שיוך"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                          <span>?</span>
+                          <span>האם לבטל את שיוך החשבון</span>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex justify-center gap-4">
+                        <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => handleUnlinkAccount(account.id)}
+                          className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                        >
+                          כן, לבטל
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+                );
+              })}
+              {linkedAccountsData.filter(account => {
+                const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                return account.id !== currentCaseId;
+              }).map(account => {
+                const currentLink = linkedAccounts.find(acc => 
+                  typeof acc === 'string' ? acc === account.id : acc.case_id === account.id
+                );
+                const accountRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : 'לווה';
+
+                return (
+                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-300 rounded-lg p-3 shadow-lg bg-white">
+                  <div className="text-sm font-bold px-3 py-1 bg-blue-100 text-blue-700 rounded-l-lg">
+                    זיקה: {accountRelationshipType}
+                  </div>
+                  <Button 
+                    onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
+                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-200 to-emerald-200 hover:from-green-300 hover:to-emerald-300 text-gray-700 rounded-l-lg"
+                  >
+                    חשבון משויך: {account.client_name} {account.account_number}
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 h-9 w-9 border-2 border-green-500 rounded-r-lg"
+                        title="בטל שיוך"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-center flex items-center justify-center gap-1">
+                          <span>?</span>
+                          <span>האם לבטל את שיוך החשבון</span>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex justify-center gap-4">
+                        <AlertDialogCancel className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex-1 max-w-xs">לא!!! תשאיר את החשבון משויך</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => handleUnlinkAccount(account.id)}
+                          className="bg-red-500 hover:bg-red-600 px-8 py-3 text-lg flex-1 max-w-xs"
+                        >
+                          כן, לבטל
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+                );
+              })}
+            </>
+            ) : (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 whitespace-nowrap">
+                  <LinkIcon className="w-4 h-4 ml-2" />
+                  שייך חשבון
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר חשבון לשיוך</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Button 
+                    onClick={() => createNewAccountMutation.mutate()}
+                    disabled={createNewAccountMutation.isPending}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    {createNewAccountMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4 ml-2" />
+                    )}
+                    צור חשבון חדש
+                  </Button>
+                  <Input
+                    placeholder="חיפוש לפי שם או מספר חשבון..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredAccounts.map(account => (
+                      <div
+                        key={account.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => handleLinkToAccount(account.id)}
+                      >
+                        <p className="font-semibold text-gray-900">{account.client_name}</p>
+                        <p className="text-sm text-gray-500">חשבון מס׳ {account.account_number}</p>
+                      </div>
+                    ))}
+                    {filteredAccounts.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו חשבונות</p>
+                    )}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+          {linkedPropertiesData.map(property => (
+            <Button 
+              key={property.id}
+              onClick={() => window.location.href = createPageUrl('PropertyDetails') + `?id=${property.id}`}
+              className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 whitespace-nowrap cursor-pointer"
+            >
+              נכס משויך: {property.address}, {property.city}
+            </Button>
+          ))}
+          {linkedPropertiesData.length === 0 && (
+            <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 whitespace-nowrap">
+                  <LinkIcon className="w-4 h-4 ml-2" />
+                  שייך נכס
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>בחר נכס לשיוך</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="חיפוש לפי כתובת או עיר..."
+                    value={propertySearchTerm}
+                    onChange={(e) => setPropertySearchTerm(e.target.value)}
+                  />
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {filteredProperties.map(property => (
+                      <div
+                        key={property.id}
+                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        onClick={() => {
+                          const updatedProperties = [...linkedProperties, property.id];
+                          setLinkedProperties(updatedProperties);
+                          updatePersonMutation.mutate({ linked_properties: updatedProperties });
+                          setPropertyDialogOpen(false);
+                          setPropertySearchTerm('');
+                        }}
+                      >
+                        <p className="font-semibold text-gray-900">{property.address}</p>
+                        <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
+                      </div>
+                    ))}
+                    {filteredProperties.length === 0 && (
+                      <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
+                    )}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+          {spouseId && linkedSpouse ? (
+            <div className="flex items-center gap-0">
+              <Button 
+                onClick={() => {
+                  // Get current case ID
+                  const currentCaseId = new URLSearchParams(window.location.search).get('id');
+
+                  // Check if spouse is linked to the current account
+                  const isLinkedToCurrentAccount = linkedSpouse.linked_accounts?.some(link => 
+                    typeof link === 'string' ? link === currentCaseId : link.case_id === currentCaseId
+                  );
+
                   if (isLinkedToCurrentAccount && currentCaseId) {
                     // Navigate within CasePersonal - trigger contact change
                     if (window.changeCaseContact) {
