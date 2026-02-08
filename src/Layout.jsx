@@ -212,6 +212,12 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
+    if (caseId) {
+      localStorage.setItem('lastOpenedCaseId', caseId);
+    }
+  }, [caseId]);
+
+  useEffect(() => {
     const saved = localStorage.getItem('globalFilterUser');
     if (saved) setGlobalFilterUser(saved);
   }, []);
