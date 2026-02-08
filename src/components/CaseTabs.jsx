@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 export const tabs = [
-  { id: 'personal', label: 'פרטים אישיים ופרטי התקשרות', icon: User, gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+  { id: 'personal', label: 'אנשי קשר משויכים לחשבון', icon: User, gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
   { id: 'contact', label: 'צור קשר', icon: Phone, gradient: 'from-green-500 to-emerald-600', bg: 'bg-green-50', border: 'border-green-200' },
   { id: 'summary', label: 'תקציר התיק', icon: FileText, gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
   { id: 'notes', label: 'הערות מיוחדות', icon: MessageSquare, gradient: 'from-amber-500 to-orange-600', bg: 'bg-amber-50', border: 'border-amber-200' },
