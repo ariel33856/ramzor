@@ -95,6 +95,7 @@ export default function PersonDetailsView({ personId }) {
   const [incomeSources, setIncomeSources] = useState([]);
   const [uploadingPayslip, setUploadingPayslip] = useState(null);
   const [obligations, setObligations] = useState([]);
+  const [spouseObligationsDialogOpen, setSpouseObligationsDialogOpen] = useState(false);
   const [healthStatus, setHealthStatus] = useState('');
   const [education, setEducation] = useState('');
   const [documentationRecords, setDocumentationRecords] = useState([]);
@@ -2099,7 +2100,7 @@ export default function PersonDetailsView({ personId }) {
           <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {spouseId && linkedSpouse && (
               <button
-                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}&tab=obligations`}
+                onClick={() => setSpouseObligationsDialogOpen(true)}
                 className="w-full bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4 hover:bg-blue-100 transition-colors cursor-pointer text-left"
               >
                 <p className="text-sm font-semibold text-blue-900">
@@ -2929,6 +2930,68 @@ export default function PersonDetailsView({ personId }) {
           </div>
         )}
       </div>
+
+      {/* Spouse Obligations Dialog */}
+      <Dialog open={spouseObligationsDialogOpen} onOpenChange={setSpouseObligationsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>התחייבויות של {linkedSpouse?.first_name} {linkedSpouse?.last_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {linkedSpouse?.custom_data?.obligations && linkedSpouse.custom_data.obligations.length > 0 ? (
+              linkedSpouse.custom_data.obligations.map((obligation, index) => (
+                <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-gray-900">
+                      {obligation.type}
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3">
+                    <div>
+                      <Label className="text-xs">שם המוסד</Label>
+                      <Input 
+                        value={obligation.institution_name || ''}
+                        readOnly
+                        placeholder="שם הבנק/מוסד"
+                        className="h-8 bg-gray-50"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">סכום יתרה</Label>
+                      <Input 
+                        value={obligation.balance ? parseFloat(obligation.balance).toLocaleString('he-IL') : ''}
+                        readOnly
+                        placeholder="0"
+                        className="h-8 bg-gray-50"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">החזר חודשי</Label>
+                      <Input 
+                        value={obligation.monthly_payment ? parseFloat(obligation.monthly_payment).toLocaleString('he-IL') : ''}
+                        readOnly
+                        placeholder="0"
+                        className="h-8 bg-gray-50"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">הערות</Label>
+                      <Input 
+                        value={obligation.notes || ''}
+                        readOnly
+                        placeholder="הערות"
+                        className="h-8 bg-gray-50"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-8">אין התחייבויות</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Create Property Dialog */}
       <Dialog open={createPropertyDialogOpen} onOpenChange={setCreatePropertyDialogOpen}>
