@@ -2,7 +2,7 @@ import {
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
   FolderOpen, MessageCircle, Contact, Calculator, CreditCard,
-  Shield, Package, DollarSign, Calendar, Briefcase, Home
+  Shield, Package, DollarSign, Calendar, Briefcase, Home, Send
 } from 'lucide-react';
 
 export const tabs = [
@@ -19,6 +19,7 @@ export const tabs = [
   { id: 'profiles', label: 'פרופילים', icon: Users, gradient: 'from-teal-500 to-teal-600', bg: 'bg-teal-50', border: 'border-teal-200' },
   { id: 'metrics', label: 'מדדים', icon: TrendingUp, gradient: 'from-rose-500 to-rose-600', bg: 'bg-rose-50', border: 'border-rose-200' },
   { id: 'dashboards', label: 'דשבורדים', icon: LayoutDashboard, gradient: 'from-violet-500 to-violet-600', bg: 'bg-violet-50', border: 'border-violet-200' },
+  { id: 'submissions', label: 'הגשות', icon: Send, gradient: 'from-rose-500 to-pink-600', bg: 'bg-rose-50', border: 'border-rose-200' },
   { id: 'documents', label: 'מסמכים', icon: FolderOpen, gradient: 'from-sky-500 to-sky-600', bg: 'bg-sky-50', border: 'border-sky-200' },
   { id: 'tracking', label: 'תיעוד התקשרות', icon: MessageCircle, gradient: 'from-lime-500 to-lime-600', bg: 'bg-lime-50', border: 'border-lime-200' },
   { id: 'contacts', label: 'אנשי קשר', icon: Contact, gradient: 'from-fuchsia-500 to-fuchsia-600', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
@@ -41,6 +42,7 @@ export const pageMapping = {
   'profiles': 'CaseProfiles',
   'metrics': 'CaseMetrics',
   'dashboards': 'CaseDashboards',
+  'submissions': 'CaseSubmissions',
   'documents': 'CaseDocuments',
   'tracking': 'CaseTracking',
   'contacts': 'CaseContacts',
