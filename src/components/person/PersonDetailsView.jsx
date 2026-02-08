@@ -611,7 +611,7 @@ export default function PersonDetailsView({ personId }) {
               { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700', borderColor: 'border-green-400', bottomBorderColor: 'border-b-green-400' },
               { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400', bottomBorderColor: 'border-b-rose-400' },
               { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', borderColor: 'border-purple-400', bottomBorderColor: 'border-b-purple-400' },
-              { id: 'health', label: 'מסמכים', activeBg: 'bg-cyan-50', activeText: 'text-cyan-700', borderColor: 'border-cyan-400', bottomBorderColor: 'border-b-cyan-400' },
+              { id: 'health', label: 'מצב בריאותי והשכלה', activeBg: 'bg-cyan-50', activeText: 'text-cyan-700', borderColor: 'border-cyan-400', bottomBorderColor: 'border-b-cyan-400' },
               { id: 'transactions', label: 'עסקאות', activeBg: 'bg-amber-50', activeText: 'text-black', borderColor: 'border-black', bottomBorderColor: 'border-b-black' },
             ];
             const activeTabDef = tabDefs.find(t => t.id === activeTab);
@@ -1218,7 +1218,7 @@ export default function PersonDetailsView({ personId }) {
           {/* Field 2 Panel */}
           <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
           <div className="flex items-center gap-2 flex-wrap">
-          <Label className="text-sm font-medium whitespace-nowrap">שדה 2</Label>
+          <Label className="text-sm font-medium whitespace-nowrap">מצב בריאותי</Label>
           <Input
             value={basicData.field_2 || ''}
             onChange={(e) => handleBasicDataChange('field_2', e.target.value)}
