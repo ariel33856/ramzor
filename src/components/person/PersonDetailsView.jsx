@@ -601,7 +601,7 @@ export default function PersonDetailsView({ personId }) {
               { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700', borderColor: 'border-green-400', bottomBorderColor: 'border-b-green-400' },
               { id: 'obligations', label: 'התחייבויות', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400', bottomBorderColor: 'border-b-rose-400' },
               { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', borderColor: 'border-purple-400', bottomBorderColor: 'border-b-purple-400' },
-              { id: 'transactions', label: 'עסקאות', activeBg: 'bg-pink-50', activeText: 'text-pink-700', borderColor: 'border-pink-400', bottomBorderColor: 'border-b-pink-400' },
+              { id: 'transactions', label: 'עסקאות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', borderColor: 'border-amber-400', bottomBorderColor: 'border-b-amber-400' },
             ];
             const activeTabDef = tabDefs.find(t => t.id === activeTab);
             const activeBottomBorder = activeTabDef?.bottomBorderColor || '';
@@ -2653,7 +2653,7 @@ export default function PersonDetailsView({ personId }) {
                     };
 
                     return (
-                      <div key={transaction.id} className="bg-white rounded-xl shadow-sm border-2 border-pink-200 p-6">
+                      <div key={transaction.id} className="bg-white rounded-xl shadow-sm border-2 border-amber-200 p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div>
                             <h3 className="text-lg font-bold text-gray-900">
