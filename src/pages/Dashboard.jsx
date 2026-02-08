@@ -515,7 +515,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden p-1">
+      <div className="flex-1 overflow-hidden p-0">
         {/* Cases Content */}
         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
