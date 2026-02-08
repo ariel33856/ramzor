@@ -710,18 +710,32 @@ export default function PersonDetailsView({ personId }) {
             </div>
           </div>
         </div>
-        <div className="mr-auto flex items-center gap-2 flex-wrap">
-          {linkedAccountsData.length > 0 ? (
-            <>
-              {linkedAccountsData.filter(account => {
-                const currentCaseId = new URLSearchParams(window.location.search).get('id');
-                return account.id === currentCaseId;
-              }).map(account => {
-                const currentCaseId = new URLSearchParams(window.location.search).get('id');
-                const currentLink = linkedAccounts.find(acc => 
-                  typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
-                );
-                let currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
+        <Button
+          onClick={() => setAccountsPropertiesDialogOpen(true)}
+          className="mr-auto bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700"
+        >
+          חשבונות ונכסים
+        </Button>
+        </div>
+
+        {/* Accounts & Properties Dialog */}
+        <Dialog open={accountsPropertiesDialogOpen} onOpenChange={setAccountsPropertiesDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>חשבונות ונכסים משויכים</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+           {linkedAccountsData.length > 0 ? (
+             <>
+               {linkedAccountsData.filter(account => {
+                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                 return account.id === currentCaseId;
+               }).map(account => {
+                 const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                 const currentLink = linkedAccounts.find(acc => 
+                   typeof acc === 'string' ? acc === currentCaseId : acc.case_id === currentCaseId
+                 );
+                 let currentRelationshipType = currentLink && typeof currentLink === 'object' ? currentLink.relationship_type : relationshipType;
                 
                 // התאם את סוג הזיקה המוצג למין
                 if (currentRelationshipType === 'ערב' || currentRelationshipType === 'ערבה') {
