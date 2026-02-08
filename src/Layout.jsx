@@ -153,6 +153,23 @@ export default function Layout({ children, currentPageName }) {
     staleTime: 30000
   });
 
+  const { data: linkedContacts = [] } = useQuery({
+    queryKey: ['linked-contacts', caseId],
+    queryFn: async () => {
+      if (!caseId) return [];
+      const allPersons = await base44.entities.Person.list();
+      return allPersons.filter(person => {
+        if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
+        return person.linked_accounts.some(acc => 
+          typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
+        );
+      });
+    },
+    enabled: !!caseId && currentPageName === 'CasePersonal',
+    staleTime: 30000,
+    refetchOnWindowFocus: false
+  });
+
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
 
   const linkToAccountMutation = useMutation({
