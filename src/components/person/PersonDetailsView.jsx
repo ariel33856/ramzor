@@ -332,9 +332,14 @@ export default function PersonDetailsView({ personId }) {
   };
 
   const handleBasicDataChange = (field, value) => {
-    const updatedData = { ...basicData, [field]: value };
-    setBasicData(updatedData);
-    updatePersonMutation.mutate(updatedData);
+    setBasicData(prev => ({ ...prev, [field]: value }));
+    
+    if (basicDataTimeoutRef.current) {
+      clearTimeout(basicDataTimeoutRef.current);
+    }
+    basicDataTimeoutRef.current = setTimeout(() => {
+      updatePersonMutation.mutate({ [field]: value });
+    }, 800);
   };
 
   const handleLinkToAccount = (accountId) => {
