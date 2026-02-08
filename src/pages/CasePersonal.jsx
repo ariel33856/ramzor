@@ -383,8 +383,8 @@ export default function CasePersonal() {
   }
 
   return (
-    <div className="relative">
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-3">
+    <div className="relative h-full overflow-hidden flex flex-col">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-3">
         <div className="flex items-center gap-2 flex-wrap">
           <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
           {linkedContacts.length > 0 && (() => {
