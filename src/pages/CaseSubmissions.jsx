@@ -71,13 +71,7 @@ export default function CaseSubmissions() {
             </div>
           ))}
         </div>
-      ) : submissions.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <Send className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">טרם נוספו הגשות לחשבון זה</p>
-          <p className="text-gray-400 text-sm mt-1">לחץ על "הגשה חדשה" כדי להגיש בקשה לבנק</p>
-        </div>
-      ) : (
+      ) : submissions.length === 0 ? null : (
         <div className="space-y-3">
           {submissions.map(sub => (
             <SubmissionCard
