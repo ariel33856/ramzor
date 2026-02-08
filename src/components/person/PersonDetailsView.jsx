@@ -98,6 +98,7 @@ export default function PersonDetailsView({ personId }) {
   const obligationsTimeoutRef = React.useRef(null);
   const basicDataTimeoutRef = React.useRef(null);
   const customDataTimeoutRef = React.useRef(null);
+  const latestCustomDataRef = React.useRef(null);
   const [createPropertyDialogOpen, setCreatePropertyDialogOpen] = useState(false);
   const [propertyFormData, setPropertyFormData] = useState({
     address: '',
