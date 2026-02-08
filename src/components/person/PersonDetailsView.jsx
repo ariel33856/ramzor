@@ -723,21 +723,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
       )}
       
-      <div className="flex gap-4 items-center mt-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => {
-            const newPhones = [...additionalPhones, ''];
-            setAdditionalPhones(newPhones);
-            saveCustomData({ additional_phones: newPhones });
-          }}
-        >
-          <Plus className="w-4 h-4" />
-        </Button>
       </div>
-          </div>
 
       <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
       <div className="flex items-start gap-2 flex-wrap">
