@@ -36,7 +36,6 @@ import CaseCalculator from './CaseCalculator';
 import CasePayments from './CasePayments';
 import CaseInsurance from './CaseInsurance';
 import CaseProducts from './CaseProducts';
-import CaseAccount from './CaseAccount';
 import CaseProperty from './CaseProperty';
 import CaseSubmissions from './CaseSubmissions';
 
