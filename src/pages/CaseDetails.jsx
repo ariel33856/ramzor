@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import ContactButtons from '@/components/case/ContactButtons';
+import AddContactButton from '@/components/case/AddContactButton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
@@ -439,20 +440,25 @@ export default function CaseDetails() {
                     {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
                   </h2>
                 </div>
-                {activeTab === 'personal' && linkedContacts.length > 0 && (
+                {activeTab === 'personal' && (
                   <>
-                    <span className="text-gray-400">|</span>
-                    <ContactButtons
-                      linkedContacts={linkedContacts}
-                      caseId={caseId}
-                      activeContactId={activeContactId}
-                      onContactClick={(contactId) => {
-                        setActiveContactId(contactId);
-                        if (window.changeCaseContact) {
-                          window.changeCaseContact(contactId);
-                        }
-                      }}
-                    />
+                    {linkedContacts.length > 0 && (
+                      <>
+                        <span className="text-gray-400">|</span>
+                        <ContactButtons
+                          linkedContacts={linkedContacts}
+                          caseId={caseId}
+                          activeContactId={activeContactId}
+                          onContactClick={(contactId) => {
+                            setActiveContactId(contactId);
+                            if (window.changeCaseContact) {
+                              window.changeCaseContact(contactId);
+                            }
+                          }}
+                        />
+                      </>
+                    )}
+                    <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
                   </>
                 )}
               </div>
