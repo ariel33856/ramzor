@@ -2602,7 +2602,7 @@ export default function PersonDetailsView({ personId }) {
 
         {/* Tab Content: Transactions */}
         {activeTab === 'transactions' && (
-          <div className="p-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          <div className="p-6 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             <div className="flex items-center justify-end mb-4">
               <Button
                 onClick={() => {
