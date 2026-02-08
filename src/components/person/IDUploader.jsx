@@ -891,15 +891,47 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
       <div className={`grid grid-cols-4 md:grid-cols-8 gap-3 p-4 rounded-xl ${extractedData ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-200'}`}>
         <div>
           <Label className="text-xs text-gray-600">ת.ז</Label>
-          <Input value={extractedData?.id_number || ''} readOnly className="bg-white" />
+          <Input 
+            value={extractedData?.id_number || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, id_number: e.target.value };
+              setExtractedData(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
+            }}
+            className="bg-white" 
+          />
         </div>
         <div>
           <Label className="text-xs text-gray-600">תאריך הנפקה</Label>
-          <Input value={extractedData?.id_issue_date || ''} readOnly className="bg-white" />
+          <Input 
+            value={extractedData?.id_issue_date || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, id_issue_date: e.target.value };
+              setExtractedData(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
+            }}
+            placeholder="DD-MM-YYYY"
+            className="bg-white" 
+          />
         </div>
         <div>
           <Label className="text-xs text-gray-600">תוקף</Label>
-          <Input value={extractedData?.id_expiry_date || ''} readOnly className="bg-white" />
+          <Input 
+            value={extractedData?.id_expiry_date || ''} 
+            onChange={(e) => {
+              const updatedData = { ...extractedData, id_expiry_date: e.target.value };
+              setExtractedData(updatedData);
+              if (onDataExtracted && typeof onDataExtracted === 'function') {
+                onDataExtracted(updatedData);
+              }
+            }}
+            placeholder="DD-MM-YYYY"
+            className="bg-white" 
+          />
         </div>
 
         <div>
