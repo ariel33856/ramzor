@@ -182,7 +182,13 @@ export default function CaseDetails() {
                   return (
                     <motion.button
                       key={tab.id}
-                      onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onClick={() => {
+                        if (isActive) {
+                          window.location.href = createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`;
+                        } else {
+                          setActiveTab(tab.id);
+                        }
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
@@ -231,7 +237,13 @@ export default function CaseDetails() {
                   return (
                     <motion.button
                       key={tab.id}
-                      onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onClick={() => {
+                        if (isActive) {
+                          window.location.href = createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`;
+                        } else {
+                          setActiveTab(tab.id);
+                        }
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
@@ -280,7 +292,13 @@ export default function CaseDetails() {
                   return (
                     <motion.button
                       key={tab.id}
-                      onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onClick={() => {
+                        if (isActive) {
+                          window.location.href = createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`;
+                        } else {
+                          setActiveTab(tab.id);
+                        }
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
@@ -329,7 +347,13 @@ export default function CaseDetails() {
                   return (
                     <motion.button
                       key={tab.id}
-                      onClick={() => setActiveTab(isActive ? null : tab.id)}
+                      onClick={() => {
+                        if (isActive) {
+                          window.location.href = createPageUrl(pageMapping[tab.id]) + `?id=${caseId}`;
+                        } else {
+                          setActiveTab(tab.id);
+                        }
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`
