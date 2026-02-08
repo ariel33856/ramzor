@@ -198,9 +198,10 @@ export default function PersonDetailsView({ personId }) {
 
   const updatePersonMutation = useMutation({
     mutationFn: async (data) => {
-      // If updating custom_data, fetch fresh person data first to avoid overwriting
+      // Fetch fresh person data to avoid stale overwrites
+      const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+      
       if (data.custom_data) {
-        const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
         data = {
           ...data,
           custom_data: {
@@ -209,6 +210,17 @@ export default function PersonDetailsView({ personId }) {
           }
         };
       }
+      
+      // Normalize linked_accounts: convert old string format to object format
+      const linkedAcc = data.linked_accounts || freshPerson?.linked_accounts;
+      if (linkedAcc && Array.isArray(linkedAcc)) {
+        data.linked_accounts = linkedAcc.map(acc => 
+          typeof acc === 'string' 
+            ? { case_id: acc, relationship_type: 'לווה' }
+            : acc
+        );
+      }
+      
       return base44.entities.Person.update(personId, data);
     },
     onSuccess: () => {
