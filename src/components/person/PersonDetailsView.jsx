@@ -1670,9 +1670,7 @@ export default function PersonDetailsView({ personId }) {
                    const value = e.target.value;
                    if (value === '' || (/^\d{1,2}$/.test(value))) {
                      setNumSiblings(value);
-                     updatePersonMutation.mutate({ 
-                       custom_data: { ...(person?.custom_data || {}), num_siblings: value }
-                     });
+                     saveCustomData({ num_siblings: value });
                    }
                  }}
                  className="w-12 text-center h-8 bg-white" 
