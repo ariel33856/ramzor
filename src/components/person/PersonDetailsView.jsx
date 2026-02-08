@@ -1215,10 +1215,25 @@ export default function PersonDetailsView({ personId }) {
           >
             להצגה במודול אנשי קשר
           </Button>
-        </div>
-      </div>
-      </div>
-      </div>
+          </div>
+          </div>
+
+          <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
+          <div className="flex items-center gap-4 flex-wrap">
+          <Label className="text-sm font-medium whitespace-nowrap">חיווי אשראי</Label>
+          <Input
+            value={creditIndicator}
+            onChange={(e) => {
+              setCreditIndicator(e.target.value);
+              saveCustomData({ credit_indicator: e.target.value });
+            }}
+            placeholder="הזן חיווי אשראי"
+            className="w-64"
+          />
+          </div>
+          </div>
+          </div>
+          </div>
         )}
 
         {/* Tab Content: Identity */}
