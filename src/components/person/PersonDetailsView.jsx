@@ -1321,9 +1321,7 @@ export default function PersonDetailsView({ personId }) {
                 <Label className="text-sm whitespace-nowrap">מין</Label>
                 <Select value={gender} onValueChange={(value) => {
                   setGender(value);
-                  updatePersonMutation.mutate({
-                    custom_data: { ...(person?.custom_data || {}), gender: value }
-                  });
+                  saveCustomData({ gender: value });
                 }}>
                   <SelectTrigger className="h-8 bg-white w-auto min-w-20">
                     <SelectValue placeholder="בחר"/>
