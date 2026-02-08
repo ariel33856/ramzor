@@ -2183,7 +2183,6 @@ export default function PersonDetailsView({ personId }) {
         {activeTab === 'properties' && (
           <div className="p-6 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">נכסים</h2>
           <div className="flex gap-2">
             <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
               <DialogTrigger asChild>
