@@ -58,7 +58,6 @@ const pageComponents = {
   payments: CasePayments,
   insurance: CaseInsurance,
   products: CaseProducts,
-  account: CaseAccount,
   property: CaseProperty,
   submissions: CaseSubmissions
 };
