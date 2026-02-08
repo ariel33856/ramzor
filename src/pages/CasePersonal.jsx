@@ -480,7 +480,7 @@ export default function CasePersonal() {
                   };
 
                   return (
-                    <div key={`couple-${contact.id}-${partner.id}`} className="flex items-center gap-2">
+                    <div key={`couple-${contact.id}-${partner.id}`} className="border-2 border-green-300 rounded-lg p-2 bg-green-50/30">
                       <div className="flex items-center gap-1">
                         <div className="flex flex-col items-center">
                           <button onClick={() => moveContactToTop(contact.id)} className={`${getButtonClass(contact)} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
