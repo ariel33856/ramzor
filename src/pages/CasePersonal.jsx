@@ -11,6 +11,7 @@ import AddContactButton from '@/components/case/AddContactButton';
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  const isFullPage = window.location.pathname.includes('CasePersonal');
   const queryClient = useQueryClient();
   const [sortedContacts, setSortedContacts] = useState([]);
   const [activeContactId, setActiveContactId] = useState(null);
@@ -187,17 +188,19 @@ export default function CasePersonal() {
 
   return (
     <div className="relative">
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-2 flex items-center gap-2 flex-wrap">
-        {linkedContacts.length > 0 && (
-          <ContactButtons
-            linkedContacts={linkedContacts}
-            caseId={caseId}
-            activeContactId={activeContactId}
-            onContactClick={(contactId) => moveContactToTop(contactId)}
-          />
-        )}
-        <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
-      </div>
+      {isFullPage && (
+        <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-2 flex items-center gap-2 flex-wrap">
+          {linkedContacts.length > 0 && (
+            <ContactButtons
+              linkedContacts={linkedContacts}
+              caseId={caseId}
+              activeContactId={activeContactId}
+              onContactClick={(contactId) => moveContactToTop(contactId)}
+            />
+          )}
+          <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
+        </div>
+      )}
 
       <div className="space-y-4 p-1">
         {sortedContacts.map((contact) => (
