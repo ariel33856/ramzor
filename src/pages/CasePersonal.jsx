@@ -447,13 +447,13 @@ export default function CasePersonal() {
                     <React.Fragment key={`couple-${contact.id}-${partner.id}`}>
                       <div className="flex items-center gap-1">
                         <div className="flex flex-col items-center">
-                          <button onClick={() => moveContactToTop(contact.id)} className={`${getButtonClass(contact)} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg scale-105' : ''}`}>
+                          <button onClick={() => moveContactToTop(contact.id)} className={`${getButtonClass(contact)} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                             <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                           </button>
                         </div>
                         <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                         <div className="flex flex-col items-center">
-                          <button onClick={() => moveContactToTop(partner.id)} className={`${getButtonClass(partner)} ${activeContactId === partner.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg scale-105' : ''}`}>
+                          <button onClick={() => moveContactToTop(partner.id)} className={`${getButtonClass(partner)} ${activeContactId === partner.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                             <span className="font-semibold">{partner.first_name} {partner.last_name}</span>
                           </button>
                         </div>
@@ -483,7 +483,7 @@ export default function CasePersonal() {
                   return (
                     <React.Fragment key={contact.id}>
                       <div className="flex flex-col items-center">
-                        <button onClick={() => moveContactToTop(contact.id)} className={`${buttonClass} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg scale-105' : ''}`}>
+                        <button onClick={() => moveContactToTop(contact.id)} className={`${buttonClass} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                           <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
                           {displayRelType && <span className="text-xs opacity-90 mt-0.5">{displayRelType}</span>}
                         </button>
