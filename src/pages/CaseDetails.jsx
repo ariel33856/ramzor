@@ -38,6 +38,7 @@ import CaseInsurance from './CaseInsurance';
 import CaseProducts from './CaseProducts';
 import CaseAccount from './CaseAccount';
 import CaseProperty from './CaseProperty';
+import CaseSubmissions from './CaseSubmissions';
 
 const pageComponents = {
   personal: CasePersonal,
@@ -59,7 +60,8 @@ const pageComponents = {
   insurance: CaseInsurance,
   products: CaseProducts,
   account: CaseAccount,
-  property: CaseProperty
+  property: CaseProperty,
+  submissions: CaseSubmissions
 };
 
 export default function CaseDetails() {
@@ -250,7 +252,7 @@ export default function CaseDetails() {
                 ניהול וארגון
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['notes', 'property', 'data', 'status', 'workflow', 'calendar', 'documents'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['notes', 'property', 'data', 'status', 'workflow', 'calendar', 'documents', 'submissions'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
