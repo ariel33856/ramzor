@@ -1241,6 +1241,13 @@ export default function PersonDetailsView({ personId }) {
             placeholder="שדה נוסף"
             className="text-xl font-bold w-40"
           />
+          <Label className="text-sm font-medium whitespace-nowrap">שדה נוסף 2</Label>
+          <Input
+            value={basicData.additional_field_2 || ''}
+            onChange={(e) => handleBasicDataChange('additional_field_2', e.target.value)}
+            placeholder="שדה נוסף 2"
+            className="text-xl font-bold w-40"
+          />
           </div>
           </div>
           </div>
