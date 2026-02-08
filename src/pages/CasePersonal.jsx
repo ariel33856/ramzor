@@ -126,15 +126,30 @@ export default function CasePersonal() {
       if (currentIds !== newIds) {
         setSortedContacts(linkedContacts);
       }
+      // אם אין activeContactId או הוא לא קיים ברשימה
       if (!activeContactId || !linkedContacts.find(c => c.id === activeContactId)) {
+        // בדוק אם יש lastPersonId שתקף
         const lastPersonId = localStorage.getItem('lastOpenedPersonId');
-        const contactToShow = lastPersonId && linkedContacts.find(c => c.id === lastPersonId)
-          ? linkedContacts.find(c => c.id === lastPersonId)
-          : linkedContacts[0];
-        setActiveContactId(contactToShow.id);
+        const validContact = lastPersonId && linkedContacts.find(c => c.id === lastPersonId);
+        
+        if (validContact) {
+          setActiveContactId(validContact.id);
+        } else {
+          // אחרת תשתמש ב-אחרון בעדיפות ל-לווה הראשי
+          const mainBorrower = linkedBorrowers.length > 0 ? linkedBorrowers[0] : null;
+          if (mainBorrower?._person) {
+            const mainBorrowerId = mainBorrower._person.id;
+            if (linkedContacts.find(c => c.id === mainBorrowerId)) {
+              setActiveContactId(mainBorrowerId);
+              return;
+            }
+          }
+          // אם אין לווה ראשי, בחר את הראשון בעדיפות
+          setActiveContactId(linkedContacts[0]?.id);
+        }
       }
     }
-  }, [linkedContacts]);
+  }, [linkedContacts, linkedBorrowers]);
 
   React.useEffect(() => {
     if (contactDialogOpen) {
