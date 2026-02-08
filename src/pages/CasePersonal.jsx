@@ -410,34 +410,38 @@ export default function CasePersonal() {
               // בדיקה אם יש spouse_id ב-custom_data
               const spouseId = contact.custom_data?.spouse_id;
               if (spouseId) {
-                const partner = linkedContacts.find(c => c.id === spouseId && !displayedIds.has(c.id));
-                if (partner) {
-                  // ודא שהגבר מוצג ראשון
-                  const male = contact.custom_data?.gender === 'male' ? contact : partner;
-                  const female = contact.custom_data?.gender === 'male' ? partner : contact;
-                  couples.push({ contact: male, partner: female });
-                  displayedIds.add(contact.id);
-                  displayedIds.add(partner.id);
-                  return;
-                }
+               const partner = linkedContacts.find(c => c.id === spouseId && !displayedIds.has(c.id));
+               if (partner) {
+                 // ודא שהגבר מוצג ראשון (gender יכול להיות 'male' או 'female')
+                 const contactGender = contact.custom_data?.gender || 'male';
+                 const partnerGender = partner.custom_data?.gender || 'male';
+                 const male = contactGender === 'male' ? contact : partner;
+                 const female = contactGender === 'male' ? partner : contact;
+                 couples.push({ contact: male, partner: female });
+                 displayedIds.add(contact.id);
+                 displayedIds.add(partner.id);
+                 return;
+               }
               }
-              
+
               // בדיקה לפי relationship_type
               const relType = getRelationshipType(contact);
               if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
-                const partner = linkedContacts.find(c => {
-                  if (c.id === contact.id || displayedIds.has(c.id)) return false;
-                  const pRelType = getRelationshipType(c);
-                  return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
-                });
-                if (partner) {
-                  // ודא שהגבר מוצג ראשון
-                  const male = contact.custom_data?.gender === 'male' ? contact : partner;
-                  const female = contact.custom_data?.gender === 'male' ? partner : contact;
-                  couples.push({ contact: male, partner: female });
-                  displayedIds.add(contact.id);
-                  displayedIds.add(partner.id);
-                }
+               const partner = linkedContacts.find(c => {
+                 if (c.id === contact.id || displayedIds.has(c.id)) return false;
+                 const pRelType = getRelationshipType(c);
+                 return pRelType === 'בן זוג' || pRelType === 'בת זוג' || pRelType === 'בן/בת זוג';
+               });
+               if (partner) {
+                 // ודא שהגבר מוצג ראשון (gender יכול להיות 'male' או 'female')
+                 const contactGender = contact.custom_data?.gender || 'male';
+                 const partnerGender = partner.custom_data?.gender || 'male';
+                 const male = contactGender === 'male' ? contact : partner;
+                 const female = contactGender === 'male' ? partner : contact;
+                 couples.push({ contact: male, partner: female });
+                 displayedIds.add(contact.id);
+                 displayedIds.add(partner.id);
+               }
               }
             });
 
