@@ -135,6 +135,15 @@ export default function CasePersonal() {
     });
   };
 
+  React.useEffect(() => {
+    window.changeCaseContact = (contactId) => {
+      moveContactToTop(contactId);
+    };
+    return () => {
+      window.changeCaseContact = null;
+    };
+  }, []);
+
   const filteredBorrowers = allBorrowers.filter(borrower => 
     borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     borrower.client_id?.includes(searchTerm) ||

@@ -995,7 +995,25 @@ export default function PersonDetailsView({ personId }) {
           {spouseId && linkedSpouse ? (
             <div className="flex items-center gap-0">
               <Button 
-                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
+                onClick={() => {
+                  // Get current case ID
+                  const currentCaseId = new URLSearchParams(window.location.search).get('id');
+                  
+                  // Check if spouse is linked to the current account
+                  const isLinkedToCurrentAccount = linkedSpouse.linked_accounts?.some(link => 
+                    typeof link === 'string' ? link === currentCaseId : link.case_id === currentCaseId
+                  );
+                  
+                  if (isLinkedToCurrentAccount && currentCaseId) {
+                    // Navigate within CasePersonal - trigger contact change
+                    if (window.changeCaseContact) {
+                      window.changeCaseContact(spouseId);
+                    }
+                  } else {
+                    // Navigate to PersonDetails (contacts module)
+                    window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`;
+                  }
+                }}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 whitespace-nowrap cursor-pointer rounded-l-none"
               >
                 {gender === 'male' ? 'בת זוג: ' : 'בן זוג: '}{linkedSpouse.first_name} {linkedSpouse.last_name}
