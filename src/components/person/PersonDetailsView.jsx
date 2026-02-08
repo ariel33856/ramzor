@@ -732,6 +732,12 @@ export default function PersonDetailsView({ personId }) {
 
                 return (
                 <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
+                  <Button 
+                    onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
+                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-l-lg"
+                  >
+                    חשבון משויך: {account.client_name} {account.account_number}
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className={`whitespace-nowrap rounded-l-lg ${
@@ -799,12 +805,6 @@ export default function PersonDetailsView({ personId }) {
                       }} className="justify-center bg-gradient-to-r from-cyan-400 to-sky-400 text-white hover:from-cyan-500 hover:to-sky-500">{gender === 'male' ? 'בן זוג' : 'בת זוג'}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Button 
-                    onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-l-lg"
-                  >
-                    חשבון משויך: {account.client_name} {account.account_number}
-                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
