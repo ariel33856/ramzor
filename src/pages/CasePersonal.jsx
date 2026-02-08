@@ -128,7 +128,11 @@ export default function CasePersonal() {
   }, [contactDialogOpen]);
 
   const moveContactToTop = (contactId) => {
+    const currentScroll = window.scrollY;
     setActiveContactId(contactId);
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScroll, behavior: 'instant' });
+    });
   };
 
   const filteredBorrowers = allBorrowers.filter(borrower => 
