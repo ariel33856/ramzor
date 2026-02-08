@@ -445,7 +445,7 @@ export default function CasePersonal() {
                   };
 
                   return (
-                    <React.Fragment key={`couple-${contact.id}-${partner.id}`}>
+                    <div key={`couple-${contact.id}-${partner.id}`} className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
                         <div className="flex flex-col items-center">
                           <button onClick={() => moveContactToTop(contact.id)} className={`${getButtonClass(contact)} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
@@ -459,8 +459,8 @@ export default function CasePersonal() {
                           </button>
                         </div>
                       </div>
-                      {coupleIdx < couples.length - 1 || otherContacts.length > 0 && <span className="text-gray-400">•</span>}
-                    </React.Fragment>
+                      {(coupleIdx < couples.length - 1 || otherContacts.length > 0) && <span className="text-gray-400">•</span>}
+                    </div>
                   );
                 })}
                 {otherContacts.map((contact, idx) => {
@@ -482,7 +482,7 @@ export default function CasePersonal() {
                     (relationshipType === 'ערב ממשכן' || relationshipType === 'ערבה ממשכנת') ? 'text-purple-500' : 'text-gray-500';
 
                   return (
-                    <React.Fragment key={contact.id}>
+                    <div key={contact.id} className="flex items-center gap-2">
                       <div className="flex flex-col items-center">
                         <button onClick={() => moveContactToTop(contact.id)} className={`${buttonClass} ${activeContactId === contact.id ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}>
                           <span className="font-semibold">{contact.first_name} {contact.last_name}</span>
@@ -490,7 +490,7 @@ export default function CasePersonal() {
                         </button>
                       </div>
                       {idx < otherContacts.length - 1 && <span className="text-gray-400">•</span>}
-                    </React.Fragment>
+                    </div>
                   );
                 })}
               </div>
