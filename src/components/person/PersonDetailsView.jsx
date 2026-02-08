@@ -427,7 +427,7 @@ export default function PersonDetailsView({ personId }) {
       await base44.entities.Person.update(personId, { custom_data: mergedCustomData });
       queryClient.invalidateQueries({ queryKey: ['person', personId] });
       latestCustomDataRef.current = null;
-    }, 600);
+    }, 300);
   }, [personId, queryClient]);
 
   React.useEffect(() => {
