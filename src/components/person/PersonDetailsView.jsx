@@ -1171,8 +1171,6 @@ export default function PersonDetailsView({ personId }) {
           </Button>
         </div>
       </div>
-      </div>
-      </div>
         )}
 
         {/* Tab Content: Identity */}
