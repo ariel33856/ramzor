@@ -552,9 +552,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden p-1">
-        {/* Cases Content */}
-        {isLoading ? (
+      <div className="flex-1 overflow-hidden flex flex-col p-1">
+        {/* Tabs */}
+        <Tabs defaultValue="table" className="flex flex-col flex-1 overflow-hidden">
+          <TabsList className="bg-white border-b border-gray-200 rounded-none w-full justify-start pl-3">
+            <TabsTrigger value="table">טבלה</TabsTrigger>
+            <TabsTrigger value="cards">כרטיסיות</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="table" className="flex-1 overflow-hidden">
+         {/* Cases Content */}
+         {isLoading ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="overflow-x-auto max-h-[75vh]">
               <table className="w-full">
