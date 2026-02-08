@@ -653,9 +653,7 @@ export default function PersonDetailsView({ personId }) {
                 onClick={() => {
                   const newPhones = [...additionalPhones, ''];
                   setAdditionalPhones(newPhones);
-                  updatePersonMutation.mutate({
-                    custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
-                  });
+                  saveCustomData({ additional_phones: newPhones });
                 }}
               >
                 <Plus className="w-4 h-4" />
@@ -670,9 +668,7 @@ export default function PersonDetailsView({ personId }) {
                     const newPhones = [...additionalPhones];
                     newPhones[index] = e.target.value;
                     setAdditionalPhones(newPhones);
-                    updatePersonMutation.mutate({
-                      custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
-                    });
+                    saveCustomData({ additional_phones: newPhones });
                   }}
                   placeholder="טלפון נוסף"
                   className="text-xl font-bold w-40"
@@ -684,9 +680,7 @@ export default function PersonDetailsView({ personId }) {
                   onClick={() => {
                     const newPhones = additionalPhones.filter((_, i) => i !== index);
                     setAdditionalPhones(newPhones);
-                    updatePersonMutation.mutate({
-                      custom_data: { ...(person?.custom_data || {}), additional_phones: newPhones }
-                    });
+                    saveCustomData({ additional_phones: newPhones });
                   }}
                 >
                   <Trash2 className="w-4 h-4" />
