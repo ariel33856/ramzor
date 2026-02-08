@@ -23,6 +23,12 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
+    if (caseId) {
+      localStorage.setItem('lastOpenedCaseId', caseId);
+    }
+  }, [caseId]);
+
+  React.useEffect(() => {
     if (activeContactId) {
       localStorage.setItem('lastOpenedPersonId', activeContactId);
     }
