@@ -6,7 +6,12 @@ export default function Index() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(createPageUrl('Dashboard'));
+    const lastCaseId = localStorage.getItem('lastOpenedCaseId');
+    if (lastCaseId) {
+      navigate(createPageUrl('CasePersonal') + `?id=${lastCaseId}`);
+    } else {
+      navigate(createPageUrl('Dashboard'));
+    }
   }, [navigate]);
 
   return null;
