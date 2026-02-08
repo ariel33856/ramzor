@@ -386,6 +386,7 @@ export default function CasePersonal() {
     <div className="relative">
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-6 py-3">
         <div className="flex items-center gap-2 flex-wrap">
+          <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון ({linkedContacts.length})</div>
           {linkedContacts.length > 0 && (() => {
             const couples = [];
             const displayedIds = new Set();
@@ -536,11 +537,8 @@ export default function CasePersonal() {
                 })}
               </div>
             );
-            })()}
-            {linkedContacts.length === 0 && (
-            <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון (0)</div>
-            )}
-            <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+          })()}
+          <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="bg-gradient-to-r from-green-400 to-purple-600 hover:from-green-500 hover:to-purple-700 border-green-500 text-white font-medium">
                 <LinkIcon className="w-4 h-4 ml-1" />
