@@ -1,39 +1,17 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, User, Save, Link as LinkIcon, Heart, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import LinkedBorrowerCard from '@/components/case/LinkedBorrowerCard';
 import PersonDetailsView from '@/components/person/PersonDetailsView';
+import ContactButtons from '@/components/case/ContactButtons';
+import AddContactButton from '@/components/case/AddContactButton';
 
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
-  const [contactDialogOpen, setContactDialogOpen] = useState(false);
-  const [contactSearchTerm, setContactSearchTerm] = useState('');
-  const [showNewContactForm, setShowNewContactForm] = useState(false);
-  const [newContactData, setNewContactData] = useState({
-    first_name: '',
-    last_name: '',
-    id_number: '',
-    phone: '',
-    email: ''
-  });
   const [sortedContacts, setSortedContacts] = useState([]);
   const [activeContactId, setActiveContactId] = useState(null);
 
@@ -78,16 +56,6 @@ export default function CasePersonal() {
     enabled: !!caseData?.linked_borrowers
   });
 
-  const { data: allBorrowers = [] } = useQuery({
-    queryKey: ['all-borrowers'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
-  });
-
-  const { data: allContacts = [] } = useQuery({
-    queryKey: ['all-contacts'],
-    queryFn: () => base44.entities.Person.filter({ is_archived: false })
-  });
-
   const { data: linkedContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
@@ -120,13 +88,6 @@ export default function CasePersonal() {
     }
   }, [linkedContacts]);
 
-  React.useEffect(() => {
-    if (contactDialogOpen) {
-      setShowNewContactForm(false);
-      setContactSearchTerm('');
-    }
-  }, [contactDialogOpen]);
-
   const moveContactToTop = (contactId) => {
     const currentScroll = window.scrollY;
     setActiveContactId(contactId);
@@ -144,105 +105,6 @@ export default function CasePersonal() {
     };
   }, []);
 
-  const filteredBorrowers = allBorrowers.filter(borrower => 
-    borrower.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    borrower.client_id?.includes(searchTerm) ||
-    borrower.client_phone?.includes(searchTerm)
-  );
-
-  const filteredContacts = allContacts.filter(contact => 
-    contact.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    contact.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    contact.id_number?.includes(searchTerm) ||
-    contact.phone?.includes(searchTerm)
-  );
-
-  const linkBorrowerMutation = useMutation({
-    mutationFn: (borrowerId) => {
-      const currentBorrowers = caseData.linked_borrowers || [];
-      return base44.entities.MortgageCase.update(caseId, { 
-        linked_borrowers: [...currentBorrowers, borrowerId] 
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
-      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
-      setDialogOpen(false);
-      setSearchTerm('');
-    }
-  });
-
-  const linkContactAsBorrowerMutation = useMutation({
-    mutationFn: async (contact) => {
-      // יצירת לווה חדש עם קישור לאיש הקשר המקורי
-      const newBorrower = await base44.entities.MortgageCase.create({
-        person_id: contact.id,
-        is_archived: true,
-        module_id: null,
-        status: 'new',
-        urgency: 'medium'
-      });
-      
-      // שיוך הלווה החדש לחשבון הנוכחי
-      const currentBorrowers = caseData.linked_borrowers || [];
-      await base44.entities.MortgageCase.update(caseId, { 
-        linked_borrowers: [...currentBorrowers, newBorrower.id] 
-      });
-      
-      return newBorrower;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
-      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-      queryClient.invalidateQueries({ queryKey: ['all-borrowers'] });
-      setDialogOpen(false);
-      setSearchTerm('');
-    }
-  });
-
-  const createContactAndLinkMutation = useMutation({
-    mutationFn: async (contactData) => {
-      // יצירת איש קשר חדש
-      const newContact = await base44.entities.Person.create({
-        ...contactData,
-        type: 'איש קשר',
-        is_archived: false
-      });
-      
-      // יצירת לווה חדש עם קישור לאיש הקשר
-      const newBorrower = await base44.entities.MortgageCase.create({
-        person_id: newContact.id,
-        is_archived: true,
-        module_id: null,
-        status: 'new',
-        urgency: 'medium'
-      });
-      
-      // שיוך הלווה החדש לחשבון הנוכחי
-      const currentBorrowers = caseData.linked_borrowers || [];
-      await base44.entities.MortgageCase.update(caseId, { 
-        linked_borrowers: [...currentBorrowers, newBorrower.id] 
-      });
-      
-      return newBorrower;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
-      queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
-      setDialogOpen(false);
-      setDialogStep('choose');
-      setNewContactData({
-        first_name: '',
-        last_name: '',
-        id_number: '',
-        phone: '',
-        email: ''
-      });
-    }
-  });
-
   const unlinkBorrowerMutation = useMutation({
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
@@ -254,65 +116,6 @@ export default function CasePersonal() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
-    }
-  });
-
-  const linkContactToAccountMutation = useMutation({
-    mutationFn: async (contactId) => {
-      const contact = await base44.entities.Person.filter({ id: contactId }).then(res => res[0]);
-      const currentAccounts = contact.linked_accounts || [];
-      
-      // המרת כל הקישורים הישנים (מחרוזות) לפורמט החדש (אובייקטים)
-      const normalizedAccounts = currentAccounts.map(acc => 
-        typeof acc === 'string' 
-          ? { case_id: acc, relationship_type: 'לווה' }
-          : acc
-      );
-      
-      // יצירת אובייקט זיקה חדש
-      const newLink = {
-        case_id: caseId,
-        relationship_type: 'לווה'
-      };
-      
-      return base44.entities.Person.update(contactId, {
-        linked_accounts: [...normalizedAccounts, newLink]
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
-      setContactDialogOpen(false);
-      setContactSearchTerm('');
-    }
-  });
-
-  const createNewContactAndLinkMutation = useMutation({
-    mutationFn: async (contactData) => {
-      const newContact = await base44.entities.Person.create({
-        ...contactData,
-        type: 'איש קשר',
-        is_archived: false,
-        linked_accounts: [{
-          case_id: caseId,
-          relationship_type: 'לווה'
-        }]
-      });
-      return newContact;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['linked-contacts'] });
-      queryClient.invalidateQueries({ queryKey: ['all-contacts'] });
-      setContactDialogOpen(false);
-      setShowNewContactForm(false);
-      setContactSearchTerm('');
-      setNewContactData({
-        first_name: '',
-        last_name: '',
-        id_number: '',
-        phone: '',
-        email: ''
-      });
     }
   });
 
@@ -384,6 +187,17 @@ export default function CasePersonal() {
 
   return (
     <div className="relative">
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm px-4 py-2 flex items-center gap-2 flex-wrap">
+        {linkedContacts.length > 0 && (
+          <ContactButtons
+            linkedContacts={linkedContacts}
+            caseId={caseId}
+            activeContactId={activeContactId}
+            onContactClick={(contactId) => moveContactToTop(contactId)}
+          />
+        )}
+        <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
+      </div>
 
       <div className="space-y-4 p-1">
         {sortedContacts.map((contact) => (
