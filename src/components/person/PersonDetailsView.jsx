@@ -444,6 +444,15 @@ export default function PersonDetailsView({ personId }) {
   }, [personId, queryClient]);
 
   React.useEffect(() => {
+    // Check if there's a tab parameter in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, []);
+
+  React.useEffect(() => {
     if (person) {
       setBasicData({
         first_name: person.first_name || '',
@@ -2090,7 +2099,7 @@ export default function PersonDetailsView({ personId }) {
           <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             {spouseId && linkedSpouse && (
               <button
-                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}`}
+                onClick={() => window.location.href = createPageUrl('PersonDetails') + `?id=${spouseId}&tab=obligations`}
                 className="w-full bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4 hover:bg-blue-100 transition-colors cursor-pointer text-left"
               >
                 <p className="text-sm font-semibold text-blue-900">
