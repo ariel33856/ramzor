@@ -541,6 +541,14 @@ export default function PersonDetailsView({ personId }) {
           setObligations(person.custom_data.obligations);
         }
 
+        // Load health status and education from custom_data
+        if (person.custom_data.health_status) {
+          setHealthStatus(person.custom_data.health_status);
+        }
+        if (person.custom_data.education) {
+          setEducation(person.custom_data.education);
+        }
+
         // Load relationship_type from linked_accounts based on current case
         const currentCaseId = new URLSearchParams(window.location.search).get('id');
         if (currentCaseId && person.linked_accounts) {
