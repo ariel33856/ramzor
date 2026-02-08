@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import ExternalContacts from '../components/transactions/ExternalContacts';
 
 const typeLabels = {
   purchase: 'רכישה',
@@ -39,7 +40,8 @@ export default function CaseTransactions() {
     seller_name: '',
     status: 'pending',
     commission: '',
-    notes: ''
+    notes: '',
+    external_contacts: []
   });
 
   const { data: caseData } = useQuery({
@@ -92,7 +94,8 @@ export default function CaseTransactions() {
       seller_name: '',
       status: 'pending',
       commission: '',
-      notes: ''
+      notes: '',
+      external_contacts: []
     });
     setEditingRecord(null);
   };
@@ -122,7 +125,8 @@ export default function CaseTransactions() {
       seller_name: record.seller_name || '',
       status: record.status || 'pending',
       commission: record.commission || '',
-      notes: record.notes || ''
+      notes: record.notes || '',
+      external_contacts: record.external_contacts || []
     });
     setDialogOpen(true);
   };
@@ -165,13 +169,14 @@ export default function CaseTransactions() {
               <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">סכום</th>
               <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">עמלה</th>
               <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">סטטוס</th>
+              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">אנשי קשר</th>
               <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">פעולות</th>
             </tr>
           </thead>
           <tbody>
             {filteredRecords.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center py-12 text-gray-400">
+                <td colSpan="9" className="text-center py-12 text-gray-400">
                   {!caseData?.property_id ? 'אין נכס משויך לחשבון זה' : 'אין עסקאות להצגה'}
                 </td>
               </tr>
@@ -202,6 +207,19 @@ export default function CaseTransactions() {
                     }`}>
                       {statusLabels[record.status]}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    {(record.external_contacts || []).length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {record.external_contacts.map((c, i) => (
+                          <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                            {c.name}{c.role ? ` (${c.role})` : ''}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-300">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2 justify-center">
@@ -274,6 +292,10 @@ export default function CaseTransactions() {
                 </SelectContent>
               </Select>
             </div>
+            <ExternalContacts
+              contacts={formData.external_contacts}
+              onChange={(contacts) => setFormData({ ...formData, external_contacts: contacts })}
+            />
             <div>
               <Label>הערות</Label>
               <Textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} />
