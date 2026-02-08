@@ -113,6 +113,38 @@ export default function CaseDashboards() {
     );
   }
 
+  const timeMetrics = useMemo(() => {
+    if (!caseData) return null;
+    const openDate = new Date(caseData.created_date);
+    const now = new Date();
+    const totalDays = Math.floor((now - openDate) / (1000 * 60 * 60 * 24));
+    const totalWeeks = Math.floor(totalDays / 7);
+    const totalMonths = Math.floor(totalDays / 30);
+
+    // זמן עד הגשה לבנק
+    const submissionStatuses = ['bank_submission', 'approved', 'completed'];
+    const isSubmitted = submissionStatuses.includes(caseData.status);
+    
+    // זמן עד אישור
+    const approvalStatuses = ['approved', 'completed'];
+    const isApproved = approvalStatuses.includes(caseData.status);
+    const isCompleted = caseData.status === 'completed';
+
+    // ציון מהירות - ככל שסיימו מהר יותר הציון גבוה יותר
+    let speedScore;
+    if (isCompleted) {
+      speedScore = totalDays <= 14 ? 100 : totalDays <= 30 ? 85 : totalDays <= 60 ? 65 : totalDays <= 90 ? 45 : 25;
+    } else if (isApproved) {
+      speedScore = totalDays <= 21 ? 90 : totalDays <= 45 ? 70 : totalDays <= 75 ? 50 : 30;
+    } else if (isSubmitted) {
+      speedScore = totalDays <= 14 ? 85 : totalDays <= 30 ? 65 : totalDays <= 60 ? 40 : 20;
+    } else {
+      speedScore = totalDays <= 7 ? 75 : totalDays <= 21 ? 55 : totalDays <= 45 ? 35 : 15;
+    }
+
+    return { openDate, totalDays, totalWeeks, totalMonths, speedScore, isSubmitted, isApproved, isCompleted };
+  }, [caseData]);
+
   return (
     <div className="p-2" dir="rtl">
       {scores && (
