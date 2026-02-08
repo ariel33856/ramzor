@@ -7,8 +7,10 @@ export default function Index() {
 
   useEffect(() => {
     const lastCaseId = localStorage.getItem('lastOpenedCaseId');
-    if (lastCaseId) {
+    const lastPersonId = localStorage.getItem('lastOpenedPersonId');
+    if (lastCaseId && lastPersonId) {
       navigate(createPageUrl('CasePersonal') + `?id=${lastCaseId}`);
+      // אחרי שנטוען את הדף, נתעדכן לאיש הקשר הנכון בעמוד עצמו
     } else {
       navigate(createPageUrl('Dashboard'));
     }

@@ -23,10 +23,10 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
-    if (caseId) {
-      localStorage.setItem('lastOpenedCaseId', caseId);
+    if (activeContactId) {
+      localStorage.setItem('lastOpenedPersonId', activeContactId);
     }
-  }, [caseId]);
+  }, [activeContactId]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [dialogStep, setDialogStep] = useState('choose'); // 'choose', 'contacts', 'new_contact'
@@ -121,7 +121,11 @@ export default function CasePersonal() {
         setSortedContacts(linkedContacts);
       }
       if (!activeContactId || !linkedContacts.find(c => c.id === activeContactId)) {
-        setActiveContactId(linkedContacts[0].id);
+        const lastPersonId = localStorage.getItem('lastOpenedPersonId');
+        const contactToShow = lastPersonId && linkedContacts.find(c => c.id === lastPersonId)
+          ? linkedContacts.find(c => c.id === lastPersonId)
+          : linkedContacts[0];
+        setActiveContactId(contactToShow.id);
       }
     }
   }, [linkedContacts]);
