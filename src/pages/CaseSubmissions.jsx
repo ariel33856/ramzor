@@ -11,7 +11,7 @@ export default function CaseSubmissions() {
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [editingSubmission, setEditingSubmission] = useState(null);
-  const [formOpen, setFormOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(true);
 
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ['submissions', caseId],
@@ -56,7 +56,7 @@ export default function CaseSubmissions() {
 
   return (
     <div className="p-2" dir="rtl">
-      {!formOpen && (
+      {!formOpen && submissions.length > 0 && (
         <div className="mb-3">
           <Button
             onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
