@@ -102,7 +102,8 @@ export default function CasePersonal() {
       });
     },
     enabled: !!caseId,
-    refetchInterval: 2000
+    staleTime: 30000,
+    refetchOnWindowFocus: false
   });
 
   React.useEffect(() => {
