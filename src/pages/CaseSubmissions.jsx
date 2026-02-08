@@ -56,7 +56,7 @@ export default function CaseSubmissions() {
 
   return (
     <div className="p-2" dir="rtl">
-      {!formOpen && submissions.length > 0 && (
+      {!formOpen && (
         <div className="mb-3">
           <Button
             onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
