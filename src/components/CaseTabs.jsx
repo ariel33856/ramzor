@@ -1,4 +1,3 @@
-
 import { 
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
@@ -50,7 +49,7 @@ export const pageMapping = {
   'payments': 'CasePayments',
   'insurance': 'CaseInsurance',
   'products': 'CaseProducts',
-  'account': 'CaseAccount',
+
   'property': 'CaseProperty',
   'transactions': 'CaseTransactions',
 };
