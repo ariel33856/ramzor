@@ -23,7 +23,6 @@ export default function CaseSubmissions() {
     mutationFn: (data) => base44.entities.Submission.create({ ...data, case_id: caseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', caseId] });
-      setFormOpen(false);
     }
   });
 
@@ -32,7 +31,6 @@ export default function CaseSubmissions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', caseId] });
       setEditingSubmission(null);
-      setFormOpen(false);
     }
   });
 
