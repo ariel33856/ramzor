@@ -16,6 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
 import IDUploader from './IDUploader';
+import BasicInfoCard from './BasicInfoCard';
 import { Upload } from 'lucide-react';
 
 
