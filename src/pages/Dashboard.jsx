@@ -827,9 +827,86 @@ export default function Dashboard() {
                 </tbody>
               </table>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+            </div>
+            )}
+            </TabsContent>
+
+            <TabsContent value="cards" className="flex-1 overflow-hidden">
+            <div className="overflow-y-auto h-full p-4">
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="h-48 bg-gray-200 rounded-lg animate-pulse" />
+                ))}
+              </div>
+            ) : filteredCases.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-16"
+              >
+                <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">אין תיקים להצגה</h3>
+                <p className="text-gray-400">התחל ביצירת תיק חדש או שנה את הסינון</p>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredCases.map((caseData, index) => {
+                  const linkedPersons = caseToPersonMap[caseData.id] || [];
+                  const linkedPerson = linkedPersons[0];
+
+                  return (
+                    <motion.div
+                      key={caseData.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.02 }}
+                      onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                      className="bg-white rounded-lg border-2 border-blue-200 p-4 cursor-pointer hover:shadow-lg hover:border-blue-400 transition-all"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <p className="text-xs text-gray-500">חשבון מס׳</p>
+                          <p className="text-lg font-bold text-blue-600">{caseData.account_number}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          caseData.status === 'approved' ? 'bg-green-100 text-green-700' :
+                          caseData.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                          caseData.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                          'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {statusLabels[caseData.status]}
+                        </span>
+                      </div>
+                      <div className="border-t border-gray-200 pt-3">
+                        <p className="text-sm font-semibold text-gray-900 mb-1">
+                          {linkedPerson?.last_name} {linkedPerson?.first_name}
+                        </p>
+                        <p className="text-xs text-gray-600 mb-3">{linkedPerson?.phone}</p>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-gray-600 pt-2 border-t border-gray-100">
+                        <span>דחיפות: <span className={`font-bold ${caseData.urgency === 'critical' ? 'text-red-600' : caseData.urgency === 'high' ? 'text-orange-600' : 'text-gray-600'}`}>{urgencyLabels[caseData.urgency]}</span></span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            archiveMutation.mutate(caseData.id);
+                          }}
+                          className="text-gray-500 hover:text-orange-600 hover:bg-orange-50 -m-2"
+                        >
+                          <Archive className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+            </div>
+            </TabsContent>
+            </Tabs>
+            </div>
+            </div>
+            );
+            }
