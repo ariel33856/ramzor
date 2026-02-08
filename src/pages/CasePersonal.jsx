@@ -536,8 +536,11 @@ export default function CasePersonal() {
                 })}
               </div>
             );
-          })()}
-          <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+            })()}
+            {linkedContacts.length === 0 && (
+            <div className="text-base font-semibold text-gray-700">אנשי קשר משויכים לחשבון (0)</div>
+            )}
+            <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="bg-gradient-to-r from-green-400 to-purple-600 hover:from-green-500 hover:to-purple-700 border-green-500 text-white font-medium">
                 <LinkIcon className="w-4 h-4 ml-1" />
