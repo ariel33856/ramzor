@@ -1229,10 +1229,9 @@ export default function PersonDetailsView({ personId }) {
           </div>
           </div>
           </div>
-          </div>
-        )}
+          )}
 
-        {/* Tab Content: Identity */}
+          {/* Tab Content: Identity */}
         {activeTab === 'identity' && (
           <div className="p-6 space-y-6 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
             <IDUploader 
