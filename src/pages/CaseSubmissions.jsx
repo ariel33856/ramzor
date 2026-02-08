@@ -56,17 +56,15 @@ export default function CaseSubmissions() {
 
   return (
     <div className="p-2" dir="rtl">
-      {!formOpen && (
-        <div className="mb-3">
-          <Button
-            onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
-            className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-lg"
-          >
-            <Plus className="w-5 h-5 ml-2" />
-            הוסף הגשה
-          </Button>
-        </div>
-      )}
+      <div className="mb-3">
+        <Button
+          onClick={() => { setEditingSubmission(null); setFormOpen(true); }}
+          className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-lg"
+        >
+          <Plus className="w-5 h-5 ml-2" />
+          הוסף הגשה
+        </Button>
+      </div>
 
       {formOpen && (
         <div className="bg-white rounded-xl border border-gray-200 p-4 mb-3">
