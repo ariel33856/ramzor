@@ -412,10 +412,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+    <div className="min-h-screen w-full bg-gray-50/50 flex flex-col overflow-hidden">
       {/* Filters */}
-      <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
-        <div className="mx-auto px-2 md:px-3">
+      <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-2 shadow-sm border-b border-gray-200">
+        <div className="px-2">
           <div className="flex flex-col md:flex-row gap-4">
             <Link to={createPageUrl('NewCase')}>
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/25">
