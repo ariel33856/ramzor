@@ -2918,7 +2918,6 @@ export default function PersonDetailsView({ personId }) {
           </form>
         </DialogContent>
       </Dialog>
-      </div>
       </>
       );
       }
