@@ -414,6 +414,42 @@ export default function Dashboard() {
 
   return (
     <div className="h-full bg-gray-50/50 flex flex-col overflow-hidden">
+      {/* Stats Cards */}
+      <div className="flex-shrink-0 p-3 bg-white border-b border-gray-100 shadow-sm">
+        <div className="mx-auto px-2 md:px-3">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <StatsCard 
+              title="סה״כ חשבונות" 
+              value={stats.total} 
+              icon={Briefcase}
+              color="bg-blue-50"
+              iconColor="text-blue-600"
+            />
+            <StatsCard 
+              title="בהמתנה למסמכים" 
+              value={stats.pending} 
+              icon={FileCheck}
+              color="bg-yellow-50"
+              iconColor="text-yellow-600"
+            />
+            <StatsCard 
+              title="דחופים" 
+              value={stats.critical} 
+              icon={AlertTriangle}
+              color="bg-red-50"
+              iconColor="text-red-600"
+            />
+            <StatsCard 
+              title="אושרו" 
+              value={stats.approved} 
+              icon={TrendingUp}
+              color="bg-green-50"
+              iconColor="text-green-600"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="flex-shrink-0 z-50 bg-gradient-to-r from-yellow-400 to-green-500 p-4 shadow-sm border-b border-gray-200">
         <div className="mx-auto px-2 md:px-3">
