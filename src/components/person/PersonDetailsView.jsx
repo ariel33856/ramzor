@@ -1234,6 +1234,13 @@ export default function PersonDetailsView({ personId }) {
             placeholder="דוח אשראי"
             className="text-xl font-bold w-40"
           />
+          <Label className="text-sm font-medium whitespace-nowrap">שדה נוסף</Label>
+          <Input
+            value={basicData.additional_field || ''}
+            onChange={(e) => handleBasicDataChange('additional_field', e.target.value)}
+            placeholder="שדה נוסף"
+            className="text-xl font-bold w-40"
+          />
           </div>
           </div>
           </div>
