@@ -399,6 +399,37 @@ export default function PersonDetailsView({ personId }) {
     prop.city?.toLowerCase().includes(propertySearchTerm.toLowerCase()))
   );
 
+  // Helper to save custom_data with debounce - always reads fresh from server
+  const saveCustomData = React.useCallback((customDataPatch) => {
+    if (customDataTimeoutRef.current) {
+      clearTimeout(customDataTimeoutRef.current);
+    }
+    // Merge patches
+    latestCustomDataRef.current = {
+      ...(latestCustomDataRef.current || {}),
+      ...customDataPatch
+    };
+    const mergedPatch = latestCustomDataRef.current;
+    
+    customDataTimeoutRef.current = setTimeout(async () => {
+      const freshPerson = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+      const freshCustomData = freshPerson?.custom_data || {};
+      const mergedCustomData = { ...freshCustomData, ...mergedPatch };
+      
+      // Handle nested id_upload_data merge
+      if (mergedPatch.id_upload_data && freshCustomData.id_upload_data) {
+        mergedCustomData.id_upload_data = {
+          ...freshCustomData.id_upload_data,
+          ...mergedPatch.id_upload_data
+        };
+      }
+      
+      await base44.entities.Person.update(personId, { custom_data: mergedCustomData });
+      queryClient.invalidateQueries({ queryKey: ['person', personId] });
+      latestCustomDataRef.current = null;
+    }, 600);
+  }, [personId, queryClient]);
+
   React.useEffect(() => {
     if (person) {
       setBasicData({
