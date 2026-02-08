@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 const bankLabels = {
   hapoalim: 'הפועלים',
@@ -44,6 +44,37 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
     tracks: []
   });
 
+  const timerRef = useRef(null);
+  const isFirstRender = useRef(true);
+
+  const saveData = useCallback((formData) => {
+    const data = {
+      ...formData,
+      loan_amount: formData.loan_amount ? Number(formData.loan_amount) : undefined,
+      loan_period_years: formData.loan_period_years ? Number(formData.loan_period_years) : undefined,
+      interest_rate: formData.interest_rate ? Number(formData.interest_rate) : undefined,
+      monthly_payment: formData.monthly_payment ? Number(formData.monthly_payment) : undefined,
+      tracks: (formData.tracks || []).map(t => ({
+        ...t,
+        amount: t.amount ? Number(t.amount) : undefined,
+        period_years: t.period_years ? Number(t.period_years) : undefined,
+        interest_rate: t.interest_rate ? Number(t.interest_rate) : undefined,
+        monthly_payment: t.monthly_payment ? Number(t.monthly_payment) : undefined,
+      }))
+    };
+    onSubmit(data);
+  }, [onSubmit]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => saveData(form), 600);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [form, saveData]);
+
   const updateField = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
   const addTrack = () => {
@@ -66,24 +97,6 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
       ...prev,
       tracks: prev.tracks.filter((_, i) => i !== index)
     }));
-  };
-
-  const handleSubmit = () => {
-    const data = {
-      ...form,
-      loan_amount: form.loan_amount ? Number(form.loan_amount) : undefined,
-      loan_period_years: form.loan_period_years ? Number(form.loan_period_years) : undefined,
-      interest_rate: form.interest_rate ? Number(form.interest_rate) : undefined,
-      monthly_payment: form.monthly_payment ? Number(form.monthly_payment) : undefined,
-      tracks: (form.tracks || []).map(t => ({
-        ...t,
-        amount: t.amount ? Number(t.amount) : undefined,
-        period_years: t.period_years ? Number(t.period_years) : undefined,
-        interest_rate: t.interest_rate ? Number(t.interest_rate) : undefined,
-        monthly_payment: t.monthly_payment ? Number(t.monthly_payment) : undefined,
-      }))
-    };
-    onSubmit(data);
   };
 
   return (
@@ -219,15 +232,7 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
         <Textarea value={form.notes} onChange={e => updateField('notes', e.target.value)} placeholder="הערות נוספות..." rows={2} />
       </div>
 
-      <div className="flex gap-2 justify-end pt-2">
-        <Button variant="outline" onClick={onCancel}>
-          <X className="w-4 h-4 ml-1" />
-          ביטול
-        </Button>
-        <Button onClick={handleSubmit} disabled={!form.bank} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-          שמור הגשה
-        </Button>
-      </div>
+
     </div>
   );
 }
