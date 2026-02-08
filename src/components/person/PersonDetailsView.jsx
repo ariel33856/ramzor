@@ -1213,8 +1213,10 @@ export default function PersonDetailsView({ personId }) {
           </Button>
         </div>
         </div>
+        </div>
+        </div>
 
-        <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-6">
+        <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mt-4">
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
@@ -1253,8 +1255,6 @@ export default function PersonDetailsView({ personId }) {
               />
             </div>
           </div>
-        </div>
-        </div>
         </div>
           )}
 
