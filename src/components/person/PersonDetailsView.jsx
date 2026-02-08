@@ -681,16 +681,7 @@ export default function PersonDetailsView({ personId }) {
                 </Button>
               </div>
             ))}
-            <div className="flex items-center gap-2">
-              <Label className="text-sm font-medium whitespace-nowrap">{personFields.email}</Label>
-              <Input
-                value={basicData.email}
-                onChange={(e) => handleBasicDataChange('email', e.target.value)}
-                placeholder={personFields.email}
-                className="text-xl font-bold w-40"
-              />
             </div>
-          </div>
         </div>
         <div className="mr-auto flex items-center gap-2 flex-wrap">
           {linkedAccountsData.length > 0 ? (
