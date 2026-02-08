@@ -417,7 +417,7 @@ export default function CaseDetails() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {activeTabData.label}
-                  {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> (מוטען...)</span>}
+                  {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
                 </h2>
               </div>
 
