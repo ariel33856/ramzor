@@ -958,15 +958,6 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           )}
-          {linkedPropertiesData.map(property => (
-            <Button 
-              key={property.id}
-              onClick={() => window.location.href = createPageUrl('PropertyDetails') + `?id=${property.id}`}
-              className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 whitespace-nowrap cursor-pointer"
-            >
-              נכס משויך: {property.address}, {property.city}
-            </Button>
-          ))}
           {linkedPropertiesData.length === 0 && (
             <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
               <DialogTrigger asChild>
