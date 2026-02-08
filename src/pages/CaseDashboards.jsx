@@ -203,6 +203,84 @@ export default function CaseDashboards() {
             </div>
           </div>
         </div>
+
+        {/* מדדי זמנים */}
+        {timeMetrics && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
+                <Clock className="w-5 h-5 text-indigo-600" />
+                ציר זמן
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-xl">
+                  <span className="text-sm font-medium text-gray-700">תאריך פתיחת תיק</span>
+                  <span className="text-sm font-bold text-indigo-700">{timeMetrics.openDate.toLocaleDateString('he-IL')}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm font-medium text-gray-700">ימים מפתיחה</span>
+                  <span className="text-sm font-bold text-gray-900">{timeMetrics.totalDays} ימים</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm font-medium text-gray-700">שבועות מפתיחה</span>
+                  <span className="text-sm font-bold text-gray-900">{timeMetrics.totalWeeks} שבועות</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm font-medium text-gray-700">חודשים מפתיחה</span>
+                  <span className="text-sm font-bold text-gray-900">{timeMetrics.totalMonths} חודשים</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
+                <Target className="w-5 h-5 text-orange-600" />
+                שלבי התקדמות
+              </h3>
+              <div className="space-y-3">
+                <div className={`flex justify-between items-center p-3 rounded-xl ${timeMetrics.isSubmitted ? 'bg-green-50' : 'bg-gray-50'}`}>
+                  <span className="text-sm font-medium text-gray-700">הוגש לבנק</span>
+                  <span className={`text-sm font-bold ${timeMetrics.isSubmitted ? 'text-green-600' : 'text-gray-400'}`}>
+                    {timeMetrics.isSubmitted ? '✓ הושלם' : 'ממתין'}
+                  </span>
+                </div>
+                <div className={`flex justify-between items-center p-3 rounded-xl ${timeMetrics.isApproved ? 'bg-green-50' : 'bg-gray-50'}`}>
+                  <span className="text-sm font-medium text-gray-700">אושר בבנק</span>
+                  <span className={`text-sm font-bold ${timeMetrics.isApproved ? 'text-green-600' : 'text-gray-400'}`}>
+                    {timeMetrics.isApproved ? '✓ הושלם' : 'ממתין'}
+                  </span>
+                </div>
+                <div className={`flex justify-between items-center p-3 rounded-xl ${timeMetrics.isCompleted ? 'bg-green-50' : 'bg-gray-50'}`}>
+                  <span className="text-sm font-medium text-gray-700">תיק הושלם</span>
+                  <span className={`text-sm font-bold ${timeMetrics.isCompleted ? 'text-green-600' : 'text-gray-400'}`}>
+                    {timeMetrics.isCompleted ? '✓ הושלם' : 'ממתין'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-teal-600" />
+                ציון מהירות טיפול
+              </h3>
+              <div className="flex flex-col items-center justify-center h-[calc(100%-3rem)] gap-3">
+                <div className="relative w-32 h-32">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                    <path d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" strokeWidth="3" />
+                    <path d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={timeMetrics.speedScore >= 70 ? '#10b981' : timeMetrics.speedScore >= 40 ? '#f59e0b' : '#ef4444'} strokeWidth="3" strokeDasharray={`${timeMetrics.speedScore}, 100`} strokeLinecap="round" />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-3xl font-black text-gray-900">{timeMetrics.speedScore}</span>
+                  </div>
+                </div>
+                <p className="text-sm font-semibold text-gray-600">
+                  {timeMetrics.speedScore >= 70 ? 'טיפול מהיר' : timeMetrics.speedScore >= 40 ? 'טיפול סביר' : 'טיפול איטי'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       )}
     </div>
   );
