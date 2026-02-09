@@ -152,11 +152,22 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
             return s + (parseFloat(inc.monthly_amount) || 0);
           }, 0);
         }, 0);
+        const totalObligations = linked.reduce((sum, person) => {
+          const obs = person.custom_data?.obligations;
+          if (!obs || !Array.isArray(obs)) return sum;
+          return sum + obs.reduce((s, ob) => s + (parseFloat(ob.monthly_payment) || 0), 0);
+        }, 0);
         return (
-          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-            <span className="text-xs font-medium text-green-700">סה״כ הכנסות משויכים:</span>
-            <span className="text-lg font-bold text-green-900">{totalIncome > 0 ? formatCurrency(Math.round(totalIncome)) : '—'}</span>
-          </div>
+          <>
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+              <span className="text-xs font-medium text-green-700">סה״כ הכנסות משויכים:</span>
+              <span className="text-lg font-bold text-green-900">{totalIncome > 0 ? formatCurrency(Math.round(totalIncome)) : '—'}</span>
+            </div>
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+              <span className="text-xs font-medium text-red-700">סה״כ התחייבויות קיימות:</span>
+              <span className="text-lg font-bold text-red-900">{totalObligations > 0 ? formatCurrency(Math.round(totalObligations)) : '—'}</span>
+            </div>
+          </>
         );
       })()}
       {/* אנשי קשר משויכים לבקשה */}
