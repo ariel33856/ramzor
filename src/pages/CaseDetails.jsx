@@ -252,7 +252,7 @@ export default function CaseDetails() {
                 ניהול
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['notes', 'property', 'status', 'workflow', 'calendar', 'documents', 'submissions'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['notes', 'property', 'status', 'workflow', 'calendar', 'documents', 'submissions', 'calculator'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
@@ -307,7 +307,7 @@ export default function CaseDetails() {
                 ניתוחים ומוצרים
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['calculator', 'payments', 'insurance', 'products', 'dashboards'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['payments', 'insurance', 'products', 'dashboards'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
