@@ -425,9 +425,8 @@ export default function CaseDetails() {
               ) : (
                 pageComponents[activeTab] && React.createElement(pageComponents[activeTab])
               )}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </div>
     </div>
   );
