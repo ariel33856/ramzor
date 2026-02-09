@@ -165,7 +165,7 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
                       <X className="w-3 h-3" />
                     </button>
                   ) : (
-                    <UserPlus className="w-3 h-3 text-gray-400" />
+                    <X className="w-4 h-4 text-red-500 font-bold" />
                   )}
                 </div>
               );
