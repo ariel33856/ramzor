@@ -427,6 +427,7 @@ export default function CaseDetails() {
               )}
             </div>
           )}
+
       </div>
     </div>
   );
