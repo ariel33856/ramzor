@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import ContactButtons from '@/components/case/ContactButtons';
 import AddContactButton from '@/components/case/AddContactButton';
+import ContactsSummaryView from '@/components/case/ContactsSummaryView';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
@@ -67,6 +68,7 @@ const pageComponents = {
 export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
   const [activeContactId, setActiveContactId] = useState(null);
+  const [showSummary, setShowSummary] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const isNew = urlParams.get('new') === 'true';
@@ -397,20 +399,37 @@ export default function CaseDetails() {
                           caseId={caseId}
                           activeContactId={activeContactId}
                           onContactClick={(contactId) => {
-                            setActiveContactId(contactId);
-                            if (window.changeCaseContact) {
-                              window.changeCaseContact(contactId);
-                            }
+                           setActiveContactId(contactId);
+                           setShowSummary(false);
+                           if (window.changeCaseContact) {
+                             window.changeCaseContact(contactId);
+                           }
                           }}
                         />
                       </>
                     )}
+                    <button
+                      onClick={() => {
+                        setShowSummary(true);
+                        setActiveContactId(null);
+                        if (window.changeCaseContact) {
+                          window.changeCaseContact(null);
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 ${showSummary ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}
+                    >
+                      סיכום
+                    </button>
                     <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
                   </>
                 )}
               </div>
 
-              {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
+              {activeTab === 'personal' && showSummary ? (
+                <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
+              ) : (
+                pageComponents[activeTab] && React.createElement(pageComponents[activeTab])
+              )}
             </motion.div>
           )}
         </AnimatePresence>
