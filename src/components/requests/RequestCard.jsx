@@ -143,34 +143,6 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
       <div className="mt-3 pt-3 border-t border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-medium text-gray-500">אנשי קשר משויכים</span>
-          <Popover open={addContactOpen} onOpenChange={setAddContactOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-6 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2">
-                <UserPlus className="w-3 h-3 ml-1" />
-                שייך
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-56 p-2" align="end">
-              {availableContacts.length === 0 ? (
-                <p className="text-xs text-gray-400 text-center py-2">אין אנשי קשר נוספים</p>
-              ) : (
-                <div className="space-y-1 max-h-48 overflow-y-auto">
-                  {availableContacts.map(person => (
-                    <button
-                      key={person.id}
-                      onClick={() => addPerson(person.id)}
-                      className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-blue-50 text-right transition-colors"
-                    >
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="w-3 h-3 text-blue-600" />
-                      </div>
-                      <span className="text-sm text-gray-900">{person.first_name} {person.last_name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </PopoverContent>
-          </Popover>
         </div>
         {linkedPersons.length > 0 ? (
           <div className="flex flex-wrap gap-2">
