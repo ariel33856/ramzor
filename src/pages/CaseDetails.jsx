@@ -87,11 +87,17 @@ export default function CaseDetails() {
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
       const allPersons = await base44.entities.Person.list();
+      const seen = new Set();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
-        return person.linked_accounts.some(acc =>
+        const isLinked = person.linked_accounts.some(acc =>
           typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
         );
+        if (isLinked && !seen.has(person.id)) {
+          seen.add(person.id);
+          return true;
+        }
+        return false;
       });
     },
     enabled: !!caseId,
