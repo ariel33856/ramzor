@@ -180,7 +180,7 @@ export default function Layout({ children, currentPageName }) {
 
   const casePageTitles = {
     'CasePersonal': 'אנשי קשר משויכים לחשבון',
-    'CaseContact': 'צור קשר',
+    'CaseContact': 'התקשרות',
     'CaseSummary': 'תקציר התיק',
     'CaseNotes': 'הערות מיוחדות',
     'CaseData': 'נתונים',
