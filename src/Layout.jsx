@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
   const casePages = ['CaseDetails', 'CasePersonal', 'CaseContact', 'CaseSummary', 'CaseNotes', 'CaseData', 
                      'CaseWorkflow', 'CaseCalendar', 'CaseStatus', 'CaseProfiles', 'CaseMetrics', 'CaseDashboards', 
                      'CaseDocuments', 'CaseTracking', 'CaseContacts', 'CaseCalculator', 'CasePayments', 
-                     'CaseInsurance', 'CaseAccount', 'CaseProperty', 'CaseTransactions', 'CaseSubmissions', 'ArchiveCaseDetails'];
+                     'CaseInsurance', 'CaseAccount', 'CaseProperty', 'CaseTransactions', 'CaseSubmissions', 'CaseRequests', 'ArchiveCaseDetails'];
   const caseId = casePages.includes(currentPageName) ? urlParams.get('id') : null;
   const personId = currentPageName === 'PersonDetails' ? urlParams.get('id') : null;
 
@@ -200,7 +200,8 @@ export default function Layout({ children, currentPageName }) {
     'CaseAccount': 'חשבון',
     'CaseProperty': 'נכס',
     'CaseTransactions': 'עסקאות',
-    'CaseSubmissions': 'הגשות'
+    'CaseSubmissions': 'הגשות',
+    'CaseRequests': 'בקשות'
   };
 
   // Don't show layout for client portal

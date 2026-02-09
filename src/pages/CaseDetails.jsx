@@ -38,6 +38,7 @@ import CaseInsurance from './CaseInsurance';
 import CaseProducts from './CaseProducts';
 import CaseProperty from './CaseProperty';
 import CaseSubmissions from './CaseSubmissions';
+import CaseRequests from './CaseRequests';
 
 const pageComponents = {
   personal: CasePersonal,
@@ -59,7 +60,8 @@ const pageComponents = {
   insurance: CaseInsurance,
   products: CaseProducts,
   property: CaseProperty,
-  submissions: CaseSubmissions
+  submissions: CaseSubmissions,
+  requests: CaseRequests
 };
 
 export default function CaseDetails() {
