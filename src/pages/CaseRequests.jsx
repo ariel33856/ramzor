@@ -29,6 +29,8 @@ export default function CaseRequests() {
       setDialogOpen(false);
       setAmount('');
       setRequestType('');
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
     }
   });
 
@@ -37,9 +39,26 @@ export default function CaseRequests() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
-  const handleSubmit = () => {
-    if (!amount || !requestType) return;
-    createMutation.mutate({ case_id: caseId, amount: Number(amount), request_type: requestType });
+  const autoSaveTimer = useRef(null);
+  const [saved, setSaved] = useState(false);
+
+  const autoSave = (newAmount, newType) => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    setSaved(false);
+    if (!newAmount || !newType) return;
+    autoSaveTimer.current = setTimeout(() => {
+      createMutation.mutate({ case_id: caseId, amount: Number(newAmount), request_type: newType });
+    }, 800);
+  };
+
+  const handleAmountChange = (val) => {
+    setAmount(val);
+    autoSave(val, requestType);
+  };
+
+  const handleTypeChange = (val) => {
+    setRequestType(val);
+    autoSave(amount, val);
   };
 
   const formatCurrency = (val) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(val);
@@ -61,11 +80,11 @@ export default function CaseRequests() {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סכום</label>
-              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => handleAmountChange(e.target.value)} />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
-              <Select value={requestType} onValueChange={setRequestType}>
+              <Select value={requestType} onValueChange={handleTypeChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="בחר סוג בקשה" />
                 </SelectTrigger>
@@ -75,9 +94,12 @@ export default function CaseRequests() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSubmit} disabled={!amount || !requestType} className="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
-              הוסף בקשה
-            </Button>
+            {saved && (
+              <div className="flex items-center gap-1 text-green-600 text-sm">
+                <Check className="w-4 h-4" />
+                נשמר
+              </div>
+            )}
           </div>
         </div>
       ) : (
@@ -112,11 +134,11 @@ export default function CaseRequests() {
           <div className="space-y-4 pt-2">
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סכום</label>
-              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => handleAmountChange(e.target.value)} />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
-              <Select value={requestType} onValueChange={setRequestType}>
+              <Select value={requestType} onValueChange={handleTypeChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="בחר סוג בקשה" />
                 </SelectTrigger>
@@ -126,9 +148,12 @@ export default function CaseRequests() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSubmit} disabled={!amount || !requestType} className="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
-              הוסף בקשה
-            </Button>
+            {saved && (
+              <div className="flex items-center gap-1 text-green-600 text-sm">
+                <Check className="w-4 h-4" />
+                נשמר
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
