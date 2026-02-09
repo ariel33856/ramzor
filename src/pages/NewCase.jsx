@@ -110,7 +110,7 @@ export default function NewCase() {
     const person = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
     const linkedAccounts = person.linked_accounts || [];
     await base44.entities.Person.update(personId, {
-      linked_accounts: [...linkedAccounts, newCase.id]
+      linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
@@ -174,7 +174,7 @@ export default function NewCase() {
 
     // Link person to account
     await base44.entities.Person.update(newPerson.id, {
-      linked_accounts: [newCase.id]
+      linked_accounts: [{ case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
