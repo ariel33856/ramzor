@@ -194,7 +194,7 @@ export default function CaseDetails() {
             {/* מידע אישי */}
             <div className="border-2 border-blue-400 rounded-xl p-4 bg-blue-200 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
-                מידע אישי
+                מידע
               </button>
               <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['personal', 'contact', 'summary', 'tracking', 'data', 'requests', 'profiles', 'metrics'].includes(tab.id)).map((tab) => {
