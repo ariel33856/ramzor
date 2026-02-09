@@ -711,15 +711,19 @@ export default function Dashboard() {
                             </Popover>
                           </div>
                           <div
-                            className={`absolute top-0 left-0 w-1 h-full cursor-col-resize hover:bg-blue-400 ${
-                              resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-100'
+                            className={`absolute top-0 left-0 w-[5px] h-full cursor-col-resize group/resize z-10 ${
+                              resizingColumn === fieldId ? 'bg-blue-500' : ''
                             }`}
                             onMouseDown={(e) => {
                               e.preventDefault();
                               const th = e.currentTarget.parentElement;
                               handleColumnResize(fieldId, e.clientX, th.offsetWidth);
                             }}
-                          />
+                          >
+                            <div className={`w-[3px] h-full mx-auto rounded-full transition-colors ${
+                              resizingColumn === fieldId ? 'bg-blue-500' : 'bg-gray-200 group-hover/resize:bg-blue-400'
+                            }`} />
+                          </div>
                         </th>
                       );
                     })}
@@ -759,7 +763,7 @@ export default function Dashboard() {
                               ) : (
                                 <span className="text-gray-600">{value}</span>
                               )}
-                              <div className="absolute top-0 left-0 w-1 h-full bg-gray-100 pointer-events-none" />
+                              <div className="absolute top-0 left-0 w-[3px] h-full bg-gray-100 pointer-events-none" />
                             </td>
                           );
                         })}
