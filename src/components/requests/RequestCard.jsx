@@ -122,7 +122,7 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
         </div>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">סכום</label>
-          <Input type="number" className="h-9" value={amount} onChange={(e) => handleAmountChange(e.target.value)} placeholder="סכום..." />
+          <Input type="text" className="h-9" value={amount ? Number(amount).toLocaleString('he-IL') : ''} onChange={(e) => { const raw = e.target.value.replace(/,/g, ''); if (raw === '' || /^\d+$/.test(raw)) handleAmountChange(raw); }} placeholder="סכום..." />
         </div>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">תקופה בחודשים</label>
