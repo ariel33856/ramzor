@@ -25,6 +25,18 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
   const [saved, setSaved] = useState(false);
   const saveTimer = useRef(null);
   const [addContactOpen, setAddContactOpen] = useState(false);
+  const didAutoLink = useRef(false);
+
+  // Auto-link all case contacts if none are linked yet
+  React.useEffect(() => {
+    if (didAutoLink.current) return;
+    if (caseContacts.length === 0) return;
+    if (linkedPersonIds.length > 0) return;
+    didAutoLink.current = true;
+    const allIds = caseContacts.map(p => p.id);
+    setLinkedPersonIds(allIds);
+    onUpdate(request.id, { linked_person_ids: allIds });
+  }, [caseContacts]);
 
   const doSave = (data) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
