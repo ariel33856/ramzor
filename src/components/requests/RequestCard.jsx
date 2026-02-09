@@ -137,6 +137,28 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
         <span className="text-xs font-medium text-indigo-700">החזר חודשי משוער:</span>
         <span className="text-lg font-bold text-indigo-900">{monthly ? formatCurrency(monthly) : '—'}</span>
       </div>
+      {(() => {
+        const linked = caseContacts.filter(p => linkedPersonIds.includes(p.id));
+        const totalIncome = linked.reduce((sum, person) => {
+          const sources = person.custom_data?.income_sources;
+          if (!sources || !Array.isArray(sources)) return sum;
+          return sum + sources.reduce((s, inc) => {
+            if (inc.type === 'תלוש משכורת-שכיר') {
+              const m1 = parseFloat(inc.month_1_salary) || 0;
+              const m2 = parseFloat(inc.month_2_salary) || 0;
+              const m3 = parseFloat(inc.month_3_salary) || 0;
+              return s + (m1 + m2 + m3) / 3;
+            }
+            return s + (parseFloat(inc.monthly_amount) || 0);
+          }, 0);
+        }, 0);
+        return (
+          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+            <span className="text-xs font-medium text-green-700">סה״כ הכנסות משויכים:</span>
+            <span className="text-lg font-bold text-green-900">{totalIncome > 0 ? formatCurrency(Math.round(totalIncome)) : '—'}</span>
+          </div>
+        );
+      })()}
       {/* אנשי קשר משויכים לבקשה */}
       <div className="mt-3 pt-3 border-t border-gray-100">
         <div className="flex items-center justify-between mb-2">
