@@ -46,13 +46,57 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     return <div className="text-center py-8 text-gray-400">אין אנשי קשר לסיכום</div>;
   }
 
-  // Sort contacts: לווה first, then ערב, then others
-  const sortedContacts = [...linkedContacts].sort((a, b) => {
-    const relA = getRelationship(a, caseId);
-    const relB = getRelationship(b, caseId);
-    const order = { 'לווה': 0, 'בן זוג': 1, 'בת זוג': 1, 'בן/בת זוג': 1, 'ערב': 2, 'ערבה': 2, 'ערב ממשכן': 3, 'ערבה ממשכנת': 3 };
-    return (order[relA] ?? 9) - (order[relB] ?? 9);
-  });
+  // Group contacts: couples together (male first), then others sorted by relationship
+  const sortedContacts = (() => {
+    const result = [];
+    const displayedIds = new Set();
+
+    // First find couples (via spouse_id or both being בן/בת זוג)
+    linkedContacts.forEach(contact => {
+      if (displayedIds.has(contact.id)) return;
+      const spouseId = contact.custom_data?.spouse_id;
+      if (spouseId) {
+        const partner = linkedContacts.find(c => c.id === spouseId && !displayedIds.has(c.id));
+        if (partner) {
+          const contactGender = contact.custom_data?.gender || 'male';
+          const male = contactGender === 'male' ? contact : partner;
+          const female = contactGender === 'male' ? partner : contact;
+          result.push(male, female);
+          displayedIds.add(contact.id);
+          displayedIds.add(partner.id);
+          return;
+        }
+      }
+      const relType = getRelationship(contact, caseId);
+      if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+        const partner = linkedContacts.find(c => {
+          if (c.id === contact.id || displayedIds.has(c.id)) return false;
+          const pRel = getRelationship(c, caseId);
+          return pRel === 'בן זוג' || pRel === 'בת זוג' || pRel === 'בן/בת זוג';
+        });
+        if (partner) {
+          const contactGender = contact.custom_data?.gender || 'male';
+          const male = contactGender === 'male' ? contact : partner;
+          const female = contactGender === 'male' ? partner : contact;
+          result.push(male, female);
+          displayedIds.add(contact.id);
+          displayedIds.add(partner.id);
+        }
+      }
+    });
+
+    // Then add remaining contacts sorted by relationship type
+    const remaining = linkedContacts
+      .filter(c => !displayedIds.has(c.id))
+      .sort((a, b) => {
+        const relA = getRelationship(a, caseId);
+        const relB = getRelationship(b, caseId);
+        const order = { 'לווה': 0, 'ערב': 1, 'ערבה': 1, 'ערב ממשכן': 2, 'ערבה ממשכנת': 2 };
+        return (order[relA] ?? 9) - (order[relB] ?? 9);
+      });
+
+    return [...result, ...remaining];
+  })();
 
   const tabDefs = [
     { id: 'general', label: 'פרטים אישיים', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400', bottomBorderColor: 'border-b-blue-400' },
