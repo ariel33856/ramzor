@@ -7,6 +7,7 @@ import LinkedBorrowerCard from '@/components/case/LinkedBorrowerCard';
 import PersonDetailsView from '@/components/person/PersonDetailsView';
 import ContactButtons from '@/components/case/ContactButtons';
 import AddContactButton from '@/components/case/AddContactButton';
+import ContactsSummaryView from '@/components/case/ContactsSummaryView';
 
 export default function CasePersonal() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,6 +16,7 @@ export default function CasePersonal() {
   const queryClient = useQueryClient();
   const [sortedContacts, setSortedContacts] = useState([]);
   const [activeContactId, setActiveContactId] = useState(null);
+  const [showSummary, setShowSummary] = useState(false);
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
@@ -92,6 +94,7 @@ export default function CasePersonal() {
   const moveContactToTop = (contactId) => {
     const currentScroll = window.scrollY;
     setActiveContactId(contactId);
+    setShowSummary(false);
     requestAnimationFrame(() => {
       window.scrollTo({ top: currentScroll, behavior: 'instant' });
     });
@@ -202,16 +205,25 @@ export default function CasePersonal() {
               onContactClick={(contactId) => moveContactToTop(contactId)}
             />
           )}
+          <button
+            onClick={() => { setShowSummary(true); setActiveContactId(null); }}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 ${showSummary ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}
+          >
+            סיכום
+          </button>
           <AddContactButton caseId={caseId} linkedContacts={linkedContacts} />
         </div>
       )}
 
       <div className="space-y-4 p-1">
+        {showSummary && (
+          <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
+        )}
         {sortedContacts.map((contact) => (
           <div 
             key={contact.id} 
             id={`contact-${contact.id}`}
-            style={{ display: contact.id === activeContactId ? 'block' : 'none' }}
+            style={{ display: !showSummary && contact.id === activeContactId ? 'block' : 'none' }}
           >
             <PersonDetailsView personId={contact.id} />
           </div>
