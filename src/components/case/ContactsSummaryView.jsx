@@ -124,7 +124,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   const numChildren = contact.custom_data?.id_upload_data?.num_children || contact.custom_data?.num_children || 0;
                   return (
                     <tr key={contact.id} className="hover:bg-blue-50/50">
-                      <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                      <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                       <td className={tdClass}>{rel || '-'}</td>
                       <td className={tdClass}>{contact.id_number || '-'}</td>
                       <td className={tdClass}>{age || '-'}</td>
@@ -171,7 +171,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   const numChildren = idData.num_children || contact.custom_data?.num_children || 0;
                   return (
                     <tr key={contact.id} className="hover:bg-amber-50/50">
-                      <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                      <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                       <td className={tdClass}>{rel || '-'}</td>
                       <td className={tdClass}>{contact.id_number || '-'}</td>
                       <td className={tdClass}>{birthDate || '-'}</td>
@@ -212,7 +212,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   if (incomeSources.length === 0) {
                     return [(
                       <tr key={contact.id} className="hover:bg-green-50/50">
-                        <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                        <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                         <td className={tdClass}>{rel || '-'}</td>
                         <td className={tdClass} colSpan={3}>אין מקורות הכנסה</td>
                       </tr>
@@ -224,7 +224,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                       : parseFloat(inc.monthly_amount) || 0;
                     return (
                       <tr key={`${contact.id}-${i}`} className="hover:bg-green-50/50">
-                        {i === 0 && <td className={`${tdClass} font-semibold`} rowSpan={incomeSources.length}>{contact.first_name} {contact.last_name}</td>}
+                        {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
                         {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}>{rel || '-'}</td>}
                         <td className={tdClass}>{inc.type}</td>
                         <td className={tdClass}>{inc.employer_name || '-'}</td>
@@ -302,7 +302,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   if (obligations.length === 0) {
                     return [(
                       <tr key={contact.id} className="hover:bg-rose-50/50">
-                        <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                        <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                         <td className={tdClass}>{rel || '-'}</td>
                         <td className={`${tdClass} font-bold text-green-700`}>{formatCurrency(contactIncome)} ₪</td>
                         <td className={tdClass} colSpan={3}>אין התחייבויות</td>
@@ -313,7 +313,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   }
                   return obligations.map((ob, i) => (
                     <tr key={`${contact.id}-${i}`} className="hover:bg-rose-50/50">
-                      {i === 0 && <td className={`${tdClass} font-semibold`} rowSpan={rowCount}>{contact.first_name} {contact.last_name}</td>}
+                      {i === 0 && <td className={tdClass} rowSpan={rowCount}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
                       {i === 0 && <td className={tdClass} rowSpan={rowCount}>{rel || '-'}</td>}
                       {i === 0 && <td className={`${tdClass} font-bold text-green-700`} rowSpan={rowCount}>{formatCurrency(contactIncome)} ₪</td>}
                       <td className={tdClass}>{ob.type}</td>
@@ -348,7 +348,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   const propertyIds = contact.linked_properties || [];
                   return (
                     <tr key={contact.id} className="hover:bg-purple-50/50">
-                      <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                      <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                       <td className={tdClass}>{rel || '-'}</td>
                       <td className={tdClass}>{propertyIds.length}</td>
                     </tr>
@@ -380,7 +380,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                   const education = contact.custom_data?.education || '';
                   return (
                     <tr key={contact.id} className="hover:bg-cyan-50/50">
-                      <td className={`${tdClass} font-semibold`}>{contact.first_name} {contact.last_name}</td>
+                      <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
                       <td className={tdClass}>{rel || '-'}</td>
                       <td className={tdClass}>{healthStatus || '-'}</td>
                       <td className={tdClass}>{education || '-'}</td>
