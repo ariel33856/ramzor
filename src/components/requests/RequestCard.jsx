@@ -133,12 +133,10 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
           <Input type="number" step="0.01" className="h-9" value={interestRate} onChange={(e) => handleInterestChange(e.target.value)} placeholder="ריבית..." />
         </div>
       </div>
-      {monthly && (
-        <div className="mt-3 p-2 bg-indigo-50 border border-indigo-200 rounded-lg flex items-center gap-2">
-          <span className="text-xs font-medium text-indigo-700">החזר חודשי משוער:</span>
-          <span className="text-lg font-bold text-indigo-900">{formatCurrency(monthly)}</span>
-        </div>
-      )}
+      <div className="mt-3 p-2 bg-indigo-50 border border-indigo-200 rounded-lg flex items-center gap-2">
+        <span className="text-xs font-medium text-indigo-700">החזר חודשי משוער:</span>
+        <span className="text-lg font-bold text-indigo-900">{monthly ? formatCurrency(monthly) : '—'}</span>
+      </div>
       {/* אנשי קשר משויכים לבקשה */}
       <div className="mt-3 pt-3 border-t border-gray-100">
         <div className="flex items-center justify-between mb-2">
