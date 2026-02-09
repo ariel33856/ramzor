@@ -171,6 +171,23 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
               <span className="text-xs font-medium text-amber-700">הכנסה בניכוי התחייבויות:</span>
               <span className="text-lg font-bold text-amber-900">{totalIncome > 0 ? formatCurrency(Math.round(totalIncome - totalObligations)) : '—'}</span>
             </div>
+            {(() => {
+              const netIncome = totalIncome - totalObligations;
+              if (!monthly || netIncome <= 0) return (
+                <div className="mt-2 p-2 bg-purple-50 border border-purple-200 rounded-lg flex items-center gap-2">
+                  <span className="text-xs font-medium text-purple-700">כיסוי החזר מההכנסה נטו:</span>
+                  <span className="text-lg font-bold text-purple-900">—</span>
+                </div>
+              );
+              const ratio = Math.round((monthly / netIncome) * 100);
+              const color = ratio <= 33 ? 'green' : ratio <= 50 ? 'amber' : 'red';
+              return (
+                <div className={`mt-2 p-2 bg-${color}-50 border border-${color}-200 rounded-lg flex items-center gap-2`}>
+                  <span className={`text-xs font-medium text-${color}-700`}>כיסוי החזר מההכנסה נטו:</span>
+                  <span className={`text-lg font-bold text-${color}-900`}>{ratio}%</span>
+                </div>
+              );
+            })()}
           </>
         );
       })()}
