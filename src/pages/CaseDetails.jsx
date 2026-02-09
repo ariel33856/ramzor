@@ -359,7 +359,7 @@ export default function CaseDetails() {
             {/* פיננסים ומוצרים */}
             <div className="border-2 border-orange-400 rounded-xl p-4 bg-orange-200 shadow-sm">
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
-                פיננסים ומוצרים
+                ניתוחים ומוצרים
               </button>
               <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['calculator', 'payments', 'insurance', 'products', 'dashboards'].includes(tab.id)).map((tab) => {
