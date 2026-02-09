@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Trash2, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Trash2, Check, User, UserPlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { motion } from 'framer-motion';
 
 const formatCurrency = (val) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(val);
@@ -15,13 +16,15 @@ const calcMonthlyPayment = (amt, months, rate) => {
   return Math.round(payment);
 };
 
-export default function RequestCard({ request, index, onUpdate, onDelete }) {
+export default function RequestCard({ request, index, onUpdate, onDelete, caseContacts = [] }) {
   const [requestType, setRequestType] = useState(request.request_type || '');
   const [amount, setAmount] = useState(request.amount?.toString() || '');
   const [periodMonths, setPeriodMonths] = useState(request.period_months?.toString() || '');
   const [interestRate, setInterestRate] = useState(request.interest_rate?.toString() || '');
+  const [linkedPersonIds, setLinkedPersonIds] = useState(request.linked_person_ids || []);
   const [saved, setSaved] = useState(false);
   const saveTimer = useRef(null);
+  const [addContactOpen, setAddContactOpen] = useState(false);
 
   const doSave = (data) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
@@ -50,8 +53,25 @@ export default function RequestCard({ request, index, onUpdate, onDelete }) {
 
   const handleInterestChange = (val) => {
     setInterestRate(val);
-    doSave({ request_type: requestType, amount: Number(amount), period_months: periodMonths ? Number(periodMonths) : undefined, interest_rate: val ? Number(val) : undefined });
+    doSave({ request_type: requestType, amount: Number(amount), period_months: periodMonths ? Number(periodMonths) : undefined, interest_rate: val ? Number(val) : undefined, linked_person_ids: linkedPersonIds });
   };
+
+  const addPerson = (personId) => {
+    if (linkedPersonIds.includes(personId)) return;
+    const newIds = [...linkedPersonIds, personId];
+    setLinkedPersonIds(newIds);
+    doSave({ request_type: requestType, amount: Number(amount), period_months: periodMonths ? Number(periodMonths) : undefined, interest_rate: interestRate ? Number(interestRate) : undefined, linked_person_ids: newIds });
+    setAddContactOpen(false);
+  };
+
+  const removePerson = (personId) => {
+    const newIds = linkedPersonIds.filter(id => id !== personId);
+    setLinkedPersonIds(newIds);
+    doSave({ request_type: requestType, amount: Number(amount), period_months: periodMonths ? Number(periodMonths) : undefined, interest_rate: interestRate ? Number(interestRate) : undefined, linked_person_ids: newIds });
+  };
+
+  const linkedPersons = caseContacts.filter(p => linkedPersonIds.includes(p.id));
+  const availableContacts = caseContacts.filter(p => !linkedPersonIds.includes(p.id));
 
   const monthly = calcMonthlyPayment(Number(amount), Number(periodMonths), Number(interestRate));
 
@@ -107,6 +127,55 @@ export default function RequestCard({ request, index, onUpdate, onDelete }) {
           <span className="text-lg font-bold text-indigo-900">{formatCurrency(monthly)}</span>
         </div>
       )}
+      {/* אנשי קשר משויכים לבקשה */}
+      <div className="mt-3 pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-medium text-gray-500">אנשי קשר משויכים</span>
+          <Popover open={addContactOpen} onOpenChange={setAddContactOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-6 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2">
+                <UserPlus className="w-3 h-3 ml-1" />
+                שייך
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-2" align="end">
+              {availableContacts.length === 0 ? (
+                <p className="text-xs text-gray-400 text-center py-2">אין אנשי קשר נוספים</p>
+              ) : (
+                <div className="space-y-1 max-h-48 overflow-y-auto">
+                  {availableContacts.map(person => (
+                    <button
+                      key={person.id}
+                      onClick={() => addPerson(person.id)}
+                      className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-blue-50 text-right transition-colors"
+                    >
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-3 h-3 text-blue-600" />
+                      </div>
+                      <span className="text-sm text-gray-900">{person.first_name} {person.last_name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </PopoverContent>
+          </Popover>
+        </div>
+        {linkedPersons.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {linkedPersons.map(person => (
+              <div key={person.id} className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-full">
+                <User className="w-3 h-3 text-blue-600" />
+                <span className="text-xs font-medium text-blue-800">{person.first_name} {person.last_name}</span>
+                <button onClick={() => removePerson(person.id)} className="hover:text-red-600 text-blue-400 transition-colors">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-300">לא שויכו אנשי קשר</p>
+        )}
+      </div>
     </motion.div>
   );
 }
