@@ -420,11 +420,14 @@ export default function CaseDetails() {
                 )}
               </div>
 
-              {activeTab === 'personal' && showSummary ? (
-                <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
-              ) : (
-                pageComponents[activeTab] && React.createElement(pageComponents[activeTab])
+              {activeTab === 'personal' && (
+                <div style={{ display: showSummary ? 'block' : 'none' }}>
+                  <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
+                </div>
               )}
+              <div style={{ display: (activeTab === 'personal' && showSummary) ? 'none' : 'block' }}>
+                {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
+              </div>
             </div>
           )}
 
