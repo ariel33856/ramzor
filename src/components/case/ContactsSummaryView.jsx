@@ -328,38 +328,54 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {sortedContacts.flatMap(contact => {
-                  const rel = getRelationship(contact, caseId);
-                  const incomeSources = contact.custom_data?.income_sources || [];
-                  if (incomeSources.length === 0) {
-                    return [(
-                      <tr key={contact.id} className="hover:bg-green-50/50">
-                        <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
-                        <td className={tdClass}>{rel || '-'}</td>
-                        <td className={tdClass} colSpan={3}>אין מקורות הכנסה</td>
-                      </tr>
-                    )];
-                  }
-                  return incomeSources.map((inc, i) => {
-                    const amt = inc.type === 'תלוש משכורת-שכיר'
-                      ? ((parseFloat(inc.month_1_salary) || 0) + (parseFloat(inc.month_2_salary) || 0) + (parseFloat(inc.month_3_salary) || 0)) / 3
-                      : parseFloat(inc.monthly_amount) || 0;
-                    return (
-                      <tr key={`${contact.id}-${i}`} className="hover:bg-green-50/50">
-                        {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
-                        {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}>{rel || '-'}</td>}
-                        <td className={tdClass}>{inc.type}</td>
-                        <td className={tdClass}>{inc.employer_name || '-'}</td>
-                        <td className={`${tdClass} font-bold text-green-700`}>{formatCurrency(amt)} ₪</td>
+                {contactGroups.flatMap((group, gi) => {
+                  const rows = [];
+                  let groupTotal = 0;
+                  group.contacts.forEach(contact => {
+                    const rel = getRelationship(contact, caseId);
+                    const incomeSources = contact.custom_data?.income_sources || [];
+                    if (incomeSources.length === 0) {
+                      rows.push(
+                        <tr key={contact.id} className="hover:bg-green-50/50">
+                          <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
+                          <td className={tdClass}>{rel || '-'}</td>
+                          <td className={tdClass} colSpan={3}>אין מקורות הכנסה</td>
+                        </tr>
+                      );
+                    } else {
+                      incomeSources.forEach((inc, i) => {
+                        const amt = inc.type === 'תלוש משכורת-שכיר'
+                          ? ((parseFloat(inc.month_1_salary) || 0) + (parseFloat(inc.month_2_salary) || 0) + (parseFloat(inc.month_3_salary) || 0)) / 3
+                          : parseFloat(inc.monthly_amount) || 0;
+                        groupTotal += amt;
+                        rows.push(
+                          <tr key={`${contact.id}-${i}`} className="hover:bg-green-50/50">
+                            {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
+                            {i === 0 && <td className={tdClass} rowSpan={incomeSources.length}>{rel || '-'}</td>}
+                            <td className={tdClass}>{inc.type}</td>
+                            <td className={tdClass}>{inc.employer_name || '-'}</td>
+                            <td className={`${tdClass} font-bold text-green-700`}>{formatCurrency(amt)} ₪</td>
+                          </tr>
+                        );
+                      });
+                    }
+                  });
+                  // Subtotal row for couple or single
+                  if (group.contacts.length > 1 || contactGroups.length > 1) {
+                    rows.push(
+                      <tr key={`subtotal-${gi}`} className={subtotalRowClass}>
+                        <td className="px-3 py-2 text-right" colSpan={4}>סה״כ {group.label}</td>
+                        <td className="px-3 py-2 text-right text-green-800">{formatCurrency(groupTotal)} ₪</td>
                       </tr>
                     );
-                  });
+                  }
+                  return rows;
                 })}
               </tbody>
               <tfoot>
-                <tr className="bg-green-100">
-                  <td className="px-3 py-3 text-sm font-bold" colSpan={4}>סה״כ הכנסות</td>
-                  <td className="px-3 py-3 text-lg font-bold text-green-700">{formatCurrency(totalIncome)} ₪</td>
+                <tr className={grandTotalRowClass}>
+                  <td className="px-3 py-3 text-right" colSpan={4}>סה״כ כולל</td>
+                  <td className="px-3 py-3 text-right">{formatCurrency(totalIncome)} ₪</td>
                 </tr>
               </tfoot>
             </table>
