@@ -66,7 +66,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
   ];
 
   // Compute totals
-  const totalIncome = linkedContacts.reduce((sum, contact) => {
+  const totalIncome = sortedContacts.reduce((sum, contact) => {
     const sources = contact.custom_data?.income_sources || [];
     return sum + sources.reduce((s, inc) => {
       if (inc.type === 'תלוש משכורת-שכיר') {
@@ -79,7 +79,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     }, 0);
   }, 0);
 
-  const totalObligations = linkedContacts.reduce((sum, contact) => {
+  const totalObligations = sortedContacts.reduce((sum, contact) => {
     const obs = contact.custom_data?.obligations || [];
     return sum + obs.reduce((s, o) => s + (parseFloat(o.monthly_payment) || 0), 0);
   }, 0);
@@ -125,7 +125,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.map(contact => {
+                {sortedContacts.map(contact => {
                   const rel = getRelationship(contact, caseId);
                   const birthDate = contact.custom_data?.id_upload_data?.birth_date || contact.custom_data?.birth_date;
                   const age = getAge(birthDate);
@@ -170,7 +170,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.map(contact => {
+                {sortedContacts.map(contact => {
                   const rel = getRelationship(contact, caseId);
                   const idData = contact.custom_data?.id_upload_data || {};
                   const birthDate = idData.birth_date || contact.custom_data?.birth_date;
@@ -214,7 +214,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.flatMap(contact => {
+                {sortedContacts.flatMap(contact => {
                   const rel = getRelationship(contact, caseId);
                   const incomeSources = contact.custom_data?.income_sources || [];
                   if (incomeSources.length === 0) {
@@ -292,7 +292,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.flatMap(contact => {
+                {sortedContacts.flatMap(contact => {
                   const rel = getRelationship(contact, caseId);
                   const obligations = contact.custom_data?.obligations || [];
                   const incomeSources = contact.custom_data?.income_sources || [];
@@ -351,7 +351,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.map(contact => {
+                {sortedContacts.map(contact => {
                   const rel = getRelationship(contact, caseId);
                   const propertyIds = contact.linked_properties || [];
                   return (
@@ -382,7 +382,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {linkedContacts.map(contact => {
+                {sortedContacts.map(contact => {
                   const rel = getRelationship(contact, caseId);
                   const healthStatus = contact.custom_data?.health_status || '';
                   const education = contact.custom_data?.education || '';
