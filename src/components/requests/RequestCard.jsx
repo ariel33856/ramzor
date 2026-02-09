@@ -151,21 +151,22 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
               return (
                 <div 
                   key={person.id} 
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full cursor-pointer transition-all ${
+                  className={`relative flex items-center gap-1.5 px-2.5 py-1 rounded-full cursor-pointer transition-all ${
                     isLinked 
                       ? 'bg-blue-50 border border-blue-200' 
-                      : 'bg-gray-50 border border-gray-200 opacity-40'
+                      : 'bg-gray-50 border border-gray-200 opacity-50'
                   }`}
                   onClick={() => !isLinked && addPerson(person.id)}
                 >
+                  {!isLinked && (
+                    <X className="w-6 h-6 text-red-500 absolute inset-0 m-auto pointer-events-none" strokeWidth={3} />
+                  )}
                   <User className={`w-3 h-3 ${isLinked ? 'text-blue-600' : 'text-gray-400'}`} />
                   <span className={`text-xs font-medium ${isLinked ? 'text-blue-800' : 'text-gray-400'}`}>{person.first_name} {person.last_name}</span>
-                  {isLinked ? (
+                  {isLinked && (
                     <button onClick={(e) => { e.stopPropagation(); removePerson(person.id); }} className="hover:text-red-600 text-blue-400 transition-colors">
                       <X className="w-3 h-3" />
                     </button>
-                  ) : (
-                    <X className="w-4 h-4 text-red-500 font-bold" />
                   )}
                 </div>
               );
