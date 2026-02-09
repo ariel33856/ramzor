@@ -970,49 +970,7 @@ export default function PersonDetailsView({ personId }) {
               </DialogContent>
             </Dialog>
           )}
-          {linkedPropertiesData.length === 0 && (
-            <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 whitespace-nowrap">
-                  <LinkIcon className="w-4 h-4 ml-2" />
-                  שייך נכס
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>בחר נכס לשיוך</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="חיפוש לפי כתובת או עיר..."
-                    value={propertySearchTerm}
-                    onChange={(e) => setPropertySearchTerm(e.target.value)}
-                  />
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {filteredProperties.map(property => (
-                      <div
-                        key={property.id}
-                        className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
-                        onClick={() => {
-                          const updatedProperties = [...linkedProperties, property.id];
-                          setLinkedProperties(updatedProperties);
-                          updatePersonMutation.mutate({ linked_properties: updatedProperties });
-                          setPropertyDialogOpen(false);
-                          setPropertySearchTerm('');
-                        }}
-                      >
-                        <p className="font-semibold text-gray-900">{property.address}</p>
-                        <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
-                      </div>
-                    ))}
-                    {filteredProperties.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
-                    )}
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          )}
+
           {spouseId && linkedSpouse ? (
             <div className="flex items-center gap-0">
               <Button 
