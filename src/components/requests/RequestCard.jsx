@@ -167,6 +167,10 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
               <span className="text-xs font-medium text-red-700">סה״כ התחייבויות קיימות:</span>
               <span className="text-lg font-bold text-red-900">{totalObligations > 0 ? formatCurrency(Math.round(totalObligations)) : '—'}</span>
             </div>
+            <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+              <span className="text-xs font-medium text-amber-700">הכנסה בניכוי התחייבויות:</span>
+              <span className="text-lg font-bold text-amber-900">{totalIncome > 0 ? formatCurrency(Math.round(totalIncome - totalObligations)) : '—'}</span>
+            </div>
           </>
         );
       })()}
