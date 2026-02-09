@@ -56,10 +56,28 @@ export default function CaseRequests() {
       {isLoading ? (
         <div className="text-center py-8 text-gray-400">טוען...</div>
       ) : requests.length === 0 ? (
-        <div className="flex items-center justify-center py-16 text-gray-400">
-          <div className="text-center space-y-3">
-            <ClipboardList className="w-12 h-12 mx-auto text-gray-300" />
-            <p className="text-lg">אין בקשות עדיין</p>
+        <div className="bg-white rounded-xl border-2 border-fuchsia-200 p-6 max-w-md">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">בקשה חדשה</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">סכום</label>
+              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => setAmount(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
+              <Select value={requestType} onValueChange={setRequestType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="בחר סוג בקשה" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="הלוואה">הלוואה</SelectItem>
+                  <SelectItem value="משכנתא">משכנתא</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={handleSubmit} disabled={!amount || !requestType} className="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
+              הוסף בקשה
+            </Button>
           </div>
         </div>
       ) : (
