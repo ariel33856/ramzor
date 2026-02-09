@@ -1,9 +1,8 @@
-
 import { 
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
   FolderOpen, MessageCircle, Contact, Calculator, CreditCard,
-  Shield, Package, DollarSign, Calendar, Briefcase, Home, Send
+  Shield, Package, DollarSign, Calendar, Briefcase, Home, Send, ClipboardList
 } from 'lucide-react';
 
 export const tabs = [
@@ -27,6 +26,7 @@ export const tabs = [
   { id: 'payments', label: 'תשלומים', icon: CreditCard, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
   { id: 'insurance', label: 'ביטוחים', icon: Shield, gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
   { id: 'products', label: 'מוצרי מעטפת', icon: Package, gradient: 'from-red-500 to-red-600', bg: 'bg-red-50', border: 'border-red-200' },
+  { id: 'requests', label: 'בקשות', icon: ClipboardList, gradient: 'from-fuchsia-500 to-fuchsia-600', bg: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
 ];
 
 export const pageMapping = {
@@ -50,4 +50,5 @@ export const pageMapping = {
   'products': 'CaseProducts',
   'property': 'CaseProperty',
   'transactions': 'CaseTransactions',
+  'requests': 'CaseRequests',
 };

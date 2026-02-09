@@ -195,7 +195,7 @@ export default function CaseDetails() {
                 מידע אישי
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {tabs.filter(tab => ['personal', 'contact', 'summary', 'tracking', 'data'].includes(tab.id)).map((tab) => {
+                {tabs.filter(tab => ['personal', 'contact', 'summary', 'tracking', 'data', 'requests'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
