@@ -361,13 +361,8 @@ export default function CaseDetails() {
         </div>
 
         {/* Expandable Content Area */}
-        <AnimatePresence>
           {activeTab && activeTabData && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
+            <div
               className={`
                 bg-white rounded-2xl border-2 ${activeTabData.border} p-8 shadow-lg mb-6
                 ${activeTabData.bg} bg-opacity-30
