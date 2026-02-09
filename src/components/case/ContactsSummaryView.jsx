@@ -6,12 +6,12 @@ const formatCurrency = (val) => {
 };
 
 const getRelationship = (contact, caseId) => {
-  if (!contact.linked_accounts) return '';
+  if (!contact.linked_accounts) return 'לווה';
   const link = contact.linked_accounts.find(acc =>
     typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
   );
-  if (link && typeof link === 'object') return link.relationship_type || '';
-  return '';
+  if (link && typeof link === 'object') return link.relationship_type || 'לווה';
+  return 'לווה';
 };
 
 const getAge = (birthDate) => {
