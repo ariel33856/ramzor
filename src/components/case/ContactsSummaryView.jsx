@@ -422,47 +422,72 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </tr>
               </thead>
               <tbody>
-                {sortedContacts.flatMap(contact => {
-                  const rel = getRelationship(contact, caseId);
-                  const obligations = contact.custom_data?.obligations || [];
-                  const incomeSources = contact.custom_data?.income_sources || [];
-                  const contactObligations = obligations.reduce((s, o) => s + (parseFloat(o.monthly_payment) || 0), 0);
-                  const contactIncome = incomeSources.reduce((s, inc) => {
-                    if (inc.type === 'תלוש משכורת-שכיר') {
-                      const m1 = parseFloat(inc.month_1_salary) || 0;
-                      const m2 = parseFloat(inc.month_2_salary) || 0;
-                      const m3 = parseFloat(inc.month_3_salary) || 0;
-                      return s + (m1 + m2 + m3) / 3;
+                {contactGroups.flatMap((group, gi) => {
+                  const rows = [];
+                  let groupIncome = 0;
+                  let groupObl = 0;
+                  group.contacts.forEach(contact => {
+                    const rel = getRelationship(contact, caseId);
+                    const obligations = contact.custom_data?.obligations || [];
+                    const cIncome = getContactIncome(contact);
+                    const cObl = getContactObligations(contact);
+                    groupIncome += cIncome;
+                    groupObl += cObl;
+                    const rowCount = Math.max(obligations.length, 1);
+                    if (obligations.length === 0) {
+                      rows.push(
+                        <tr key={contact.id} className="hover:bg-rose-50/50">
+                          <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
+                          <td className={tdClass}>{rel || '-'}</td>
+                          <td className={`${tdClass} font-bold text-green-700`}>{formatCurrency(cIncome)} ₪</td>
+                          <td className={tdClass} colSpan={3}>אין התחייבויות</td>
+                          <td className={tdClass}>-</td>
+                          <td className={`${tdClass} font-bold text-blue-700`}>{formatCurrency(cIncome)} ₪</td>
+                        </tr>
+                      );
+                    } else {
+                      obligations.forEach((ob, i) => {
+                        rows.push(
+                          <tr key={`${contact.id}-${i}`} className="hover:bg-rose-50/50">
+                            {i === 0 && <td className={tdClass} rowSpan={rowCount}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
+                            {i === 0 && <td className={tdClass} rowSpan={rowCount}>{rel || '-'}</td>}
+                            {i === 0 && <td className={`${tdClass} font-bold text-green-700`} rowSpan={rowCount}>{formatCurrency(cIncome)} ₪</td>}
+                            <td className={tdClass}>{ob.type}</td>
+                            <td className={tdClass}>{ob.institution_name || '-'}</td>
+                            <td className={`${tdClass} font-bold text-red-700`}>{formatCurrency(ob.monthly_payment)} ₪</td>
+                            <td className={tdClass}>{ob.balance ? `${formatCurrency(ob.balance)} ₪` : '-'}</td>
+                            {i === 0 && <td className={`${tdClass} font-bold text-blue-700`} rowSpan={rowCount}>{formatCurrency(cIncome - cObl)} ₪</td>}
+                          </tr>
+                        );
+                      });
                     }
-                    return s + (parseFloat(inc.monthly_amount) || 0);
-                  }, 0);
-                  const rowCount = Math.max(obligations.length, 1);
-                  if (obligations.length === 0) {
-                    return [(
-                      <tr key={contact.id} className="hover:bg-rose-50/50">
-                        <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
-                        <td className={tdClass}>{rel || '-'}</td>
-                        <td className={`${tdClass} font-bold text-green-700`}>{formatCurrency(contactIncome)} ₪</td>
-                        <td className={tdClass} colSpan={3}>אין התחייבויות</td>
-                        <td className={tdClass}>-</td>
-                        <td className={`${tdClass} font-bold text-blue-700`}>{formatCurrency(contactIncome)} ₪</td>
+                  });
+                  // Subtotal row
+                  if (group.contacts.length > 1 || contactGroups.length > 1) {
+                    rows.push(
+                      <tr key={`subtotal-obl-${gi}`} className={subtotalRowClass}>
+                        <td className="px-3 py-2 text-right" colSpan={2}>סה״כ {group.label}</td>
+                        <td className="px-3 py-2 text-right text-green-800">{formatCurrency(groupIncome)} ₪</td>
+                        <td className="px-3 py-2 text-right" colSpan={2}></td>
+                        <td className="px-3 py-2 text-right text-red-800">{formatCurrency(groupObl)} ₪</td>
+                        <td className="px-3 py-2 text-right"></td>
+                        <td className="px-3 py-2 text-right text-blue-800">{formatCurrency(groupIncome - groupObl)} ₪</td>
                       </tr>
-                    )];
+                    );
                   }
-                  return obligations.map((ob, i) => (
-                    <tr key={`${contact.id}-${i}`} className="hover:bg-rose-50/50">
-                      {i === 0 && <td className={tdClass} rowSpan={rowCount}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
-                      {i === 0 && <td className={tdClass} rowSpan={rowCount}>{rel || '-'}</td>}
-                      {i === 0 && <td className={`${tdClass} font-bold text-green-700`} rowSpan={rowCount}>{formatCurrency(contactIncome)} ₪</td>}
-                      <td className={tdClass}>{ob.type}</td>
-                      <td className={tdClass}>{ob.institution_name || '-'}</td>
-                      <td className={`${tdClass} font-bold text-red-700`}>{formatCurrency(ob.monthly_payment)} ₪</td>
-                      <td className={tdClass}>{ob.balance ? `${formatCurrency(ob.balance)} ₪` : '-'}</td>
-                      {i === 0 && <td className={`${tdClass} font-bold text-blue-700`} rowSpan={rowCount}>{formatCurrency(contactIncome - contactObligations)} ₪</td>}
-                    </tr>
-                  ));
+                  return rows;
                 })}
               </tbody>
+              <tfoot>
+                <tr className={grandTotalRowClass}>
+                  <td className="px-3 py-3 text-right" colSpan={2}>סה״כ כולל</td>
+                  <td className="px-3 py-3 text-right">{formatCurrency(totalIncome)} ₪</td>
+                  <td className="px-3 py-3 text-right" colSpan={2}></td>
+                  <td className="px-3 py-3 text-right">{formatCurrency(totalObligations)} ₪</td>
+                  <td className="px-3 py-3 text-right"></td>
+                  <td className="px-3 py-3 text-right">{formatCurrency(totalIncome - totalObligations)} ₪</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
