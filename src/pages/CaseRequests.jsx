@@ -112,6 +112,10 @@ export default function CaseRequests() {
               <label className="text-sm font-medium text-gray-700 mb-1 block">תקופה בחודשים</label>
               <Input type="number" placeholder="הזן מספר חודשים..." value={periodMonths} onChange={(e) => handlePeriodChange(e.target.value)} />
             </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">ריבית</label>
+              <Input type="number" step="0.01" placeholder="הזן ריבית..." value={interestRate} onChange={(e) => handleInterestChange(e.target.value)} />
+            </div>
             {saved && (
               <div className="flex items-center gap-1 text-green-600 text-sm">
                 <Check className="w-4 h-4" />
@@ -136,6 +140,7 @@ export default function CaseRequests() {
                 </div>
                 <span className="text-lg font-bold text-gray-900">{formatCurrency(req.amount)}</span>
                 {req.period_months && <span className="text-sm text-gray-500">{req.period_months} חודשים</span>}
+                {req.interest_rate && <span className="text-sm text-gray-500">ריבית {req.interest_rate}%</span>}
               </div>
               <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(req.id)} className="text-gray-400 hover:text-red-600 hover:bg-red-50">
                 <Trash2 className="w-4 h-4" />
@@ -158,6 +163,10 @@ export default function CaseRequests() {
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">תקופה בחודשים</label>
               <Input type="number" placeholder="הזן מספר חודשים..." value={periodMonths} onChange={(e) => handlePeriodChange(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">ריבית</label>
+              <Input type="number" step="0.01" placeholder="הזן ריבית..." value={interestRate} onChange={(e) => handleInterestChange(e.target.value)} />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
