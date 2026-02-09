@@ -46,6 +46,14 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     return <div className="text-center py-8 text-gray-400">אין אנשי קשר לסיכום</div>;
   }
 
+  // Sort contacts: לווה first, then ערב, then others
+  const sortedContacts = [...linkedContacts].sort((a, b) => {
+    const relA = getRelationship(a, caseId);
+    const relB = getRelationship(b, caseId);
+    const order = { 'לווה': 0, 'בן זוג': 1, 'בת זוג': 1, 'בן/בת זוג': 1, 'ערב': 2, 'ערבה': 2, 'ערב ממשכן': 3, 'ערבה ממשכנת': 3 };
+    return (order[relA] ?? 9) - (order[relB] ?? 9);
+  });
+
   const tabDefs = [
     { id: 'general', label: 'פרטים אישיים', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400', bottomBorderColor: 'border-b-blue-400' },
     { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', borderColor: 'border-amber-400', bottomBorderColor: 'border-b-amber-400' },
