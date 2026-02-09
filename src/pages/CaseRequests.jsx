@@ -16,6 +16,7 @@ export default function CaseRequests() {
   const [amount, setAmount] = useState('');
   const [requestType, setRequestType] = useState('');
   const [periodMonths, setPeriodMonths] = useState('');
+  const [interestRate, setInterestRate] = useState('');
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['requests', caseId],
@@ -31,6 +32,7 @@ export default function CaseRequests() {
       setAmount('');
       setRequestType('');
       setPeriodMonths('');
+      setInterestRate('');
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     }
@@ -44,28 +46,33 @@ export default function CaseRequests() {
   const autoSaveTimer = useRef(null);
   const [saved, setSaved] = useState(false);
 
-  const autoSave = (newAmount, newType, newPeriod) => {
+  const autoSave = (newAmount, newType, newPeriod, newInterest) => {
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     setSaved(false);
     if (!newAmount || !newType) return;
     autoSaveTimer.current = setTimeout(() => {
-      createMutation.mutate({ case_id: caseId, amount: Number(newAmount), request_type: newType, period_months: newPeriod ? Number(newPeriod) : undefined });
+      createMutation.mutate({ case_id: caseId, amount: Number(newAmount), request_type: newType, period_months: newPeriod ? Number(newPeriod) : undefined, interest_rate: newInterest ? Number(newInterest) : undefined });
     }, 800);
   };
 
   const handleAmountChange = (val) => {
     setAmount(val);
-    autoSave(val, requestType, periodMonths);
+    autoSave(val, requestType, periodMonths, interestRate);
   };
 
   const handleTypeChange = (val) => {
     setRequestType(val);
-    autoSave(amount, val, periodMonths);
+    autoSave(amount, val, periodMonths, interestRate);
   };
 
   const handlePeriodChange = (val) => {
     setPeriodMonths(val);
-    autoSave(amount, requestType, val);
+    autoSave(amount, requestType, val, interestRate);
+  };
+
+  const handleInterestChange = (val) => {
+    setInterestRate(val);
+    autoSave(amount, requestType, periodMonths, val);
   };
 
   const formatCurrency = (val) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(val);
