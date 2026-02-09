@@ -77,6 +77,16 @@ export default function CaseRequests() {
 
   const formatCurrency = (val) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(val);
 
+  const calcMonthlyPayment = (amt, months, rate) => {
+    if (!amt || !months || !rate) return null;
+    const monthlyRate = (rate / 100) / 12;
+    const n = months;
+    const payment = amt * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1);
+    return Math.round(payment);
+  };
+
+  const monthlyPayment = calcMonthlyPayment(Number(amount), Number(periodMonths), Number(interestRate));
+
   return (
     <div className="p-2" dir="rtl">
       <div className="flex items-center justify-between mb-4">
@@ -116,6 +126,12 @@ export default function CaseRequests() {
               <label className="text-sm font-medium text-gray-700 mb-1 block">ריבית</label>
               <Input type="number" step="0.01" placeholder="הזן ריבית..." value={interestRate} onChange={(e) => handleInterestChange(e.target.value)} />
             </div>
+            {monthlyPayment && (
+              <div className="p-3 bg-indigo-50 border-2 border-indigo-200 rounded-lg">
+                <label className="text-sm font-medium text-indigo-700 mb-1 block">החזר חודשי משוער</label>
+                <span className="text-xl font-bold text-indigo-900">{formatCurrency(monthlyPayment)}</span>
+              </div>
+            )}
             {saved && (
               <div className="flex items-center gap-1 text-green-600 text-sm">
                 <Check className="w-4 h-4" />
@@ -141,6 +157,9 @@ export default function CaseRequests() {
                 <span className="text-lg font-bold text-gray-900">{formatCurrency(req.amount)}</span>
                 {req.period_months && <span className="text-sm text-gray-500">{req.period_months} חודשים</span>}
                 {req.interest_rate && <span className="text-sm text-gray-500">ריבית {req.interest_rate}%</span>}
+                {calcMonthlyPayment(req.amount, req.period_months, req.interest_rate) && (
+                  <span className="text-sm font-semibold text-indigo-700">החזר: {formatCurrency(calcMonthlyPayment(req.amount, req.period_months, req.interest_rate))}</span>
+                )}
               </div>
               <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(req.id)} className="text-gray-400 hover:text-red-600 hover:bg-red-50">
                 <Trash2 className="w-4 h-4" />
@@ -168,6 +187,12 @@ export default function CaseRequests() {
               <label className="text-sm font-medium text-gray-700 mb-1 block">ריבית</label>
               <Input type="number" step="0.01" placeholder="הזן ריבית..." value={interestRate} onChange={(e) => handleInterestChange(e.target.value)} />
             </div>
+            {monthlyPayment && (
+              <div className="p-3 bg-indigo-50 border-2 border-indigo-200 rounded-lg">
+                <label className="text-sm font-medium text-indigo-700 mb-1 block">החזר חודשי משוער</label>
+                <span className="text-xl font-bold text-indigo-900">{formatCurrency(monthlyPayment)}</span>
+              </div>
+            )}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
               <Select value={requestType} onValueChange={handleTypeChange}>
