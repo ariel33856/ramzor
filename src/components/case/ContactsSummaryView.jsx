@@ -31,6 +31,14 @@ const getAge = (birthDate) => {
 const thClass = "px-3 py-2 text-xs font-bold text-gray-600 bg-gray-100 border-b-2 border-gray-300 text-right whitespace-nowrap";
 const tdClass = "px-3 py-2.5 text-sm border-b border-gray-100 text-right";
 
+const getNameStyle = (rel) => {
+  if (rel === 'לווה') return 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-2 py-1 rounded-lg inline-block';
+  if (rel === 'ערב' || rel === 'ערבה') return 'bg-gradient-to-r from-pink-500 to-rose-500 text-white px-2 py-1 rounded-lg inline-block';
+  if (rel === 'ערב ממשכן' || rel === 'ערבה ממשכנת') return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-lg inline-block';
+  if (rel === 'בן זוג' || rel === 'בת זוג' || rel === 'בן/בת זוג') return 'bg-gradient-to-r from-cyan-400 to-sky-400 text-white px-2 py-1 rounded-lg inline-block';
+  return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-2 py-1 rounded-lg inline-block';
+};
+
 export default function ContactsSummaryView({ linkedContacts, caseId }) {
   const [activeTab, setActiveTab] = useState('general');
 
