@@ -52,6 +52,9 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     { id: 'income', label: 'הכנסות', activeBg: 'bg-green-50', activeText: 'text-green-700', borderColor: 'border-green-400', bottomBorderColor: 'border-b-green-400' },
     { id: 'obligations', label: 'התחייבויות ועו"ש', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400', bottomBorderColor: 'border-b-rose-400' },
     { id: 'properties', label: 'נכסים', activeBg: 'bg-purple-50', activeText: 'text-purple-700', borderColor: 'border-purple-400', bottomBorderColor: 'border-b-purple-400' },
+    { id: 'health', label: 'מסמכים', activeBg: 'bg-cyan-50', activeText: 'text-cyan-700', borderColor: 'border-cyan-400', bottomBorderColor: 'border-b-cyan-400' },
+    { id: 'documentation', label: 'תקשורת', activeBg: 'bg-teal-50', activeText: 'text-teal-700', borderColor: 'border-teal-400', bottomBorderColor: 'border-b-teal-400' },
+    { id: 'transactions', label: 'עסקאות', activeBg: 'bg-amber-50', activeText: 'text-black', borderColor: 'border-black', bottomBorderColor: 'border-b-black' },
   ];
 
   // Compute totals
@@ -346,6 +349,53 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Health/Documents Tab */}
+      {activeTab === 'health' && (
+        <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+          <div className="space-y-3">
+            {linkedContacts.map(contact => {
+              const rel = getRelationship(contact, caseId);
+              const gradient = relColors[rel] || 'from-gray-500 to-gray-600';
+              const healthStatus = contact.custom_data?.health_status || '';
+              const education = contact.custom_data?.education || '';
+
+              return (
+                <div key={contact.id} className="bg-white border-2 border-cyan-200 rounded-xl p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`px-3 py-1 rounded-lg text-white text-sm font-bold bg-gradient-to-r ${gradient}`}>
+                      {contact.first_name} {contact.last_name}
+                    </div>
+                    {rel && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{rel}</span>}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><span className="text-gray-500 text-xs">מצב בריאותי:</span> <span className="font-medium">{healthStatus || '-'}</span></div>
+                    <div><span className="text-gray-500 text-xs">השכלה:</span> <span className="font-medium">{education || '-'}</span></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Documentation/Communication Tab */}
+      {activeTab === 'documentation' && (
+        <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+          <div className="text-center py-12 text-gray-500">
+            <p>סיכום תקשורת</p>
+          </div>
+        </div>
+      )}
+
+      {/* Transactions Tab */}
+      {activeTab === 'transactions' && (
+        <div className="p-4 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+          <div className="text-center py-12 text-gray-500">
+            <p>סיכום עסקאות</p>
           </div>
         </div>
       )}
