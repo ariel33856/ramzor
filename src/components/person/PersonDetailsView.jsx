@@ -762,12 +762,12 @@ export default function PersonDetailsView({ personId }) {
                 }
 
                 return (
-                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-500 rounded-lg p-3 shadow-lg bg-white">
+                <div key={account.id} className="flex items-center gap-3 border-4 border-blue-600 rounded-lg p-3 shadow-xl bg-blue-50 ring-2 ring-blue-400">
                   <Button 
                     onClick={() => window.location.href = createPageUrl('CaseDetails') + `?id=${account.id}`}
-                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-l-lg"
+                    className="whitespace-nowrap cursor-pointer bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-l-lg shadow-lg"
                   >
-                    חשבון משויך: {account.client_name} {account.account_number}
+                    חשבון נוכחי: {account.client_name} {account.account_number}
                   </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
