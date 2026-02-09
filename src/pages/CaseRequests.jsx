@@ -79,10 +79,6 @@ export default function CaseRequests() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">בקשה חדשה</h3>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">סכום</label>
-              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => handleAmountChange(e.target.value)} />
-            </div>
-            <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">סוג בקשה</label>
               <Select value={requestType} onValueChange={handleTypeChange}>
                 <SelectTrigger>
@@ -93,6 +89,10 @@ export default function CaseRequests() {
                   <SelectItem value="משכנתא">משכנתא</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-1 block">סכום</label>
+              <Input type="number" placeholder="הזן סכום..." value={amount} onChange={(e) => handleAmountChange(e.target.value)} />
             </div>
             {saved && (
               <div className="flex items-center gap-1 text-green-600 text-sm">
