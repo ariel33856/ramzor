@@ -194,7 +194,7 @@ export default function CaseDetails() {
               <button className="w-full bg-white text-gray-900 font-semibold text-sm py-2 px-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-colors mb-3">
                 מידע אישי
               </button>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
                 {tabs.filter(tab => ['personal', 'contact', 'summary', 'tracking', 'data'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
