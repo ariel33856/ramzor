@@ -16,6 +16,16 @@ export default function CaseRequests() {
     enabled: !!caseId
   });
 
+  const didAutoCreate = React.useRef(false);
+  React.useEffect(() => {
+    if (didAutoCreate.current) return;
+    if (isLoading) return;
+    if (requests.length === 0 && caseId) {
+      didAutoCreate.current = true;
+      createMutation.mutate();
+    }
+  }, [isLoading, requests.length, caseId]);
+
   const { data: caseContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
@@ -72,8 +82,8 @@ export default function CaseRequests() {
               caseContacts={caseContacts}
             />
           ))}
-          {requests.length === 0 && (
-            <div className="text-center py-8 text-gray-400">אין בקשות. לחץ על "בקשה חדשה" כדי להוסיף.</div>
+          {requests.length === 0 && !createMutation.isPending && (
+            <div className="text-center py-8 text-gray-400">טוען...</div>
           )}
         </div>
       )}
