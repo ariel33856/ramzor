@@ -144,17 +144,32 @@ export default function RequestCard({ request, index, onUpdate, onDelete, caseCo
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-medium text-gray-500">אנשי קשר משויכים</span>
         </div>
-        {linkedPersons.length > 0 ? (
+        {caseContacts.length > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {linkedPersons.map(person => (
-              <div key={person.id} className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-full">
-                <User className="w-3 h-3 text-blue-600" />
-                <span className="text-xs font-medium text-blue-800">{person.first_name} {person.last_name}</span>
-                <button onClick={() => removePerson(person.id)} className="hover:text-red-600 text-blue-400 transition-colors">
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
+            {caseContacts.map(person => {
+              const isLinked = linkedPersonIds.includes(person.id);
+              return (
+                <div 
+                  key={person.id} 
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full cursor-pointer transition-all ${
+                    isLinked 
+                      ? 'bg-blue-50 border border-blue-200' 
+                      : 'bg-gray-50 border border-gray-200 opacity-40'
+                  }`}
+                  onClick={() => !isLinked && addPerson(person.id)}
+                >
+                  <User className={`w-3 h-3 ${isLinked ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <span className={`text-xs font-medium ${isLinked ? 'text-blue-800' : 'text-gray-400'}`}>{person.first_name} {person.last_name}</span>
+                  {isLinked ? (
+                    <button onClick={(e) => { e.stopPropagation(); removePerson(person.id); }} className="hover:text-red-600 text-blue-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  ) : (
+                    <UserPlus className="w-3 h-3 text-gray-400" />
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="text-xs text-gray-300">לא שויכו אנשי קשר</p>
