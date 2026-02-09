@@ -98,6 +98,76 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     return [...result, ...remaining];
   })();
 
+  // Build groups: couples and singles for subtotals
+  const contactGroups = (() => {
+    const groups = [];
+    const usedIds = new Set();
+    
+    // Find couples first
+    sortedContacts.forEach(contact => {
+      if (usedIds.has(contact.id)) return;
+      const spouseId = contact.custom_data?.spouse_id;
+      if (spouseId) {
+        const partner = sortedContacts.find(c => c.id === spouseId && !usedIds.has(c.id));
+        if (partner) {
+          const contactGender = contact.custom_data?.gender || 'male';
+          const male = contactGender === 'male' ? contact : partner;
+          const female = contactGender === 'male' ? partner : contact;
+          groups.push({ type: 'couple', contacts: [male, female], label: `${male.first_name} ${male.last_name} + ${female.first_name} ${female.last_name}` });
+          usedIds.add(contact.id);
+          usedIds.add(partner.id);
+          return;
+        }
+      }
+      const relType = getRelationship(contact, caseId);
+      if (relType === 'בן זוג' || relType === 'בת זוג' || relType === 'בן/בת זוג') {
+        const partner = sortedContacts.find(c => {
+          if (c.id === contact.id || usedIds.has(c.id)) return false;
+          const pRel = getRelationship(c, caseId);
+          return pRel === 'בן זוג' || pRel === 'בת זוג' || pRel === 'בן/בת זוג';
+        });
+        if (partner) {
+          const contactGender = contact.custom_data?.gender || 'male';
+          const male = contactGender === 'male' ? contact : partner;
+          const female = contactGender === 'male' ? partner : contact;
+          groups.push({ type: 'couple', contacts: [male, female], label: `${male.first_name} ${male.last_name} + ${female.first_name} ${female.last_name}` });
+          usedIds.add(contact.id);
+          usedIds.add(partner.id);
+        }
+      }
+    });
+    
+    // Add remaining as singles
+    sortedContacts.forEach(contact => {
+      if (usedIds.has(contact.id)) return;
+      groups.push({ type: 'single', contacts: [contact], label: `${contact.first_name} ${contact.last_name}` });
+      usedIds.add(contact.id);
+    });
+    
+    return groups;
+  })();
+
+  const getContactIncome = (contact) => {
+    const sources = contact.custom_data?.income_sources || [];
+    return sources.reduce((s, inc) => {
+      if (inc.type === 'תלוש משכורת-שכיר') {
+        const m1 = parseFloat(inc.month_1_salary) || 0;
+        const m2 = parseFloat(inc.month_2_salary) || 0;
+        const m3 = parseFloat(inc.month_3_salary) || 0;
+        return s + (m1 + m2 + m3) / 3;
+      }
+      return s + (parseFloat(inc.monthly_amount) || 0);
+    }, 0);
+  };
+
+  const getContactObligations = (contact) => {
+    const obs = contact.custom_data?.obligations || [];
+    return obs.reduce((s, o) => s + (parseFloat(o.monthly_payment) || 0), 0);
+  };
+
+  const subtotalRowClass = "bg-gray-200 font-bold text-sm";
+  const grandTotalRowClass = "bg-gray-800 text-white font-bold text-base";
+
   const tabDefs = [
     { id: 'general', label: 'פרטים אישיים', activeBg: 'bg-blue-50', activeText: 'text-blue-700', borderColor: 'border-blue-400', bottomBorderColor: 'border-b-blue-400' },
     { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', borderColor: 'border-amber-400', bottomBorderColor: 'border-b-amber-400' },
