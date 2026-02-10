@@ -1639,6 +1639,81 @@ export default function PersonDetailsView({ personId }) {
                   />
                  </div>
                  </div>
+
+            <IDUploader 
+              initialData={person?.custom_data?.id_upload_data}
+              gender={gender}
+              setGender={setGender}
+              onDataExtracted={(data) => {
+                if (!data) {
+                  const customData = { ...(person?.custom_data || {}) };
+                  delete customData.id_upload_data;
+                  delete customData.children_birth_dates;
+                  delete customData.children_names;
+                  delete customData.num_children;
+                  setChildrenDates(['']);
+                  setChildrenNames(['']);
+                  setManualNumChildren('');
+                  setManualNumChildrenUnder18('');
+                  setBasicData(prev => ({
+                    ...prev,
+                    address: '',
+                    building_number: '',
+                    entrance: '',
+                    apartment_number: '',
+                    residential_city: ''
+                  }));
+                  updatePersonMutation.mutate({ 
+                    custom_data: customData,
+                    address: '',
+                    building_number: '',
+                    entrance: '',
+                    apartment_number: '',
+                    residential_city: ''
+                  });
+                  return;
+                }
+                
+                const updates = {};
+                if (data.first_name) updates.first_name = data.first_name;
+                if (data.last_name) updates.last_name = data.last_name;
+                if (data.id_number) updates.id_number = String(data.id_number).replace(/\D/g, '').padStart(9, '0').slice(0, 9);
+                
+                if (data.address) updates.address = data.address;
+                if (data.building_number) updates.building_number = data.building_number;
+                if (data.entrance) updates.entrance = data.entrance;
+                if (data.apartment_number) updates.apartment_number = data.apartment_number;
+                if (data.city) updates.residential_city = data.city;
+                
+                setBasicData(prev => ({ ...prev, ...updates }));
+                if (data.gender) {
+                  setGender(data.gender);
+                  updates.custom_data = {
+                    ...(person?.custom_data || {}),
+                    gender: data.gender
+                  };
+                }
+                
+                if (data.children_birth_dates && Array.isArray(data.children_birth_dates)) {
+                  setChildrenDates([...data.children_birth_dates, '']);
+                }
+                if (data.children_names && Array.isArray(data.children_names)) {
+                  setChildrenNames([...data.children_names, '']);
+                }
+                if (data.num_children) {
+                  setManualNumChildren(String(data.num_children));
+                }
+                
+                const customData = { 
+                  ...(person?.custom_data || {}),
+                  ...(updates.custom_data || {}),
+                  id_upload_data: data,
+                  birth_date: data.birth_date || person?.custom_data?.birth_date
+                };
+                delete updates.custom_data;
+                updatePersonMutation.mutate({ ...updates, custom_data: customData });
+              }}
+            />
                  </div>
                  )}
 
