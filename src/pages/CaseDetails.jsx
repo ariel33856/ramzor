@@ -424,8 +424,8 @@ export default function CaseDetails() {
                         const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
                         setShowSummary(true);
                         setActiveContactId(null);
-                        if (window.changeCaseContact) {
-                          window.changeCaseContact(null);
+                        if (window.showCaseSummary) {
+                          window.showCaseSummary();
                         }
                         requestAnimationFrame(() => {
                           if (scrollContainer) {
