@@ -653,24 +653,6 @@ export default function PersonDetailsView({ personId }) {
       <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <Label className="text-sm font-medium whitespace-nowrap">{personFields.first_name}</Label>
-          <Input
-            value={basicData.first_name}
-            onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
-            placeholder={personFields.first_name}
-            className="text-xl font-bold w-40"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Label className="text-sm font-medium whitespace-nowrap">{personFields.last_name}</Label>
-          <Input
-            value={basicData.last_name}
-            onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
-            placeholder={personFields.last_name}
-            className="text-xl font-bold w-40"
-          />
-        </div>
-        <div className="flex items-center gap-2">
           <Label className="text-sm font-medium whitespace-nowrap">{personFields.phone}</Label>
           <Input
             value={basicData.phone}
