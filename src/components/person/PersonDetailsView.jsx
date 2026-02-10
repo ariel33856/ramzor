@@ -1292,6 +1292,20 @@ export default function PersonDetailsView({ personId }) {
             {/* Birth Info Section - Yellow */}
             <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-3 mt-0">
               <div className="flex items-center gap-2 flex-wrap">
+                <Label className="text-sm whitespace-nowrap">שם פרטי</Label>
+                <Input 
+                  value={basicData.first_name}
+                  onChange={(e) => handleBasicDataChange('first_name', e.target.value)}
+                  placeholder="שם פרטי"
+                  className="bg-white w-32 h-8"
+                />
+                <Label className="text-sm whitespace-nowrap">שם משפחה</Label>
+                <Input 
+                  value={basicData.last_name}
+                  onChange={(e) => handleBasicDataChange('last_name', e.target.value)}
+                  placeholder="שם משפחה"
+                  className="bg-white w-32 h-8"
+                />
                 <Label className="text-sm whitespace-nowrap">תאריך לידה</Label>
                 <Input 
                   value={person?.custom_data?.id_upload_data?.birth_date || person?.custom_data?.birth_date || ''} 
