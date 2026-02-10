@@ -93,7 +93,7 @@ export default function ContactButtons({ linkedContacts, caseId, activeContactId
     });
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex items-center gap-2 flex-wrap" style={{ minHeight: '52px' }}>
       {couples.map(({ contact, partner }) => (
         <div key={`couple-${contact.id}-${partner.id}`} className="border-2 border-green-300 rounded-lg p-2 bg-green-50/30">
           <div className="flex items-center gap-1">
