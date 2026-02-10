@@ -220,10 +220,10 @@ export default function CasePersonal() {
         </div>
       )}
 
-      <div className="space-y-4 p-1" style={{ minHeight: '80vh' }}>
-        {showSummary && (
+      <div className="relative p-1" style={{ minHeight: '80vh' }}>
+        <div style={{ display: showSummary ? 'block' : 'none' }}>
           <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
-        )}
+        </div>
         {sortedContacts.map((contact) => (
           <div 
             key={contact.id} 
