@@ -97,6 +97,7 @@ export default function CasePersonal() {
     setActiveContactId(contactId);
     setShowSummary(false);
     requestAnimationFrame(() => {
+      window.dispatchEvent(new Event('syncPersonTab'));
       if (scrollContainer) {
         scrollContainer.scrollTop = currentScroll;
       } else {
