@@ -223,8 +223,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       </div>
 
       {/* General Tab */}
-      {activeTab === 'general' && (
-        <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'general' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
@@ -265,8 +264,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Identity Tab */}
-      {activeTab === 'identity' && (
-        <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'identity' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
@@ -315,8 +313,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Income Tab */}
-      {activeTab === 'income' && (
-        <div className="p-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
@@ -385,8 +382,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Obligations Tab */}
-      {activeTab === 'obligations' && (
-        <div className="p-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'obligations' ? 'block' : 'none' }}>
           {/* Summary row */}
           <div className="overflow-x-auto mb-4">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
@@ -495,8 +491,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Properties Tab */}
-      {activeTab === 'properties' && (
-        <div className="p-4 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'properties' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
@@ -525,8 +520,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Health/Documents Tab */}
-      {activeTab === 'health' && (
-        <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'health' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
@@ -558,15 +552,13 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
       )}
 
       {/* Documentation/Communication Tab */}
-      {activeTab === 'documentation' && (
-        <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'documentation' ? 'block' : 'none' }}>
           <CommunicationHub linkedContacts={linkedContacts} caseId={caseId} />
         </div>
       )}
 
       {/* Transactions Tab */}
-      {activeTab === 'transactions' && (
-        <div className="p-4 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px' }}>
+      <div className="p-4 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'transactions' ? 'block' : 'none' }}>
           <div className="text-center py-12 text-gray-500">
             <p>סיכום עסקאות</p>
           </div>
