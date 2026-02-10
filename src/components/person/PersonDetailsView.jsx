@@ -453,8 +453,14 @@ export default function PersonDetailsView({ personId }) {
     const tabParam = urlParams.get('tab');
     if (tabParam) {
       setActiveTab(tabParam);
+    } else if (window._sharedPersonTab) {
+      setActiveTab(window._sharedPersonTab);
     }
   }, []);
+
+  React.useEffect(() => {
+    window._sharedPersonTab = activeTab;
+  }, [activeTab]);
 
   React.useEffect(() => {
     if (person) {
