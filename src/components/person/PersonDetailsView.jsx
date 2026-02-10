@@ -3100,10 +3100,9 @@ export default function PersonDetailsView({ personId }) {
               </div>
             )}
           </div>
-        )}
-      </div>
+          </div>
 
-      {/* Spouse Obligations Dialog */}
+          {/* Spouse Obligations Dialog */}
       <Dialog open={spouseObligationsDialogOpen} onOpenChange={setSpouseObligationsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
