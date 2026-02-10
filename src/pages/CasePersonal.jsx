@@ -109,8 +109,22 @@ export default function CasePersonal() {
     window.changeCaseContact = (contactId) => {
       moveContactToTop(contactId);
     };
+    window.showCaseSummary = () => {
+      const scrollContainer = document.querySelector('main');
+      const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
+      setShowSummary(true);
+      setActiveContactId(null);
+      requestAnimationFrame(() => {
+        if (scrollContainer) {
+          scrollContainer.scrollTop = currentScroll;
+        } else {
+          window.scrollTo({ top: currentScroll, behavior: 'instant' });
+        }
+      });
+    };
     return () => {
       window.changeCaseContact = null;
+      window.showCaseSummary = null;
     };
   }, []);
 
