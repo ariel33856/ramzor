@@ -48,6 +48,17 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
     window._sharedPersonTab = tab;
   };
 
+  // Sync tab when switching to summary view
+  React.useEffect(() => {
+    const handler = () => {
+      if (window._sharedPersonTab && window._sharedPersonTab !== activeTab) {
+        _setActiveTab(window._sharedPersonTab);
+      }
+    };
+    window.addEventListener('syncPersonTab', handler);
+    return () => window.removeEventListener('syncPersonTab', handler);
+  }, [activeTab]);
+
   if (!linkedContacts || linkedContacts.length === 0) {
     return <div className="text-center py-8 text-gray-400">אין אנשי קשר לסיכום</div>;
   }
