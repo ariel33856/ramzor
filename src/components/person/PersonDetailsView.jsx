@@ -1638,9 +1638,101 @@ export default function PersonDetailsView({ personId }) {
                  className="w-12 text-center h-8 bg-white" 
                   />
                  </div>
+                    </div>
+
+                 {/* ID Details Section - Blue */}
+                 <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
+                 <div className="flex items-center gap-2 flex-wrap">
+                  <Label className="text-sm whitespace-nowrap">ת.ז</Label>
+                  <Input 
+                    value={basicData.id_number}
+                    onChange={(e) => handleBasicDataChange('id_number', e.target.value)}
+                    placeholder="מספר ת.ז"
+                    className="bg-white w-28 h-8"
+                  />
+                  <Label className="text-sm whitespace-nowrap">תאריך הנפקה</Label>
+                  <Input 
+                    value={person?.custom_data?.id_upload_data?.id_issue_date || ''}
+                    onChange={(e) => {
+                      saveCustomData({ 
+                        id_upload_data: {
+                          ...(person?.custom_data?.id_upload_data || {}),
+                          id_issue_date: e.target.value
+                        }
+                      });
+                    }}
+                    placeholder="DD-MM-YYYY"
+                    className="bg-white w-28 h-8"
+                  />
+                  <Label className="text-sm whitespace-nowrap">תוקף</Label>
+                  <Input 
+                    value={person?.custom_data?.id_upload_data?.id_expiry_date || ''}
+                    onChange={(e) => {
+                      saveCustomData({ 
+                        id_upload_data: {
+                          ...(person?.custom_data?.id_upload_data || {}),
+                          id_expiry_date: e.target.value
+                        }
+                      });
+                    }}
+                    placeholder="DD-MM-YYYY"
+                    className="bg-white w-28 h-8"
+                  />
+                  <Label className="text-sm whitespace-nowrap">מעמד ישראלי</Label>
+                  <Select 
+                    value={person?.custom_data?.id_upload_data?.israeli_status || ''} 
+                    onValueChange={(value) => {
+                      saveCustomData({ 
+                        id_upload_data: {
+                          ...(person?.custom_data?.id_upload_data || {}),
+                          israeli_status: value
+                        }
+                      });
+                    }}
+                  >
+                    <SelectTrigger className="h-8 bg-white w-auto min-w-32">
+                      <SelectValue placeholder="בחר מעמד" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="אזרחות ישראלית">אזרחות ישראלית</SelectItem>
+                      <SelectItem value="תושבות קבע">תושבות קבע</SelectItem>
+                      <SelectItem value="תושבות ארעית">תושבות ארעית</SelectItem>
+                      <SelectItem value="אשרת שהיה">אשרת שהיה</SelectItem>
+                      <SelectItem value="ללא">ללא</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Label className="text-sm whitespace-nowrap">אזרחות זרה</Label>
+                  <Input 
+                    value={person?.custom_data?.id_upload_data?.foreign_citizenship || ''}
+                    onChange={(e) => {
+                      saveCustomData({ 
+                        id_upload_data: {
+                          ...(person?.custom_data?.id_upload_data || {}),
+                          foreign_citizenship: e.target.value
+                        }
+                      });
+                    }}
+                    placeholder=""
+                    className="bg-white w-28 h-8"
+                  />
+                  <Label className="text-sm whitespace-nowrap">מס' דרכון</Label>
+                  <Input 
+                    value={person?.custom_data?.id_upload_data?.passport_number || ''}
+                    onChange={(e) => {
+                      saveCustomData({ 
+                        id_upload_data: {
+                          ...(person?.custom_data?.id_upload_data || {}),
+                          passport_number: e.target.value
+                        }
+                      });
+                    }}
+                    placeholder=""
+                    className="bg-white w-28 h-8"
+                  />
+                 </div>
                  </div>
 
-            <IDUploader 
+                 <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
               setGender={setGender}
