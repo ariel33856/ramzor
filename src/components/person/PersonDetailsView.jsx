@@ -19,6 +19,7 @@ import IDUploader from './IDUploader';
 import { Upload } from 'lucide-react';
 import ExternalContacts from '../transactions/ExternalContacts';
 import CommunicationHub from '../case/CommunicationHub';
+import personTabDefs from './personTabDefs';
 
 
 const validateIsraeliID = (id) => {

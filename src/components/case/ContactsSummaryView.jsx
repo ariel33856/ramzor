@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CommunicationHub from './CommunicationHub';
+import personTabDefs from '../person/personTabDefs';
 
 const formatCurrency = (val) => {
   if (!val) return '0';
