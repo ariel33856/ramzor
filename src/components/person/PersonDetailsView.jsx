@@ -649,8 +649,7 @@ export default function PersonDetailsView({ personId }) {
         </div>
 
         {/* Tab Content: General */}
-        {activeTab === 'general' && (
-          <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+        <div className="p-4 bg-blue-50 border-2 border-blue-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'general' ? 'block' : 'none' }}>
       <div className="bg-white border-2 border-blue-200 rounded-lg p-4">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
@@ -1189,11 +1188,9 @@ export default function PersonDetailsView({ personId }) {
           </div>
           </div>
           </div>
-          )}
 
-        {/* Tab Content: Identity */}
-        {activeTab === 'identity' && (
-          <div className="p-6 space-y-4 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Identity */}
+          <div className="p-6 space-y-4 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'identity' ? 'block' : 'none' }}>
             {/* Birth Info Section - Purple */}
             <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-3">
               <div className="flex items-center gap-2 flex-wrap">
@@ -1808,11 +1805,9 @@ export default function PersonDetailsView({ personId }) {
               }}
             />
                  </div>
-                 )}
 
         {/* Tab Content: Income */}
-        {activeTab === 'income' && (
-          <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+        <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
                 <div className="flex items-center justify-between">
@@ -2133,11 +2128,9 @@ export default function PersonDetailsView({ personId }) {
               </Select>
             </div>
           </div>
-        )}
 
-        {/* Tab Content: Obligations */}
-        {activeTab === 'obligations' && (
-          <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Obligations */}
+          <div className="p-6 space-y-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'obligations' ? 'block' : 'none' }}>
             <h2 className="text-lg font-bold text-gray-900 mb-4">התחייבויות שלי</h2>
             {obligations.map((obligation, index) => (
              <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
@@ -2369,11 +2362,9 @@ export default function PersonDetailsView({ personId }) {
               </>
             )}
           </div>
-        )}
 
-        {/* Tab Content: Properties */}
-        {activeTab === 'properties' && (
-          <div className="p-6 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Properties */}
+          <div className="p-6 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'properties' ? 'block' : 'none' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex gap-2">
             <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
@@ -2804,11 +2795,9 @@ export default function PersonDetailsView({ personId }) {
           </div>
         )}
           </div>
-        )}
 
-        {/* Tab Content: Health & Education */}
-        {activeTab === 'health' && (
-          <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Health & Education */}
+          <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'health' ? 'block' : 'none' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
               gender={gender}
@@ -2884,18 +2873,14 @@ export default function PersonDetailsView({ personId }) {
               }}
             />
           </div>
-        )}
 
-        {/* Tab Content: Documentation */}
-        {activeTab === 'documentation' && (
-          <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Documentation */}
+          <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'documentation' ? 'block' : 'none' }}>
             <CommunicationHub linkedContacts={person ? [person] : []} caseId={null} />
           </div>
-        )}
 
-        {/* Tab Content: Transactions */}
-        {activeTab === 'transactions' && (
-          <div className="p-6 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
+          {/* Tab Content: Transactions */}
+          <div className="p-6 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'transactions' ? 'block' : 'none' }}>
             <div className="flex items-center justify-end mb-4">
               <Button
                 onClick={() => {
