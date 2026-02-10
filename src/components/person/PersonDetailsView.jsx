@@ -18,6 +18,7 @@ import { tabComponents } from '@/components/dashboard/FieldsHierarchy';
 import IDUploader from './IDUploader';
 import { Upload } from 'lucide-react';
 import ExternalContacts from '../transactions/ExternalContacts';
+import CommunicationHub from '../case/CommunicationHub';
 
 
 const validateIsraeliID = (id) => {
