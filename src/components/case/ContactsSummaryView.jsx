@@ -41,7 +41,11 @@ const getNameStyle = (rel) => {
 };
 
 export default function ContactsSummaryView({ linkedContacts, caseId }) {
-  const [activeTab, setActiveTab] = useState('documentation');
+  const [activeTab, _setActiveTab] = useState(() => window._sharedPersonTab || 'documentation');
+  const setActiveTab = (tab) => {
+    _setActiveTab(tab);
+    window._sharedPersonTab = tab;
+  };
 
   if (!linkedContacts || linkedContacts.length === 0) {
     return <div className="text-center py-8 text-gray-400">אין אנשי קשר לסיכום</div>;
