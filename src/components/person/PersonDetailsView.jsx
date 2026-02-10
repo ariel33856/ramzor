@@ -2808,46 +2808,6 @@ export default function PersonDetailsView({ personId }) {
         {/* Tab Content: Health & Education */}
         {activeTab === 'health' && (
           <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px' }}>
-            <div className="bg-white border-2 border-cyan-200 rounded-lg p-4 mb-4">
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Label className="text-sm font-medium whitespace-nowrap">מצב בריאותי</Label>
-                  <Select value={healthStatus} onValueChange={(value) => {
-                    setHealthStatus(value);
-                    saveCustomData({ health_status: value });
-                  }}>
-                    <SelectTrigger className="w-48 bg-white h-9">
-                      <SelectValue placeholder="בחר מצב בריאותי" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="טוב">טוב</SelectItem>
-                      <SelectItem value="בינוני">בינוני</SelectItem>
-                      <SelectItem value="לא טוב">לא טוב</SelectItem>
-                      <SelectItem value="עם מגבלות">עם מגבלות</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label className="text-sm font-medium whitespace-nowrap">השכלה</Label>
-                  <Select value={education} onValueChange={(value) => {
-                    setEducation(value);
-                    saveCustomData({ education: value });
-                  }}>
-                    <SelectTrigger className="w-48 bg-white h-9">
-                      <SelectValue placeholder="בחר רמת השכלה" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="יסודי">יסודי</SelectItem>
-                      <SelectItem value="תיכון">תיכון</SelectItem>
-                      <SelectItem value="תואר ראשון">תואר ראשון</SelectItem>
-                      <SelectItem value="תואר שני">תואר שני</SelectItem>
-                      <SelectItem value="דוקטורט">דוקטורט</SelectItem>
-                      <SelectItem value="אחר">אחר</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
