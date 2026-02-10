@@ -92,11 +92,16 @@ export default function CasePersonal() {
   }, [linkedContacts]);
 
   const moveContactToTop = (contactId) => {
-    const currentScroll = window.scrollY;
+    const scrollContainer = document.querySelector('main');
+    const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
     setActiveContactId(contactId);
     setShowSummary(false);
     requestAnimationFrame(() => {
-      window.scrollTo({ top: currentScroll, behavior: 'instant' });
+      if (scrollContainer) {
+        scrollContainer.scrollTop = currentScroll;
+      } else {
+        window.scrollTo({ top: currentScroll, behavior: 'instant' });
+      }
     });
   };
 
