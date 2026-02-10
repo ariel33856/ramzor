@@ -445,21 +445,7 @@ export default function CaseDetails() {
               </div>
 
               <div style={{ minHeight: '60vh' }}>
-                {activeTab === 'personal' && (
-                  <>
-                    <div style={{ display: showSummary ? 'block' : 'none' }}>
-                      <ContactsSummaryView linkedContacts={linkedContacts} caseId={caseId} />
-                    </div>
-                    <div style={{ display: showSummary ? 'none' : 'block' }}>
-                      {React.createElement(pageComponents.personal)}
-                    </div>
-                  </>
-                )}
-                {activeTab !== 'personal' && pageComponents[activeTab] && (
-                  <div>
-                    {React.createElement(pageComponents[activeTab])}
-                  </div>
-                )}
+                {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
               </div>
             </div>
           )}
