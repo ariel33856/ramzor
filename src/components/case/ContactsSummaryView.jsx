@@ -261,7 +261,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Identity Tab */}
       <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'identity' ? 'block' : 'none' }}>
@@ -310,7 +309,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Income Tab */}
       <div className="p-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
@@ -379,7 +377,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Obligations Tab */}
       <div className="p-4 bg-rose-50 border-2 border-rose-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'obligations' ? 'block' : 'none' }}>
@@ -488,7 +485,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Properties Tab */}
       <div className="p-4 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'properties' ? 'block' : 'none' }}>
@@ -517,7 +513,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Health/Documents Tab */}
       <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'health' ? 'block' : 'none' }}>
@@ -549,13 +544,11 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             </table>
           </div>
         </div>
-      )}
 
       {/* Documentation/Communication Tab */}
       <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'documentation' ? 'block' : 'none' }}>
           <CommunicationHub linkedContacts={linkedContacts} caseId={caseId} />
         </div>
-      )}
 
       {/* Transactions Tab */}
       <div className="p-4 bg-amber-50 border-2 border-black rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'transactions' ? 'block' : 'none' }}>
@@ -563,7 +556,6 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
             <p>סיכום עסקאות</p>
           </div>
         </div>
-      )}
     </div>
   );
 }
