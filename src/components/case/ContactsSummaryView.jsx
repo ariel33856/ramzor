@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CommunicationHub from './CommunicationHub';
 
 const formatCurrency = (val) => {
   if (!val) return '0';
