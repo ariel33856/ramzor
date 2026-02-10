@@ -420,11 +420,20 @@ export default function CaseDetails() {
                     )}
                     <button
                       onClick={() => {
+                        const scrollContainer = document.querySelector('main');
+                        const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
                         setShowSummary(true);
                         setActiveContactId(null);
                         if (window.changeCaseContact) {
                           window.changeCaseContact(null);
                         }
+                        requestAnimationFrame(() => {
+                          if (scrollContainer) {
+                            scrollContainer.scrollTop = currentScroll;
+                          } else {
+                            window.scrollTo({ top: currentScroll, behavior: 'instant' });
+                          }
+                        });
                       }}
                       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 ${showSummary ? 'ring-4 ring-white outline outline-4 outline-blue-500 shadow-lg' : ''}`}
                     >
