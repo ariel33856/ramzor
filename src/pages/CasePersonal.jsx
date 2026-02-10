@@ -223,7 +223,7 @@ export default function CasePersonal() {
           <div 
             key={contact.id} 
             id={`contact-${contact.id}`}
-            style={{ display: !showSummary && contact.id === activeContactId ? 'block' : 'none' }}
+            style={{ display: !showSummary && contact.id === activeContactId ? 'block' : 'none', minHeight: '70vh' }}
           >
             <PersonDetailsView personId={contact.id} />
           </div>
