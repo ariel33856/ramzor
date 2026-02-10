@@ -463,6 +463,17 @@ export default function PersonDetailsView({ personId }) {
     window._sharedPersonTab = activeTab;
   }, [activeTab]);
 
+  // Sync tab when this contact becomes visible (switching between contacts)
+  React.useEffect(() => {
+    const handler = () => {
+      if (window._sharedPersonTab && window._sharedPersonTab !== activeTab) {
+        setActiveTab(window._sharedPersonTab);
+      }
+    };
+    window.addEventListener('syncPersonTab', handler);
+    return () => window.removeEventListener('syncPersonTab', handler);
+  }, [activeTab]);
+
   React.useEffect(() => {
     if (person) {
       setBasicData({
