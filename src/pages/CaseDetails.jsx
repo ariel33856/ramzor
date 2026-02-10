@@ -400,11 +400,20 @@ export default function CaseDetails() {
                           caseId={caseId}
                           activeContactId={activeContactId}
                           onContactClick={(contactId) => {
+                           const scrollContainer = document.querySelector('main');
+                           const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
                            setActiveContactId(contactId);
                            setShowSummary(false);
                            if (window.changeCaseContact) {
                              window.changeCaseContact(contactId);
                            }
+                           requestAnimationFrame(() => {
+                             if (scrollContainer) {
+                               scrollContainer.scrollTop = currentScroll;
+                             } else {
+                               window.scrollTo({ top: currentScroll, behavior: 'instant' });
+                             }
+                           });
                           }}
                         />
                       </>
