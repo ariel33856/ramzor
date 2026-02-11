@@ -191,6 +191,23 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
               <Send className="w-4 h-4" />
               שלח לכולם
             </Button>
+            <div className="h-6 w-px bg-gray-200 mx-1" />
+            {[
+              { key: 'all', label: 'הכל', bg: 'bg-gray-500 hover:bg-gray-600', activeBg: 'bg-gray-700' },
+              { key: 'whatsapp', label: 'וואטסאפ', bg: 'bg-green-500 hover:bg-green-600', activeBg: 'bg-green-700' },
+              { key: 'email', label: 'אימייל', bg: 'bg-blue-500 hover:bg-blue-600', activeBg: 'bg-blue-700' },
+              { key: 'phone', label: 'שיחות', bg: 'bg-gray-400 hover:bg-gray-500', activeBg: 'bg-gray-600' },
+              { key: 'note', label: 'הערות', bg: 'bg-amber-500 hover:bg-amber-600', activeBg: 'bg-amber-700' },
+            ].map(f => (
+              <Button
+                key={f.key}
+                size="sm"
+                onClick={() => setTypeFilter(f.key)}
+                className={`text-white gap-1 ${typeFilter === f.key ? `${f.activeBg} ring-2 ring-offset-1 ring-gray-400` : f.bg}`}
+              >
+                {f.label}
+              </Button>
+            ))}
             {!combinedView && selectedContact && (
               <span className="text-xs text-gray-500 mr-auto">
                 פעולות עבור: <span className="font-semibold text-gray-800">{selectedContact.first_name} {selectedContact.last_name}</span>
