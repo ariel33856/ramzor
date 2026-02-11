@@ -856,12 +856,19 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
 
                 {!uploading3 && (
                    <div className="flex flex-col h-full">
-                     <iframe 
+                     <object 
                        key={preview3}
-                       src={`https://docs.google.com/gview?url=${encodeURIComponent(preview3)}&embedded=true`}
+                       data={preview3}
+                       type="application/pdf"
                        className="w-full flex-1 min-h-[280px] rounded-xl"
-                       frameBorder="0"
-                     />
+                     >
+                       <img 
+                         src={preview3} 
+                         alt="ספח" 
+                         className="w-full h-full min-h-[280px] object-contain rounded-xl cursor-pointer" 
+                         onClick={(e) => { e.stopPropagation(); window.open(preview3, '_blank'); }}
+                       />
+                     </object>
                      <p className="text-xs text-gray-500 mt-2 text-center">ספח</p>
                    </div>
                  )}
