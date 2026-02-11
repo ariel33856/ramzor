@@ -1816,7 +1816,7 @@ export default function PersonDetailsView({ personId }) {
                  </div>
 
         {/* Tab Content: Income */}
-        <div className="p-6 space-y-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
+        <div className="p-6 space-y-4 bg-lime-50 border-2 border-lime-600 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
             {incomeSources.map((income, index) => (
               <div key={index} className="border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50/30 space-y-3">
                 <div className="flex items-center justify-between">
