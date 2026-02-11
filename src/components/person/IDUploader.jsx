@@ -732,12 +732,19 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
 
                 {!uploading2 && (
                    <div className="flex flex-col h-full">
-                     <iframe 
+                     <object 
                        key={preview2}
-                       src={`https://docs.google.com/gview?url=${encodeURIComponent(preview2)}&embedded=true`}
+                       data={preview2}
+                       type="application/pdf"
                        className="w-full flex-1 min-h-[280px] rounded-xl"
-                       frameBorder="0"
-                     />
+                     >
+                       <img 
+                         src={preview2} 
+                         alt="מסמך" 
+                         className="w-full h-full min-h-[280px] object-contain rounded-xl cursor-pointer" 
+                         onClick={(e) => { e.stopPropagation(); window.open(preview2, '_blank'); }}
+                       />
+                     </object>
                      <p className="text-xs text-gray-500 mt-2 text-center">
                        {idType === 'ביומטרית' ? 'צד שני של תעודה' : 'ספח'}
                      </p>
