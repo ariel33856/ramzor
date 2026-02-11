@@ -601,12 +601,19 @@ export default function IDUploader({ onDataExtracted, initialData = null, gender
               )}
 
               <div className="flex flex-col h-full">
-                <iframe 
+                <object 
                   key={preview}
-                  src={`https://docs.google.com/gview?url=${encodeURIComponent(preview)}&embedded=true`}
+                  data={preview}
+                  type="application/pdf"
                   className="w-full flex-1 min-h-[280px] rounded-xl"
-                  frameBorder="0"
-                />
+                >
+                  <img 
+                    src={preview} 
+                    alt="תעודת זהות" 
+                    className="w-full h-full min-h-[280px] object-contain rounded-xl cursor-pointer" 
+                    onClick={(e) => { e.stopPropagation(); window.open(preview, '_blank'); }}
+                  />
+                </object>
                 <p className="text-xs text-gray-500 mt-2 text-center">
                   {detectionResult === 'both' ? 'תעודת זהות + ספח' : detectionResult === 'id_card' ? 'תעודת זהות' : 'ספח'}
                 </p>
