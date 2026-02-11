@@ -667,8 +667,8 @@ export default function Layout({ children, currentPageName }) {
                   </div>
 
                   <div className="flex items-center gap-2">
-                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-1">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/0eca9f20c_.png" alt="לוגו" className="h-[108px] w-auto object-contain" />
+                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-1 relative">
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/0eca9f20c_.png" alt="לוגו" className="h-[108px] w-auto object-contain absolute top-0 z-40" />
                   <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
                   <Home className="w-5 h-5 text-gray-500" />
                   </Button>
