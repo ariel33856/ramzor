@@ -806,7 +806,7 @@ export default function Layout({ children, currentPageName }) {
                   <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
                   </Button>
                   <Link to={createPageUrl('Dashboard')} className="flex items-center">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/33b8e2ef2_3.png" alt="לוגו" className="h-9 w-auto object-contain scale-[1.66] origin-center pointer-events-none" />
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/40ed21842_4.png" alt="לוגו" className="h-9 w-auto object-contain scale-[1.66] origin-center pointer-events-none" />
                   </Link>
                   </div>
                   </div>
