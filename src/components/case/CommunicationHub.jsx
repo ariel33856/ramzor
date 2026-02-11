@@ -1,47 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Phone, Mail, MessageSquare, Send, StickyNote, Users, User, ChevronLeft, Plus, Clock } from 'lucide-react';
+import { Phone, Mail, MessageSquare, Send, StickyNote, Users, User, ChevronLeft, Plus, Clock, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const interactionTypes = {
   whatsapp: { icon: MessageSquare, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', label: 'וואטסאפ' },
   email: { icon: Mail, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', label: 'אימייל' },
   phone: { icon: Phone, color: 'text-gray-600', bg: 'bg-gray-50', border: 'border-gray-200', label: 'שיחה' },
   note: { icon: StickyNote, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', label: 'הערה' },
-};
-
-const dummyInteractions = (contacts) => {
-  if (!contacts || contacts.length === 0) return [];
-  const types = ['whatsapp', 'email', 'phone', 'note'];
-  const titles = {
-    whatsapp: ['הודעת וואטסאפ נשלחה', 'תגובה התקבלה בוואטסאפ', 'נשלח מסמך בוואטסאפ'],
-    email: ['אימייל נשלח', 'תשובה התקבלה באימייל', 'נשלח סיכום פגישה'],
-    phone: ['שיחת טלפון', 'שיחה נכנסת', 'הודעה קולית'],
-    note: ['הערה פנימית', 'תזכורת', 'סיכום שיחה'],
-  };
-  const descriptions = {
-    whatsapp: ['נשלחו פרטי הבקשה', 'הלקוח אישר קבלת מסמכים', 'נשלח טופס חתום'],
-    email: ['נשלח סיכום תנאי המשכנתא', 'התקבל אישור העסקה', 'נשלחה בקשת מסמכים'],
-    phone: ['שיחה בנוגע לתנאי ההלוואה', 'הלקוח התקשר לברר פרטים', 'הושארה הודעה'],
-    note: ['יש לעקוב אחרי חתימת המסמכים', 'להתקשר שוב מחר', 'סוכם על מועד פגישה'],
-  };
-
-  const items = [];
-  const now = Date.now();
-  for (let i = 0; i < 12; i++) {
-    const type = types[i % types.length];
-    const contact = contacts[i % contacts.length];
-    items.push({
-      id: `int-${i}`,
-      type,
-      contactId: contact.id,
-      contactName: `${contact.first_name} ${contact.last_name}`,
-      title: titles[type][i % titles[type].length],
-      description: descriptions[type][i % descriptions[type].length],
-      date: new Date(now - i * 3600000 * (6 + Math.random() * 18)),
-    });
-  }
-  return items.sort((a, b) => b.date - a.date);
 };
 
 function formatDate(d) {
