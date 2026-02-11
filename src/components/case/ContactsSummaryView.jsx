@@ -318,7 +318,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
         </div>
 
       {/* Income Tab */}
-      <div className="p-4 bg-green-50 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
+      <div className="p-4 bg-lime-50 border-2 border-lime-600 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'income' ? 'block' : 'none' }}>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
               <thead>
