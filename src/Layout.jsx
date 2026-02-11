@@ -264,7 +264,7 @@ export default function Layout({ children, currentPageName }) {
       <div className="fixed inset-0 flex flex-col overflow-hidden">
         {/* Top Bar */}
         <header className="flex-shrink-0 z-30 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-          <div className="flex items-center justify-between px-3 py-3">
+          <div className="flex items-center justify-between px-3 py-1">
             <div className="flex items-center gap-4">
               {(currentPageName === 'Dashboard' || currentPageName === 'AccountsArchive' || currentPageName === 'ArchiveAccounts' || currentPageName === 'ContactsArchive' || currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ModulesManager' || currentPageName === 'Management' || currentPageName === 'Marketing' || currentPageName === 'ModuleView' || currentPageName === 'ModuleArchive' || currentPageName === 'RecordsTable') && (
                 <>
@@ -667,8 +667,8 @@ export default function Layout({ children, currentPageName }) {
                   </div>
 
                   <div className="flex items-center gap-2">
-                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-1 relative">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/0eca9f20c_.png" alt="לוגו" className="h-[108px] w-auto object-contain absolute top-0 z-40" />
+                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-1">
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/0eca9f20c_.png" alt="לוגו" className="h-[108px] w-auto object-contain" />
                   <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
                   <Home className="w-5 h-5 text-gray-500" />
                   </Button>
