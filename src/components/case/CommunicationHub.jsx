@@ -83,9 +83,15 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
   const allInteractions = useMemo(() => [...extraInteractions, ...interactions].sort((a, b) => b.date - a.date), [interactions, extraInteractions]);
 
   const filteredInteractions = useMemo(() => {
-    if (combinedView || !selectedContactId) return allInteractions;
-    return allInteractions.filter(i => i.contactId === selectedContactId);
-  }, [allInteractions, selectedContactId, combinedView]);
+    let result = allInteractions;
+    if (!combinedView && selectedContactId) {
+      result = result.filter(i => i.contactId === selectedContactId);
+    }
+    if (typeFilter !== 'all') {
+      result = result.filter(i => i.type === typeFilter);
+    }
+    return result;
+  }, [allInteractions, selectedContactId, combinedView, typeFilter]);
 
   const selectedContact = linkedContacts.find(c => c.id === selectedContactId);
 
