@@ -77,6 +77,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
   const [combinedView, setCombinedView] = useState(true);
   const [noteText, setNoteText] = useState('');
   const [extraInteractions, setExtraInteractions] = useState([]);
+  const [typeFilter, setTypeFilter] = useState('all');
 
   const interactions = useMemo(() => dummyInteractions(linkedContacts), [linkedContacts]);
   const allInteractions = useMemo(() => [...extraInteractions, ...interactions].sort((a, b) => b.date - a.date), [interactions, extraInteractions]);
