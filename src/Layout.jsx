@@ -805,6 +805,12 @@ export default function Layout({ children, currentPageName }) {
                   <Bell className="w-5 h-5 text-gray-500" />
                   <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
                   </Button>
+                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-1">
+                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/af38ce8b9_1.png" alt="לוגו" className="h-9 w-auto object-contain scale-[1.8] origin-center pointer-events-none" />
+                  <Button variant="ghost" size="icon" title="חזרה למסך הראשי">
+                  <Home className="w-5 h-5 text-gray-500" />
+                  </Button>
+                  </Link>
                   </div>
                   </div>
                   </header>
