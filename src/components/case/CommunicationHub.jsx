@@ -207,22 +207,17 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
         {/* Action Bar */}
         <div className="p-3 border-b border-gray-100 space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white gap-1.5">
+            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white gap-1.5" onClick={() => { setAddingType('whatsapp'); setNewTitle(''); setNewDescription(''); }}>
               <MessageSquare className="w-4 h-4" />
-              וואטסאפ
+              + וואטסאפ
             </Button>
-            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white gap-1.5">
+            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white gap-1.5" onClick={() => { setAddingType('email'); setNewTitle(''); setNewDescription(''); }}>
               <Mail className="w-4 h-4" />
-              אימייל
+              + אימייל
             </Button>
-            <Button size="sm" variant="outline" className="gap-1.5">
+            <Button size="sm" variant="outline" className="gap-1.5" onClick={() => { setAddingType('phone'); setNewTitle(''); setNewDescription(''); }}>
               <Phone className="w-4 h-4" />
-              שיחה
-            </Button>
-            <div className="h-6 w-px bg-gray-200 mx-1" />
-            <Button size="sm" className="bg-purple-500 hover:bg-purple-600 text-white gap-1.5">
-              <Send className="w-4 h-4" />
-              שלח לכולם
+              + שיחה
             </Button>
             <div className="h-6 w-px bg-gray-200 mx-1" />
             {[
