@@ -263,13 +263,42 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
           </div>
         </div>
 
+        {/* Add Interaction Form */}
+        {addingType && (
+          <div className="p-3 border-b border-gray-100 bg-gray-50 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-gray-700">
+                {interactionTypes[addingType]?.label || addingType} חדש
+              </span>
+              <Button size="sm" variant="ghost" onClick={() => setAddingType(null)} className="mr-auto text-xs">ביטול</Button>
+            </div>
+            <Input
+              placeholder="כותרת..."
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              className="text-sm"
+            />
+            <Input
+              placeholder="תיאור..."
+              value={newDescription}
+              onChange={e => setNewDescription(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddInteraction(addingType)}
+              className="text-sm"
+            />
+            <Button size="sm" onClick={() => handleAddInteraction(addingType)} disabled={!newTitle.trim() || createMutation.isPending}>
+              <Plus className="w-4 h-4 ml-1" />
+              שמור
+            </Button>
+          </div>
+        )}
+
         {/* Timeline */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {filteredInteractions.length === 0 ? (
             <div className="text-center py-12 text-gray-400">אין אינטראקציות להצגה</div>
           ) : (
             filteredInteractions.map(item => {
-              const typeInfo = interactionTypes[item.type];
+              const typeInfo = interactionTypes[item.type] || interactionTypes.note;
               const Icon = typeInfo.icon;
               return (
                 <div key={item.id} className={`flex gap-3 p-3 rounded-xl border ${typeInfo.border} ${typeInfo.bg} transition-all hover:shadow-sm`}>
@@ -280,18 +309,26 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-semibold text-gray-900">{item.title}</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full ${typeInfo.bg} ${typeInfo.color} border ${typeInfo.border}`}>{typeInfo.label}</span>
-                      {combinedView && (
+                      {combinedView && item.contact_name && (
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                          {item.contactName}
+                          {item.contact_name}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                    {item.description && <p className="text-sm text-gray-600 mt-1">{item.description}</p>}
                     <div className="flex items-center gap-1 mt-1.5 text-xs text-gray-400">
                       <Clock className="w-3 h-3" />
-                      {formatDate(item.date)}
+                      {formatDate(item.interaction_date || item.created_date)}
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 text-red-400 hover:text-red-600 hover:bg-red-50 flex-shrink-0 self-start"
+                    onClick={() => deleteMutation.mutate(item.id)}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
                 </div>
               );
             })
