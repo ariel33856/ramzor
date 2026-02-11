@@ -44,39 +44,104 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [combinedView, setCombinedView] = useState(true);
   const [noteText, setNoteText] = useState('');
-  const [extraInteractions, setExtraInteractions] = useState([]);
   const [typeFilter, setTypeFilter] = useState('all');
+  const [addingType, setAddingType] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const queryClient = useQueryClient();
 
-  const interactions = useMemo(() => dummyInteractions(linkedContacts), [linkedContacts]);
-  const allInteractions = useMemo(() => [...extraInteractions, ...interactions].sort((a, b) => b.date - a.date), [interactions, extraInteractions]);
+  // Build query filter based on linked contacts and case
+  const contactIds = linkedContacts.map(c => c.id);
+
+  const { data: interactions = [] } = useQuery({
+    queryKey: ['interactions', caseId, contactIds.join(',')],
+    queryFn: async () => {
+      if (caseId) {
+        const byCaseId = await base44.entities.Interaction.filter({ case_id: caseId }, '-interaction_date');
+        // Also fetch by contact IDs not linked to this case
+        const byContactPromises = contactIds.map(id => 
+          base44.entities.Interaction.filter({ contact_id: id }, '-interaction_date')
+        );
+        const byContactResults = await Promise.all(byContactPromises);
+        const byContact = byContactResults.flat();
+        // Merge and deduplicate
+        const allMap = new Map();
+        [...byCaseId, ...byContact].forEach(i => allMap.set(i.id, i));
+        return Array.from(allMap.values()).sort((a, b) => 
+          new Date(b.interaction_date || b.created_date) - new Date(a.interaction_date || a.created_date)
+        );
+      } else if (contactIds.length > 0) {
+        const byContactPromises = contactIds.map(id => 
+          base44.entities.Interaction.filter({ contact_id: id }, '-interaction_date')
+        );
+        const results = await Promise.all(byContactPromises);
+        return results.flat().sort((a, b) => 
+          new Date(b.interaction_date || b.created_date) - new Date(a.interaction_date || a.created_date)
+        );
+      }
+      return [];
+    },
+    enabled: contactIds.length > 0 || !!caseId,
+    staleTime: 30000
+  });
 
   const filteredInteractions = useMemo(() => {
-    let result = allInteractions;
+    let result = interactions;
     if (!combinedView && selectedContactId) {
-      result = result.filter(i => i.contactId === selectedContactId);
+      result = result.filter(i => i.contact_id === selectedContactId);
     }
     if (typeFilter !== 'all') {
       result = result.filter(i => i.type === typeFilter);
     }
     return result;
-  }, [allInteractions, selectedContactId, combinedView, typeFilter]);
+  }, [interactions, selectedContactId, combinedView, typeFilter]);
 
   const selectedContact = linkedContacts.find(c => c.id === selectedContactId);
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.Interaction.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['interactions'] });
+      setNoteText('');
+      setNewTitle('');
+      setNewDescription('');
+      setAddingType(null);
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Interaction.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['interactions'] })
+  });
 
   const handleAddNote = () => {
     if (!noteText.trim()) return;
     const target = selectedContact || linkedContacts[0];
     if (!target) return;
-    setExtraInteractions(prev => [{
-      id: `note-${Date.now()}`,
+    createMutation.mutate({
+      case_id: caseId || '',
+      contact_id: target.id,
+      contact_name: `${target.first_name} ${target.last_name}`,
       type: 'note',
-      contactId: target.id,
-      contactName: `${target.first_name} ${target.last_name}`,
       title: 'הערה פנימית',
       description: noteText.trim(),
-      date: new Date(),
-    }, ...prev]);
-    setNoteText('');
+      interaction_date: new Date().toISOString()
+    });
+  };
+
+  const handleAddInteraction = (type) => {
+    if (!newTitle.trim()) return;
+    const target = selectedContact || linkedContacts[0];
+    if (!target) return;
+    createMutation.mutate({
+      case_id: caseId || '',
+      contact_id: target.id,
+      contact_name: `${target.first_name} ${target.last_name}`,
+      type,
+      title: newTitle.trim(),
+      description: newDescription.trim(),
+      interaction_date: new Date().toISOString()
+    });
   };
 
   if (!linkedContacts || linkedContacts.length === 0) {
