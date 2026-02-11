@@ -553,7 +553,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
         </div>
 
       {/* Documentation/Communication Tab */}
-      <div className="p-4 bg-teal-50 border-2 border-teal-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'documentation' ? 'block' : 'none' }}>
+      <div className="p-4 bg-green-100 border-2 border-green-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'documentation' ? 'block' : 'none' }}>
           <CommunicationHub linkedContacts={linkedContacts} caseId={caseId} />
         </div>
 

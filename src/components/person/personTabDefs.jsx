@@ -3,7 +3,7 @@
 // Change labels here and they will update in both places.
 
 const personTabDefs = [
-  { id: 'documentation', label: 'תקשורת', activeBg: 'bg-teal-50', activeText: 'text-teal-700', borderColor: 'border-teal-400', bottomBorderColor: 'border-b-teal-400' },
+  { id: 'documentation', label: 'תקשורת', activeBg: 'bg-green-100', activeText: 'text-green-700', borderColor: 'border-green-400', bottomBorderColor: 'border-b-green-400' },
   { id: 'identity', label: 'תעודת זהות', activeBg: 'bg-amber-50', activeText: 'text-amber-700', borderColor: 'border-amber-400', bottomBorderColor: 'border-b-amber-400' },
   { id: 'income', label: 'הכנסות', activeBg: 'bg-lime-100', activeText: 'text-lime-900', borderColor: 'border-lime-800', bottomBorderColor: 'border-b-lime-800' },
   { id: 'obligations', label: 'התחייבויות ועו"ש', activeBg: 'bg-rose-50', activeText: 'text-rose-700', borderColor: 'border-rose-400', bottomBorderColor: 'border-b-rose-400' },
