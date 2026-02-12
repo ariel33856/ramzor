@@ -88,9 +88,9 @@ export default function CaseSubmissions() {
   });
 
   return (
-    <div className="p-2 flex gap-3 items-stretch" dir="rtl">
+    <div className="p-2 flex gap-3" dir="rtl">
       {/* Submissions - main area */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 flex flex-col">
         <div className="mb-3">
           <Button
             onClick={() => setShowNewForm(true)}
@@ -147,38 +147,36 @@ export default function CaseSubmissions() {
       </div>
 
       {/* Requests - side panel */}
-      <div className="w-80 flex-shrink-0">
-        <div className="sticky top-2">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <ClipboardList className="w-5 h-5 text-purple-600" />
-              <h3 className="text-lg font-bold text-gray-900">בקשות</h3>
-            </div>
-            <Button size="sm" onClick={() => createRequestMutation.mutate()} className="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
-              <Plus className="w-4 h-4 ml-1" />
-              חדשה
-            </Button>
+      <div className="w-80 flex-shrink-0 flex flex-col">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <ClipboardList className="w-5 h-5 text-purple-600" />
+            <h3 className="text-lg font-bold text-gray-900">בקשות</h3>
           </div>
-          {requestsLoading ? (
-            <div className="text-center py-8 text-gray-400">טוען...</div>
-          ) : (
-            <div className="space-y-3 max-h-[calc(100vh-160px)] overflow-y-auto pr-1">
-              {requests.map((req, index) => (
-                <RequestCard
-                  key={req.id}
-                  request={req}
-                  index={index}
-                  onUpdate={(id, data) => updateRequestMutation.mutate({ id, data })}
-                  onDelete={(id) => deleteRequestMutation.mutate(id)}
-                  caseContacts={caseContacts}
-                />
-              ))}
-              {requests.length === 0 && !createRequestMutation.isPending && (
-                <div className="text-center py-8 text-gray-400">אין בקשות</div>
-              )}
-            </div>
-          )}
+          <Button size="sm" onClick={() => createRequestMutation.mutate()} className="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
+            <Plus className="w-4 h-4 ml-1" />
+            חדשה
+          </Button>
         </div>
+        {requestsLoading ? (
+          <div className="text-center py-8 text-gray-400">טוען...</div>
+        ) : (
+          <div className="space-y-3 flex-1 overflow-y-auto pr-1">
+            {requests.map((req, index) => (
+              <RequestCard
+                key={req.id}
+                request={req}
+                index={index}
+                onUpdate={(id, data) => updateRequestMutation.mutate({ id, data })}
+                onDelete={(id) => deleteRequestMutation.mutate(id)}
+                caseContacts={caseContacts}
+              />
+            ))}
+            {requests.length === 0 && !createRequestMutation.isPending && (
+              <div className="text-center py-8 text-gray-400">אין בקשות</div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
