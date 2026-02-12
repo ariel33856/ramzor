@@ -11,7 +11,7 @@ export default function CaseSubmissions() {
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [editingSubmission, setEditingSubmission] = useState(null);
-  const [formOpen, setFormOpen] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
 
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ['submissions', caseId],
