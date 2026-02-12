@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import SubmissionForm from '../components/submissions/SubmissionForm';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+
 
 export default function CaseSubmissions() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -78,28 +78,10 @@ export default function CaseSubmissions() {
             <div key={sub.id} className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-gray-600">הגשה #{sub.id?.slice(-6)}</h3>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button size="sm" variant="ghost" className="text-red-500 hover:bg-red-50 hover:text-red-700">
+                <Button size="sm" variant="ghost" className="text-red-500 hover:bg-red-50 hover:text-red-700" onClick={() => deleteMutation.mutate(sub.id)}>
                       <Trash2 className="w-4 h-4 ml-1" />
                       מחק הגשה
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-center">האם למחוק את ההגשה?</AlertDialogTitle>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="flex justify-center gap-4">
-                      <AlertDialogAction
-                        onClick={() => deleteMutation.mutate(sub.id)}
-                        className="bg-red-500 hover:bg-red-600 flex-1 max-w-xs"
-                      >
-                        מחק
-                      </AlertDialogAction>
-                      <AlertDialogCancel className="flex-1 max-w-xs">ביטול</AlertDialogCancel>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
               </div>
               <SubmissionForm
                 key={sub.id}
