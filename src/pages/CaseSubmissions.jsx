@@ -88,7 +88,7 @@ export default function CaseSubmissions() {
   });
 
   return (
-    <div className="p-2 flex gap-3" dir="rtl">
+    <div className="p-2 flex gap-3 items-start" dir="rtl">
       {/* Submissions - main area */}
       <div className="flex-1 min-w-0">
         <div className="mb-3">
