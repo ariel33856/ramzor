@@ -46,9 +46,10 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
 
   const timerRef = useRef(null);
   const isFirstRender = useRef(true);
+  const isEditing = !!initialData;
 
-  const saveData = useCallback((formData) => {
-    const data = {
+  const prepareData = useCallback((formData) => {
+    return {
       ...formData,
       loan_amount: formData.loan_amount ? Number(formData.loan_amount) : undefined,
       loan_period_years: formData.loan_period_years ? Number(formData.loan_period_years) : undefined,
@@ -62,18 +63,23 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
         monthly_payment: t.monthly_payment ? Number(t.monthly_payment) : undefined,
       }))
     };
-    onSubmit(data);
-  }, [onSubmit]);
+  }, []);
 
+  // Auto-save only when editing an existing submission
   useEffect(() => {
+    if (!isEditing) return;
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
     if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => saveData(form), 600);
+    timerRef.current = setTimeout(() => onSubmit(prepareData(form)), 600);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [form, saveData]);
+  }, [form, prepareData, isEditing]);
+
+  const handleManualSave = () => {
+    onSubmit(prepareData(form));
+  };
 
   const updateField = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
