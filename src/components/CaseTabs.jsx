@@ -1,3 +1,4 @@
+
 import { 
   User, Phone, FileText, MessageSquare, Database,
   Workflow, Activity, Users, TrendingUp, LayoutDashboard,
@@ -7,7 +8,6 @@ import {
 
 export const tabs = [
   { id: 'personal', label: 'אנשי קשר משויכים לחשבון', icon: User, gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
-  { id: 'contact', label: 'התקשרות', icon: Phone, gradient: 'from-green-500 to-emerald-600', bg: 'bg-green-50', border: 'border-green-200' },
   { id: 'summary', label: 'תקציר התיק', icon: FileText, gradient: 'from-purple-500 to-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' },
   { id: 'notes', label: 'הערות מיוחדות', icon: MessageSquare, gradient: 'from-amber-500 to-orange-600', bg: 'bg-amber-50', border: 'border-amber-200' },
   { id: 'property', label: 'נכס', icon: Home, gradient: 'from-stone-500 to-stone-600', bg: 'bg-stone-50', border: 'border-stone-200' },
@@ -21,7 +21,6 @@ export const tabs = [
   { id: 'dashboards', label: 'דשבורדים', icon: LayoutDashboard, gradient: 'from-violet-500 to-violet-600', bg: 'bg-violet-50', border: 'border-violet-200' },
   { id: 'submissions', label: 'הגשות', icon: Send, gradient: 'from-rose-500 to-pink-600', bg: 'bg-rose-50', border: 'border-rose-200' },
   { id: 'documents', label: 'מסמכים', icon: FolderOpen, gradient: 'from-sky-500 to-sky-600', bg: 'bg-sky-50', border: 'border-sky-200' },
-  { id: 'tracking', label: 'תיעוד התקשרות', icon: MessageCircle, gradient: 'from-lime-500 to-lime-600', bg: 'bg-lime-50', border: 'border-lime-200' },
   { id: 'calculator', label: 'מחשבון', icon: Calculator, gradient: 'from-slate-500 to-slate-600', bg: 'bg-slate-50', border: 'border-slate-200' },
   { id: 'payments', label: 'תשלומים', icon: CreditCard, gradient: 'from-emerald-500 to-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
   { id: 'insurance', label: 'ביטוחים', icon: Shield, gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-50', border: 'border-orange-200' },
@@ -31,7 +30,6 @@ export const tabs = [
 
 export const pageMapping = {
   'personal': 'CasePersonal',
-  'contact': 'CaseContact',
   'summary': 'CaseSummary',
   'notes': 'CaseNotes',
   'data': 'CaseData',
@@ -43,7 +41,6 @@ export const pageMapping = {
   'dashboards': 'CaseDashboards',
   'submissions': 'CaseSubmissions',
   'documents': 'CaseDocuments',
-  'tracking': 'CaseTracking',
   'calculator': 'CaseCalculator',
   'payments': 'CasePayments',
   'insurance': 'CaseInsurance',
