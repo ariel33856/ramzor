@@ -147,7 +147,7 @@ export default function CaseSubmissions() {
       </div>
 
       {/* Requests - side panel */}
-      <div className="w-80 flex-shrink-0 flex flex-col">
+      <div className="w-[420px] flex-shrink-0 flex flex-col">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-purple-600" />
