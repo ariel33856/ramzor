@@ -238,6 +238,14 @@ export default function SubmissionForm({ onSubmit, onCancel, initialData }) {
         <Textarea value={form.notes} onChange={e => updateField('notes', e.target.value)} placeholder="הערות נוספות..." rows={2} />
       </div>
 
+      {!isEditing && (
+        <div className="flex gap-2 justify-end pt-2">
+          <Button variant="outline" onClick={onCancel}>ביטול</Button>
+          <Button onClick={handleManualSave} className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700">
+            שמור הגשה
+          </Button>
+        </div>
+      )}
 
     </div>
   );
