@@ -45,11 +45,16 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Determine which user to filter by
-      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
+      // If admin filtering by specific user, or non-admin user
+      if (filterUser && filterUser !== 'all') {
+        return base44.entities.Person.filter({ created_by: filterUser }, '-created_date');
+      }
       
-      // Show only contacts created by the target user
-      return base44.entities.Person.filter({ created_by: targetUser }, '-created_date');
+      // Admin with 'all' - show all contacts; non-admin - show own contacts
+      if (user.role === 'admin') {
+        return base44.entities.Person.list('-created_date');
+      }
+      return base44.entities.Person.filter({ created_by: user.email }, '-created_date');
     },
     enabled: !!user
   });
