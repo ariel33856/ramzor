@@ -153,7 +153,13 @@ export default function ArchiveAccounts() {
           >
             <UserPlus className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">אין אנשי קשר</h3>
-            <p className="text-gray-400">התחל ביצירת איש קשר חדש</p>
+            <p className="text-gray-400 mb-6">התחל ביצירת איש קשר חדש</p>
+            <Link to={createPageUrl('NewContact')}>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <UserPlus className="w-5 h-5 ml-2" />
+                צור איש קשר חדש
+              </Button>
+            </Link>
           </motion.div>
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100">
