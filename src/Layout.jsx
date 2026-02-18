@@ -670,7 +670,7 @@ export default function Layout({ children, currentPageName }) {
                   <Button
                     onClick={async () => {
                       try {
-                        const response = await fetch("https://your-n8n-instance.com/webhook/test-trigger", {
+                        const response = await fetch("https://n8n.srv1118261.hstgr.cloud/webhook-test/test-trigger", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({
