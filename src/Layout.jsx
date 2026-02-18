@@ -667,6 +667,30 @@ export default function Layout({ children, currentPageName }) {
                   </div>
 
                   <div className="flex items-center gap-2">
+                  <Button
+                    onClick={async () => {
+                      try {
+                        const response = await fetch("https://your-n8n-instance.com/webhook/test-trigger", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            source: "base44",
+                            action: "test",
+                            timestamp: new Date().toISOString()
+                          })
+                        });
+                        const data = await response.json();
+                        console.log("N8N Response:", data);
+                        alert("התהליך הופעל בהצלחה!");
+                      } catch (error) {
+                        console.error("Error:", error);
+                        alert("שגיאה בהפעלת התהליך");
+                      }
+                    }}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg"
+                  >
+                    N8N
+                  </Button>
                   {user?.role === 'admin' && (
                     <Select value={globalFilterUser} onValueChange={handleGlobalFilterChange}>
                       <SelectTrigger className="w-40 h-10 border-orange-200 bg-orange-50 text-orange-900">
