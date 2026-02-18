@@ -670,17 +670,8 @@ export default function Layout({ children, currentPageName }) {
                   <Button
                     onClick={async () => {
                       try {
-                        const response = await fetch("https://n8n.srv1118261.hstgr.cloud/webhook-test/test-trigger", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            source: "base44",
-                            action: "test",
-                            timestamp: new Date().toISOString()
-                          })
-                        });
-                        const data = await response.json();
-                        console.log("N8N Response:", data);
+                        const response = await base44.functions.invoke('triggerN8N', {});
+                        console.log("N8N Response:", response.data);
                         alert("התהליך הופעל בהצלחה!");
                       } catch (error) {
                         console.error("Error:", error);
