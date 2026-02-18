@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const response = await fetch("https://n8n.srv1118261.hstgr.cloud/webhook-test/test-trigger", {
+    const response = await fetch("https://n8n.srv1118261.hstgr.cloud/webhook/test-trigger", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
