@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { Calendar as CalendarIcon, Plus } from 'lucide-react';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function AppointmentDialog({ open, onOpenChange, cases = [], caseId, selectedTimeSlot, appointment }) {
   const queryClient = useQueryClient();
@@ -38,12 +39,12 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
 
   const { data: allContacts = [] } = useQuery({
     queryKey: ['persons'],
-    queryFn: () => base44.entities.Person.list()
+    queryFn: () => SecureEntities.Person.list()
   });
 
   const { data: selectedCase } = useQuery({
     queryKey: ['case-for-appointment', formData.case_id],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: formData.case_id }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: formData.case_id }).then(res => res[0]),
     enabled: !!formData.case_id
   });
 
@@ -101,7 +102,7 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
   }, [appointment, caseId]);
 
   const createContactMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.create(data),
+    mutationFn: (data) => SecureEntities.Person.create(data),
     onSuccess: (newContact) => {
       queryClient.invalidateQueries({ queryKey: ['persons'] });
       setFormData({ ...formData, contact_person_id: newContact.id });
@@ -123,9 +124,9 @@ export default function AppointmentDialog({ open, onOpenChange, cases = [], case
         date: format(data.date, 'yyyy-MM-dd')
       };
       if (appointment?.id) {
-        return base44.entities.Appointment.update(appointment.id, submitData);
+        return SecureEntities.Appointment.update(appointment.id, submitData);
       }
-      return base44.entities.Appointment.create(submitData);
+      return SecureEntities.Appointment.create(submitData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });

@@ -7,12 +7,13 @@ import { createPageUrl } from '@/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
   const queryClient = useQueryClient();
   const { data: customFieldsData = [] } = useQuery({
     queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+    queryFn: () => SecureEntities.CustomField.filter({ module_type: 'borrower' }, 'order')
   });
   
   // שימוש בנתונים מ-Person אם קיים, אחרת מ-MortgageCase
@@ -52,7 +53,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
           email: data.email,
           custom_data: data.custom_data
         };
-        await base44.entities.Person.update(borrower.person_id, personData);
+        await SecureEntities.Person.update(borrower.person_id, personData);
       } else {
         // אם אין person_id, נעדכן את ה-MortgageCase ישירות
         const caseData = {
@@ -63,7 +64,7 @@ export default function LinkedBorrowerCard({ borrower, caseId, onUnlink }) {
           client_email: data.email,
           custom_data: data.custom_data
         };
-        await base44.entities.MortgageCase.update(borrower.id, caseData);
+        await SecureEntities.MortgageCase.update(borrower.id, caseData);
       }
       
       return true;

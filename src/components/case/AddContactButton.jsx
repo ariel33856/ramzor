@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function AddContactButton({ caseId, linkedContacts = [] }) {
   const queryClient = useQueryClient();
@@ -28,7 +29,7 @@ export default function AddContactButton({ caseId, linkedContacts = [] }) {
 
   const { data: allContacts = [] } = useQuery({
     queryKey: ['all-contacts'],
-    queryFn: () => base44.entities.Person.filter({ is_archived: false })
+    queryFn: () => SecureEntities.Person.filter({ is_archived: false })
   });
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function AddContactButton({ caseId, linkedContacts = [] }) {
 
   const linkContactToAccountMutation = useMutation({
     mutationFn: async (contactId) => {
-      const contact = await base44.entities.Person.filter({ id: contactId }).then(res => res[0]);
+      const contact = await SecureEntities.Person.filter({ id: contactId }).then(res => res[0]);
       const currentAccounts = contact.linked_accounts || [];
       const normalizedAccounts = currentAccounts.map(acc =>
         typeof acc === 'string'
@@ -48,7 +49,7 @@ export default function AddContactButton({ caseId, linkedContacts = [] }) {
           : acc
       );
       const newLink = { case_id: caseId, relationship_type: 'לווה' };
-      return base44.entities.Person.update(contactId, {
+      return SecureEntities.Person.update(contactId, {
         linked_accounts: [...normalizedAccounts, newLink]
       });
     },
@@ -62,7 +63,7 @@ export default function AddContactButton({ caseId, linkedContacts = [] }) {
 
   const createNewContactAndLinkMutation = useMutation({
     mutationFn: async (contactData) => {
-      const newContact = await base44.entities.Person.create({
+      const newContact = await SecureEntities.Person.create({
         ...contactData,
         type: 'איש קשר',
         is_archived: false,

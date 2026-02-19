@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { SecureEntities } from '@/components/secureEntities';
 
 const interactionTypes = {
   whatsapp: { icon: MessageSquare, color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', label: 'וואטסאפ' },
@@ -57,7 +58,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
     queryKey: ['interactions', caseId, contactIds.join(',')],
     queryFn: async () => {
       if (caseId) {
-        const byCaseId = await base44.entities.Interaction.filter({ case_id: caseId }, '-interaction_date');
+        const byCaseId = await SecureEntities.Interaction.filter({ case_id: caseId }, '-interaction_date');
         // Also fetch by contact IDs not linked to this case
         const byContactPromises = contactIds.map(id => 
           base44.entities.Interaction.filter({ contact_id: id }, '-interaction_date')
@@ -72,7 +73,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
         );
       } else if (contactIds.length > 0) {
         const byContactPromises = contactIds.map(id => 
-          base44.entities.Interaction.filter({ contact_id: id }, '-interaction_date')
+          SecureEntities.Interaction.filter({ contact_id: id }, '-interaction_date')
         );
         const results = await Promise.all(byContactPromises);
         return results.flat().sort((a, b) => 
@@ -99,7 +100,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
   const selectedContact = linkedContacts.find(c => c.id === selectedContactId);
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Interaction.create(data),
+    mutationFn: (data) => SecureEntities.Interaction.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['interactions'] });
       setNoteText('');
@@ -110,7 +111,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Interaction.delete(id),
+    mutationFn: (id) => SecureEntities.Interaction.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['interactions'] })
   });
 

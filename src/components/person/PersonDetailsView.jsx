@@ -20,6 +20,7 @@ import { Upload } from 'lucide-react';
 import ExternalContacts from '../transactions/ExternalContacts';
 import CommunicationHub from '../case/CommunicationHub';
 import personTabDefs from './personTabDefs';
+import { SecureEntities } from '@/components/secureEntities';
 
 
 const validateIsraeliID = (id) => {
@@ -123,7 +124,7 @@ export default function PersonDetailsView({ personId }) {
 
   const { data: person, isLoading } = useQuery({
     queryKey: ['person', personId],
-    queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
+    queryFn: () => SecureEntities.Person.filter({ id: personId }).then(res => res[0]),
     enabled: !!personId,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false
@@ -131,14 +132,14 @@ export default function PersonDetailsView({ personId }) {
 
   const { data: allAccounts = [] } = useQuery({
     queryKey: ['all-accounts'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    queryFn: () => SecureEntities.MortgageCase.list('-created_date'),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
   const { data: allProperties = [] } = useQuery({
     queryKey: ['all-properties'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.list('-created_date'),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
@@ -153,7 +154,7 @@ export default function PersonDetailsView({ personId }) {
     queryKey: ['all-contacts-spouse', currentUser?.email],
     queryFn: async () => {
       if (!currentUser) return [];
-      return base44.entities.Person.filter({ 
+      return SecureEntities.Person.filter({ 
         is_archived: false,
         created_by: currentUser.email 
       });
@@ -164,33 +165,33 @@ export default function PersonDetailsView({ personId }) {
 
   const { data: linkedSpouse } = useQuery({
     queryKey: ['spouse', spouseId],
-    queryFn: () => base44.entities.Person.filter({ id: spouseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.Person.filter({ id: spouseId }).then(res => res[0]),
     enabled: !!spouseId
   });
 
   const { data: allTransactions = [] } = useQuery({
     queryKey: ['all-transactions'],
-    queryFn: () => base44.entities.Transaction.list('-transaction_date'),
+    queryFn: () => SecureEntities.Transaction.list('-transaction_date'),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
   const createTransactionMutation = useMutation({
-    mutationFn: (data) => base44.entities.Transaction.create(data),
+    mutationFn: (data) => SecureEntities.Transaction.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['all-transactions']);
     }
   });
 
   const updateTransactionMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Transaction.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Transaction.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['all-transactions']);
     }
   });
 
   const deleteTransactionMutation = useMutation({
-    mutationFn: (id) => base44.entities.Transaction.delete(id),
+    mutationFn: (id) => SecureEntities.Transaction.delete(id),
     onSuccess: () => queryClient.invalidateQueries(['all-transactions'])
   });
 
@@ -218,7 +219,7 @@ export default function PersonDetailsView({ personId }) {
         );
       }
       
-      return base44.entities.Person.update(personId, data);
+      return SecureEntities.Person.update(personId, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', personId] });

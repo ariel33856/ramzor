@@ -4,6 +4,7 @@ import { Upload, FileText, X, Loader2, CheckCircle, AlertTriangle, Image } from 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 
 const documentTypes = [
   { value: 'id_card', label: 'תעודת זהות' },
@@ -62,7 +63,7 @@ export default function DocumentUploader({ caseId, onUploadComplete }) {
     for (const file of files) {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       
-      await base44.entities.Document.create({
+      await SecureEntities.Document.create({
         case_id: caseId,
         document_type: selectedType,
         file_url,
@@ -70,7 +71,7 @@ export default function DocumentUploader({ caseId, onUploadComplete }) {
         status: 'pending'
       });
       
-      await base44.entities.AuditLog.create({
+      await SecureEntities.AuditLog.create({
         case_id: caseId,
         action_type: 'document_upload',
         actor: 'user',

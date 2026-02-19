@@ -1,13 +1,14 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { User, Phone, Mail } from 'lucide-react';
 
 export default function LinkedContactsList({ caseId }) {
   const { data: linkedContacts = [], isLoading } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
         return person.linked_accounts.some(acc =>
