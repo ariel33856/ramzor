@@ -158,7 +158,7 @@ ${signatureLink}
         `
       });
 
-      return base44.entities.MortgageCase.update(caseId, {
+      return SecureEntities.MortgageCase.update(caseId, {
         custom_data: {
           ...caseData.custom_data,
           signature_status: 'pending',
