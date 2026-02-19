@@ -125,7 +125,7 @@ export default function CasePayments() {
   });
 
   const saveSignatureMutation = useMutation({
-    mutationFn: (signatureData) => base44.entities.MortgageCase.update(caseId, {
+    mutationFn: (signatureData) => SecureEntities.MortgageCase.update(caseId, {
       custom_data: {
         ...caseData.custom_data,
         signature: signatureData,

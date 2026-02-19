@@ -46,9 +46,9 @@ export default function CaseData() {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(async id => {
         try {
-          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+          const borrower = await SecureEntities.MortgageCase.filter({ id }).then(res => res[0]);
           if (borrower?.person_id) {
-            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+            const person = await SecureEntities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
             if (person) {
               return { ...borrower, _person: person };
             }
