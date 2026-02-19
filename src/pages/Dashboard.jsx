@@ -266,7 +266,7 @@ export default function Dashboard() {
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list(),
+    queryFn: () => SecureEntities.Person.list(),
     retry: 1,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
@@ -305,11 +305,11 @@ export default function Dashboard() {
       
       // If filterUser is set and not 'all', filter by that user
       if (filterUser && filterUser !== 'all') {
-        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
       
       // Otherwise show all cases
-      return base44.entities.MortgageCase.list('-created_date');
+      return SecureEntities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
     retry: 1,
