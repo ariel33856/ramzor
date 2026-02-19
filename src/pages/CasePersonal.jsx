@@ -171,14 +171,14 @@ export default function CasePersonal() {
   }, [linkedBorrowers]);
 
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, data),
+    mutationFn: (data) => SecureEntities.MortgageCase.update(caseId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
     }
   });
 
   const updateBorrowerMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(linkedBorrowers[0].id, data),
+    mutationFn: (data) => SecureEntities.MortgageCase.update(linkedBorrowers[0].id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
