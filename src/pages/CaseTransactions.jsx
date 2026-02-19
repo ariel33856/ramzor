@@ -81,7 +81,7 @@ export default function CaseTransactions() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Transaction.delete(id),
+    mutationFn: (id) => SecureEntities.Transaction.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['case-transactions', caseId] })
   });
 
