@@ -243,6 +243,14 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.logout();
   };
 
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50/50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50/50" dir="rtl">
       <style>{`
