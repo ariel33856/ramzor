@@ -71,7 +71,7 @@ export default function CaseTabContent({ tabId, caseId, caseData }) {
   });
 
   const updateBorrowerMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(linkedBorrowers[0].id, data),
+    mutationFn: (data) => SecureEntities.MortgageCase.update(linkedBorrowers[0].id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['linked-borrowers'] });
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
