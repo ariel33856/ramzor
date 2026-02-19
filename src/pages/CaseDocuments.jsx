@@ -32,7 +32,7 @@ export default function CaseDocuments() {
 
   const { data: personById } = useQuery({
     queryKey: ['person', caseData?.person_id],
-    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    queryFn: () => SecureEntities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
     enabled: !!caseData?.person_id
   });
 
@@ -41,7 +41,7 @@ export default function CaseDocuments() {
   const [gender, setGender] = useState('male');
 
   const updatePersonMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.update(person?.id, data),
+    mutationFn: (data) => SecureEntities.Person.update(person?.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['person', person?.id] });
       queryClient.invalidateQueries({ queryKey: ['all-persons'] });
