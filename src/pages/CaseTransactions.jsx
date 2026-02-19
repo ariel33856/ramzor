@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Plus, Edit, Trash2, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,23 +47,23 @@ export default function CaseTransactions() {
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(r => r[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(r => r[0]),
     enabled: !!caseId
   });
 
   const { data: properties = [] } = useQuery({
     queryKey: ['properties'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date')
+    queryFn: () => SecureEntities.PropertyAsset.list('-created_date')
   });
 
   const { data: allTransactions = [] } = useQuery({
     queryKey: ['case-transactions', caseId],
-    queryFn: () => base44.entities.Transaction.filter({ property_id: caseData?.property_id }),
+    queryFn: () => SecureEntities.Transaction.filter({ property_id: caseData?.property_id }),
     enabled: !!caseData?.property_id
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Transaction.create({ ...data, property_id: caseData?.property_id || data.property_id }),
+    mutationFn: (data) => SecureEntities.Transaction.create({ ...data, property_id: caseData?.property_id || data.property_id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case-transactions', caseId] });
       setDialogOpen(false);
@@ -71,7 +72,7 @@ export default function CaseTransactions() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Transaction.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Transaction.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case-transactions', caseId] });
       setDialogOpen(false);

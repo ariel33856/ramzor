@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Loader2, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -22,13 +23,13 @@ export default function CaseStatus() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const updateStatusMutation = useMutation({
     mutationFn: (mainStatus) => 
-      base44.entities.MortgageCase.update(caseId, { 
+      SecureEntities.MortgageCase.update(caseId, { 
         main_status: mainStatus 
       }),
     onSuccess: () => {
@@ -38,7 +39,7 @@ export default function CaseStatus() {
 
   const updateSubStatusMutation = useMutation({
     mutationFn: (subStatus) => 
-      base44.entities.MortgageCase.update(caseId, { 
+      SecureEntities.MortgageCase.update(caseId, { 
         sub_status: subStatus 
       }),
     onSuccess: () => {

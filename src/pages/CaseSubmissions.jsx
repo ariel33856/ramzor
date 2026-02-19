@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, ClipboardList } from 'lucide-react';
 import SubmissionForm from '../components/submissions/SubmissionForm';
@@ -16,12 +17,12 @@ export default function CaseSubmissions() {
   // Submissions
   const { data: submissions = [], isLoading } = useQuery({
     queryKey: ['submissions', caseId],
-    queryFn: () => base44.entities.Submission.filter({ case_id: caseId }, '-created_date'),
+    queryFn: () => SecureEntities.Submission.filter({ case_id: caseId }, '-created_date'),
     enabled: !!caseId
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Submission.create({ ...data, case_id: caseId }),
+    mutationFn: (data) => SecureEntities.Submission.create({ ...data, case_id: caseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', caseId] });
       setShowNewForm(false);
@@ -29,28 +30,28 @@ export default function CaseSubmissions() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Submission.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Submission.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['submissions', caseId] });
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Submission.delete(id),
+    mutationFn: (id) => SecureEntities.Submission.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['submissions', caseId] })
   });
 
   // Requests
   const { data: requests = [], isLoading: requestsLoading } = useQuery({
     queryKey: ['requests', caseId],
-    queryFn: () => base44.entities.Request.filter({ case_id: caseId }),
+    queryFn: () => SecureEntities.Request.filter({ case_id: caseId }),
     enabled: !!caseId
   });
 
   const { data: caseContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
         return person.linked_accounts.some(acc =>

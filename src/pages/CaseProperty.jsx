@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -36,20 +37,20 @@ export default function CaseProperty() {
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ['property-assets', caseId],
-    queryFn: () => base44.entities.PropertyAsset.filter({ case_id: caseId }, '-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.filter({ case_id: caseId }, '-created_date'),
     enabled: !!caseId,
     staleTime: 5 * 60 * 1000
   });
 
   const { data: allProperties = [] } = useQuery({
     queryKey: ['all-property-assets'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.list('-created_date'),
     staleTime: 5 * 60 * 1000
   });
 

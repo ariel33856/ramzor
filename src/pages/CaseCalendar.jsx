@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Plus, ChevronLeft, ChevronRight, Clock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -20,7 +21,7 @@ export default function CaseCalendar() {
 
   const { data: allAppointments = [], isLoading } = useQuery({
     queryKey: ['appointments'],
-    queryFn: () => base44.entities.Appointment.list('-date')
+    queryFn: () => SecureEntities.Appointment.list('-date')
   });
 
   // Filter appointments for this case only
@@ -28,12 +29,12 @@ export default function CaseCalendar() {
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const deleteAppointmentMutation = useMutation({
-    mutationFn: (id) => base44.entities.Appointment.delete(id),
+    mutationFn: (id) => SecureEntities.Appointment.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
     }

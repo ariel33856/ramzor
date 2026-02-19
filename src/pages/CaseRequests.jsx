@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Plus, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RequestCard from '@/components/requests/RequestCard';
@@ -12,7 +13,7 @@ export default function CaseRequests() {
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['requests', caseId],
-    queryFn: () => base44.entities.Request.filter({ case_id: caseId }),
+    queryFn: () => SecureEntities.Request.filter({ case_id: caseId }),
     enabled: !!caseId
   });
 
@@ -29,7 +30,7 @@ export default function CaseRequests() {
   const { data: caseContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
         return person.linked_accounts.some(acc =>
@@ -42,17 +43,17 @@ export default function CaseRequests() {
   });
 
   const createMutation = useMutation({
-    mutationFn: () => base44.entities.Request.create({ case_id: caseId, amount: 0, request_type: 'הלוואה' }),
+    mutationFn: () => SecureEntities.Request.create({ case_id: caseId, amount: 0, request_type: 'הלוואה' }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Request.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Request.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Request.delete(id),
+    mutationFn: (id) => SecureEntities.Request.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 

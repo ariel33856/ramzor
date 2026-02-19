@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Loader2, DollarSign, Link as LinkIcon, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -23,13 +24,13 @@ export default function CaseAccount() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: borrowers = [] } = useQuery({
     queryKey: ['borrowers'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+    queryFn: () => SecureEntities.MortgageCase.filter({ is_archived: true, module_id: null })
   });
 
   const { data: linkedBorrowers = [] } = useQuery({
@@ -37,7 +38,7 @@ export default function CaseAccount() {
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(id => 
-        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
+        SecureEntities.MortgageCase.filter({ id }).then(res => res[0])
       );
       return Promise.all(promises);
     },
@@ -47,7 +48,7 @@ export default function CaseAccount() {
   const { data: linkedContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       return allPersons.filter(person => 
         person.linked_accounts && person.linked_accounts.includes(caseId)
       );
@@ -58,7 +59,7 @@ export default function CaseAccount() {
   const linkMutation = useMutation({
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
-      return base44.entities.MortgageCase.update(caseId, { 
+      return SecureEntities.MortgageCase.update(caseId, { 
         linked_borrowers: [...currentBorrowers, borrowerId] 
       });
     },
@@ -72,7 +73,7 @@ export default function CaseAccount() {
   const unlinkMutation = useMutation({
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
-      return base44.entities.MortgageCase.update(caseId, { 
+      return SecureEntities.MortgageCase.update(caseId, { 
         linked_borrowers: currentBorrowers.filter(id => id !== borrowerId) 
       });
     },

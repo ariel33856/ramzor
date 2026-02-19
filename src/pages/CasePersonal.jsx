@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Loader2 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import LinkedBorrowerCard from '@/components/case/LinkedBorrowerCard';
@@ -20,7 +21,7 @@ export default function CasePersonal() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
@@ -28,15 +29,14 @@ export default function CasePersonal() {
     queryKey: ['linked-borrowers', caseData?.linked_borrowers],
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
-      // הסרת כפילויות מהמערך
       const uniqueIds = [...new Set(caseData.linked_borrowers)];
       const promises = uniqueIds.map(async id => {
-        const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+        const borrower = await SecureEntities.MortgageCase.filter({ id }).then(res => res[0]);
         if (!borrower) return null;
         
         // אם ללווה יש person_id, נשלוף את הנתונים מה-Person
         if (borrower.person_id) {
-          const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+          const person = await SecureEntities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
           if (person) {
             return {
               ...borrower,
@@ -62,7 +62,7 @@ export default function CasePersonal() {
   const { data: linkedContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
         
