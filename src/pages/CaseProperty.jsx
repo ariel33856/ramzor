@@ -107,7 +107,7 @@ export default function CaseProperty() {
 
   const linkPropertyMutation = useMutation({
     mutationFn: (propertyId) => {
-      return base44.entities.PropertyAsset.update(propertyId, { case_id: caseId });
+      return SecureEntities.PropertyAsset.update(propertyId, { case_id: caseId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
@@ -118,7 +118,7 @@ export default function CaseProperty() {
   });
 
   const createPropertyMutation = useMutation({
-    mutationFn: (data) => base44.entities.PropertyAsset.create({ ...data, case_id: caseId }),
+    mutationFn: (data) => SecureEntities.PropertyAsset.create({ ...data, case_id: caseId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
@@ -128,7 +128,7 @@ export default function CaseProperty() {
   });
 
   const updatePropertyMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.PropertyAsset.update(id || editingProperty?.id, data),
+    mutationFn: ({ id, data }) => SecureEntities.PropertyAsset.update(id || editingProperty?.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       queryClient.invalidateQueries({ queryKey: ['all-property-assets'] });
