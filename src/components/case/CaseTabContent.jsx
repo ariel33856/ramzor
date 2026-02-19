@@ -31,7 +31,7 @@ export default function CaseTabContent({ tabId, caseId, caseData }) {
 
   const { data: borrowers = [] } = useQuery({
     queryKey: ['borrowers'],
-    queryFn: () => base44.entities.MortgageCase.filter({ is_archived: true, module_id: null })
+    queryFn: () => SecureEntities.MortgageCase.filter({ is_archived: true, module_id: null })
   });
 
   const { data: linkedBorrowers = [] } = useQuery({
@@ -39,7 +39,7 @@ export default function CaseTabContent({ tabId, caseId, caseData }) {
     queryFn: async () => {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(id => 
-        base44.entities.MortgageCase.filter({ id }).then(res => res[0])
+        SecureEntities.MortgageCase.filter({ id }).then(res => res[0])
       );
       return Promise.all(promises);
     },
