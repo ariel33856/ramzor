@@ -35,11 +35,11 @@ export default function Management() {
 
   const { data: people = [], isLoading } = useQuery({
     queryKey: ['people'],
-    queryFn: () => base44.entities.Person.list('-created_date')
+    queryFn: () => SecureEntities.Person.list('-created_date')
   });
 
   const createPersonMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.create(data),
+    mutationFn: (data) => SecureEntities.Person.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['people'] });
       setDialogOpen(false);
