@@ -134,7 +134,7 @@ export default function CasePersonal() {
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
       const updatedBorrowers = currentBorrowers.filter(id => id !== borrowerId);
-      return base44.entities.MortgageCase.update(caseId, { 
+      return SecureEntities.MortgageCase.update(caseId, { 
         linked_borrowers: updatedBorrowers 
       });
     },
