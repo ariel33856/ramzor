@@ -81,7 +81,7 @@ export default function CaseTabContent({ tabId, caseId, caseData }) {
   const linkMutation = useMutation({
     mutationFn: (borrowerId) => {
       const currentBorrowers = caseData.linked_borrowers || [];
-      return base44.entities.MortgageCase.update(caseId, { 
+      return SecureEntities.MortgageCase.update(caseId, { 
         linked_borrowers: [...currentBorrowers, borrowerId] 
       });
     },
