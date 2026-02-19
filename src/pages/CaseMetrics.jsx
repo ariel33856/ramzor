@@ -12,7 +12,7 @@ export default function CaseMetrics() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
