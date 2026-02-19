@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Loader2, Database, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -16,13 +17,13 @@ export default function CaseData() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list(),
+    queryFn: () => SecureEntities.Person.list(),
     enabled: !!caseId
   });
 
@@ -35,7 +36,7 @@ export default function CaseData() {
 
   const { data: personById } = useQuery({
     queryKey: ['person', caseData?.person_id],
-    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    queryFn: () => SecureEntities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
     enabled: !!caseData?.person_id
   });
 
