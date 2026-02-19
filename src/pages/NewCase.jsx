@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { SecureEntities } from '@/components/secureEntities';
 import { 
   User, Phone, Mail, Home, Banknote, Users, 
   Building2, ChevronRight, ChevronLeft, Check, Loader2, Search, Plus, X 
@@ -56,7 +57,7 @@ export default function NewCase() {
     queryFn: async () => {
       if (!currentUser) return [];
       const targetUser = (filterUser && filterUser !== 'all') ? filterUser : currentUser.email;
-      return base44.entities.Person.filter({ created_by: targetUser });
+      return SecureEntities.Person.filter({ created_by: targetUser });
     },
     enabled: !!currentUser,
     staleTime: 5 * 60 * 1000
@@ -94,7 +95,7 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const allCases = await base44.entities.MortgageCase.list();
+      const allCases = await SecureEntities.MortgageCase.list();
       const accountNumbers = allCases
         .filter(c => c.account_number)
         .map(c => c.account_number);
@@ -104,17 +105,17 @@ export default function NewCase() {
       caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await base44.entities.MortgageCase.create(caseData);
+    const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    const person = await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+    const person = await SecureEntities.Person.filter({ id: personId }).then(res => res[0]);
     const linkedAccounts = person.linked_accounts || [];
-    await base44.entities.Person.update(personId, {
+    await SecureEntities.Person.update(personId, {
       linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
-    await base44.entities.AuditLog.create({
+    await SecureEntities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',
@@ -138,7 +139,7 @@ export default function NewCase() {
     setSaving(true);
 
     // Create new person in Person entity
-    const newPerson = await base44.entities.Person.create({
+    const newPerson = await SecureEntities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
@@ -160,7 +161,7 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const allCases = await base44.entities.MortgageCase.list();
+      const allCases = await SecureEntities.MortgageCase.list();
       const accountNumbers = allCases
         .filter(c => c.account_number)
         .map(c => c.account_number);
@@ -170,15 +171,15 @@ export default function NewCase() {
       caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await base44.entities.MortgageCase.create(caseData);
+    const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    await base44.entities.Person.update(newPerson.id, {
+    await SecureEntities.Person.update(newPerson.id, {
       linked_accounts: [{ case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
-    await base44.entities.AuditLog.create({
+    await SecureEntities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',

@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
+import { SecureEntities } from '../components/secureEntities';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { personFields } from '../components/case/personFields';
 import FieldsSelector from '../components/dashboard/FieldsSelector';
@@ -89,7 +90,7 @@ export default function Dashboard() {
   };
 
   const archiveMutation = useMutation({
-    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
+    mutationFn: (caseId) => SecureEntities.MortgageCase.update(caseId, { is_archived: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cases'] });
     }

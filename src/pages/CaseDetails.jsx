@@ -9,6 +9,7 @@ import ContactsSummaryView from '@/components/case/ContactsSummaryView';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
+import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import {
@@ -77,7 +78,7 @@ export default function CaseDetails() {
 
   const { data: caseData, isLoading, error } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId,
     retry: 1,
     staleTime: 30000
@@ -86,7 +87,7 @@ export default function CaseDetails() {
   const { data: linkedContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       const seen = new Set();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,7 +23,7 @@ export default function NewContact() {
   });
 
   const createContactMutation = useMutation({
-    mutationFn: (data) => base44.entities.Person.create(data),
+    mutationFn: (data) => SecureEntities.Person.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       window.location.href = createPageUrl('ArchiveAccounts');

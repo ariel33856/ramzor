@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function ArchiveAccounts() {
   const queryClient = useQueryClient();
@@ -34,7 +35,7 @@ export default function ArchiveAccounts() {
   });
 
   const archiveMutation = useMutation({
-    mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: true }),
+    mutationFn: (personId) => SecureEntities.Person.update(personId, { is_archived: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     }
@@ -47,14 +48,14 @@ export default function ArchiveAccounts() {
       
       // If admin filtering by specific user, or non-admin user
       if (filterUser && filterUser !== 'all') {
-        return base44.entities.Person.filter({ created_by: filterUser }, '-created_date');
+        return SecureEntities.Person.filter({ created_by: filterUser }, '-created_date');
       }
       
       // Admin with 'all' - show all contacts; non-admin - show own contacts
       if (user.role === 'admin') {
-        return base44.entities.Person.list('-created_date');
+        return SecureEntities.Person.list('-created_date');
       }
-      return base44.entities.Person.filter({ created_by: user.email }, '-created_date');
+      return SecureEntities.Person.filter({ created_by: user.email }, '-created_date');
     },
     enabled: !!user
   });
