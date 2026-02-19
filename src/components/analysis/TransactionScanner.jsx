@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, AlertTriangle, CheckCircle, XCircle, Loader2, CreditCard, TrendingDown, Repeat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function TransactionScanner({ bankStatement, caseId, onScanComplete }) {
   const [scanning, setScanning] = useState(false);
