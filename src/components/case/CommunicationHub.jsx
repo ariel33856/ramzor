@@ -61,7 +61,7 @@ export default function CommunicationHub({ linkedContacts = [], caseId }) {
         const byCaseId = await SecureEntities.Interaction.filter({ case_id: caseId }, '-interaction_date');
         // Also fetch by contact IDs not linked to this case
         const byContactPromises = contactIds.map(id => 
-          base44.entities.Interaction.filter({ contact_id: id }, '-interaction_date')
+          SecureEntities.Interaction.filter({ contact_id: id }, '-interaction_date')
         );
         const byContactResults = await Promise.all(byContactPromises);
         const byContact = byContactResults.flat();
