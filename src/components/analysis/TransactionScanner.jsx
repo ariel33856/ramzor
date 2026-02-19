@@ -74,7 +74,7 @@ export default function TransactionScanner({ bankStatement, caseId, onScanComple
     setResults(scanResult);
     
     // Log the scan
-    await base44.entities.AuditLog.create({
+    await SecureEntities.AuditLog.create({
       case_id: caseId,
       action_type: 'ai_analysis',
       actor: 'AI',
