@@ -42,20 +42,20 @@ export default function CaseDashboards() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: transactions = [] } = useQuery({
     queryKey: ['case-transactions', caseId],
-    queryFn: () => base44.entities.Transaction.filter({ property_id: caseId }),
+    queryFn: () => SecureEntities.Transaction.filter({ property_id: caseId }),
     enabled: !!caseId
   });
 
   const { data: payments = [] } = useQuery({
     queryKey: ['case-payments-dash', caseId],
     queryFn: async () => {
-      const allInsurance = await base44.entities.Insurance.list();
+      const allInsurance = await SecureEntities.Insurance.list();
       return allInsurance.filter(i => i.insured_name === caseData?.client_name);
     },
     enabled: !!caseData?.client_name

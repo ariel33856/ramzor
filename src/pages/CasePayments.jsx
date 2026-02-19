@@ -52,9 +52,9 @@ export default function CasePayments() {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(async id => {
         try {
-          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
+          const borrower = await SecureEntities.MortgageCase.filter({ id }).then(res => res[0]);
           if (borrower?.person_id) {
-            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+            const person = await SecureEntities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
             if (person) {
               return { ...borrower, _person: person };
             }
@@ -73,7 +73,7 @@ export default function CasePayments() {
 
   const { data: caseLinkedPerson } = useQuery({
     queryKey: ['case-linked-person', caseData?.person_id],
-    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    queryFn: () => SecureEntities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
     enabled: !!caseData?.person_id,
     retry: 1,
     staleTime: 30000
@@ -81,7 +81,7 @@ export default function CasePayments() {
 
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list(),
+    queryFn: () => SecureEntities.Person.list(),
     enabled: !!caseId,
     retry: 1,
     staleTime: 5 * 60 * 1000,
@@ -97,7 +97,7 @@ export default function CasePayments() {
 
   const { data: documents = [] } = useQuery({
     queryKey: ['case-documents', caseId, 'service_agreement'],
-    queryFn: () => base44.entities.Document.filter({ 
+    queryFn: () => SecureEntities.Document.filter({ 
       case_id: caseId,
       document_type: 'service_agreement'
     }),
@@ -105,14 +105,14 @@ export default function CasePayments() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (docId) => base44.entities.Document.delete(docId),
+    mutationFn: (docId) => SecureEntities.Document.delete(docId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case-documents', caseId, 'service_agreement'] });
     }
   });
 
   const updatePaymentsMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, {
+    mutationFn: (data) => SecureEntities.MortgageCase.update(caseId, {
       custom_data: {
         ...caseData.custom_data,
         ...data
