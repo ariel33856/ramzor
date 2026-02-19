@@ -204,13 +204,28 @@ export default function Layout({ children, currentPageName }) {
     'CaseRequests': 'בקשות'
   };
 
+  const [authChecked, setAuthChecked] = useState(false);
+
   // Don't show layout for client portal
   if (currentPageName === 'ClientPortal') {
     return <>{children}</>;
   }
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    async function checkAuth() {
+      try {
+        const u = await base44.auth.me();
+        if (!u) {
+          base44.auth.redirectToLogin(window.location.href);
+          return;
+        }
+        setUser(u);
+        setAuthChecked(true);
+      } catch {
+        base44.auth.redirectToLogin(window.location.href);
+      }
+    }
+    checkAuth();
   }, []);
 
   useEffect(() => {
