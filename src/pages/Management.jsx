@@ -56,7 +56,7 @@ export default function Management() {
   });
 
   const deletePersonMutation = useMutation({
-    mutationFn: (id) => base44.entities.Person.delete(id),
+    mutationFn: (id) => SecureEntities.Person.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['people'] });
     }
