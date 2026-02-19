@@ -8,6 +8,7 @@ import { format, addDays, startOfWeek, addWeeks, isSameDay } from 'date-fns';
 import { he } from 'date-fns/locale';
 import AppointmentDialog from '../components/calendar/AppointmentDialog';
 import AppointmentCard from '../components/calendar/AppointmentCard';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -18,16 +19,16 @@ export default function CalendarPage() {
 
   const { data: appointments = [] } = useQuery({
     queryKey: ['appointments'],
-    queryFn: () => base44.entities.Appointment.list('-date')
+    queryFn: () => SecureEntities.Appointment.list('-date')
   });
 
   const { data: cases = [] } = useQuery({
     queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => SecureEntities.MortgageCase.list('-created_date')
   });
 
   const deleteAppointmentMutation = useMutation({
-    mutationFn: (id) => base44.entities.Appointment.delete(id),
+    mutationFn: (id) => SecureEntities.Appointment.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
     }

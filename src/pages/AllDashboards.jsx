@@ -4,11 +4,12 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Briefcase, FileCheck, AlertTriangle, TrendingUp, Clock } from 'lucide-react';
 import StatsCard from '../components/dashboard/StatsCard';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function AllDashboards() {
   const { data: cases = [] } = useQuery({
     queryKey: ['cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => SecureEntities.MortgageCase.list('-created_date')
   });
 
   const stats = {

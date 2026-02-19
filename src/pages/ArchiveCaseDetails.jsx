@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function ArchiveCaseDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -25,20 +26,20 @@ export default function ArchiveCaseDetails() {
   const [searchTerm, setSearchTerm] = useState('');
   const { data: customFieldsData = [] } = useQuery({
     queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+    queryFn: () => SecureEntities.CustomField.filter({ module_type: 'borrower' }, 'order')
   });
   const [isAddingField, setIsAddingField] = useState(false);
   const [newFieldName, setNewFieldName] = useState('');
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['archive-case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date')
+    queryFn: () => SecureEntities.MortgageCase.list('-created_date')
   });
 
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
@@ -59,7 +60,7 @@ export default function ArchiveCaseDetails() {
   }, [caseData]);
 
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, data),
+    mutationFn: (data) => SecureEntities.MortgageCase.update(caseId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['archive-case', caseId] });
       queryClient.invalidateQueries({ queryKey: ['archive-cases'] });
@@ -67,7 +68,7 @@ export default function ArchiveCaseDetails() {
   });
 
   const addFieldMutation = useMutation({
-    mutationFn: (fieldData) => base44.entities.CustomField.create(fieldData),
+    mutationFn: (fieldData) => SecureEntities.CustomField.create(fieldData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['custom-fields-borrower'] });
       setNewFieldName('');
@@ -113,10 +114,10 @@ export default function ArchiveCaseDetails() {
 
   const linkToAccountMutation = useMutation({
     mutationFn: (accountId) => {
-      return base44.entities.MortgageCase.filter({ id: accountId }).then(async (result) => {
+      return SecureEntities.MortgageCase.filter({ id: accountId }).then(async (result) => {
         const account = result[0];
         const currentBorrowers = account.linked_borrowers || [];
-        return base44.entities.MortgageCase.update(accountId, { 
+        return SecureEntities.MortgageCase.update(accountId, { 
           linked_borrowers: [...currentBorrowers, caseId] 
         });
       });

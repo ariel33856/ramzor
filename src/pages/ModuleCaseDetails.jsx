@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function ModuleCaseDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -19,13 +20,13 @@ export default function ModuleCaseDetails() {
 
   const { data: caseData, isLoading } = useQuery({
     queryKey: ['module-case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
-    queryFn: () => base44.entities.Module.filter({ id: moduleId }).then(res => res[0]),
+    queryFn: () => SecureEntities.Module.filter({ id: moduleId }).then(res => res[0]),
     enabled: !!moduleId
   });
 
@@ -38,7 +39,7 @@ export default function ModuleCaseDetails() {
   }, [caseData]);
 
   const updateMutation = useMutation({
-    mutationFn: (data) => base44.entities.MortgageCase.update(caseId, data),
+    mutationFn: (data) => SecureEntities.MortgageCase.update(caseId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['module-case', caseId] });
       queryClient.invalidateQueries({ queryKey: ['module-cases', moduleId] });

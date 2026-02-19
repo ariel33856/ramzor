@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { createPageUrl } from '@/utils';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function RecordsTable() {
   const navigate = useNavigate();
@@ -42,14 +43,14 @@ export default function RecordsTable() {
 
   const { data: records = [], isLoading } = useQuery({
     queryKey: ['property-assets'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.list('-created_date'),
     enabled: !!user,
     staleTime: 5 * 60 * 1000
   });
 
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
-    queryFn: () => base44.entities.MortgageCase.list(),
+    queryFn: () => SecureEntities.MortgageCase.list(),
     staleTime: 5 * 60 * 1000
   });
 
@@ -60,7 +61,7 @@ export default function RecordsTable() {
   }, [records]);
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.PropertyAsset.create(data),
+    mutationFn: (data) => SecureEntities.PropertyAsset.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
       setDialogOpen(false);
@@ -71,7 +72,7 @@ export default function RecordsTable() {
 
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.PropertyAsset.delete(id),
+    mutationFn: (id) => SecureEntities.PropertyAsset.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });
     }
@@ -79,7 +80,7 @@ export default function RecordsTable() {
 
   const linkPropertyMutation = useMutation({
     mutationFn: (caseId) => {
-      return base44.entities.PropertyAsset.update(selectedPropertyForLink, { case_id: caseId });
+      return SecureEntities.PropertyAsset.update(selectedPropertyForLink, { case_id: caseId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['property-assets'] });

@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { borrowerFields } from '../components/case/borrowerFields';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function ModuleArchive() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,7 +36,7 @@ export default function ModuleArchive() {
   // Fetch custom fields from database
   const { data: customFieldsData = [] } = useQuery({
     queryKey: ['custom-fields-borrower'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'borrower' }, 'order')
+    queryFn: () => SecureEntities.CustomField.filter({ module_type: 'borrower' }, 'order')
   });
 
   // Update columnOrder when custom fields are loaded
@@ -117,13 +118,13 @@ export default function ModuleArchive() {
 
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
-    queryFn: () => base44.entities.Module.filter({ id: moduleId }).then(res => res[0]),
+    queryFn: () => SecureEntities.Module.filter({ id: moduleId }).then(res => res[0]),
     enabled: !!moduleId
   });
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['module-archive-cases', moduleId],
-    queryFn: () => base44.entities.MortgageCase.filter({ module_id: moduleId, is_archived: true }, '-updated_date'),
+    queryFn: () => SecureEntities.MortgageCase.filter({ module_id: moduleId, is_archived: true }, '-updated_date'),
     enabled: !!moduleId
   });
 

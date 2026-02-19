@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { borrowerFields } from '../components/case/borrowerFields';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function AccountsArchive() {
   const queryClient = useQueryClient();
@@ -83,7 +84,7 @@ export default function AccountsArchive() {
 
   const { data: customFieldsData = [] } = useQuery({
     queryKey: ['custom-fields-account'],
-    queryFn: () => base44.entities.CustomField.filter({ module_type: 'account' }, 'order')
+    queryFn: () => SecureEntities.CustomField.filter({ module_type: 'account' }, 'order')
   });
 
   React.useEffect(() => {
@@ -113,7 +114,7 @@ export default function AccountsArchive() {
   }, [customFieldsData, user]);
 
   const unarchiveMutation = useMutation({
-    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: false }),
+    mutationFn: (caseId) => SecureEntities.MortgageCase.update(caseId, { is_archived: false }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts-archive'] });
     }
@@ -126,12 +127,12 @@ export default function AccountsArchive() {
       
       if (user.role === 'admin') {
         if (filterUser !== 'all') {
-          return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-updated_date');
+          return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-updated_date');
         }
-        return base44.entities.MortgageCase.list('-updated_date');
+        return SecureEntities.MortgageCase.list('-updated_date');
       }
       
-      return base44.entities.MortgageCase.filter({ created_by: user.email }, '-updated_date');
+      return SecureEntities.MortgageCase.filter({ created_by: user.email }, '-updated_date');
     },
     enabled: !!user
   });

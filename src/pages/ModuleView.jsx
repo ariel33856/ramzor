@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function ModuleView() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -113,7 +114,7 @@ export default function ModuleView() {
   const { data: module } = useQuery({
     queryKey: ['module', moduleId],
     queryFn: async () => {
-      return base44.entities.Module.filter({ id: moduleId }).then(res => res[0]);
+      return SecureEntities.Module.filter({ id: moduleId }).then(res => res[0]);
     },
     enabled: !!moduleId
   });
@@ -127,12 +128,12 @@ export default function ModuleView() {
       
       if (user.role === 'admin') {
         if (filterUser !== 'all') {
-          return base44.entities.MortgageCase.filter({ ...baseFilter, created_by: filterUser }, '-created_date');
+          return SecureEntities.MortgageCase.filter({ ...baseFilter, created_by: filterUser }, '-created_date');
         }
-        return base44.entities.MortgageCase.filter(baseFilter, '-created_date');
+        return SecureEntities.MortgageCase.filter(baseFilter, '-created_date');
       }
       
-      return base44.entities.MortgageCase.filter({ ...baseFilter, created_by: user.email }, '-created_date');
+      return SecureEntities.MortgageCase.filter({ ...baseFilter, created_by: user.email }, '-created_date');
     },
     enabled: !!moduleId && !!user
   });

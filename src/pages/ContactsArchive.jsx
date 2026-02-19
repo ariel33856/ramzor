@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Search, ArchiveX, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SecureEntities } from '@/components/secureEntities';
 
 export default function ContactsArchive() {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ export default function ContactsArchive() {
   });
 
   const unarchiveMutation = useMutation({
-    mutationFn: (personId) => base44.entities.Person.update(personId, { is_archived: false }),
+    mutationFn: (personId) => SecureEntities.Person.update(personId, { is_archived: false }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contacts-archive'] });
     }
@@ -34,7 +35,7 @@ export default function ContactsArchive() {
     queryFn: async () => {
       if (!user) return [];
       const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
-      return base44.entities.Person.filter({ created_by: targetUser }, '-updated_date');
+      return SecureEntities.Person.filter({ created_by: targetUser }, '-updated_date');
     },
     enabled: !!user
   });

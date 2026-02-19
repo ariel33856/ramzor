@@ -6,6 +6,7 @@ import { Loader2, Home, HelpCircle, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ClientProgress from '../components/client/ClientProgress';
 import DocumentUploader from '../components/documents/DocumentUploader';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function ClientPortal() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -13,13 +14,13 @@ export default function ClientPortal() {
 
   const { data: caseData, isLoading: loadingCase } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
 
   const { data: documents = [], refetch: refetchDocs } = useQuery({
     queryKey: ['documents', caseId],
-    queryFn: () => base44.entities.Document.filter({ case_id: caseId }),
+    queryFn: () => SecureEntities.Document.filter({ case_id: caseId }),
     enabled: !!caseId
   });
 

@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { SecureEntities } from '../components/secureEntities';
 
 export default function Transactions() {
   const queryClient = useQueryClient();
@@ -34,18 +35,18 @@ export default function Transactions() {
 
   const { data: properties = [] } = useQuery({
     queryKey: ['properties'],
-    queryFn: () => base44.entities.PropertyAsset.list('-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.list('-created_date'),
     enabled: !!user
   });
 
   const { data: records = [] } = useQuery({
     queryKey: ['transaction-records'],
-    queryFn: () => base44.entities.Transaction.list('-created_date'),
+    queryFn: () => SecureEntities.Transaction.list('-created_date'),
     enabled: !!user
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Transaction.create(data),
+    mutationFn: (data) => SecureEntities.Transaction.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['transaction-records']);
       setDialogOpen(false);
@@ -54,7 +55,7 @@ export default function Transactions() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Transaction.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Transaction.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['transaction-records']);
       setDialogOpen(false);
@@ -63,7 +64,7 @@ export default function Transactions() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Transaction.delete(id),
+    mutationFn: (id) => SecureEntities.Transaction.delete(id),
     onSuccess: () => queryClient.invalidateQueries(['transaction-records'])
   });
 

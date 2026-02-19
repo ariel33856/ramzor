@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SecureEntities } from '../components/secureEntities';
 
 const colorOptions = [
   { value: 'blue', label: 'כחול', gradient: 'from-blue-500 to-blue-600' },
@@ -34,11 +35,11 @@ export default function ModulesManager() {
 
   const { data: modules = [], isLoading } = useQuery({
     queryKey: ['modules'],
-    queryFn: () => base44.entities.Module.list('order')
+    queryFn: () => SecureEntities.Module.list('order')
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Module.create(data),
+    mutationFn: (data) => SecureEntities.Module.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules'] });
       setIsOpen(false);
@@ -47,7 +48,7 @@ export default function ModulesManager() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Module.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Module.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules'] });
       setEditingModule(null);
@@ -56,7 +57,7 @@ export default function ModulesManager() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Module.delete(id),
+    mutationFn: (id) => SecureEntities.Module.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules'] });
     }
