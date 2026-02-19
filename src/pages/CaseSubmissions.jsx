@@ -74,17 +74,17 @@ export default function CaseSubmissions() {
   }, [requestsLoading, requests.length, caseId]);
 
   const createRequestMutation = useMutation({
-    mutationFn: () => base44.entities.Request.create({ case_id: caseId, amount: 0, request_type: 'הלוואה' }),
+    mutationFn: () => SecureEntities.Request.create({ case_id: caseId, amount: 0, request_type: 'הלוואה' }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
   const updateRequestMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Request.update(id, data),
+    mutationFn: ({ id, data }) => SecureEntities.Request.update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
   const deleteRequestMutation = useMutation({
-    mutationFn: (id) => base44.entities.Request.delete(id),
+    mutationFn: (id) => SecureEntities.Request.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['requests', caseId] })
   });
 
