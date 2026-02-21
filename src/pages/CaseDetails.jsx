@@ -176,6 +176,9 @@ export default function CaseDetails() {
     );
   }
 
+  const isOwner = caseData.created_by === currentUser?.email || currentUser?.role === 'admin';
+  const isSharedUser = !isOwner && caseData.shared_with?.includes(currentUser?.email);
+
   const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
 
   return (
