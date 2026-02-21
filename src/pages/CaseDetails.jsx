@@ -71,11 +71,18 @@ export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
   const [activeContactId, setActiveContactId] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [showSharingPanel, setShowSharingPanel] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const isNew = urlParams.get('new') === 'true';
   const accountNumber = urlParams.get('accountNumber');
   const [showCongrats, setShowCongrats] = useState(false);
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 60000
+  });
 
   const { data: caseData, isLoading, error } = useQuery({
     queryKey: ['case', caseId],
