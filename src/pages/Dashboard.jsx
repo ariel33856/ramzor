@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
   Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive,
-  ArrowUp, ArrowDown, FilterX, X
+  ArrowUp, ArrowDown, FilterX, X, Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
