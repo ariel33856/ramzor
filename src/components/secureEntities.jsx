@@ -10,7 +10,6 @@ async function getCurrentUser() {
     throw new Error("Not authenticated");
   }
   cachedUser = user;
-  // Clear cache after 60 seconds so role changes are picked up
   setTimeout(() => { cachedUser = null; }, 60000);
   return user;
 }
@@ -19,29 +18,44 @@ export function clearSecureUserCache() {
   cachedUser = null;
 }
 
+// Returns the active filter user for admin (from localStorage), or null
+function getAdminFilterUser() {
+  try {
+    const val = localStorage.getItem('globalFilterUser');
+    return val && val !== 'all' ? val : null;
+  } catch {
+    return null;
+  }
+}
+
 function createSecureEntity(entityName) {
   const entity = base44.entities[entityName];
 
   return {
-    // list(sortBy?, limit?) — matches the SDK signature
     async list(sortBy, limit) {
       const user = await getCurrentUser();
       if (user.role === 'admin') {
+        const filterUser = getAdminFilterUser();
+        if (filterUser) {
+          return entity.filter({ created_by: filterUser }, sortBy, limit);
+        }
         return entity.list(sortBy, limit);
       }
       return entity.filter({ created_by: user.email }, sortBy, limit);
     },
 
-    // filter(filters, sortBy?, limit?) — matches the SDK signature
     async filter(filters = {}, sortBy, limit) {
       const user = await getCurrentUser();
-      const secureFilters = user.role === 'admin'
-        ? filters
-        : { ...filters, created_by: user.email };
-      return entity.filter(secureFilters, sortBy, limit);
+      if (user.role === 'admin') {
+        const filterUser = getAdminFilterUser();
+        if (filterUser) {
+          return entity.filter({ ...filters, created_by: filterUser }, sortBy, limit);
+        }
+        return entity.filter(filters, sortBy, limit);
+      }
+      return entity.filter({ ...filters, created_by: user.email }, sortBy, limit);
     },
 
-    // get by id — verifies ownership
     async get(id) {
       const user = await getCurrentUser();
       const results = await entity.filter({ id });
@@ -54,12 +68,25 @@ function createSecureEntity(entityName) {
     },
 
     async create(data) {
-      await getCurrentUser();
+      const user = await getCurrentUser();
+      if (user.role === 'admin') {
+        const filterUser = getAdminFilterUser();
+        if (filterUser) {
+          // Create on behalf of the selected user
+          return entity.create({ ...data, created_by: filterUser });
+        }
+      }
       return entity.create(data);
     },
 
     async bulkCreate(dataArray) {
-      await getCurrentUser();
+      const user = await getCurrentUser();
+      if (user.role === 'admin') {
+        const filterUser = getAdminFilterUser();
+        if (filterUser) {
+          return entity.bulkCreate(dataArray.map(d => ({ ...d, created_by: filterUser })));
+        }
+      }
       return entity.bulkCreate(dataArray);
     },
 
@@ -89,12 +116,10 @@ function createSecureEntity(entityName) {
       return entity.delete(id);
     },
 
-    // Pass-through for schema
     schema() {
       return entity.schema();
     },
 
-    // Pass-through for subscribe
     subscribe(callback) {
       return entity.subscribe(callback);
     }
