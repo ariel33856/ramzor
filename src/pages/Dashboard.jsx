@@ -748,10 +748,11 @@ export default function Dashboard() {
                         transition={{ delay: index * 0.02 }}
                         className={`border-b border-gray-100 hover:bg-opacity-75 transition-colors ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}
                       >
-                        {selectedFields.map(fieldId => {
+                        {selectedFields.map((fieldId, fIdx) => {
                           const field = allAvailableFields.find(f => f.id === fieldId);
                           const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
                           const width = columnWidths[fieldId];
+                          const isSharedWithMe = user && caseData.created_by !== user.email && caseData.shared_with?.includes(user.email);
 
                           return (
                             <td 
@@ -761,7 +762,14 @@ export default function Dashboard() {
                               onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                             >
                               {fieldId === 'account_number' ? (
-                                <div className="font-semibold text-blue-600">{value}</div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-semibold text-blue-600">{value}</span>
+                                  {isSharedWithMe && (
+                                    <span title="שותף איתך" className="inline-flex items-center gap-0.5 bg-amber-100 text-amber-700 text-xs px-1.5 py-0.5 rounded-full border border-amber-200">
+                                      <Users className="w-3 h-3" />
+                                    </span>
+                                  )}
+                                </div>
                               ) : fieldId === 'first_name' ? (
                                 <div className="font-semibold text-gray-900">{value}</div>
                               ) : (
