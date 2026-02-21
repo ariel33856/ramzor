@@ -385,6 +385,29 @@ export default function CaseDetails() {
           </div>
         </div>
 
+        {/* Sharing Panel (owner only) */}
+        {isOwner && (
+          <div className="mb-4">
+            <button
+              onClick={() => setShowSharingPanel(p => !p)}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors border border-white/20"
+            >
+              <Share2 className="w-4 h-4" />
+              שיתוף חשבון
+              {caseData.shared_with?.length > 0 && (
+                <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {caseData.shared_with.length}
+                </span>
+              )}
+            </button>
+            {showSharingPanel && (
+              <div className="mt-3">
+                <SharingPanel caseData={caseData} currentUser={currentUser} />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Expandable Content Area */}
           {activeTab && activeTabData && (
             <div
