@@ -183,6 +183,13 @@ export default function CaseDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      {/* Read-only banner for shared users */}
+      {isSharedUser && (
+        <div className="bg-amber-50 border-b-2 border-amber-300 px-4 py-2 flex items-center justify-center gap-2">
+          <Eye className="w-4 h-4 text-amber-600" />
+          <span className="text-amber-800 font-medium text-sm">אתה צופה בחשבון זה במצב צפייה בלבד</span>
+        </div>
+      )}
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
         <DialogContent className="sm:max-w-lg border-4 border-transparent bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 shadow-2xl [&>button]:hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-lg"></div>
