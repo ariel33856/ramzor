@@ -10,7 +10,7 @@ import ContactsSummaryView from '@/components/case/ContactsSummaryView';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
-import { SecureEntities } from '@/components/secureEntities';
+// import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import {

@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
-import { SecureEntities } from '../components/secureEntities';
+// import { SecureEntities } from '../components/secureEntities';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { personFields } from '../components/case/personFields';
 import FieldsSelector from '../components/dashboard/FieldsSelector';
@@ -90,7 +90,7 @@ export default function Dashboard() {
   };
 
   const archiveMutation = useMutation({
-    mutationFn: (caseId) => SecureEntities.MortgageCase.update(caseId, { is_archived: true }),
+    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cases'] });
     }
@@ -266,7 +266,7 @@ export default function Dashboard() {
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => SecureEntities.Person.list(),
+    queryFn: () => base44.entities.Person.list(),
     retry: 1,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
@@ -305,11 +305,11 @@ export default function Dashboard() {
       
       // If filterUser is set and not 'all', filter by that user
       if (filterUser && filterUser !== 'all') {
-        return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
       
       // Otherwise show all cases
-      return SecureEntities.MortgageCase.list('-created_date');
+      return base44.entities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
     retry: 1,
