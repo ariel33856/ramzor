@@ -108,7 +108,7 @@ export default function NewCase() {
     const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    const person = allPersons.find(p => p.id === personId) || await base44.entities.Person.filter({ id: personId }).then(res => res[0]);
+    const person = allPersons.find(p => p.id === personId);
     const linkedAccounts = person.linked_accounts || [];
     await SecureEntities.Person.update(personId, {
       linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
