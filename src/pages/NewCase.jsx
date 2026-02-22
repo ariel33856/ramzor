@@ -85,20 +85,26 @@ export default function NewCase() {
 
     const caseData = {
       client_name: '',
-      status: 'ליד חדש',
+      status: 'new',
+      main_status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
-      module_id: moduleId || null
     };
+    if (moduleId) caseData.module_id = moduleId;
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
-      const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
-        ? latestCases[0].account_number 
-        : 72515;
-      caseData.account_number = maxAccountNumber + 1;
+      try {
+        const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
+        const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
+          ? latestCases[0].account_number 
+          : 72515;
+        caseData.account_number = maxAccountNumber + 1;
+      } catch (error) {
+        console.error("Error fetching latest case for account number:", error);
+        caseData.account_number = 72516; // Fallback
+      }
     }
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
@@ -107,10 +113,14 @@ export default function NewCase() {
     const person = allPersons.find(p => p.id === personId);
     if (person) {
       const linkedAccounts = person.linked_accounts || [];
-      // Sanitize linked_accounts to ensure they are all objects (handle legacy string IDs)
+      // Sanitize linked_accounts
       const sanitizedLinkedAccounts = linkedAccounts.map(acc => {
         if (typeof acc === 'string') {
           return { case_id: acc, relationship_type: 'לווה' };
+        }
+        // Ensure relationship_type exists
+        if (!acc.relationship_type) {
+          return { ...acc, relationship_type: 'לווה' };
         }
         return acc;
       });
@@ -157,21 +167,27 @@ export default function NewCase() {
     // Create new MortgageCase
     const caseData = {
       client_name: '',
-      status: 'ליד חדש',
+      status: 'new',
+      main_status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
-      module_id: moduleId || null,
       person_id: newPerson.id
     };
+    if (moduleId) caseData.module_id = moduleId;
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
-      const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
-        ? latestCases[0].account_number 
-        : 72515;
-      caseData.account_number = maxAccountNumber + 1;
+      try {
+        const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
+        const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
+          ? latestCases[0].account_number 
+          : 72515;
+        caseData.account_number = maxAccountNumber + 1;
+      } catch (error) {
+        console.error("Error fetching latest case for account number:", error);
+        caseData.account_number = 72516; // Fallback
+      }
     }
 
     const newCase = await base44.entities.MortgageCase.create(caseData);
@@ -203,13 +219,14 @@ export default function NewCase() {
 
 
   return (
-    <div className="h-full bg-gray-50/50 p-2 overflow-hidden flex items-center justify-center">
-      <div className="w-full">
+    <div className="h-full bg-gray-50/50 p-2 overflow-hidden">
+      <div className="w-full h-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          className="h-full"
         >
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-8 relative">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-8 relative h-full overflow-y-auto">
             <Button
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
