@@ -416,32 +416,15 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <div className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all flex-wrap`}>
-                <div 
-                  onClick={() => window.location.href = createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}
-                  className="flex items-center gap-3 cursor-pointer"
-                >
-                  <div className={`
-                    w-14 h-14 rounded-xl flex items-center justify-center
-                    bg-gradient-to-br ${activeTabData.gradient} shadow-lg
-                  `}>
-                    {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {activeTabData.label}
-                    {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
-                  </h2>
-                </div>
+              <div className="flex items-center gap-3 mb-4 flex-wrap justify-end">
                 {activeTab === 'personal' && (
                   <>
                     {linkedContacts.length > 0 && (
-                      <>
-                        <span className="text-gray-400">|</span>
-                        <ContactButtons
-                          linkedContacts={linkedContacts}
-                          caseId={caseId}
-                          activeContactId={activeContactId}
-                          onContactClick={(contactId) => {
+                      <ContactButtons
+                        linkedContacts={linkedContacts}
+                        caseId={caseId}
+                        activeContactId={activeContactId}
+                        onContactClick={(contactId) => {
                            const scrollContainer = document.querySelector('main');
                            const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
                            setActiveContactId(contactId);
@@ -456,9 +439,8 @@ export default function CaseDetails() {
                                window.scrollTo({ top: currentScroll, behavior: 'instant' });
                              }
                            });
-                          }}
-                        />
-                      </>
+                        }}
+                      />
                     )}
                     <button
                       onClick={() => {
