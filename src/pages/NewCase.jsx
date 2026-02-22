@@ -219,14 +219,14 @@ export default function NewCase() {
 
 
   return (
-    <div className="h-full bg-gray-50/50 p-2 overflow-hidden">
+    <div className="h-full bg-gray-50/50 p-2 overflow-hidden w-full">
       <div className="w-full h-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="h-full"
         >
-          <div className="bg-white rounded-none shadow-none border-0 p-4 md:p-8 relative h-full overflow-y-auto w-full">
+          <div className="bg-white p-4 md:p-8 relative h-full overflow-y-auto w-full">
             <Button
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
@@ -236,7 +236,7 @@ export default function NewCase() {
               <X className="w-5 h-5" />
             </Button>
 
-            <div className="space-y-6 pt-8">
+            <div className="space-y-6 pt-8 w-full max-w-5xl mx-auto">
               {!showNewBorrowerForm ? (
                 <>
                   <Button
