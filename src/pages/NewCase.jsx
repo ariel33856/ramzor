@@ -226,7 +226,7 @@ export default function NewCase() {
           animate={{ opacity: 1, y: 0 }}
           className="h-full"
         >
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-8 relative h-full overflow-y-auto">
+          <div className="bg-white rounded-none shadow-none border-0 p-4 md:p-8 relative h-full overflow-y-auto w-full">
             <Button
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
