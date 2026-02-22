@@ -107,8 +107,16 @@ export default function NewCase() {
     const person = allPersons.find(p => p.id === personId);
     if (person) {
       const linkedAccounts = person.linked_accounts || [];
+      // Sanitize linked_accounts to ensure they are all objects (handle legacy string IDs)
+      const sanitizedLinkedAccounts = linkedAccounts.map(acc => {
+        if (typeof acc === 'string') {
+          return { case_id: acc, relationship_type: 'לווה' };
+        }
+        return acc;
+      });
+      
       await base44.entities.Person.update(personId, {
-        linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
+        linked_accounts: [...sanitizedLinkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
       });
     }
 
@@ -196,12 +204,12 @@ export default function NewCase() {
 
   return (
     <div className="h-full bg-gray-50/50 p-2 overflow-hidden flex items-center justify-center">
-      <div className="w-full max-w-3xl">
+      <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 relative">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-8 relative">
             <Button
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
@@ -210,8 +218,6 @@ export default function NewCase() {
             >
               <X className="w-5 h-5" />
             </Button>
-            
-            {/* Header removed as requested */}
 
             <div className="space-y-6 pt-8">
               {!showNewBorrowerForm ? (
