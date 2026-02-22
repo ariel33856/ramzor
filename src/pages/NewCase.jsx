@@ -95,12 +95,10 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const allCases = await SecureEntities.MortgageCase.list();
-      const accountNumbers = allCases
-        .filter(c => c.account_number)
-        .map(c => c.account_number);
-      const maxAccountNumber = accountNumbers.length > 0 
-        ? Math.max(...accountNumbers)
+      // Use direct SDK call to get latest account number efficiently
+      const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
+      const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
+        ? latestCases[0].account_number 
         : 72515;
       caseData.account_number = maxAccountNumber + 1;
     }
@@ -163,12 +161,10 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      const allCases = await SecureEntities.MortgageCase.list();
-      const accountNumbers = allCases
-        .filter(c => c.account_number)
-        .map(c => c.account_number);
-      const maxAccountNumber = accountNumbers.length > 0 
-        ? Math.max(...accountNumbers)
+      // Use direct SDK call to get latest account number efficiently
+      const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
+      const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
+        ? latestCases[0].account_number 
         : 72515;
       caseData.account_number = maxAccountNumber + 1;
     }
