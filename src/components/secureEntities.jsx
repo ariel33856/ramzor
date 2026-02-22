@@ -46,7 +46,7 @@ function createMortgageCaseEntity() {
       // Return cases owned by user OR shared with user
       const [owned, shared] = await Promise.all([
         entity.filter({ created_by: user.email }, sortBy, limit),
-        entity.filter({ shared_with: user.email }, sortBy, limit)
+        entity.filter({ shared_with: { $contains: user.email } }, sortBy, limit)
       ]);
       const seen = new Set();
       return [...owned, ...shared].filter(r => {
@@ -68,7 +68,7 @@ function createMortgageCaseEntity() {
       // Return cases matching filters AND (owned or shared)
       const [owned, shared] = await Promise.all([
         entity.filter({ ...filters, created_by: user.email }, sortBy, limit),
-        entity.filter({ ...filters, shared_with: user.email }, sortBy, limit)
+        entity.filter({ ...filters, shared_with: { $contains: user.email } }, sortBy, limit)
       ]);
       const seen = new Set();
       return [...owned, ...shared].filter(r => {
@@ -184,7 +184,7 @@ function createSecureEntity(entityName, parentCaseIdField = null) {
     if (user.role === 'admin') return null; // null = no restriction
     const [owned, shared] = await Promise.all([
       base44.entities.MortgageCase.filter({ created_by: user.email }),
-      base44.entities.MortgageCase.filter({ shared_with: user.email })
+      base44.entities.MortgageCase.filter({ shared_with: { $contains: user.email } })
     ]);
     const seen = new Set();
     return [...owned, ...shared]
