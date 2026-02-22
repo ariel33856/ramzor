@@ -109,13 +109,15 @@ export default function NewCase() {
 
     // Link person to account
     const person = allPersons.find(p => p.id === personId);
-    const linkedAccounts = person.linked_accounts || [];
-    await SecureEntities.Person.update(personId, {
-      linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
-    });
+    if (person) {
+      const linkedAccounts = person.linked_accounts || [];
+      await base44.entities.Person.update(personId, {
+        linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
+      });
+    }
 
     // Create audit log
-    await SecureEntities.AuditLog.create({
+    await base44.entities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',
@@ -174,12 +176,12 @@ export default function NewCase() {
     const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    await SecureEntities.Person.update(newPerson.id, {
+    await base44.entities.Person.update(newPerson.id, {
       linked_accounts: [{ case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
-    await SecureEntities.AuditLog.create({
+    await base44.entities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',
