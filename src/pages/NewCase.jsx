@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { SecureEntities } from '@/components/secureEntities';
 import { 
   User, Phone, Mail, Home, Banknote, Users, 
   Building2, ChevronRight, ChevronLeft, Check, Loader2, Search, Plus, X 
@@ -57,7 +56,7 @@ export default function NewCase() {
     queryFn: async () => {
       if (!currentUser) return [];
       const targetUser = (filterUser && filterUser !== 'all') ? filterUser : currentUser.email;
-      return SecureEntities.Person.filter({ created_by: targetUser });
+      return base44.entities.Person.filter({ created_by: targetUser });
     },
     enabled: !!currentUser,
     staleTime: 5 * 60 * 1000
@@ -95,7 +94,6 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      // Use direct SDK call to get latest account number efficiently
       const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
       const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
         ? latestCases[0].account_number 
@@ -103,7 +101,7 @@ export default function NewCase() {
       caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await SecureEntities.MortgageCase.create(caseData);
+    const newCase = await base44.entities.MortgageCase.create(caseData);
 
     // Link person to account
     const person = allPersons.find(p => p.id === personId);
@@ -139,7 +137,7 @@ export default function NewCase() {
     setSaving(true);
 
     // Create new person in Person entity
-    const newPerson = await SecureEntities.Person.create({
+    const newPerson = await base44.entities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
@@ -161,7 +159,6 @@ export default function NewCase() {
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      // Use direct SDK call to get latest account number efficiently
       const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
       const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
         ? latestCases[0].account_number 
@@ -169,7 +166,7 @@ export default function NewCase() {
       caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await SecureEntities.MortgageCase.create(caseData);
+    const newCase = await base44.entities.MortgageCase.create(caseData);
 
     // Link person to account
     await base44.entities.Person.update(newPerson.id, {
@@ -213,17 +210,10 @@ export default function NewCase() {
             >
               <X className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">חשבון חדש</h1>
-                <p className="text-gray-500">צור אישר קשר כדי לפתוח עבורו חשבון או בחר מהרשימה</p>
-              </div>
-            </div>
+            
+            {/* Header removed as requested */}
 
-            <div className="space-y-6">
+            <div className="space-y-6 pt-8">
               {!showNewBorrowerForm ? (
                 <>
                   <Button
