@@ -182,7 +182,7 @@ export default function CaseDetails() {
   const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       {/* Read-only banner for shared users */}
       {isSharedUser && (
         <div className="bg-amber-50 border-b-2 border-amber-300 px-4 py-2 flex items-center justify-center gap-2">
@@ -214,7 +214,7 @@ export default function CaseDetails() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="mx-auto p-2 md:p-3">
+      <div className="w-full p-2 md:p-3">
         {/* Tabs Grid - Column Layout */}
         <div className="mb-6">
           <div className="grid grid-cols-3 gap-6">
