@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { SecureEntities } from '@/components/secureEntities';
 import { 
   User, Phone, Mail, Home, Banknote, Users, 
   Building2, ChevronRight, ChevronLeft, Check, Loader2, Search, Plus, X 
@@ -56,7 +57,7 @@ export default function NewCase() {
     queryFn: async () => {
       if (!currentUser) return [];
       const targetUser = (filterUser && filterUser !== 'all') ? filterUser : currentUser.email;
-      return base44.entities.Person.filter({ created_by: targetUser });
+      return SecureEntities.Person.filter({ created_by: targetUser });
     },
     enabled: !!currentUser,
     staleTime: 5 * 60 * 1000
@@ -85,53 +86,36 @@ export default function NewCase() {
 
     const caseData = {
       client_name: '',
-      status: 'new',
-      main_status: 'ליד חדש',
+      status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
+      module_id: moduleId || null
     };
-    if (moduleId) caseData.module_id = moduleId;
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      try {
-        const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
-        const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
-          ? latestCases[0].account_number 
-          : 72515;
-        caseData.account_number = maxAccountNumber + 1;
-      } catch (error) {
-        console.error("Error fetching latest case for account number:", error);
-        caseData.account_number = 72516; // Fallback
-      }
+      const allCases = await SecureEntities.MortgageCase.list();
+      const accountNumbers = allCases
+        .filter(c => c.account_number)
+        .map(c => c.account_number);
+      const maxAccountNumber = accountNumbers.length > 0 
+        ? Math.max(...accountNumbers)
+        : 72515;
+      caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await base44.entities.MortgageCase.create(caseData);
+    const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    const person = allPersons.find(p => p.id === personId);
-    if (person) {
-      const linkedAccounts = person.linked_accounts || [];
-      // Sanitize linked_accounts
-      const sanitizedLinkedAccounts = linkedAccounts.map(acc => {
-        if (typeof acc === 'string') {
-          return { case_id: acc, relationship_type: 'לווה' };
-        }
-        // Ensure relationship_type exists
-        if (!acc.relationship_type) {
-          return { ...acc, relationship_type: 'לווה' };
-        }
-        return acc;
-      });
-      
-      await base44.entities.Person.update(personId, {
-        linked_accounts: [...sanitizedLinkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
-      });
-    }
+    const person = await SecureEntities.Person.filter({ id: personId }).then(res => res[0]);
+    const linkedAccounts = person.linked_accounts || [];
+    await SecureEntities.Person.update(personId, {
+      linked_accounts: [...linkedAccounts, { case_id: newCase.id, relationship_type: 'לווה' }]
+    });
 
     // Create audit log
-    await base44.entities.AuditLog.create({
+    await SecureEntities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',
@@ -155,7 +139,7 @@ export default function NewCase() {
     setSaving(true);
 
     // Create new person in Person entity
-    const newPerson = await base44.entities.Person.create({
+    const newPerson = await SecureEntities.Person.create({
       first_name: newBorrowerData.client_name,
       last_name: newBorrowerData.last_name || '',
       id_number: newBorrowerData.client_id || '',
@@ -167,38 +151,35 @@ export default function NewCase() {
     // Create new MortgageCase
     const caseData = {
       client_name: '',
-      status: 'new',
-      main_status: 'ליד חדש',
+      status: 'ליד חדש',
       urgency: 'medium',
       progress_percentage: 0,
       is_archived: isArchive,
+      module_id: moduleId || null,
       person_id: newPerson.id
     };
-    if (moduleId) caseData.module_id = moduleId;
 
     // Only add account number for main accounts module (no moduleId)
     if (!moduleId) {
-      try {
-        const latestCases = await base44.entities.MortgageCase.list('-account_number', 1);
-        const maxAccountNumber = latestCases.length > 0 && latestCases[0].account_number 
-          ? latestCases[0].account_number 
-          : 72515;
-        caseData.account_number = maxAccountNumber + 1;
-      } catch (error) {
-        console.error("Error fetching latest case for account number:", error);
-        caseData.account_number = 72516; // Fallback
-      }
+      const allCases = await SecureEntities.MortgageCase.list();
+      const accountNumbers = allCases
+        .filter(c => c.account_number)
+        .map(c => c.account_number);
+      const maxAccountNumber = accountNumbers.length > 0 
+        ? Math.max(...accountNumbers)
+        : 72515;
+      caseData.account_number = maxAccountNumber + 1;
     }
 
-    const newCase = await base44.entities.MortgageCase.create(caseData);
+    const newCase = await SecureEntities.MortgageCase.create(caseData);
 
     // Link person to account
-    await base44.entities.Person.update(newPerson.id, {
+    await SecureEntities.Person.update(newPerson.id, {
       linked_accounts: [{ case_id: newCase.id, relationship_type: 'לווה' }]
     });
 
     // Create audit log
-    await base44.entities.AuditLog.create({
+    await SecureEntities.AuditLog.create({
       case_id: newCase.id,
       action_type: 'status_change',
       actor: 'user',
@@ -219,14 +200,13 @@ export default function NewCase() {
 
 
   return (
-    <div className="h-full bg-gray-50/50 p-2 overflow-hidden w-full">
-      <div className="w-full h-full">
+    <div className="h-full bg-gray-50/50 p-2 overflow-hidden flex items-center justify-center">
+      <div className="w-full max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="h-full"
         >
-          <div className="bg-white p-4 md:p-8 relative h-full overflow-y-auto w-full">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 relative">
             <Button
               onClick={() => navigate(createPageUrl('Dashboard'))}
               variant="ghost"
@@ -235,8 +215,17 @@ export default function NewCase() {
             >
               <X className="w-5 h-5" />
             </Button>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
+                <User className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">חשבון חדש</h1>
+                <p className="text-gray-500">צור אישר קשר כדי לפתוח עבורו חשבון או בחר מהרשימה</p>
+              </div>
+            </div>
 
-            <div className="space-y-6 pt-8 w-full max-w-5xl mx-auto">
+            <div className="space-y-6">
               {!showNewBorrowerForm ? (
                 <>
                   <Button

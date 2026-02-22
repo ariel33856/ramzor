@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Briefcase, FileCheck, AlertTriangle, TrendingUp, 
   Plus, Search, Filter, Columns, GripVertical, PlusCircle, Archive,
-  ArrowUp, ArrowDown, FilterX, X, Users
+  ArrowUp, ArrowDown, FilterX, X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import StatsCard from '../components/dashboard/StatsCard';
-// import { SecureEntities } from '../components/secureEntities';
+import { SecureEntities } from '../components/secureEntities';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { personFields } from '../components/case/personFields';
 import FieldsSelector from '../components/dashboard/FieldsSelector';
@@ -90,7 +90,7 @@ export default function Dashboard() {
   };
 
   const archiveMutation = useMutation({
-    mutationFn: (caseId) => base44.entities.MortgageCase.update(caseId, { is_archived: true }),
+    mutationFn: (caseId) => SecureEntities.MortgageCase.update(caseId, { is_archived: true }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cases'] });
     }
@@ -266,7 +266,7 @@ export default function Dashboard() {
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list(),
+    queryFn: () => SecureEntities.Person.list(),
     retry: 1,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
@@ -305,11 +305,11 @@ export default function Dashboard() {
       
       // If filterUser is set and not 'all', filter by that user
       if (filterUser && filterUser !== 'all') {
-        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
       
       // Otherwise show all cases
-      return base44.entities.MortgageCase.list('-created_date');
+      return SecureEntities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
     retry: 1,
@@ -748,11 +748,10 @@ export default function Dashboard() {
                         transition={{ delay: index * 0.02 }}
                         className={`border-b border-gray-100 hover:bg-opacity-75 transition-colors ${index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}`}
                       >
-                        {selectedFields.map((fieldId, fIdx) => {
+                        {selectedFields.map(fieldId => {
                           const field = allAvailableFields.find(f => f.id === fieldId);
                           const value = field ? getFieldValue(field, caseData, linkedPerson, allPersons) : '—';
                           const width = columnWidths[fieldId];
-                          const isSharedWithMe = user && caseData.created_by !== user.email && caseData.shared_with?.includes(user.email);
 
                           return (
                             <td 
@@ -762,14 +761,7 @@ export default function Dashboard() {
                               onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
                             >
                               {fieldId === 'account_number' ? (
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-semibold text-blue-600">{value}</span>
-                                  {isSharedWithMe && (
-                                    <span title="שותף איתך" className="inline-flex items-center gap-0.5 bg-amber-100 text-amber-700 text-xs px-1.5 py-0.5 rounded-full border border-amber-200">
-                                      <Users className="w-3 h-3" />
-                                    </span>
-                                  )}
-                                </div>
+                                <div className="font-semibold text-blue-600">{value}</div>
                               ) : fieldId === 'first_name' ? (
                                 <div className="font-semibold text-gray-900">{value}</div>
                               ) : (

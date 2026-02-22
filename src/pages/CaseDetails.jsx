@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Loader2, ExternalLink, ChevronDown, ChevronUp, Eye, Share2 } from 'lucide-react';
-import SharingPanel from '@/components/case/SharingPanel';
+import { Loader2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import ContactButtons from '@/components/case/ContactButtons';
 import AddContactButton from '@/components/case/AddContactButton';
 import ContactsSummaryView from '@/components/case/ContactsSummaryView';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { tabs, pageMapping } from '@/components/CaseTabs';
-// import { SecureEntities } from '@/components/secureEntities';
+import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import {
@@ -71,22 +70,15 @@ export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
   const [activeContactId, setActiveContactId] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
-  const [showSharingPanel, setShowSharingPanel] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const isNew = urlParams.get('new') === 'true';
   const accountNumber = urlParams.get('accountNumber');
   const [showCongrats, setShowCongrats] = useState(false);
 
-  const { data: currentUser } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    staleTime: 60000
-  });
-
   const { data: caseData, isLoading, error } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId,
     retry: 1,
     staleTime: 30000
@@ -95,7 +87,7 @@ export default function CaseDetails() {
   const { data: linkedContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await base44.entities.Person.list();
+      const allPersons = await SecureEntities.Person.list();
       const seen = new Set();
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
@@ -176,20 +168,10 @@ export default function CaseDetails() {
     );
   }
 
-  const isOwner = caseData.created_by === currentUser?.email || currentUser?.role === 'admin';
-  const isSharedUser = !isOwner && caseData.shared_with?.includes(currentUser?.email);
-
   const activeTabData = activeTab ? tabs.find(t => t.id === activeTab) : null;
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      {/* Read-only banner for shared users */}
-      {isSharedUser && (
-        <div className="bg-amber-50 border-b-2 border-amber-300 px-4 py-2 flex items-center justify-center gap-2">
-          <Eye className="w-4 h-4 text-amber-600" />
-          <span className="text-amber-800 font-medium text-sm">אתה צופה בחשבון זה במצב צפייה בלבד</span>
-        </div>
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
         <DialogContent className="sm:max-w-lg border-4 border-transparent bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 shadow-2xl [&>button]:hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-lg"></div>
@@ -214,7 +196,7 @@ export default function CaseDetails() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="w-full p-2 md:p-3">
+      <div className="mx-auto p-2 md:p-3">
         {/* Tabs Grid - Column Layout */}
         <div className="mb-6">
           <div className="grid grid-cols-3 gap-6">
@@ -385,29 +367,6 @@ export default function CaseDetails() {
           </div>
         </div>
 
-        {/* Sharing Panel (owner only) */}
-        {isOwner && (
-          <div className="mb-4">
-            <button
-              onClick={() => setShowSharingPanel(p => !p)}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors border border-white/20"
-            >
-              <Share2 className="w-4 h-4" />
-              שיתוף חשבון
-              {caseData.shared_with?.length > 0 && (
-                <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {caseData.shared_with.length}
-                </span>
-              )}
-            </button>
-            {showSharingPanel && (
-              <div className="mt-3">
-                <SharingPanel caseData={caseData} currentUser={currentUser} />
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Expandable Content Area */}
           {activeTab && activeTabData && (
             <div
@@ -416,15 +375,32 @@ export default function CaseDetails() {
                 ${activeTabData.bg} bg-opacity-30
               `}
             >
-              <div className="flex items-center gap-3 mb-4 flex-wrap justify-end">
+              <div className={`flex items-center gap-3 mb-6 px-8 py-4 rounded-xl border-2 ${activeTabData.border} ${activeTabData.bg} hover:shadow-lg transition-all flex-wrap`}>
+                <div 
+                  onClick={() => window.location.href = createPageUrl(pageMapping[activeTab]) + `?id=${caseId}`}
+                  className="flex items-center gap-3 cursor-pointer"
+                >
+                  <div className={`
+                    w-14 h-14 rounded-xl flex items-center justify-center
+                    bg-gradient-to-br ${activeTabData.gradient} shadow-lg
+                  `}>
+                    {React.createElement(activeTabData.icon, { className: "w-7 h-7 text-white" })}
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {activeTabData.label}
+                    {activeTab === 'personal' && <span className="text-gray-600 text-lg font-normal"> ({linkedContacts.length})</span>}
+                  </h2>
+                </div>
                 {activeTab === 'personal' && (
                   <>
                     {linkedContacts.length > 0 && (
-                      <ContactButtons
-                        linkedContacts={linkedContacts}
-                        caseId={caseId}
-                        activeContactId={activeContactId}
-                        onContactClick={(contactId) => {
+                      <>
+                        <span className="text-gray-400">|</span>
+                        <ContactButtons
+                          linkedContacts={linkedContacts}
+                          caseId={caseId}
+                          activeContactId={activeContactId}
+                          onContactClick={(contactId) => {
                            const scrollContainer = document.querySelector('main');
                            const currentScroll = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
                            setActiveContactId(contactId);
@@ -439,8 +415,9 @@ export default function CaseDetails() {
                                window.scrollTo({ top: currentScroll, behavior: 'instant' });
                              }
                            });
-                        }}
-                      />
+                          }}
+                        />
+                      </>
                     )}
                     <button
                       onClick={() => {
