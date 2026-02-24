@@ -44,9 +44,9 @@ Deno.serve(async (req) => {
       let results;
       if (entity_name === 'Person') {
         // For Person, find persons linked to this case
-        // Get all persons created by the case owner
-        const ownerPersons = await entityApi.filter({ created_by: caseOwner });
-        results = ownerPersons.filter(person => {
+        // Get ALL persons (service role bypasses RLS) and filter by link
+        const allPersons = await entityApi.list();
+        results = allPersons.filter(person => {
           // Check if person is directly linked via person_id
           if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
           // Check linked_accounts
@@ -65,11 +65,11 @@ Deno.serve(async (req) => {
           results = [mortgageCase];
         }
       } else if (filters) {
-        // Use provided filters with service role
+        // Use provided filters with service role (bypasses RLS)
         results = await entityApi.filter(filters);
       } else {
-        // For entities with case_id field, filter by case_id and case owner
-        results = await entityApi.filter({ case_id, created_by: caseOwner });
+        // For entities with case_id field
+        results = await entityApi.filter({ case_id });
       }
 
       return Response.json({ data: results });
