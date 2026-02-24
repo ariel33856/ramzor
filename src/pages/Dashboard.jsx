@@ -313,20 +313,19 @@ export default function Dashboard() {
         return base44.entities.MortgageCase.list('-created_date');
       }
       
-      // Regular user: get all cases (RLS read is open), then filter client-side
-      const allData = await base44.entities.MortgageCase.list('-created_date');
+      // Regular user: get own cases + shared cases from backend
+      const [ownCases, sharedResponse] = await Promise.all([
+        base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date'),
+        base44.functions.invoke('getSharedCases', {}).catch(() => ({ data: { shared_cases: [] } }))
+      ]);
       
-      return allData.map(c => {
-        const isOwner = c.created_by === user.email;
-        const isShared = !isOwner && 
-          c.shared_with && 
-          Array.isArray(c.shared_with) && 
-          c.shared_with.includes(user.email);
-        
-        if (isOwner) return c;
-        if (isShared) return { ...c, _isShared: true };
-        return null; // Not accessible
-      }).filter(Boolean);
+      const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
+      
+      // Merge, avoiding duplicates
+      const ownIds = new Set(ownCases.map(c => c.id));
+      const uniqueShared = sharedCases.filter(c => !ownIds.has(c.id));
+      
+      return [...ownCases, ...uniqueShared];
     },
     enabled: !!user,
     retry: 1,
