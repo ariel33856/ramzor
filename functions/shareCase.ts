@@ -30,8 +30,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'המשתמש כבר משותף לתיק זה' }, { status: 400 });
     }
 
-    // Create permission using user scope (so it lands in the correct tenant/app)
-    const result = await base44.entities.CasePermission.create({
+    // Create permission using service role to ensure it's written to the correct app DB
+    const result = await base44.asServiceRole.entities.CasePermission.create({
       case_id,
       case_title: case_title || 'Untitled Case',
       owner_email: user.email,
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
       is_active: true
     });
 
-    console.log('[shareCase] Created permission:', result);
+    console.log('[shareCase] Created permission:', JSON.stringify(result));
     return Response.json({ success: true, permission: result });
   } catch (error) {
     console.error('[shareCase] Error:', error.message);
