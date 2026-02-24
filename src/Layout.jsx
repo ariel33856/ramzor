@@ -845,6 +845,15 @@ export default function Layout({ children, currentPageName }) {
                   <Bell className="w-5 h-5 text-gray-500" />
                   <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="text-gray-500 hover:text-red-600 hover:bg-red-50"
+                    title="יציאה מהמערכת"
+                  >
+                    <LogOut className="w-5 h-5" />
+                  </Button>
                   <Link to={createPageUrl('Dashboard')} className="flex items-center">
                   <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694ea14dd62d8c7f3cc02c70/40ed21842_4.png" alt="לוגו" className="h-9 w-auto object-contain scale-[1.66] origin-center" />
                   </Link>
