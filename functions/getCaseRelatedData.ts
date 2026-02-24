@@ -38,17 +38,17 @@ Deno.serve(async (req) => {
         return Response.json({ error: `Unknown entity: ${entity_name}` }, { status: 400 });
       }
 
-      // Find the original case owner to scope data properly
-      const caseOwner = mortgageCase.created_by;
-
       let results;
       if (entity_name === 'Person') {
         // For Person, find persons linked to this case
         // Get ALL persons (service role bypasses RLS) and filter by link
-        const allPersons = await entityApi.list('-created_date', 500);
-        console.log('[getCaseRelatedData] Total persons found:', allPersons.length);
-        console.log('[getCaseRelatedData] Case person_id:', mortgageCase.person_id);
-        console.log('[getCaseRelatedData] Sample person linked_accounts:', allPersons.slice(0, 3).map(p => ({ id: p.id, name: p.first_name, linked: p.linked_accounts })));
+        let allPersons = [];
+        try {
+          allPersons = await entityApi.filter({}, '-created_date', 500);
+        } catch (e) {
+          // fallback
+          allPersons = await entityApi.list('-created_date', 500);
+        }
         results = allPersons.filter(person => {
           // Check if person is directly linked via person_id
           if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
@@ -59,6 +59,16 @@ Deno.serve(async (req) => {
             );
           }
           return false;
+        });
+        // Debug info in response
+        return Response.json({ 
+          data: results, 
+          debug: { 
+            total_persons: allPersons.length, 
+            case_person_id: mortgageCase.person_id,
+            matched: results.length,
+            case_owner: mortgageCase.created_by
+          } 
         });
       } else if (entity_name === 'MortgageCase') {
         // Return the case itself (and linked borrowers)
