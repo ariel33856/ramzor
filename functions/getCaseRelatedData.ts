@@ -11,6 +11,8 @@ Deno.serve(async (req) => {
 
     const { case_id, entity_name, filters } = await req.json();
 
+    console.log('[getCaseRelatedData] Received request - case_id:', case_id, 'entity_name:', entity_name);
+
     if (!case_id) {
       return Response.json({ error: 'Missing case_id' }, { status: 400 });
     }
