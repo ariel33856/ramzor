@@ -54,7 +54,7 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
         throw new Error("This case is already shared with this user");
       }
       
-      return SecureEntities.CasePermission.create({
+      return base44.entities.CasePermission.create({
         case_id: caseId,
         case_title: caseTitle || 'Untitled Case',
         owner_email: ownerEmail,
