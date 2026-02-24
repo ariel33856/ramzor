@@ -104,20 +104,14 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-3 mb-3">
-          <Input
-            placeholder="הכנס אימייל של משתמש"
-            value={emailToShare}
-            onChange={(e) => { setEmailToShare(e.target.value); setShareResult(null); }}
-            className="bg-white"
-            onKeyDown={(e) => e.key === 'Enter' && emailToShare && shareMutation.mutate(emailToShare)}
-          />
+        <div className="mb-4">
           <Button 
-            onClick={() => shareMutation.mutate(emailToShare)}
-            disabled={shareMutation.isPending || !emailToShare}
+            onClick={() => shareMutation.mutate()}
+            disabled={shareMutation.isPending || sharedUsers.length === allUsers.length}
             className="bg-blue-600 hover:bg-blue-700"
           >
-            {shareMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'שתף'}
+            {shareMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            שתף עם כל המשתמשים
           </Button>
         </div>
 
