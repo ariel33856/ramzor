@@ -18,7 +18,6 @@ import {
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
-  const [emailToShare, setEmailToShare] = useState('');
   const [isRevokeDialogOpen, setIsRevokeDialogOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [shareResult, setShareResult] = useState(null);
@@ -33,6 +32,12 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
     queryKey: ['case', caseId],
     queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['all-users'],
+    queryFn: () => base44.entities.User.list(),
+    staleTime: 5 * 60 * 1000
   });
 
   const sharedUsers = caseData?.shared_with || [];
