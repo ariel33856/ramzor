@@ -40,20 +40,54 @@ Deno.serve(async (req) => {
 
       let results;
       if (entity_name === 'Person') {
-        // For Person - use list() to get ALL persons (service role bypasses RLS)
-        const allPersons = await entityApi.list('-created_date', 1000);
+        // Strategy: fetch persons by multiple approaches
+        const personMap = new Map();
         
-        results = allPersons.filter(person => {
-          // Check if person is directly linked via person_id on the case
-          if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
-          // Check linked_accounts array on the person
-          if (person.linked_accounts && Array.isArray(person.linked_accounts) && person.linked_accounts.length > 0) {
-            return person.linked_accounts.some(acc =>
-              typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
-            );
+        // 1. If the case has a person_id, fetch that person directly
+        if (mortgageCase.person_id) {
+          try {
+            const directPersons = await entityApi.filter({ id: mortgageCase.person_id });
+            for (const p of directPersons) personMap.set(p.id, p);
+          } catch (e) {
+            console.log('Direct person fetch failed:', e.message);
           }
-          return false;
-        });
+        }
+        
+        // 2. Fetch all persons created by the case owner
+        try {
+          const ownerPersons = await entityApi.filter({ created_by: mortgageCase.created_by });
+          for (const person of ownerPersons) {
+            if (personMap.has(person.id)) continue;
+            if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
+              const isLinked = person.linked_accounts.some(acc =>
+                typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
+              );
+              if (isLinked) personMap.set(person.id, person);
+            }
+          }
+        } catch (e) {
+          console.log('Owner persons fetch failed:', e.message);
+        }
+        
+        // 3. If shared, also check persons created by the shared user (current user)
+        if (isShared && !isOwner) {
+          try {
+            const myPersons = await entityApi.filter({ created_by: user.email });
+            for (const person of myPersons) {
+              if (personMap.has(person.id)) continue;
+              if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
+                const isLinked = person.linked_accounts.some(acc =>
+                  typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
+                );
+                if (isLinked) personMap.set(person.id, person);
+              }
+            }
+          } catch (e) {
+            console.log('Shared user persons fetch failed:', e.message);
+          }
+        }
+        
+        results = Array.from(personMap.values());
       } else if (entity_name === 'MortgageCase') {
         // Return the case itself (and linked borrowers)
         if (filters && filters.id) {
