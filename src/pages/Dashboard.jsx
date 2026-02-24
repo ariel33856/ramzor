@@ -792,19 +792,24 @@ export default function Dashboard() {
                           const width = columnWidths[fieldId];
 
                           return (
-                            <td 
-                              key={fieldId} 
-                              className="px-6 py-2 cursor-pointer relative"
-                              style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
-                              onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
-                            >
-                              {fieldId === 'account_number' ? (
-                                <div className="font-semibold text-blue-600">{value}</div>
-                              ) : fieldId === 'first_name' ? (
-                                <div className="font-semibold text-gray-900">{value}</div>
-                              ) : (
-                                <span className="text-gray-600">{value}</span>
-                              )}
+                          <td 
+                            key={fieldId} 
+                            className="px-6 py-2 cursor-pointer relative"
+                            style={{ width: width ? `${width}px` : 'auto', minWidth: '80px' }}
+                            onClick={() => window.location.href = createPageUrl(`CaseDetails?id=${caseData.id}`)}
+                          >
+                            {fieldId === 'account_number' ? (
+                              <div className="font-semibold text-blue-600 flex items-center gap-2">
+                                {value}
+                                {caseData._isShared && (
+                                  <span className="text-xs bg-blue-100 text-blue-700 border border-blue-300 rounded-full px-2 py-0.5 font-medium whitespace-nowrap">שותף איתי</span>
+                                )}
+                              </div>
+                            ) : fieldId === 'first_name' ? (
+                              <div className="font-semibold text-gray-900">{value}</div>
+                            ) : (
+                              <span className="text-gray-600">{value}</span>
+                            )}
                               <div className="absolute top-0 left-0 w-[3px] h-full bg-gray-100 pointer-events-none" />
                             </td>
                           );
