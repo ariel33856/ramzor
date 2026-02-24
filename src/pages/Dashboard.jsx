@@ -359,7 +359,8 @@ export default function Dashboard() {
   }, [allPersons, allCases]);
 
   // Filter only non-archived cases without module_id (main accounts module)
-  const cases = allCases.filter(c => !c.is_archived && !c.module_id);
+  // Show shared cases even if archived (from the shared user's perspective)
+  const cases = allCases.filter(c => (!c.is_archived || c._isShared) && !c.module_id);
 
   let filteredCases = cases.filter(c => {
     try {
