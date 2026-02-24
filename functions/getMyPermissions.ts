@@ -9,16 +9,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use service role to bypass RLS and fetch all permissions, then filter by shared_email
-    const allPermissions = await base44.asServiceRole.entities.CasePermission.list('-created_date', 1000);
+    // Use user scope — RLS on CasePermission allows:
+    // read where owner_email == user.email OR shared_email == user.email
+    const allPermissions = await base44.entities.CasePermission.list('-created_date', 1000);
     const myPermissions = allPermissions.filter(
       p => p.shared_email === user.email && p.is_active === true
     );
 
-    console.log('[getMyPermissions] user:', user.email, 'total permissions in DB:', allPermissions.length, 'mine:', myPermissions.length);
+    console.log('[getMyPermissions] user:', user.email, 'total visible:', allPermissions.length, 'as shared recipient:', myPermissions.length);
 
     return Response.json({ permissions: myPermissions });
   } catch (error) {
+    console.error('[getMyPermissions] error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
