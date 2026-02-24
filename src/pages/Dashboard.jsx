@@ -311,11 +311,16 @@ export default function Dashboard() {
         myCases = await base44.entities.MortgageCase.list('-created_date');
       }
       
-      // Get shared cases
+      // Get shared cases - RLS read is open, so we can query all cases
       if (!filterUser || filterUser === 'all') {
         try {
-          const sharedResponse = await base44.functions.invoke('getSharedCases', {});
-          const sharedCases = sharedResponse.data.shared_cases || [];
+          const allCasesForSharing = await base44.entities.MortgageCase.list('-created_date');
+          const sharedCases = allCasesForSharing.filter(c => 
+            c.shared_with && 
+            Array.isArray(c.shared_with) && 
+            c.shared_with.includes(user.email) &&
+            c.created_by !== user.email
+          );
           
           // Merge and deduplicate
           const combined = [...myCases];
