@@ -9,10 +9,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use service role to get all permissions and filter manually
-    const allPermissions = await base44.asServiceRole.entities.CasePermission.list('-created_date', 500);
-    const permissions = allPermissions.filter(p => p.shared_email === user.email && p.is_active === true);
-    console.log('[getSharedCases] user:', user.email, 'total in DB:', allPermissions.length, 'matched:', permissions.length);
+    // Use user-scoped query — RLS on CasePermission allows reading where shared_email = user.email
+    const userScopedAll = await base44.entities.CasePermission.list('-created_date', 500);
+    const permissions = userScopedAll.filter(p => p.shared_email === user.email && p.is_active === true);
+    console.log('[getSharedCases] user:', user.email, 'user-scoped total:', userScopedAll.length, 'matched:', permissions.length);
 
     if (!permissions.length) {
       return Response.json({ cases: [] });
