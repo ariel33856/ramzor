@@ -303,9 +303,9 @@ export default function Dashboard() {
     queryFn: async () => {
       if (!user) return [];
       if (filterUser && filterUser !== 'all') {
-        return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
-      return SecureEntities.MortgageCase.list('-created_date');
+      return base44.entities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
     retry: 1,
