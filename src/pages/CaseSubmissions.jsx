@@ -51,7 +51,7 @@ export default function CaseSubmissions() {
   const { data: caseContacts = [] } = useQuery({
     queryKey: ['linked-contacts', caseId],
     queryFn: async () => {
-      const allPersons = await SecureEntities.Person.list();
+      const allPersons = await SecureEntities.Person.listForCasePersons(caseId);
       return allPersons.filter(person => {
         if (!person.linked_accounts || person.linked_accounts.length === 0) return false;
         return person.linked_accounts.some(acc =>
