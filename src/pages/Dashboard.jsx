@@ -298,34 +298,18 @@ export default function Dashboard() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const { data: sharedCaseIds = [], isLoading: sharedLoading } = useQuery({
-    queryKey: ['shared-permissions', user?.email],
+  const { data: sharedCases = [], isLoading: sharedCasesLoading } = useQuery({
+    queryKey: ['shared-cases', user?.email],
     queryFn: async () => {
       if (!user) return [];
-      const permissions = await base44.entities.CasePermission.filter({
-        shared_email: user.email,
-        is_active: true
-      });
-      return permissions.map(p => p.case_id);
+      const res = await base44.functions.invoke('getSharedCases', {});
+      return (res.data?.cases || []).map(c => ({ ...c, _isShared: true }));
     },
     enabled: !!user,
     staleTime: 2 * 60 * 1000
   });
 
-  const { data: sharedCases = [], isLoading: sharedCasesLoading } = useQuery({
-    queryKey: ['shared-cases', sharedCaseIds],
-    queryFn: async () => {
-      if (!sharedCaseIds.length) return [];
-      const results = await Promise.all(
-        sharedCaseIds.map(id =>
-          base44.entities.MortgageCase.filter({ id }).then(r => r[0]).catch(() => null)
-        )
-      );
-      return results.filter(Boolean).map(c => ({ ...c, _isShared: true }));
-    },
-    enabled: sharedCaseIds.length > 0,
-    staleTime: 2 * 60 * 1000
-  });
+  const sharedLoading = false;
 
   const { data: ownCases = [], isLoading: ownLoading } = useQuery({
     queryKey: ['cases', user?.email, filterUser],
