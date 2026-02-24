@@ -81,15 +81,15 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
 
   if (!currentUser) return null;
 
-  const isOwner = currentUser.email === ownerEmail;
+  const isOwner = currentUser.email === ownerEmail || currentUser.email === caseData?.created_by;
 
   if (!isOwner) {
     return (
       <Alert className="mb-6 border-amber-200 bg-amber-50">
         <AlertTriangle className="h-4 w-4 text-amber-600" />
-        <AlertTitle className="text-amber-800">Shared Access</AlertTitle>
+        <AlertTitle className="text-amber-800">גישה משותפת</AlertTitle>
         <AlertDescription className="text-amber-700">
-          You are viewing this case in shared mode. You can view and edit but cannot delete.
+          אתה צופה בחשבון זה בגישה משותפת.
         </AlertDescription>
       </Alert>
     );
