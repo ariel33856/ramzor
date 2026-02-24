@@ -9,9 +9,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { case_id, entity_name, filters } = await req.json();
+    const body = await req.json();
+    const { case_id, entity_name, filters } = body;
 
-    console.log('[getCaseRelatedData] Received request - case_id:', case_id, 'entity_name:', entity_name);
+    console.log('[getCaseRelatedData] Request from:', user.email, 'case_id:', case_id, 'entity:', entity_name);
 
     if (!case_id) {
       return Response.json({ error: 'Missing case_id' }, { status: 400 });
@@ -29,7 +30,7 @@ Deno.serve(async (req) => {
     const isShared = (mortgageCase.shared_with || []).includes(user.email);
     const isAdmin = user.role === 'admin';
 
-    console.log('[getCaseRelatedData] user:', user.email, 'isOwner:', isOwner, 'isShared:', isShared, 'isAdmin:', isAdmin);
+    console.log('[getCaseRelatedData] Access check - isOwner:', isOwner, 'isShared:', isShared, 'isAdmin:', isAdmin);
 
     if (!isOwner && !isShared && !isAdmin) {
       return Response.json({ error: 'No access to this case' }, { status: 403 });
@@ -39,28 +40,19 @@ Deno.serve(async (req) => {
 
     // If requesting specific entity data related to the case
     if (entity_name) {
-      const entityApi = base44.asServiceRole.entities[entity_name];
-      if (!entityApi) {
-        return Response.json({ error: `Unknown entity: ${entity_name}` }, { status: 400 });
-      }
-
-      let results;
       if (entity_name === 'Person') {
-        // Fetch all persons using service role (no created_by filter - shared users need access)
-        const personApi = base44.asServiceRole.entities.Person;
-        const allPersons = await personApi.list('-created_date', 500);
+        // Fetch ALL persons using service role (bypasses RLS completely)
+        const allPersons = await base44.asServiceRole.entities.Person.list('-created_date', 500);
         
-        console.log('[getCaseRelatedData] Total persons fetched:', allPersons.length);
-        console.log('[getCaseRelatedData] Case person_id:', mortgageCase.person_id);
-        console.log('[getCaseRelatedData] Case owner:', caseOwner);
+        console.log('[getCaseRelatedData] Total persons from service role:', allPersons.length);
         
         // Filter to only persons linked to this case
-        const personMap = new Map();
+        const matched = [];
         
         for (const person of allPersons) {
           // Check direct person_id link
           if (mortgageCase.person_id && person.id === mortgageCase.person_id) {
-            personMap.set(person.id, person);
+            matched.push(person);
             continue;
           }
           // Check linked_accounts
@@ -69,15 +61,23 @@ Deno.serve(async (req) => {
               typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
             );
             if (isLinked) {
-              console.log('[getCaseRelatedData] Found linked person:', person.id, person.first_name, person.last_name);
-              personMap.set(person.id, person);
+              console.log('[getCaseRelatedData] Matched person:', person.id, person.first_name, person.last_name);
+              matched.push(person);
             }
           }
         }
         
-        console.log('[getCaseRelatedData] Matched persons count:', personMap.size);
-        results = Array.from(personMap.values());
-      } else if (entity_name === 'MortgageCase') {
+        console.log('[getCaseRelatedData] Total matched persons:', matched.length);
+        return Response.json({ data: matched });
+      }
+      
+      const entityApi = base44.asServiceRole.entities[entity_name];
+      if (!entityApi) {
+        return Response.json({ error: `Unknown entity: ${entity_name}` }, { status: 400 });
+      }
+
+      let results;
+      if (entity_name === 'MortgageCase') {
         if (filters && filters.id) {
           results = await entityApi.filter(filters);
         } else {
