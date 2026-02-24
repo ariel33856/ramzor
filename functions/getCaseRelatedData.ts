@@ -40,36 +40,42 @@ Deno.serve(async (req) => {
 
       let results;
       if (entity_name === 'Person') {
-        // For Person, find persons linked to this case
-        // Get ALL persons (service role bypasses RLS) and filter by link
-        let allPersons = [];
-        try {
-          allPersons = await entityApi.filter({}, '-created_date', 500);
-        } catch (e) {
-          // fallback
-          allPersons = await entityApi.list('-created_date', 500);
-        }
-        results = allPersons.filter(person => {
-          // Check if person is directly linked via person_id
-          if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
-          // Check linked_accounts
-          if (person.linked_accounts && person.linked_accounts.length > 0) {
-            return person.linked_accounts.some(acc =>
-              typeof acc === 'string' ? acc === case_id : acc.case_id === case_id
-            );
+        // For Person - first try to get directly by person_id, then by linked_accounts
+        const personResults = [];
+        
+        // 1. Get person directly linked via person_id
+        if (mortgageCase.person_id) {
+          try {
+            const directPersons = await entityApi.filter({ id: mortgageCase.person_id });
+            if (directPersons.length > 0) {
+              personResults.push(...directPersons);
+            }
+          } catch (e) {
+            console.log('Could not fetch person by person_id:', e.message);
           }
-          return false;
-        });
-        // Debug info in response
-        return Response.json({ 
-          data: results, 
-          debug: { 
-            total_persons: allPersons.length, 
-            case_person_id: mortgageCase.person_id,
-            matched: results.length,
-            case_owner: mortgageCase.created_by
-          } 
-        });
+        }
+        
+        // 2. Get all persons by the case owner to find linked ones
+        const caseOwner = mortgageCase.created_by;
+        try {
+          const ownerPersons = await entityApi.filter({ created_by: caseOwner }, '-created_date', 500);
+          const linkedPersons = ownerPersons.filter(person => {
+            // Skip if already added
+            if (personResults.some(p => p.id === person.id)) return false;
+            // Check linked_accounts
+            if (person.linked_accounts && person.linked_accounts.length > 0) {
+              return person.linked_accounts.some(acc =>
+                typeof acc === 'string' ? acc === case_id : acc.case_id === case_id
+              );
+            }
+            return false;
+          });
+          personResults.push(...linkedPersons);
+        } catch (e) {
+          console.log('Could not fetch owner persons:', e.message);
+        }
+        
+        results = personResults;
       } else if (entity_name === 'MortgageCase') {
         // Return the case itself (and linked borrowers)
         if (filters && filters.id) {
