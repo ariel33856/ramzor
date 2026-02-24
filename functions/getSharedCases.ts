@@ -12,14 +12,26 @@ Deno.serve(async (req) => {
     console.log('User email:', user.email);
     
     // Get all cases using service role - fetch more
-    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date', 500);
-    console.log('Total cases found:', allCases.length);
+    let allCases;
+    try {
+      allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date', 500);
+    } catch (listError) {
+      console.error('Error listing cases with service role:', listError.message);
+      // Fallback: try filter
+      try {
+        allCases = await base44.asServiceRole.entities.MortgageCase.filter({}, '-created_date', 500);
+      } catch (filterError) {
+        console.error('Error filtering cases with service role:', filterError.message);
+        return Response.json({ shared_cases: [], debug: { error: filterError.message } });
+      }
+    }
+    console.log('Total cases found:', allCases ? allCases.length : 0);
     
-    // Log first case structure to see field names
-    if (allCases.length > 0) {
-      const sampleKeys = Object.keys(allCases[0]);
-      console.log('Sample case keys:', JSON.stringify(sampleKeys));
-      console.log('Sample case shared_with:', JSON.stringify(allCases[0].shared_with));
+    // Log first 3 cases to debug
+    if (allCases && allCases.length > 0) {
+      for (let i = 0; i < Math.min(3, allCases.length); i++) {
+        console.log(`Case[${i}] id=${allCases[i].id} created_by=${allCases[i].created_by} shared_with=${JSON.stringify(allCases[i].shared_with)}`);
+      }
     }
     
     // Log cases with shared_with
