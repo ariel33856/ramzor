@@ -311,6 +311,26 @@ export default function Dashboard() {
         myCases = await base44.entities.MortgageCase.list('-created_date');
       }
       
+      // Get shared cases
+      if (!filterUser || filterUser === 'all') {
+        try {
+          const sharedResponse = await base44.functions.invoke('getSharedCases', {});
+          const sharedCases = sharedResponse.data.shared_cases || [];
+          
+          // Merge and deduplicate
+          const combined = [...myCases];
+          sharedCases.forEach(sharedCase => {
+            if (!combined.find(c => c.id === sharedCase.id)) {
+              combined.push({ ...sharedCase, _isShared: true });
+            }
+          });
+          return combined;
+        } catch (e) {
+          console.error('Error fetching shared cases:', e);
+          return myCases;
+        }
+      }
+      
       return myCases;
     },
     enabled: !!user,
