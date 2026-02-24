@@ -45,8 +45,8 @@ function createSecureEntity(entityName, options = {}) {
         return entity.list(sortBy, limit);
       }
 
-      // Regular User - RLS handles shared_with automatically
-      return entity.list(sortBy, limit);
+      // Regular User - filter by created_by (since read RLS is open for sharing support)
+      return entity.filter({ created_by: user.email }, sortBy, limit);
     },
 
     async filter(filters = {}, sortBy, limit) {
@@ -61,7 +61,11 @@ function createSecureEntity(entityName, options = {}) {
         return entity.filter(filters, sortBy, limit);
       }
 
-      // Regular User - RLS handles ownership and shared_with automatically
+      // Regular User - add created_by filter (since read RLS is open for sharing support)
+      // But don't override if caller already specified created_by or id filter
+      if (!filters.created_by && !filters.id) {
+        return entity.filter({ ...filters, created_by: user.email }, sortBy, limit);
+      }
       return entity.filter(filters, sortBy, limit);
     },
 
