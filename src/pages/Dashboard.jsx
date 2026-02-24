@@ -604,25 +604,26 @@ export default function Dashboard() {
                                 </div>
                               </PopoverContent>
                             </Popover>
-                            <button
-                              onClick={() => {
-                                if (sortField === fieldId) {
-                                  setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
-                                } else {
-                                  setSortField(fieldId);
-                                  setSortDirection('desc');
-                                }
-                              }}
-                              className={`p-px rounded border transition-colors flex items-center ${sortField === fieldId ? 'bg-blue-100 border-blue-400' : 'hover:bg-gray-100 border-gray-300'}`}
-                              title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
-                            >
-                              <ArrowUp className={`w-2 h-2 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} style={{transform: 'scaleX(0.7)'}} />
-                              <ArrowDown className={`w-2 h-2 -mr-1 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} style={{transform: 'scaleX(0.7)'}} />
-                            </button>
+                            <div className="flex flex-col gap-px">
+                              <button
+                                onClick={() => {
+                                  if (sortField === fieldId) {
+                                    setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
+                                  } else {
+                                    setSortField(fieldId);
+                                    setSortDirection('desc');
+                                  }
+                                }}
+                                className={`p-px rounded border transition-colors flex items-center ${sortField === fieldId ? 'bg-blue-100 border-blue-400' : 'hover:bg-gray-100 border-gray-400'}`}
+                                title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
+                              >
+                                <ArrowUp className={`w-2 h-2 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-600'}`} style={{transform: 'scaleX(0.7)'}} />
+                                <ArrowDown className={`w-2 h-2 -mr-1 ${sortField === fieldId && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-600'}`} style={{transform: 'scaleX(0.7)'}} />
+                              </button>
                             <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
                               <PopoverTrigger asChild>
-                                <button className="relative hover:text-blue-600 transition-colors p-0.5 rounded border-2 border-gray-300 hover:border-blue-400">
-                                  <Filter className="w-4 h-4 text-gray-400 hover:text-blue-600" />
+                                <button className={`relative transition-colors p-px rounded border flex items-center justify-center hover:border-blue-400 ${(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) ? 'border-blue-400 bg-blue-100' : 'border-gray-400 hover:bg-gray-100'}`}>
+                                  <Filter className="w-2 h-2 text-gray-600" style={{transform: 'scaleX(0.7)'}} />
                                   {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
                                     <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
                                       {columnFilters[fieldId]?.length || '↔'}
