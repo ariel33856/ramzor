@@ -298,17 +298,42 @@ export default function Dashboard() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const { data: allCases = [], isLoading } = useQuery({
+  const { data: sharedCaseIds = [], isLoading: sharedLoading } = useQuery({
+    queryKey: ['shared-permissions', user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      const permissions = await base44.entities.CasePermission.filter({
+        shared_email: user.email,
+        is_active: true
+      });
+      return permissions.map(p => p.case_id);
+    },
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000
+  });
+
+  const { data: sharedCases = [], isLoading: sharedCasesLoading } = useQuery({
+    queryKey: ['shared-cases', sharedCaseIds],
+    queryFn: async () => {
+      if (!sharedCaseIds.length) return [];
+      const results = await Promise.all(
+        sharedCaseIds.map(id =>
+          base44.entities.MortgageCase.filter({ id }).then(r => r[0]).catch(() => null)
+        )
+      );
+      return results.filter(Boolean).map(c => ({ ...c, _isShared: true }));
+    },
+    enabled: sharedCaseIds.length > 0,
+    staleTime: 2 * 60 * 1000
+  });
+
+  const { data: ownCases = [], isLoading: ownLoading } = useQuery({
     queryKey: ['cases', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
-      
-      // If filterUser is set and not 'all', filter by that user
       if (filterUser && filterUser !== 'all') {
         return SecureEntities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
       }
-      
-      // Otherwise show all cases
       return SecureEntities.MortgageCase.list('-created_date');
     },
     enabled: !!user,
@@ -316,6 +341,17 @@ export default function Dashboard() {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
+
+  const isLoading = ownLoading || sharedLoading || sharedCasesLoading;
+
+  const allCases = React.useMemo(() => {
+    const ownIds = new Set(ownCases.map(c => c.id));
+    const merged = [...ownCases];
+    sharedCases.forEach(c => {
+      if (!ownIds.has(c.id)) merged.push(c);
+    });
+    return merged;
+  }, [ownCases, sharedCases]);
 
   // Create a map of case IDs to their linked persons
   const caseToPersonMap = React.useMemo(() => {
