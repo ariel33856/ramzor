@@ -302,10 +302,37 @@ export default function Dashboard() {
     queryKey: ['cases', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
+      
+      // Get my own cases
+      let myCases = [];
       if (filterUser && filterUser !== 'all') {
-        return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+        myCases = await base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+      } else {
+        myCases = await base44.entities.MortgageCase.list('-created_date');
       }
-      return base44.entities.MortgageCase.list('-created_date');
+      
+      // Get all cases and filter for shared ones
+      if (!filterUser || filterUser === 'all') {
+        try {
+          const allCasesForSharing = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
+          const sharedCases = allCasesForSharing.filter(c => 
+            c.shared_with && Array.isArray(c.shared_with) && c.shared_with.includes(user.email)
+          );
+          
+          // Merge and deduplicate
+          const combined = [...myCases];
+          sharedCases.forEach(sharedCase => {
+            if (!combined.find(c => c.id === sharedCase.id)) {
+              combined.push({ ...sharedCase, _isShared: true });
+            }
+          });
+          return combined;
+        } catch (e) {
+          return myCases;
+        }
+      }
+      
+      return myCases;
     },
     enabled: !!user,
     retry: 1,
