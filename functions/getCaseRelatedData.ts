@@ -45,7 +45,10 @@ Deno.serve(async (req) => {
       if (entity_name === 'Person') {
         // For Person, find persons linked to this case
         // Get ALL persons (service role bypasses RLS) and filter by link
-        const allPersons = await entityApi.list();
+        const allPersons = await entityApi.list('-created_date', 500);
+        console.log('[getCaseRelatedData] Total persons found:', allPersons.length);
+        console.log('[getCaseRelatedData] Case person_id:', mortgageCase.person_id);
+        console.log('[getCaseRelatedData] Sample person linked_accounts:', allPersons.slice(0, 3).map(p => ({ id: p.id, name: p.first_name, linked: p.linked_accounts })));
         results = allPersons.filter(person => {
           // Check if person is directly linked via person_id
           if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
