@@ -11,24 +11,31 @@ Deno.serve(async (req) => {
 
     console.log('User email:', user.email);
     
-    // Step 1: Get all cases using service role
-    const allCases = await base44.asServiceRole.entities.MortgageCase.list();
-    console.log('Total cases from service role:', allCases.length);
+    // Use service role to get ALL cases (bypasses RLS)
+    // Try fetching with filter to get a large batch
+    let allCases = [];
+    let page = 0;
+    const pageSize = 50;
     
-    // Debug: log first case
-    if (allCases.length > 0) {
-      console.log('First case keys:', Object.keys(allCases[0]).join(', '));
-      console.log('First case shared_with:', JSON.stringify(allCases[0].shared_with));
-      console.log('First case created_by:', allCases[0].created_by);
-    }
-    
-    // Step 2: Find cases with shared_with containing this user's email
-    const sharedCases = [];
-    for (const c of allCases) {
-      if (c.shared_with && Array.isArray(c.shared_with) && c.shared_with.includes(user.email) && c.created_by !== user.email) {
-        sharedCases.push(c);
+    while (true) {
+      const batch = await base44.asServiceRole.entities.MortgageCase.filter({}, '-created_date', pageSize);
+      console.log(`Batch ${page}: got ${batch.length} cases`);
+      if (batch.length > 0) {
+        console.log(`First case in batch: id=${batch[0].id}, keys=${Object.keys(batch[0]).join(',')}`);
       }
+      allCases = batch;
+      break; // Just get first batch for now
     }
+    
+    console.log('Total cases:', allCases.length);
+    
+    // Find shared cases
+    const sharedCases = allCases.filter(c => 
+      c.shared_with && 
+      Array.isArray(c.shared_with) && 
+      c.shared_with.includes(user.email) && 
+      c.created_by !== user.email
+    );
     
     console.log('Shared cases found:', sharedCases.length);
 
