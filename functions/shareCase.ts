@@ -30,8 +30,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'המשתמש כבר משותף לתיק זה' }, { status: 400 });
     }
 
-    // Create permission using service role to bypass RLS
-    const result = await base44.asServiceRole.entities.CasePermission.create({
+    // Create permission using user scope (so it lands in the correct tenant/app)
+    const result = await base44.entities.CasePermission.create({
       case_id,
       case_title: case_title || 'Untitled Case',
       owner_email: user.email,
