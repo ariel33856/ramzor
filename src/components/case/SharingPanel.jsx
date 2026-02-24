@@ -135,36 +135,31 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
         )}
 
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-500">Current shared users</h4>
-          {isLoading ? (
+          <h4 className="text-sm font-medium text-gray-500">משתמשים עם גישה</h4>
+          {!caseData ? (
             <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
           ) : sharedUsers.length === 0 ? (
-            <p className="text-sm text-gray-400 italic">Not shared with anyone yet</p>
+            <p className="text-sm text-gray-400 italic">לא משותף עם אף אחד עדיין</p>
           ) : (
             <div className="grid gap-2">
-              {sharedUsers.map((p) => (
-                <div key={p.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
+              {sharedUsers.map((email) => (
+                <div key={email} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium text-xs">
-                      {p.shared_email ? p.shared_email.substring(0, 2).toUpperCase() : '??'}
+                      {email.substring(0, 2).toUpperCase()}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{p.shared_email}</p>
-                      <Badge variant="secondary" className="text-xs font-normal h-5">
-                        {p.permission === 'edit' ? 'Can Edit' : 'Can View'}
-                      </Badge>
-                    </div>
+                    <p className="text-sm font-medium text-gray-900">{email}</p>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     className="text-red-500 hover:text-red-700 hover:bg-red-50"
                     onClick={() => {
-                      setSelectedPermission(p);
+                      setSelectedEmail(email);
                       setIsRevokeDialogOpen(true);
                     }}
                   >
-                    Revoke Access
+                    הסר גישה
                   </Button>
                 </div>
               ))}
@@ -176,21 +171,20 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
       <Dialog open={isRevokeDialogOpen} onOpenChange={setIsRevokeDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Revoke Access</DialogTitle>
+            <DialogTitle>הסר גישה</DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove access for <span className="font-semibold text-gray-900">{selectedPermission?.shared_email}</span>? 
-              They will no longer see this case.
+              האם אתה בטוח שאתה רוצה להסיר גישה ל <span className="font-semibold text-gray-900">{selectedEmail}</span>?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRevokeDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setIsRevokeDialogOpen(false)}>ביטול</Button>
             <Button 
               variant="destructive" 
-              onClick={() => selectedPermission && revokeMutation.mutate(selectedPermission.id)}
-              disabled={revokeMutation.isPending || !selectedPermission}
+              onClick={() => selectedEmail && revokeMutation.mutate(selectedEmail)}
+              disabled={revokeMutation.isPending}
             >
               {revokeMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Revoke Access
+              הסר גישה
             </Button>
           </DialogFooter>
         </DialogContent>
