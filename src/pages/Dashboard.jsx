@@ -299,44 +299,34 @@ export default function Dashboard() {
   };
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['cases', user?.email, filterUser],
+    queryKey: ['cases', user?.email, user?.role, filterUser],
     queryFn: async () => {
       if (!user) return [];
       
-      // Get my own cases
-      let myCases = [];
-      if (filterUser && filterUser !== 'all') {
-        myCases = await base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
-      } else {
-        myCases = await base44.entities.MortgageCase.list('-created_date');
-      }
+      const isAdmin = user.role === 'admin';
       
-      // Get shared cases - RLS read is open, so we can query all cases
-      if (!filterUser || filterUser === 'all') {
-        try {
-          const allCasesForSharing = await base44.entities.MortgageCase.list('-created_date');
-          const sharedCases = allCasesForSharing.filter(c => 
-            c.shared_with && 
-            Array.isArray(c.shared_with) && 
-            c.shared_with.includes(user.email) &&
-            c.created_by !== user.email
-          );
-          
-          // Merge and deduplicate
-          const combined = [...myCases];
-          sharedCases.forEach(sharedCase => {
-            if (!combined.find(c => c.id === sharedCase.id)) {
-              combined.push({ ...sharedCase, _isShared: true });
-            }
-          });
-          return combined;
-        } catch (e) {
-          console.error('Error fetching shared cases:', e);
-          return myCases;
+      // Admin: can see all or filter by specific user
+      if (isAdmin) {
+        if (filterUser && filterUser !== 'all') {
+          return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
         }
+        return base44.entities.MortgageCase.list('-created_date');
       }
       
-      return myCases;
+      // Regular user: get all cases (RLS read is open), then filter client-side
+      const allData = await base44.entities.MortgageCase.list('-created_date');
+      
+      return allData.map(c => {
+        const isOwner = c.created_by === user.email;
+        const isShared = !isOwner && 
+          c.shared_with && 
+          Array.isArray(c.shared_with) && 
+          c.shared_with.includes(user.email);
+        
+        if (isOwner) return c;
+        if (isShared) return { ...c, _isShared: true };
+        return null; // Not accessible
+      }).filter(Boolean);
     },
     enabled: !!user,
     retry: 1,
