@@ -43,22 +43,17 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const sharedUsers = caseData?.shared_with || [];
 
   const shareMutation = useMutation({
-    mutationFn: async (email) => {
-      if (!email) throw new Error("Email is required");
-      if (sharedUsers.includes(email)) {
-        throw new Error("המשתמש כבר משותף לתיק זה");
-      }
-      if (email === ownerEmail) {
-        throw new Error("לא ניתן לשתף עם בעלים התיק");
-      }
+    mutationFn: async () => {
+      const allEmails = allUsers
+        .filter(u => u.email !== ownerEmail && !sharedUsers.includes(u.email))
+        .map(u => u.email);
       
-      const updatedSharedWith = [...sharedUsers, email];
+      const updatedSharedWith = [...sharedUsers, ...allEmails];
       await base44.entities.MortgageCase.update(caseId, { shared_with: updatedSharedWith });
       return { shared_with: updatedSharedWith };
     },
     onSuccess: () => {
-      setShareResult({ type: 'success', message: `השיתוף עם ${emailToShare} בוצע בהצלחה!` });
-      setEmailToShare('');
+      setShareResult({ type: 'success', message: 'השיתוף עם כל המשתמשים בוצע בהצלחה!' });
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       setTimeout(() => setShareResult(null), 5000);
     },
