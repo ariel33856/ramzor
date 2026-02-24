@@ -117,7 +117,7 @@ function createSecureEntity(entityName, options = {}) {
 }
 
 export const SecureEntities = {
-  MortgageCase: createSecureEntity("MortgageCase"),
+  MortgageCase: createSecureEntity("MortgageCase", { openRead: true }),
   Submission: createSecureEntity("Submission", { hasCaseId: true }),
   Person: createSecureEntity("Person"),
   Interaction: createSecureEntity("Interaction", { hasCaseId: true }),
