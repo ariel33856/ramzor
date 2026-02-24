@@ -182,8 +182,8 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
             <Button variant="outline" onClick={() => setIsRevokeDialogOpen(false)}>Cancel</Button>
             <Button 
               variant="destructive" 
-              onClick={() => revokeMutation.mutate(selectedPermission.id)}
-              disabled={revokeMutation.isPending}
+              onClick={() => selectedPermission && revokeMutation.mutate(selectedPermission.id)}
+              disabled={revokeMutation.isPending || !selectedPermission}
             >
               {revokeMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Revoke Access

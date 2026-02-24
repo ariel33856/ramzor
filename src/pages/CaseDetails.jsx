@@ -41,6 +41,7 @@ import CaseProducts from './CaseProducts';
 import CaseProperty from './CaseProperty';
 import CaseSubmissions from './CaseSubmissions';
 import CaseRequests from './CaseRequests';
+import SharingPanel from '@/components/case/SharingPanel';
 
 const pageComponents = {
   personal: CasePersonal,
@@ -197,6 +198,7 @@ export default function CaseDetails() {
         </DialogContent>
       </Dialog>
       <div className="mx-auto p-2 md:p-3">
+        <SharingPanel caseId={caseId} caseTitle={caseData.client_name} ownerEmail={caseData.created_by} />
         {/* Tabs Grid - Column Layout */}
         <div className="mb-6">
           <div className="grid grid-cols-3 gap-6">
