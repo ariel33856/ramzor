@@ -19,29 +19,28 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'לא ניתן לשתף עם עצמך' }, { status: 400 });
     }
 
-    // Check existing using service role to see all records
-    const existingPermissions = await base44.asServiceRole.entities.CasePermission.filter({
-      case_id,
-      shared_email,
-      is_active: true
-    });
+    // Fetch the case using service role (owner's case)
+    const cases = await base44.asServiceRole.entities.MortgageCase.filter({ id: case_id });
+    const mortgageCase = cases[0];
 
-    if (existingPermissions.length > 0) {
+    if (!mortgageCase) {
+      return Response.json({ error: 'Case not found' }, { status: 404 });
+    }
+
+    // Check if already shared
+    const currentSharedWith = mortgageCase.shared_with || [];
+    if (currentSharedWith.includes(shared_email)) {
       return Response.json({ error: 'המשתמש כבר משותף לתיק זה' }, { status: 400 });
     }
 
-    // Create with asServiceRole so all records are in same tenant/scope
-    const result = await base44.asServiceRole.entities.CasePermission.create({
-      case_id,
-      case_title: case_title || 'Untitled Case',
-      owner_email: user.email,
-      shared_email,
-      permission: 'edit',
-      is_active: true
+    // Add email to shared_with array on the case itself
+    const updatedSharedWith = [...currentSharedWith, shared_email];
+    await base44.asServiceRole.entities.MortgageCase.update(case_id, {
+      shared_with: updatedSharedWith
     });
 
-    console.log('[shareCase] Created permission (serviceRole), id:', result.id, 'for:', shared_email);
-    return Response.json({ success: true, permission: result });
+    console.log('[shareCase] Updated case', case_id, 'shared_with:', updatedSharedWith);
+    return Response.json({ success: true, shared_with: updatedSharedWith });
   } catch (error) {
     console.error('[shareCase] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
