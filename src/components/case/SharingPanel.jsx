@@ -80,7 +80,12 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const revokeMutation = useMutation({
     mutationFn: async (emailToRevoke) => {
       const updatedSharedWith = sharedUsers.filter(e => e !== emailToRevoke);
-      await base44.entities.MortgageCase.update(caseId, { shared_with: updatedSharedWith });
+      // Use service role via backend to update (works for all users)
+      await base44.functions.invoke('shareCase', {
+        case_id: caseId,
+        action: 'revoke',
+        shared_email: emailToRevoke
+      });
       return updatedSharedWith;
     },
     onSuccess: () => {
