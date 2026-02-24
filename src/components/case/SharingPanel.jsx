@@ -36,7 +36,16 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ['all-users'],
-    queryFn: () => base44.entities.User.list(),
+    queryFn: async () => {
+      try {
+        // Try direct list first (works for admins)
+        return await base44.entities.User.list();
+      } catch {
+        // For regular users, use backend function
+        const res = await base44.functions.invoke('getAllUsers', {});
+        return res?.data?.users || [];
+      }
+    },
     staleTime: 5 * 60 * 1000
   });
 
