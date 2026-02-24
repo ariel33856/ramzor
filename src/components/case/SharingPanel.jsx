@@ -43,9 +43,13 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const shareMutation = useMutation({
     mutationFn: async (email) => {
       if (!email) throw new Error("Email is required");
-      if (email === ownerEmail) throw new Error("Cannot share with yourself");
       
-      // Check existing using direct entity (RLS allows owner to see their own shares)
+      // Use currentUser.email as owner (reliable, comes from auth)
+      const effectiveOwner = currentUser?.email;
+      if (!effectiveOwner) throw new Error("לא ניתן לזהות את המשתמש הנוכחי");
+      if (email === effectiveOwner) throw new Error("לא ניתן לשתף עם עצמך");
+      
+      // Check existing
       const existing = await base44.entities.CasePermission.filter({
         case_id: caseId,
         shared_email: email,
@@ -56,14 +60,17 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
         throw new Error("המשתמש כבר משותף לתיק זה");
       }
       
-      return base44.entities.CasePermission.create({
+      const result = await base44.entities.CasePermission.create({
         case_id: caseId,
         case_title: caseTitle || 'Untitled Case',
-        owner_email: ownerEmail,
+        owner_email: effectiveOwner,
         shared_email: email,
         permission: 'edit',
         is_active: true
       });
+      
+      console.log('[SharingPanel] Created permission:', result);
+      return result;
     },
     onSuccess: () => {
       setShareResult({ type: 'success', message: `השיתוף עם ${emailToShare} בוצע בהצלחה!` });
