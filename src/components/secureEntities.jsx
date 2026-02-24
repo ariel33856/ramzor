@@ -1,6 +1,10 @@
 import { base44 } from '@/api/base44Client';
 
 let cachedUser = null;
+// Cache for shared case IDs the current user has access to
+let sharedCaseIdsCache = null;
+let sharedCaseIdsCacheTime = 0;
+const SHARED_CACHE_TTL = 60000; // 1 minute
 
 async function getCurrentUser() {
   if (cachedUser) return cachedUser;
@@ -16,6 +20,8 @@ async function getCurrentUser() {
 
 export function clearSecureUserCache() {
   cachedUser = null;
+  sharedCaseIdsCache = null;
+  sharedCaseIdsCacheTime = 0;
 }
 
 // Returns the active filter user for admin (from localStorage), or null
@@ -25,6 +31,45 @@ function getAdminFilterUser() {
     return val && val !== 'all' ? val : null;
   } catch {
     return null;
+  }
+}
+
+// Get shared case IDs for this user
+async function getSharedCaseIds() {
+  const now = Date.now();
+  if (sharedCaseIdsCache && (now - sharedCaseIdsCacheTime) < SHARED_CACHE_TTL) {
+    return sharedCaseIdsCache;
+  }
+  try {
+    const response = await base44.functions.invoke('getSharedCases', {});
+    const sharedCases = response.data?.shared_cases || [];
+    sharedCaseIdsCache = sharedCases.map(c => c.id);
+    sharedCaseIdsCacheTime = now;
+    return sharedCaseIdsCache;
+  } catch (e) {
+    console.error('Failed to get shared cases:', e);
+    return [];
+  }
+}
+
+// Check if a specific case is shared with the user
+async function isCaseSharedWithUser(caseId) {
+  const sharedIds = await getSharedCaseIds();
+  return sharedIds.includes(caseId);
+}
+
+// Fetch entity data for a shared case via backend (bypasses RLS)
+async function fetchSharedCaseEntityData(caseId, entityName, filters) {
+  try {
+    const response = await base44.functions.invoke('getCaseRelatedData', {
+      case_id: caseId,
+      entity_name: entityName,
+      filters: filters || undefined
+    });
+    return response.data?.data || [];
+  } catch (e) {
+    console.error(`Failed to fetch shared ${entityName} for case ${caseId}:`, e);
+    return [];
   }
 }
 
@@ -45,7 +90,7 @@ function createSecureEntity(entityName, options = {}) {
         return entity.list(sortBy, limit);
       }
 
-      // Regular User - filter by created_by (since read RLS is open for sharing support)
+      // Regular User - filter by created_by
       return entity.filter({ created_by: user.email }, sortBy, limit);
     },
 
@@ -61,12 +106,75 @@ function createSecureEntity(entityName, options = {}) {
         return entity.filter(filters, sortBy, limit);
       }
 
-      // Regular User - add created_by filter (since read RLS is open for sharing support)
-      // But don't override if caller already specified created_by or id filter
+      // For entities with case_id filter - check if it's a shared case
+      const caseIdInFilter = filters.case_id;
+      if (caseIdInFilter && hasCaseId) {
+        const isShared = await isCaseSharedWithUser(caseIdInFilter);
+        if (isShared) {
+          return fetchSharedCaseEntityData(caseIdInFilter, entityName, filters);
+        }
+      }
+
+      // For MortgageCase filtered by id - check if shared
+      if (entityName === 'MortgageCase' && filters.id) {
+        const isShared = await isCaseSharedWithUser(filters.id);
+        if (isShared) {
+          return fetchSharedCaseEntityData(filters.id, entityName, filters);
+        }
+      }
+
+      // Regular User - add created_by filter
       if (!filters.created_by && !filters.id) {
         return entity.filter({ ...filters, created_by: user.email }, sortBy, limit);
       }
       return entity.filter(filters, sortBy, limit);
+    },
+
+    // Special method to list entities for a specific case (handles shared cases)
+    async listForCase(caseId, additionalFilters = {}, sortBy, limit) {
+      const user = await getCurrentUser();
+      
+      if (user.role === 'admin') {
+        const filterUser = getAdminFilterUser();
+        if (hasCaseId) {
+          const filters = { case_id: caseId, ...additionalFilters };
+          if (filterUser) filters.created_by = filterUser;
+          return entity.filter(filters, sortBy, limit);
+        }
+        return entity.list(sortBy, limit);
+      }
+
+      // Check if this is a shared case
+      const isShared = await isCaseSharedWithUser(caseId);
+      if (isShared) {
+        const filters = hasCaseId ? { case_id: caseId, ...additionalFilters } : additionalFilters;
+        return fetchSharedCaseEntityData(caseId, entityName, filters);
+      }
+
+      // Own case - use regular filter
+      if (hasCaseId) {
+        return entity.filter({ case_id: caseId, ...additionalFilters, created_by: user.email }, sortBy, limit);
+      }
+      return entity.filter({ ...additionalFilters, created_by: user.email }, sortBy, limit);
+    },
+
+    // List persons linked to a case (handles shared cases)
+    async listForCasePersons(caseId) {
+      const user = await getCurrentUser();
+      
+      if (user.role === 'admin' || entityName !== 'Person') {
+        // For admin or non-Person entities, delegate to normal flow
+        return this.list();
+      }
+
+      // Check if this is a shared case
+      const isShared = await isCaseSharedWithUser(caseId);
+      if (isShared) {
+        return fetchSharedCaseEntityData(caseId, 'Person', null);
+      }
+
+      // Own case
+      return entity.filter({ created_by: user.email });
     },
 
     async get(id) {
