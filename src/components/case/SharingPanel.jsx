@@ -54,12 +54,17 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const shareMutation = useMutation({
     mutationFn: async () => {
       const allEmails = allUsers
-        .filter(u => u.email !== ownerEmail && !sharedUsers.includes(u.email))
+        .filter(u => u.email !== (ownerEmail || caseData?.created_by) && !sharedUsers.includes(u.email))
         .map(u => u.email);
       
-      const updatedSharedWith = [...sharedUsers, ...allEmails];
-      await base44.entities.MortgageCase.update(caseId, { shared_with: updatedSharedWith });
-      return { shared_with: updatedSharedWith };
+      // Use backend function for sharing (works for all users)
+      for (const email of allEmails) {
+        await base44.functions.invoke('shareCase', { 
+          case_id: caseId, 
+          shared_email: email 
+        });
+      }
+      return { shared_with: [...sharedUsers, ...allEmails] };
     },
     onSuccess: () => {
       setShareResult({ type: 'success', message: 'השיתוף עם כל המשתמשים בוצע בהצלחה!' });
