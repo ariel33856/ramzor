@@ -19,9 +19,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'לא ניתן לשתף עם עצמך' }, { status: 400 });
     }
 
-    // Check existing permission using service role (so we see all records)
-    const allPermissions = await base44.asServiceRole.entities.CasePermission.list('-created_date', 1000);
-    const existing = allPermissions.find(
+    // Check existing permission using user scope
+    const myPermissions = await base44.entities.CasePermission.list('-created_date', 500);
+    const existing = myPermissions.find(
       p => p.case_id === case_id && p.shared_email === shared_email && p.is_active === true
     );
 
@@ -29,8 +29,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'המשתמש כבר משותף לתיק זה' }, { status: 400 });
     }
 
-    // Create permission using service role so it lands in the same tenant as getSharedCases reads from
-    const result = await base44.asServiceRole.entities.CasePermission.create({
+    // Create permission using USER scope (not service role)
+    // This ensures it lands in the correct user-tenant and can be read by serviceRole later
+    const result = await base44.entities.CasePermission.create({
       case_id,
       case_title: case_title || 'Untitled Case',
       owner_email: user.email,
@@ -39,7 +40,7 @@ Deno.serve(async (req) => {
       is_active: true
     });
 
-    console.log('[shareCase] Created permission via serviceRole:', JSON.stringify(result));
+    console.log('[shareCase] Created permission (user scope):', JSON.stringify(result));
     return Response.json({ success: true, permission: result });
   } catch (error) {
     console.error('[shareCase] Error:', error.message);
