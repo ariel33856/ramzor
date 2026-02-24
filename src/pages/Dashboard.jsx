@@ -622,8 +622,8 @@ export default function Dashboard() {
                               </button>
                               <Popover open={filterDialogOpen === fieldId} onOpenChange={(open) => setFilterDialogOpen(open ? fieldId : null)}>
                               <PopoverTrigger asChild>
-                                <button className={`relative transition-colors p-px rounded border flex items-center justify-center hover:border-blue-400 ${(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) ? 'border-blue-400 bg-blue-100' : 'border-gray-400 hover:bg-gray-100'}`}>
-                                  <Filter className="w-2 h-2 text-gray-600" style={{transform: 'scaleX(0.7)'}} />
+                                <button className={`relative transition-colors p-px rounded border flex items-center justify-center ${(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) ? 'border-blue-600 bg-blue-500 hover:bg-blue-600' : 'border-gray-600 bg-gray-500 hover:bg-gray-600'}`}>
+                                  <Filter className="w-2 h-2 text-white" style={{transform: 'scaleX(0.7)'}} />
                                   {(columnFilters[fieldId]?.length > 0 || rangeFilters[fieldId]) && (
                                     <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-blue-500 text-white text-xs rounded-full leading-none">
                                       {columnFilters[fieldId]?.length || '↔'}
