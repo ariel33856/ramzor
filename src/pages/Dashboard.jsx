@@ -614,7 +614,7 @@ export default function Dashboard() {
                                     setSortDirection('desc');
                                   }
                                 }}
-                                className={`p-px rounded border transition-colors flex items-center ${sortField === fieldId ? 'bg-blue-100 border-blue-400' : 'hover:bg-gray-100 border-gray-400'}`}
+                                className={`p-px rounded border transition-colors flex items-center ${sortField === fieldId ? 'bg-blue-500 border-blue-600' : 'bg-gray-500 border-gray-600 hover:bg-gray-600'}`}
                                 title={sortField === fieldId && sortDirection === 'desc' ? 'מיין בסדר עולה' : 'מיין בסדר יורד'}
                               >
                                 <ArrowUp className={`w-2 h-2 ${sortField === fieldId && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-600'}`} style={{transform: 'scaleX(0.7)'}} />
