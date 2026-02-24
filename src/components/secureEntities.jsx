@@ -74,37 +74,17 @@ async function fetchSharedCaseEntityData(caseId, entityName, filters) {
 }
 
 function createSecureEntity(entityName, options = {}) {
-  const { hasCaseId = false, openRead = false } = options;
+  const { hasCaseId = false } = options;
   const entity = base44.entities[entityName];
 
   return {
     async list(sortBy, limit) {
       const user = await getCurrentUser();
-
-      // Admin Logic
-      if (user.role === 'admin') {
-        const filterUser = getAdminFilterUser();
-        if (filterUser) {
-          return entity.filter({ created_by: filterUser }, sortBy, limit);
-        }
-        return entity.list(sortBy, limit);
-      }
-
-      // Regular User - filter by created_by
       return entity.filter({ created_by: user.email }, sortBy, limit);
     },
 
     async filter(filters = {}, sortBy, limit) {
       const user = await getCurrentUser();
-
-      // Admin Logic
-      if (user.role === 'admin') {
-        const filterUser = getAdminFilterUser();
-        if (filterUser) {
-          return entity.filter({ ...filters, created_by: filterUser }, sortBy, limit);
-        }
-        return entity.filter(filters, sortBy, limit);
-      }
 
       // For entities with case_id filter - check if it's a shared case
       const caseIdInFilter = filters.case_id;
@@ -123,7 +103,7 @@ function createSecureEntity(entityName, options = {}) {
         }
       }
 
-      // Regular User - add created_by filter
+      // Add created_by filter unless already filtering by id
       if (!filters.created_by && !filters.id) {
         return entity.filter({ ...filters, created_by: user.email }, sortBy, limit);
       }
@@ -133,16 +113,6 @@ function createSecureEntity(entityName, options = {}) {
     // Special method to list entities for a specific case (handles shared cases)
     async listForCase(caseId, additionalFilters = {}, sortBy, limit) {
       const user = await getCurrentUser();
-      
-      if (user.role === 'admin') {
-        const filterUser = getAdminFilterUser();
-        if (hasCaseId) {
-          const filters = { case_id: caseId, ...additionalFilters };
-          if (filterUser) filters.created_by = filterUser;
-          return entity.filter(filters, sortBy, limit);
-        }
-        return entity.list(sortBy, limit);
-      }
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
@@ -161,11 +131,6 @@ function createSecureEntity(entityName, options = {}) {
     // List persons linked to a case (handles shared cases)
     async listForCasePersons(caseId) {
       const user = await getCurrentUser();
-      
-      if (user.role === 'admin' || entityName !== 'Person') {
-        // For admin or non-Person entities, delegate to normal flow
-        return this.list();
-      }
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
@@ -185,24 +150,10 @@ function createSecureEntity(entityName, options = {}) {
     },
 
     async create(data) {
-      const user = await getCurrentUser();
-      if (user.role === 'admin') {
-        const filterUser = getAdminFilterUser();
-        if (filterUser) {
-          return entity.create({ ...data, created_by: filterUser });
-        }
-      }
       return entity.create(data);
     },
 
     async bulkCreate(dataArray) {
-      const user = await getCurrentUser();
-      if (user.role === 'admin') {
-        const filterUser = getAdminFilterUser();
-        if (filterUser) {
-          return entity.bulkCreate(dataArray.map(d => ({ ...d, created_by: filterUser })));
-        }
-      }
       return entity.bulkCreate(dataArray);
     },
 
