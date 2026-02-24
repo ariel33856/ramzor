@@ -9,18 +9,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use user-scoped query — RLS on CasePermission allows reading where shared_email = user.email
-    const userScopedAll = await base44.entities.CasePermission.list('-created_date', 500);
-    const permissions = userScopedAll.filter(p => p.shared_email === user.email && p.is_active === true);
-    console.log('[getSharedCases] user:', user.email, 'user-scoped total:', userScopedAll.length, 'matched:', permissions.length);
+    // Use service role to bypass RLS — get all permissions and filter by shared_email
+    const allPermissions = await base44.asServiceRole.entities.CasePermission.list('-created_date', 1000);
+    const myPermissions = allPermissions.filter(
+      p => p.shared_email === user.email && p.is_active === true
+    );
 
-    if (!permissions.length) {
+    console.log('[getSharedCases] user:', user.email, 'total in DB:', allPermissions.length, 'mine:', myPermissions.length);
+
+    if (!myPermissions.length) {
       return Response.json({ cases: [] });
     }
 
-    const caseIds = permissions.map(p => p.case_id);
+    const caseIds = myPermissions.map(p => p.case_id);
 
-    // Fetch each case using service role (bypasses RLS)
+    // Fetch each case using service role (bypasses MortgageCase RLS)
     const results = await Promise.all(
       caseIds.map(id =>
         base44.asServiceRole.entities.MortgageCase.filter({ id })
