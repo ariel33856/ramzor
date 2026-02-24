@@ -12,24 +12,18 @@ Deno.serve(async (req) => {
     console.log('User email:', user.email);
     
     // Use service role to get ALL cases (bypasses RLS)
-    // Try fetching with filter to get a large batch
-    let allCases = [];
-    let page = 0;
-    const pageSize = 50;
+    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
     
-    while (true) {
-      const batch = await base44.asServiceRole.entities.MortgageCase.filter({}, '-created_date', pageSize);
-      console.log(`Batch ${page}: got ${batch.length} cases`);
-      if (batch.length > 0) {
-        console.log(`First case in batch: id=${batch[0].id}, keys=${Object.keys(batch[0]).join(',')}`);
-      }
-      allCases = batch;
-      break; // Just get first batch for now
-    }
+    console.log('Total cases from service role:', allCases.length);
     
-    console.log('Total cases:', allCases.length);
+    // Log a sample of shared_with fields for debugging
+    const casesWithSharing = allCases.filter(c => c.shared_with && c.shared_with.length > 0);
+    console.log('Cases with shared_with:', casesWithSharing.length);
+    casesWithSharing.forEach(c => {
+      console.log(`Case ${c.id}: shared_with=${JSON.stringify(c.shared_with)}, created_by=${c.created_by}`);
+    });
     
-    // Find shared cases
+    // Find shared cases for this user
     const sharedCases = allCases.filter(c => 
       c.shared_with && 
       Array.isArray(c.shared_with) && 
@@ -39,7 +33,14 @@ Deno.serve(async (req) => {
     
     console.log('Shared cases found:', sharedCases.length);
 
-    return Response.json({ shared_cases: sharedCases, debug: { total: allCases.length, user_email: user.email } });
+    return Response.json({ 
+      shared_cases: sharedCases, 
+      debug: { 
+        total: allCases.length, 
+        user_email: user.email,
+        cases_with_sharing: casesWithSharing.length
+      } 
+    });
   } catch (error) {
     console.error('Error getting shared cases:', error.message, error.stack);
     return Response.json({ error: error.message, stack: error.stack }, { status: 500 });
