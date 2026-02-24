@@ -40,50 +40,66 @@ Deno.serve(async (req) => {
 
       let results;
       if (entity_name === 'Person') {
-        // Strategy: fetch persons by multiple approaches
+        // Person entity: service role doesn't work reliably with Person RLS.
+        // Use the case owner's created_by to impersonate via user-level API.
+        // The user-level API respects RLS (created_by = user.email),
+        // so we use the authenticated user's token for their own persons,
+        // and for shared cases we fetch using the owner's persons via a direct approach.
+        
         const personMap = new Map();
         
-        // 1. If the case has a person_id, fetch that person directly
-        if (mortgageCase.person_id) {
-          try {
-            const directPersons = await entityApi.filter({ id: mortgageCase.person_id });
-            for (const p of directPersons) personMap.set(p.id, p);
-          } catch (e) {
-            console.log('Direct person fetch failed:', e.message);
-          }
-        }
-        
-        // 2. Fetch all persons created by the case owner
+        // Use user-level API (works with RLS) to get current user's persons
         try {
-          const ownerPersons = await entityApi.filter({ created_by: mortgageCase.created_by });
-          for (const person of ownerPersons) {
-            if (personMap.has(person.id)) continue;
+          const userPersons = await base44.entities.Person.list('-created_date', 500);
+          for (const person of userPersons) {
             if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
               const isLinked = person.linked_accounts.some(acc =>
                 typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
               );
               if (isLinked) personMap.set(person.id, person);
             }
+            // Also check direct person_id link
+            if (mortgageCase.person_id && person.id === mortgageCase.person_id) {
+              personMap.set(person.id, person);
+            }
           }
         } catch (e) {
-          console.log('Owner persons fetch failed:', e.message);
+          console.log('User persons fetch failed:', e.message);
         }
         
-        // 3. If shared, also check persons created by the shared user (current user)
-        if (isShared && !isOwner) {
+        // If this is a shared case and we're not the owner,
+        // we need the owner's persons too - try fetching them via service role
+        // using a workaround: fetch ALL persons and filter manually
+        if ((isShared || isAdmin) && !isOwner && personMap.size === 0) {
           try {
-            const myPersons = await entityApi.filter({ created_by: user.email });
-            for (const person of myPersons) {
-              if (personMap.has(person.id)) continue;
-              if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
-                const isLinked = person.linked_accounts.some(acc =>
-                  typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
-                );
-                if (isLinked) personMap.set(person.id, person);
+            // Fetch all Person records owned by the case owner using the REST approach
+            const caseOwner = mortgageCase.created_by;
+            // Use MortgageCase's linked data to find person IDs, then fetch them
+            
+            // Try getting person by direct ID if available
+            if (mortgageCase.person_id) {
+              try {
+                const directPerson = await base44.entities.Person.filter({ id: mortgageCase.person_id });
+                for (const p of directPerson) personMap.set(p.id, p);
+              } catch(e) {
+                // Person not accessible via current user's RLS
               }
             }
+            
+            // For shared cases - the owner's persons aren't accessible via RLS
+            // We need to signal that the caller should use a different approach
+            if (personMap.size === 0) {
+              // Return a special flag indicating persons need to be fetched differently
+              return Response.json({ 
+                data: [], 
+                _needsOwnerPersons: true,
+                _caseOwner: caseOwner,
+                _caseId: case_id,
+                _personId: mortgageCase.person_id
+              });
+            }
           } catch (e) {
-            console.log('Shared user persons fetch failed:', e.message);
+            console.log('Shared person fetch failed:', e.message);
           }
         }
         
