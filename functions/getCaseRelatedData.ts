@@ -38,13 +38,15 @@ Deno.serve(async (req) => {
         return Response.json({ error: `Unknown entity: ${entity_name}` }, { status: 400 });
       }
 
+      // Find the original case owner to scope data properly
+      const caseOwner = mortgageCase.created_by;
+
       let results;
-      if (filters) {
-        results = await entityApi.filter(filters);
-      } else if (entity_name === 'Person') {
-        // For Person, we need to find persons linked to this case
-        const allPersons = await entityApi.list();
-        results = allPersons.filter(person => {
+      if (entity_name === 'Person') {
+        // For Person, find persons linked to this case
+        // Get all persons created by the case owner
+        const ownerPersons = await entityApi.filter({ created_by: caseOwner });
+        results = ownerPersons.filter(person => {
           // Check if person is directly linked via person_id
           if (mortgageCase.person_id && person.id === mortgageCase.person_id) return true;
           // Check linked_accounts
@@ -55,9 +57,19 @@ Deno.serve(async (req) => {
           }
           return false;
         });
+      } else if (entity_name === 'MortgageCase') {
+        // Return the case itself (and linked borrowers)
+        if (filters && filters.id) {
+          results = await entityApi.filter(filters);
+        } else {
+          results = [mortgageCase];
+        }
+      } else if (filters) {
+        // Use provided filters with service role
+        results = await entityApi.filter(filters);
       } else {
-        // For entities with case_id field
-        results = await entityApi.filter({ case_id });
+        // For entities with case_id field, filter by case_id and case owner
+        results = await entityApi.filter({ case_id, created_by: caseOwner });
       }
 
       return Response.json({ data: results });
