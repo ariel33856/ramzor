@@ -11,9 +11,16 @@ Deno.serve(async (req) => {
 
     console.log('User email:', user.email);
     
-    // Get all cases using service role
-    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
+    // Get all cases using service role - fetch more
+    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date', 500);
     console.log('Total cases found:', allCases.length);
+    
+    // Log first case structure to see field names
+    if (allCases.length > 0) {
+      const sampleKeys = Object.keys(allCases[0]);
+      console.log('Sample case keys:', JSON.stringify(sampleKeys));
+      console.log('Sample case shared_with:', JSON.stringify(allCases[0].shared_with));
+    }
     
     // Log cases with shared_with
     const casesWithSharing = allCases.filter(c => c.shared_with && c.shared_with.length > 0);
