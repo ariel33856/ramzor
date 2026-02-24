@@ -104,15 +104,7 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const hasSharedAccess = !isOwner && caseData?.shared_with?.includes(currentUser.email);
 
   if (!isOwner && !hasSharedAccess) {
-    return (
-      <Alert className="mb-6 border-amber-200 bg-amber-50">
-        <AlertTriangle className="h-4 w-4 text-amber-600" />
-        <AlertTitle className="text-amber-800">גישה משותפת</AlertTitle>
-        <AlertDescription className="text-amber-700">
-          אתה צופה בחשבון זה בגישה משותפת.
-        </AlertDescription>
-      </Alert>
-    );
+    return null;
   }
 
   return (
