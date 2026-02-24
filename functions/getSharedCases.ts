@@ -4,43 +4,25 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-
+    
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use asServiceRole to read ALL permissions (created by service role in shareCase)
-    // then filter to only ones shared with this user
-    const allPermissions = await base44.asServiceRole.entities.CasePermission.filter({
-      shared_email: user.email,
-      is_active: true
-    });
-
-    console.log('[getSharedCases] user:', user.email);
-    console.log('[getSharedCases] permissions found:', allPermissions.length);
-
-    if (!allPermissions.length) {
-      return Response.json({ cases: [] });
-    }
-
-    const caseIds = allPermissions.map(p => p.case_id);
-    console.log('[getSharedCases] case_ids:', caseIds);
-
-    // Fetch each case using service role
-    const results = await Promise.all(
-      caseIds.map(id =>
-        base44.asServiceRole.entities.MortgageCase.filter({ id })
-          .then(r => r[0] || null)
-          .catch(() => null)
-      )
+    // Get all cases using service role
+    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
+    
+    // Filter for cases shared with this user
+    const sharedCases = allCases.filter(c => 
+      c.shared_with && 
+      Array.isArray(c.shared_with) && 
+      c.shared_with.includes(user.email) &&
+      c.created_by !== user.email // Don't include own cases
     );
 
-    const cases = results.filter(c => c && !c.is_archived && !c.module_id);
-    console.log('[getSharedCases] final cases:', cases.length);
-
-    return Response.json({ cases, permissions: allPermissions });
+    return Response.json({ shared_cases: sharedCases });
   } catch (error) {
-    console.error('[getSharedCases] error:', error.message);
+    console.error('Error getting shared cases:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
