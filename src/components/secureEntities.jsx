@@ -29,7 +29,7 @@ function getAdminFilterUser() {
 }
 
 function createSecureEntity(entityName, options = {}) {
-  const { hasCaseId = false } = options;
+  const { hasCaseId = false, openRead = false } = options;
   const entity = base44.entities[entityName];
 
   return {
