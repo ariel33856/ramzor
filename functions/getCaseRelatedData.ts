@@ -44,7 +44,8 @@ Deno.serve(async (req) => {
     if (entity_name) {
       if (entity_name === 'Person') {
         // Fetch ALL persons using service role (bypasses RLS completely)
-        const allPersons = await base44.asServiceRole.entities.Person.list('-created_date', 500);
+        // Use filter with empty object to get all, as list() may have issues
+        const allPersons = await base44.asServiceRole.entities.Person.filter({});
         
         console.log('[getCaseRelatedData] Total persons from service role:', allPersons.length);
         
