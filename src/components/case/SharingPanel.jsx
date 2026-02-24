@@ -36,25 +36,24 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
 
   const { data: sharedUsers = [], isLoading } = useQuery({
     queryKey: ['case-permissions', caseId],
-    queryFn: () => SecureEntities.CasePermission.filter({ case_id: caseId, is_active: true }),
+    queryFn: () => base44.entities.CasePermission.filter({ case_id: caseId, is_active: true }),
     enabled: !!caseId
   });
 
   const shareMutation = useMutation({
     mutationFn: async (email) => {
-      // Validation
       if (!email) throw new Error("Email is required");
       if (email === ownerEmail) throw new Error("Cannot share with yourself");
       
-      // Check existing
-      const existing = await SecureEntities.CasePermission.filter({
+      // Check existing using direct entity (RLS allows owner to see their own shares)
+      const existing = await base44.entities.CasePermission.filter({
         case_id: caseId,
         shared_email: email,
         is_active: true
       });
       
       if (existing.length > 0) {
-        throw new Error("This case is already shared with this user");
+        throw new Error("המשתמש כבר משותף לתיק זה");
       }
       
       return base44.entities.CasePermission.create({
