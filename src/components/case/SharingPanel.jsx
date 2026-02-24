@@ -44,33 +44,19 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
     mutationFn: async (email) => {
       if (!email) throw new Error("Email is required");
       
-      // Use currentUser.email as owner (reliable, comes from auth)
-      const effectiveOwner = currentUser?.email;
-      if (!effectiveOwner) throw new Error("לא ניתן לזהות את המשתמש הנוכחי");
-      if (email === effectiveOwner) throw new Error("לא ניתן לשתף עם עצמך");
-      
-      // Check existing
-      const existing = await base44.entities.CasePermission.filter({
-        case_id: caseId,
-        shared_email: email,
-        is_active: true
-      });
-      
-      if (existing.length > 0) {
-        throw new Error("המשתמש כבר משותף לתיק זה");
-      }
-      
-      const result = await base44.entities.CasePermission.create({
+      // Use backend function to bypass RLS entirely
+      const response = await base44.functions.invoke('shareCase', {
         case_id: caseId,
         case_title: caseTitle || 'Untitled Case',
-        owner_email: effectiveOwner,
-        shared_email: email,
-        permission: 'edit',
-        is_active: true
+        shared_email: email
       });
       
-      console.log('[SharingPanel] Created permission:', result);
-      return result;
+      if (response.data?.error) {
+        throw new Error(response.data.error);
+      }
+      
+      console.log('[SharingPanel] Created permission via backend:', response.data);
+      return response.data;
     },
     onSuccess: () => {
       setShareResult({ type: 'success', message: `השיתוף עם ${emailToShare} בוצע בהצלחה!` });
