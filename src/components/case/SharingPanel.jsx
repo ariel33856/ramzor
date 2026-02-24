@@ -118,22 +118,35 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-3 mb-3">
           <Input
-            placeholder="Enter user email"
+            placeholder="הכנס אימייל של משתמש"
             value={emailToShare}
-            onChange={(e) => setEmailToShare(e.target.value)}
+            onChange={(e) => { setEmailToShare(e.target.value); setShareResult(null); }}
             className="bg-white"
+            onKeyDown={(e) => e.key === 'Enter' && emailToShare && shareMutation.mutate(emailToShare)}
           />
           <Button 
             onClick={() => shareMutation.mutate(emailToShare)}
             disabled={shareMutation.isPending || !emailToShare}
             className="bg-blue-600 hover:bg-blue-700"
           >
-            {shareMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Share
+            {shareMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'שתף'}
           </Button>
         </div>
+
+        {shareResult && (
+          <div className={`flex items-center gap-2 p-3 rounded-lg mb-4 text-sm font-medium ${
+            shareResult.type === 'success' 
+              ? 'bg-green-50 border border-green-200 text-green-800' 
+              : 'bg-red-50 border border-red-200 text-red-800'
+          }`}>
+            {shareResult.type === 'success' 
+              ? <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+              : <XCircle className="h-4 w-4 text-red-600 shrink-0" />}
+            {shareResult.message}
+          </div>
+        )}
 
         <div className="space-y-3">
           <h4 className="text-sm font-medium text-gray-500">Current shared users</h4>
