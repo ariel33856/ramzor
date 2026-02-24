@@ -18,11 +18,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { Toaster } from 'sonner';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const [emailToShare, setEmailToShare] = useState('');
   const [isRevokeDialogOpen, setIsRevokeDialogOpen] = useState(false);
   const [selectedPermission, setSelectedPermission] = useState(null);
+  const [shareResult, setShareResult] = useState(null); // { type: 'success'|'error', message: string }
   const queryClient = useQueryClient();
   const [currentUser, setCurrentUser] = useState(null);
 
