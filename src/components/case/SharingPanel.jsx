@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { SecureEntities } from '@/components/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Trash2, Shield, Users, AlertTriangle } from 'lucide-react';
+import { Loader2, Shield, Users, AlertTriangle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -15,53 +14,47 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { toast } from 'sonner';
-import { Toaster } from 'sonner';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const [emailToShare, setEmailToShare] = useState('');
   const [isRevokeDialogOpen, setIsRevokeDialogOpen] = useState(false);
-  const [selectedPermission, setSelectedPermission] = useState(null);
-  const [shareResult, setShareResult] = useState(null); // { type: 'success'|'error', message: string }
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [shareResult, setShareResult] = useState(null);
   const queryClient = useQueryClient();
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Fetch current user
   React.useEffect(() => {
     base44.auth.me().then(setCurrentUser);
   }, []);
 
-  const { data: sharedUsers = [], isLoading } = useQuery({
-    queryKey: ['case-permissions', caseId],
-    queryFn: () => base44.entities.CasePermission.filter({ case_id: caseId, is_active: true }),
+  const { data: caseData } = useQuery({
+    queryKey: ['case', caseId],
+    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId
   });
+
+  const sharedUsers = caseData?.shared_with || [];
 
   const shareMutation = useMutation({
     mutationFn: async (email) => {
       if (!email) throw new Error("Email is required");
-      
-      // Use backend function to bypass RLS entirely
-      const response = await base44.functions.invoke('shareCase', {
-        case_id: caseId,
-        case_title: caseTitle || 'Untitled Case',
-        shared_email: email
-      });
-      
-      if (response.data?.error) {
-        throw new Error(response.data.error);
+      if (sharedUsers.includes(email)) {
+        throw new Error("המשתמש כבר משותף לתיק זה");
+      }
+      if (email === ownerEmail) {
+        throw new Error("לא ניתן לשתף עם בעלים התיק");
       }
       
-      console.log('[SharingPanel] Created permission via backend:', response.data);
-      return response.data;
+      const updatedSharedWith = [...sharedUsers, email];
+      await base44.entities.MortgageCase.update(caseId, { shared_with: updatedSharedWith });
+      return { shared_with: updatedSharedWith };
     },
     onSuccess: () => {
       setShareResult({ type: 'success', message: `השיתוף עם ${emailToShare} בוצע בהצלחה!` });
       setEmailToShare('');
-      queryClient.invalidateQueries({ queryKey: ['case-permissions', caseId] });
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       setTimeout(() => setShareResult(null), 5000);
     },
     onError: (error) => {
@@ -71,17 +64,18 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   });
 
   const revokeMutation = useMutation({
-    mutationFn: async (permissionId) => {
-      return SecureEntities.CasePermission.update(permissionId, { is_active: false });
+    mutationFn: async (emailToRevoke) => {
+      const updatedSharedWith = sharedUsers.filter(e => e !== emailToRevoke);
+      await base44.entities.MortgageCase.update(caseId, { shared_with: updatedSharedWith });
+      return updatedSharedWith;
     },
     onSuccess: () => {
-      toast.success("Access revoked");
       setIsRevokeDialogOpen(false);
-      setSelectedPermission(null);
-      queryClient.invalidateQueries({ queryKey: ['case-permissions', caseId] });
+      setSelectedEmail(null);
+      queryClient.invalidateQueries({ queryKey: ['case', caseId] });
     },
     onError: (error) => {
-      toast.error(error.message);
+      setShareResult({ type: 'error', message: error.message });
     }
   });
 
