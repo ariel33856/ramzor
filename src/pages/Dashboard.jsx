@@ -715,7 +715,6 @@ export default function Dashboard() {
                               </PopoverContent>
                             </Popover>
                             </div>
-                          </div>
                           <div
                             className={`absolute top-0 left-0 w-[5px] h-full cursor-col-resize group/resize z-10 ${
                               resizingColumn === fieldId ? 'bg-blue-500' : ''
