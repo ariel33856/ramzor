@@ -43,7 +43,10 @@ Deno.serve(async (req) => {
       let results;
       if (entity_name === 'Person') {
         // Fetch all persons using service role (no created_by filter - shared users need access)
-        const allPersons = await entityApi.list();
+        const allPersons = await entityApi.list('-created_date', 500);
+        
+        console.log('[getCaseRelatedData] Total persons fetched:', allPersons.length);
+        console.log('[getCaseRelatedData] Case person_id:', mortgageCase.person_id);
         
         // Filter to only persons linked to this case
         const personMap = new Map();
@@ -59,10 +62,14 @@ Deno.serve(async (req) => {
             const isLinked = person.linked_accounts.some(acc =>
               typeof acc === 'string' ? acc === case_id : (acc && acc.case_id === case_id)
             );
-            if (isLinked) personMap.set(person.id, person);
+            if (isLinked) {
+              console.log('[getCaseRelatedData] Found linked person:', person.id, person.first_name, person.last_name);
+              personMap.set(person.id, person);
+            }
           }
         }
         
+        console.log('[getCaseRelatedData] Matched persons count:', personMap.size);
         results = Array.from(personMap.values());
       } else if (entity_name === 'MortgageCase') {
         if (filters && filters.id) {
