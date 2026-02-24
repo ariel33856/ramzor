@@ -299,29 +299,11 @@ export default function Dashboard() {
   };
 
   const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ['cases', user?.email, user?.role, filterUser],
+    queryKey: ['cases', user?.email],
     queryFn: async () => {
       if (!user) return [];
       
-      const isAdmin = user.role === 'admin';
-      
-      // Admin: can see all or filter by specific user
-      if (isAdmin) {
-        if (filterUser && filterUser !== 'all') {
-          // Admin filtering by specific user: get their own + shared with them
-          const [userCases, sharedResponse] = await Promise.all([
-            base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date'),
-            base44.functions.invoke('getSharedCases', { target_email: filterUser }).catch(() => ({ data: { shared_cases: [] } }))
-          ]);
-          const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
-          const ownIds = new Set(userCases.map(c => c.id));
-          const uniqueShared = sharedCases.filter(c => !ownIds.has(c.id));
-          return [...userCases, ...uniqueShared];
-        }
-        return base44.entities.MortgageCase.list('-created_date');
-      }
-      
-      // Regular user: get own cases + shared cases from backend
+      // All users: get own cases + shared cases
       const [ownCases, sharedResponse] = await Promise.all([
         base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date'),
         base44.functions.invoke('getSharedCases', {}).catch((err) => {
@@ -329,8 +311,6 @@ export default function Dashboard() {
           return { data: { shared_cases: [] } };
         })
       ]);
-      
-      console.log('Own cases:', ownCases.length, 'Shared response:', sharedResponse?.data);
       
       const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
       
