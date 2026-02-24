@@ -298,20 +298,7 @@ export default function Dashboard() {
     return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const { data: sharedCases = [], isLoading: sharedCasesLoading } = useQuery({
-    queryKey: ['shared-cases', user?.email],
-    queryFn: async () => {
-      if (!user) return [];
-      const res = await base44.functions.invoke('getSharedCases', {});
-      return (res.data?.cases || []).map(c => ({ ...c, _isShared: true }));
-    },
-    enabled: !!user,
-    staleTime: 2 * 60 * 1000
-  });
-
-  const sharedLoading = false;
-
-  const { data: ownCases = [], isLoading: ownLoading } = useQuery({
+  const { data: allCases = [], isLoading } = useQuery({
     queryKey: ['cases', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
@@ -325,17 +312,6 @@ export default function Dashboard() {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
-
-  const isLoading = ownLoading || sharedLoading || sharedCasesLoading;
-
-  const allCases = React.useMemo(() => {
-    const ownIds = new Set(ownCases.map(c => c.id));
-    const merged = [...ownCases];
-    sharedCases.forEach(c => {
-      if (!ownIds.has(c.id)) merged.push(c);
-    });
-    return merged;
-  }, [ownCases, sharedCases]);
 
   // Create a map of case IDs to their linked persons
   const caseToPersonMap = React.useMemo(() => {
