@@ -27,6 +27,8 @@ Deno.serve(async (req) => {
     const isShared = (mortgageCase.shared_with || []).includes(user.email);
     const isAdmin = user.role === 'admin';
 
+    console.log('[getCaseRelatedData] user:', user.email, 'isOwner:', isOwner, 'isShared:', isShared, 'isAdmin:', isAdmin);
+
     if (!isOwner && !isShared && !isAdmin) {
       return Response.json({ error: 'No access to this case' }, { status: 403 });
     }
