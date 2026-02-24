@@ -18,15 +18,17 @@ export default function CaseDocuments() {
   });
 
   const { data: allPersons = [] } = useQuery({
-    queryKey: ['all-persons'],
-    queryFn: () => SecureEntities.Person.list(),
+    queryKey: ['all-persons-for-case', caseId],
+    queryFn: () => SecureEntities.Person.listForCasePersons(caseId),
     enabled: !!caseId
   });
 
   const linkedPerson = React.useMemo(() => {
     if (!caseId || !allPersons.length) return null;
     return allPersons.find(person => 
-      person.linked_accounts && person.linked_accounts.includes(caseId)
+      person.linked_accounts && person.linked_accounts.some(acc =>
+        typeof acc === 'string' ? acc === caseId : acc.case_id === caseId
+      )
     );
   }, [caseId, allPersons]);
 
