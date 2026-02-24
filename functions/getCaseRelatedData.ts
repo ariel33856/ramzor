@@ -42,8 +42,8 @@ Deno.serve(async (req) => {
 
       let results;
       if (entity_name === 'Person') {
-        // Fetch all persons created by the case owner using service role
-        const allPersons = await entityApi.filter({ created_by: caseOwner });
+        // Fetch all persons using service role (no created_by filter - shared users need access)
+        const allPersons = await entityApi.list();
         
         // Filter to only persons linked to this case
         const personMap = new Map();
