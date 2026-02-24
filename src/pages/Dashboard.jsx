@@ -308,7 +308,15 @@ export default function Dashboard() {
       // Admin: can see all or filter by specific user
       if (isAdmin) {
         if (filterUser && filterUser !== 'all') {
-          return base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date');
+          // Admin filtering by specific user: get their own + shared with them
+          const [userCases, sharedResponse] = await Promise.all([
+            base44.entities.MortgageCase.filter({ created_by: filterUser }, '-created_date'),
+            base44.functions.invoke('getSharedCases', { target_email: filterUser }).catch(() => ({ data: { shared_cases: [] } }))
+          ]);
+          const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
+          const ownIds = new Set(userCases.map(c => c.id));
+          const uniqueShared = sharedCases.filter(c => !ownIds.has(c.id));
+          return [...userCases, ...uniqueShared];
         }
         return base44.entities.MortgageCase.list('-created_date');
       }
@@ -316,8 +324,13 @@ export default function Dashboard() {
       // Regular user: get own cases + shared cases from backend
       const [ownCases, sharedResponse] = await Promise.all([
         base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date'),
-        base44.functions.invoke('getSharedCases', {}).catch(() => ({ data: { shared_cases: [] } }))
+        base44.functions.invoke('getSharedCases', {}).catch((err) => {
+          console.error('getSharedCases error:', err);
+          return { data: { shared_cases: [] } };
+        })
       ]);
+      
+      console.log('Own cases:', ownCases.length, 'Shared response:', sharedResponse?.data);
       
       const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
       
@@ -328,8 +341,8 @@ export default function Dashboard() {
       return [...ownCases, ...uniqueShared];
     },
     enabled: !!user,
-    retry: 1,
-    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    staleTime: 30 * 1000,
     refetchOnWindowFocus: false
   });
 
