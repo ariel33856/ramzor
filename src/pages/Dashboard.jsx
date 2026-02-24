@@ -714,6 +714,7 @@ export default function Dashboard() {
                                 </div>
                               </PopoverContent>
                             </Popover>
+                            </div>
                           </div>
                           <div
                             className={`absolute top-0 left-0 w-[5px] h-full cursor-col-resize group/resize z-10 ${
