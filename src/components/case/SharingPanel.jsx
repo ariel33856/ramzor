@@ -67,12 +67,14 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
       });
     },
     onSuccess: () => {
-      toast.success(`Case shared with ${emailToShare}`);
+      setShareResult({ type: 'success', message: `השיתוף עם ${emailToShare} בוצע בהצלחה!` });
       setEmailToShare('');
       queryClient.invalidateQueries({ queryKey: ['case-permissions', caseId] });
+      setTimeout(() => setShareResult(null), 5000);
     },
     onError: (error) => {
-      toast.error(error.message);
+      setShareResult({ type: 'error', message: error.message });
+      setTimeout(() => setShareResult(null), 5000);
     }
   });
 
