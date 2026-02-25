@@ -77,21 +77,25 @@ export default function Layout({ children, currentPageName }) {
       if (!caseData?.linked_borrowers || caseData.linked_borrowers.length === 0) return [];
       const promises = caseData.linked_borrowers.map(async id => {
         try {
-          const borrower = await base44.entities.MortgageCase.filter({ id }).then(res => res[0]);
-          if (borrower?.person_id) {
-            const person = await base44.entities.Person.filter({ id: borrower.person_id }).then(res => res[0]);
+          const res = await base44.entities.MortgageCase.filter({ id });
+          const borrower = res?.[0];
+          if (!borrower) return null;
+          if (borrower.person_id) {
+            const pRes = await base44.entities.Person.filter({ id: borrower.person_id });
+            const person = pRes?.[0];
             if (person) {
               return { ...borrower, _person: person };
             }
           }
           return borrower;
         } catch (e) {
+          console.warn('Failed to load linked borrower:', e);
           return null;
         }
       });
       return (await Promise.all(promises)).filter(b => b !== null);
     },
-    enabled: !!caseData?.linked_borrowers,
+    enabled: !!caseData?.linked_borrowers && caseData.linked_borrowers.length > 0,
     retry: 1,
     staleTime: 30000
   });
