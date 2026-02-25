@@ -383,12 +383,12 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
               <div style={cs}><AmountInputC inpS={inpS} value={t.amount} onChange={v=>updateTrack(t.id,'amount',v)} style={{ fontWeight:700, fontSize:11, maxWidth:82 }} /></div>
               <div style={cs}><select value={t.repaymentType} onChange={e=>updateTrack(t.id,'repaymentType',e.target.value)} style={{ ...sl, maxWidth:74 }}>{REPAYMENT_TYPES.map(r=><option key={r}>{r}</option>)}</select></div>
               <div style={cs}><select value={t.interestType} onChange={e=>updateTrack(t.id,'interestType',e.target.value)} style={{ ...sl, maxWidth:68 }}>{Object.keys(INTEREST_TYPES).map(k=><option key={k}>{k}</option>)}</select></div>
-              <div style={cs}><NI value={t.periodMonths} onChange={v=>updateTrack(t.id,'periodMonths',Math.round(Math.max(1,Math.min(360,v))))} min={1} max={360} step={1} style={{ maxWidth:40 }} /></div>
-              <div style={cs}><NI value={parseFloat((t.periodMonths/12).toFixed(2))} onChange={v=>updateTrack(t.id,'periodMonths',Math.round(v*12))} min={1} max={30} step={0.5} style={{ maxWidth:40 }} /></div>
-              <div style={cs}>{meta?.fixed?<span style={{ color:K.textMuted }}>—</span>:<NI value={t.updateMonths} onChange={v=>updateTrack(t.id,'updateMonths',v)} min={0} max={120} step={12} style={{ maxWidth:44 }} />}</div>
-              <div style={cs}><NI value={t.rate} onChange={v=>updateTrack(t.id,'rate',v)} min={0} max={15} step={0.05} style={{ maxWidth:50, fontWeight:700, color:t.rate>5?K.red:t.rate<3?K.green:accent }} /></div>
+              <div style={cs}><NI inpS={inpS} value={t.periodMonths} onChange={v=>updateTrack(t.id,'periodMonths',Math.round(Math.max(1,Math.min(360,v))))} min={1} max={360} step={1} style={{ maxWidth:40 }} /></div>
+              <div style={cs}><NI inpS={inpS} value={parseFloat((t.periodMonths/12).toFixed(2))} onChange={v=>updateTrack(t.id,'periodMonths',Math.round(v*12))} min={1} max={30} step={0.5} style={{ maxWidth:40 }} /></div>
+              <div style={cs}>{meta?.fixed?<span style={{ color:K.textMuted }}>—</span>:<NI inpS={inpS} value={t.updateMonths} onChange={v=>updateTrack(t.id,'updateMonths',v)} min={0} max={120} step={12} style={{ maxWidth:44 }} />}</div>
+              <div style={cs}><NI inpS={inpS} value={t.rate} onChange={v=>updateTrack(t.id,'rate',v)} min={0} max={15} step={0.05} style={{ maxWidth:50, fontWeight:700, color:t.rate>5?K.red:t.rate<3?K.green:accent }} /></div>
               <div style={{ ...cs, fontSize:8.5, color:K.textMuted }}>{meta?.anchor}</div>
-              <div style={cs}><NI value={t.graceMonths} onChange={v=>updateTrack(t.id,'graceMonths',v)} min={0} max={60} step={1} style={{ maxWidth:38 }} /></div>
+              <div style={cs}><NI inpS={inpS} value={t.graceMonths} onChange={v=>updateTrack(t.id,'graceMonths',v)} min={0} max={60} step={1} style={{ maxWidth:38 }} /></div>
               <div style={{ ...cs, fontWeight:700, color:accent, fontSize:11 }}>₪ {fmt(fp)}</div>
             </div>
           );
