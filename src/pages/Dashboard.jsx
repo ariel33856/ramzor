@@ -339,10 +339,11 @@ export default function Dashboard() {
   // Create a map of case IDs to their linked persons
   const caseToPersonMap = React.useMemo(() => {
     const map = {};
+    if (!Array.isArray(allPersons)) return map;
     allPersons.forEach(person => {
-      if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
+      if (person && person.linked_accounts && Array.isArray(person.linked_accounts)) {
         person.linked_accounts.forEach(link => {
-          const caseId = typeof link === 'string' ? link : link.case_id;
+          const caseId = typeof link === 'string' ? link : link?.case_id;
           if (caseId) {
             if (!map[caseId]) {
               map[caseId] = [];
