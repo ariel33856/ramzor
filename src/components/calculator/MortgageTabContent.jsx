@@ -9,7 +9,7 @@ import { genAmortization, exportAmortCSV, fmt, calcFirstPayment, BOI_RATE, PRIME
 export default function MortgageTabContent({ ctx }) {
   const {
     tab, K, isDark, accent, accent2,
-    tracks, totalAmount, income, inpS,
+    tracks, totalAmount, income, propValue, ltv, comp, inpS,
     NI, AmountInputC, SectionTitle, Pill, ChartCard, CTooltipC, GaugeChart,
     summCards, comparisonData, activeId, mergedRows, tabCompareOpen, compareToId,
     chartData, cmpName, health, costDonutData, effData,

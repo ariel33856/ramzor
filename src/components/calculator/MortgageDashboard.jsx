@@ -309,7 +309,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
   ];
 
   const COL = "34px 52px 90px 80px 74px 46px 46px 54px 58px 58px 46px 82px";
-  const tabsDef = [{id:"profile",l:"פרופיל",icon:"👤"},{id:"sim",l:"סימולציה",icon:"📊"},{id:"stress",l:"Stress Test",icon:"⚡"},{id:"amort",l:"לוח סילוקין",icon:"📋"},{id:"prepay",l:"פירעון מוקדם",icon:"💰"},{id:"reverse",l:"מחשבון הפוך",icon:"🔄"}];
+  const tabsDef = [{id:"profile",l:"פרופיל",icon:"👤"},{id:"sim",l:"סימולציה",icon:"📊"},{id:"financial",l:"נתונים כלכליים",icon:"💹"},{id:"stress",l:"Stress Test",icon:"⚡"},{id:"amort",l:"לוח סילוקין",icon:"📋"},{id:"prepay",l:"פירעון מוקדם",icon:"💰"},{id:"reverse",l:"מחשבון הפוך",icon:"🔄"}];
 
   const costDonutData = useMemo(() => {
     if (tracks.length === 0) return [];
@@ -482,7 +482,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
       {/* TAB CONTENT */}
       <MortgageTabContent ctx={{
         tab, K, isDark, accent, accent2,
-        tracks, totalAmount, income, inpS,
+        tracks, totalAmount, income, propValue, ltv, comp, inpS,
         NI, AmountInputC, SectionTitle, Pill, ChartCard, CTooltipC, GaugeChart,
         summCards, comparisonData, activeId, mergedRows, tabCompareOpen, compareToId,
         chartData, cmpName, health, costDonutData, effData,
