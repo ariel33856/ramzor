@@ -120,6 +120,7 @@ function createSecureEntity(entityName, options = {}) {
     // Special method to list entities for a specific case (handles shared cases)
     async listForCase(caseId, additionalFilters = {}, sortBy, limit) {
       const user = await getCurrentUser();
+      if (!user) return [];
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
@@ -138,6 +139,7 @@ function createSecureEntity(entityName, options = {}) {
     // List persons linked to a case (handles shared cases)
     async listForCasePersons(caseId) {
       const user = await getCurrentUser();
+      if (!user) return [];
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
@@ -152,7 +154,7 @@ function createSecureEntity(entityName, options = {}) {
     async get(id) {
       const results = await entity.filter({ id });
       const record = results[0];
-      if (!record) throw new Error(`Record not found: ${entityName}/${id}`);
+      if (!record) return null;
       return record;
     },
 
