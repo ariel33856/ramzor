@@ -176,6 +176,10 @@ const initTracks = [
   { id:3, repaymentType:'שפיצר', interestType:'מ"צ', amount:500000, periodMonths:240, updateMonths:60, rate:2.20, graceMonths:0, graceType:'none' },
 ];
 
+const emptyInitTracks = [
+  { id:1, repaymentType:'שפיצר', interestType:'פריים', amount:0, periodMonths:240, updateMonths:0, rate:DEFAULT_RATES['פריים'], graceMonths:0, graceType:'none' },
+];
+
 const trackColors_arr = ["#6c63ff", "#4ecdc4", "#ff9f43", "#a855f7", "#38bdf8", "#f472b6"];
 
 export {
@@ -184,5 +188,5 @@ export {
   calcShpitzer, calcShpitzerReverse, genAmortization,
   calcIRR, calcFirstPayment, checkCompliance, getExitPoints,
   calcHealthScore, calcEarlyRepaymentFee, exportAmortCSV, fmt,
-  DARK, LIGHT, mkTrack, getNextId, initTracks, trackColors_arr,
+  DARK, LIGHT, mkTrack, getNextId, initTracks, emptyInitTracks, trackColors_arr,
 };
