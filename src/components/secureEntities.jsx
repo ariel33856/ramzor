@@ -47,12 +47,14 @@ async function getSharedCaseIds() {
   }
   try {
     const response = await base44.functions.invoke('getSharedCases', {});
-    const sharedCases = response.data?.shared_cases || [];
-    sharedCaseIdsCache = sharedCases.map(c => c.id);
+    const sharedCases = response?.data?.shared_cases || [];
+    sharedCaseIdsCache = Array.isArray(sharedCases) ? sharedCases.map(c => c.id) : [];
     sharedCaseIdsCacheTime = now;
     return sharedCaseIdsCache;
   } catch (e) {
-    console.error('Failed to get shared cases:', e);
+    console.warn('Failed to get shared cases:', e);
+    sharedCaseIdsCache = [];
+    sharedCaseIdsCacheTime = now;
     return [];
   }
 }
