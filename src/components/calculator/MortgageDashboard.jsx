@@ -270,7 +270,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
     {label:"גיל לווה",color:K.purple,input:true,el:<NI inpS={inpS} value={borrowerAge} onChange={setBorrowerAge} min={18} max={75} step={1} style={{width:44}}/>},
     {label:"תקופה מקסימלית",val:maxPeriodYears+" שנה",color:periodOk?K.green:K.red},
     {label:"LTV מקסימלי",val:(maxLtv*100)+"%",color:K.sky},
-    {label:"שווי נכס",color:K.sky,input:true,el:<AmountInputC value={propValue} onChange={setPropValue} style={{width:80,fontSize:10}}/>},
+    {label:"שווי נכס",color:K.sky,input:true,el:<AmountInputC inpS={inpS} value={propValue} onChange={setPropValue} style={{width:80,fontSize:10}}/>},
     {label:"LTV בפועל",val:(ltv*100).toFixed(1)+"%",color:ltvOk?K.green:K.red},
     {label:"הון עצמי",val:"₪ "+fmt(equity),color:equity>0?K.emerald:K.red},
     {label:"סטטוס LTV",val:ltvOk?"✓ תקין":"✗ חריגה!",color:ltvOk?K.green:K.red},
