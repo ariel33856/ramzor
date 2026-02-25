@@ -198,6 +198,20 @@ export default function MortgageTabContent({ ctx }) {
           <div style={{ background:K.bgCard, borderRadius:12, overflow:"hidden", border:`1px solid ${K.border}` }}>
             <SectionTitle icon="👤">פרופיל לווה</SectionTitle>
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11 }}><tbody>{profileRows.map((r,i)=>r.sep?<tr key={i}><td colSpan={2} style={{ padding:0, borderBottom:`2px solid ${isDark?K.gold+"25":K.purple+"25"}` }}></td></tr>:<tr key={i} style={{ background:i%2?K.bgCard2:K.bgCard }}><td style={{ padding:"8px 10px", textAlign:"right", borderBottom:`1px solid ${K.border}`, color:K.textSoft, fontWeight:500, whiteSpace:"nowrap", fontSize:11 }}>{r.label}</td><td style={{ padding:"8px 10px", textAlign:"center", borderBottom:`1px solid ${K.border}`, fontWeight:700, color:r.color, fontSize:11 }}>{r.input?r.el:r.val}</td></tr>)}</tbody></table>
+            {/* אנשי קשר משויכים */}
+            {caseContacts.length > 0 && (
+              <div style={{ padding:"12px 14px", borderTop:`1px solid ${K.border}` }}>
+                <div style={{ fontSize:11, fontWeight:600, color:K.textSoft, marginBottom:8 }}>אנשי קשר משויכים</div>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+                  {caseContacts.map(person => (
+                    <div key={person.id} style={{ display:"flex", alignItems:"center", gap:5, padding:"4px 10px", borderRadius:16, background:isDark?`${K.teal}15`:"#eff6ff", border:`1px solid ${isDark?K.teal+"40":"#bfdbfe"}` }}>
+                      <User style={{ width:12, height:12, color:isDark?K.teal:"#2563eb" }} />
+                      <span style={{ fontSize:11, fontWeight:600, color:isDark?K.teal:"#1e40af" }}>{person.first_name} {person.last_name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>}
