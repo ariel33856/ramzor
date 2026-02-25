@@ -17,7 +17,7 @@ export default function MortgageTabContent({ ctx }) {
     requestRows, profileRows,
     stressData, baseFP,
     amortView, setAmortView, amortTrack, setAmortTrack,
-    monthlyData, yearlyData, totals, exitYears,
+    monthlyData, yearlyData, totals, metrics, exitYears,
     prepYears, setPrepYears, prepAvgRate, setPrepAvgRate,
     prepDay, setPrepDay, prepNotice, setPrepNotice, prepAllFees,
     reverseMode, setReverseMode, revPmt, setRevPmt, revRate, setRevRate,
