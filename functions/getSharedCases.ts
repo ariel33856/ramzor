@@ -22,7 +22,13 @@ Deno.serve(async (req) => {
     console.log('Looking for shared cases for:', targetEmail);
     
     // Use service role to get ALL cases (bypasses RLS)
-    const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
+    let allCases = [];
+    try {
+      allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date');
+    } catch (e) {
+      console.error('Failed to list cases with service role:', e.message);
+      return Response.json({ shared_cases: [], debug: { error: e.message } });
+    }
     
     console.log('Total cases from service role:', allCases.length);
     
