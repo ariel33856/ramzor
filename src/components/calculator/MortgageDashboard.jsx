@@ -258,8 +258,8 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
   const ltvOk = ltv <= maxLtv;
 
   const profileRows = [
-    {label:"סה״כ הכנסות",color:isDark?K.goldLight:K.purple,input:true,el:<AmountInputC value={income} onChange={setIncome} style={{width:80,fontSize:10}}/>},
-    {label:"סה״כ התחייבויות קיימות",val:"₪ "+fmt(otherDebts),color:otherDebts>0?K.orange:K.textMuted,input:true,el:<AmountInputC value={otherDebts} onChange={setOtherDebts} style={{width:80,fontSize:10}}/>},
+    {label:"סה״כ הכנסות",color:isDark?K.goldLight:K.purple,input:true,el:<AmountInputC inpS={inpS} value={income} onChange={setIncome} style={{width:80,fontSize:10}}/>},
+    {label:"סה״כ התחייבויות קיימות",val:"₪ "+fmt(otherDebts),color:otherDebts>0?K.orange:K.textMuted,input:true,el:<AmountInputC inpS={inpS} value={otherDebts} onChange={setOtherDebts} style={{width:80,fontSize:10}}/>},
     {label:"סה״כ הכנסה פנויה",val:"₪ "+fmt(freeIncomeBeforeMortgage),color:freeIncomeBeforeMortgage>0?K.green:K.red},
     {label:"יחס החזר מהכנסה פנויה",val:(ptiFromFree*100).toFixed(1)+"%",color:ptiFromFree<=0.33?K.green:ptiFromFree<=0.4?K.amber:ptiFromFree<=0.5?K.orange:K.red},
     {label:"PTI לפי לווה",val:(ptiPerBorrower*100).toFixed(1)+"%",color:ptiPerBorrower<=0.33?K.green:ptiPerBorrower<=0.4?K.amber:ptiPerBorrower<=0.5?K.orange:K.red},
