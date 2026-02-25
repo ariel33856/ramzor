@@ -155,7 +155,14 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
-    queryFn: () => base44.entities.MortgageCase.list('-created_date'),
+    queryFn: async () => {
+      try {
+        return await base44.entities.MortgageCase.list('-created_date');
+      } catch (e) {
+        console.warn('Failed to load all cases:', e);
+        return [];
+      }
+    },
     enabled: currentPageName === 'ArchiveCaseDetails' || currentPageName === 'ContactsArchive',
     retry: 1,
     staleTime: 5 * 60 * 1000,
