@@ -5,6 +5,7 @@ import {
   PieChart, Pie, Cell,
 } from "recharts";
 import { genAmortization, exportAmortCSV, fmt, calcFirstPayment, BOI_RATE, PRIME_BASE, ASSUMED_CPI, trackColors_arr, INTEREST_TYPES, mkTrack } from "./mortgageEngine";
+import { User, X } from "lucide-react";
 
 export default function MortgageTabContent({ ctx }) {
   const {
