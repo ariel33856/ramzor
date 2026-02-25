@@ -117,7 +117,15 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: modules = [] } = useQuery({
     queryKey: ['modules'],
-    queryFn: () => base44.entities.Module.list('order'),
+    queryFn: async () => {
+      try {
+        return await base44.entities.Module.list('order');
+      } catch (e) {
+        console.warn('Failed to load modules:', e);
+        return [];
+      }
+    },
+    enabled: !!user,
     retry: 1,
     staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false
