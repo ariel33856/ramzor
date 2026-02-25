@@ -25,6 +25,7 @@ export default function MortgageTabContent({ ctx }) {
     revPrice, setRevPrice, revDealType, setRevDealType, reverseResult,
     portfolios, activePortfolio,
     setTracks, setTab,
+    caseContacts = [],
   } = ctx;
 
   return (
