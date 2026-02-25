@@ -476,6 +476,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave,
         revPrice, setRevPrice, revDealType, setRevDealType, reverseResult,
         portfolios, activePortfolio,
         setTracks, setTab,
+        caseContacts,
       }} />
     </div>
   );
