@@ -8,7 +8,7 @@ import {
   DARK, LIGHT, mkTrack, getNextId, initTracks, emptyInitTracks, trackColors_arr,
 } from "./mortgageEngine";
 import MortgageTabContent from "./MortgageTabContent";
-import { NI as NIBase, AmountInputC as AmountInputCBase } from "./CalcInputs";
+import { NI, AmountInputC } from "./CalcInputs";
 
 let _pid = 2;
 
