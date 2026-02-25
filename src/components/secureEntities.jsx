@@ -8,14 +8,19 @@ const SHARED_CACHE_TTL = 60000; // 1 minute
 
 async function getCurrentUser() {
   if (cachedUser) return cachedUser;
-  const user = await base44.auth.me();
-  if (!user) {
-    base44.auth.redirectToLogin(window.location.href);
-    throw new Error("Not authenticated");
+  try {
+    const user = await base44.auth.me();
+    if (!user) {
+      console.warn('SecureEntities: user not authenticated');
+      return null;
+    }
+    cachedUser = user;
+    setTimeout(() => { cachedUser = null; }, 60000);
+    return user;
+  } catch (e) {
+    console.warn('SecureEntities: auth check failed', e);
+    return null;
   }
-  cachedUser = user;
-  setTimeout(() => { cachedUser = null; }, 60000);
-  return user;
 }
 
 export function clearSecureUserCache() {
