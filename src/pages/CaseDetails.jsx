@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import SharingPanel from '@/components/case/SharingPanel';
 
 // Import all case page components
 import CasePersonal from './CasePersonal';
