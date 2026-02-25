@@ -183,7 +183,15 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: currentBorrower } = useQuery({
     queryKey: ['archive-case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: async () => {
+      try {
+        const res = await base44.entities.MortgageCase.filter({ id: caseId });
+        return res?.[0] || null;
+      } catch (e) {
+        console.warn('Failed to load archive case:', e);
+        return null;
+      }
+    },
     enabled: currentPageName === 'ArchiveCaseDetails' && !!caseId,
     retry: 1,
     staleTime: 30000
@@ -191,7 +199,15 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: currentPerson } = useQuery({
     queryKey: ['person', personId],
-    queryFn: () => base44.entities.Person.filter({ id: personId }).then(res => res[0]),
+    queryFn: async () => {
+      try {
+        const res = await base44.entities.Person.filter({ id: personId });
+        return res?.[0] || null;
+      } catch (e) {
+        console.warn('Failed to load person:', e);
+        return null;
+      }
+    },
     enabled: currentPageName === 'PersonDetails' && !!personId,
     retry: 1,
     staleTime: 30000
