@@ -106,7 +106,14 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => base44.entities.Person.list(),
+    queryFn: async () => {
+      try {
+        return await base44.entities.Person.list();
+      } catch (e) {
+        console.warn('Failed to load persons:', e);
+        return [];
+      }
+    },
     enabled: !!caseId,
     retry: 1,
     staleTime: 5 * 60 * 1000,
