@@ -264,6 +264,9 @@ export const getAllFields = () => {
 // פונקציה לקבלת ערך שדה מהנתונים - מטפלת גם בשדות רגילים וגם ב-custom_data
 export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
   if (!field) return '—';
+  if (!caseData && !linkedPerson) return '—';
+  
+  try {
   
   if (field.source === 'case') {
     const value = caseData?.[field.id];
