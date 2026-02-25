@@ -470,6 +470,16 @@ export default function CaseDetails() {
           )}
 
       </div>
+
+      {/* Sharing Dialog */}
+      <Dialog open={sharingDialogOpen} onOpenChange={setSharingDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>שיתוף חשבון</DialogTitle>
+          </DialogHeader>
+          <SharingPanel caseId={caseId} caseTitle={caseData.client_name} ownerEmail={caseData.created_by} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
