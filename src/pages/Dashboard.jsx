@@ -303,16 +303,23 @@ export default function Dashboard() {
     queryFn: async () => {
       if (!user) return [];
       
-      // All users: get own cases + shared cases
-      const [ownCases, sharedResponse] = await Promise.all([
-        base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date'),
-        base44.functions.invoke('getSharedCases', {}).catch((err) => {
-          console.error('getSharedCases error:', err);
-          return { data: { shared_cases: [] } };
-        })
-      ]);
+      let ownCases = [];
+      let sharedCases = [];
       
-      const sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
+      try {
+        ownCases = await base44.entities.MortgageCase.filter({ created_by: user.email }, '-created_date');
+      } catch (err) {
+        console.error('Failed to fetch own cases:', err);
+        ownCases = [];
+      }
+      
+      try {
+        const sharedResponse = await base44.functions.invoke('getSharedCases', {});
+        sharedCases = (sharedResponse?.data?.shared_cases || []).map(c => ({ ...c, _isShared: true }));
+      } catch (err) {
+        console.error('getSharedCases error:', err);
+        sharedCases = [];
+      }
       
       // Merge, avoiding duplicates
       const ownIds = new Set(ownCases.map(c => c.id));
