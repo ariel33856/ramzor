@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import SharingPanel from '@/components/case/SharingPanel';
 
 const navigation = [
   { name: 'מרכז פיקוד', icon: LayoutDashboard, page: 'Dashboard' },
