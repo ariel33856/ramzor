@@ -108,7 +108,7 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   }
 
   return (
-    <div>
+    <>
         <div className="mb-4">
           <Button 
             onClick={() => shareMutation.mutate()}
