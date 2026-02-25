@@ -6,8 +6,8 @@ import {
   calcIRR, calcFirstPayment, checkCompliance, getExitPoints,
   calcHealthScore, calcEarlyRepaymentFee, fmt,
   DARK, LIGHT, mkTrack, getNextId, initTracks, trackColors_arr,
-} from "./mortgageEngine.js";
-import MortgageTabContent from "./MortgageTabContent.jsx";
+} from "./mortgageEngine";
+import MortgageTabContent from "./MortgageTabContent";
 
 let _pid = 2;
 
