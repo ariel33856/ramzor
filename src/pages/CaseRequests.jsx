@@ -11,6 +11,7 @@ export default function CaseRequests() {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['requests', caseId],
