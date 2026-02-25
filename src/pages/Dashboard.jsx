@@ -266,7 +266,10 @@ export default function Dashboard() {
   // Fetch all persons to extract custom fields from their custom_data
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
-    queryFn: () => SecureEntities.Person.list(),
+    queryFn: async () => {
+      const result = await SecureEntities.Person.list();
+      return result || [];
+    },
     retry: 1,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
