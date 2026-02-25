@@ -384,7 +384,7 @@ export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
     return value || '—';
   }
   
-  return '—';
+    return '—';
   } catch (e) {
     console.warn('getFieldValue error for field:', field?.id, e);
     return '—';
