@@ -40,6 +40,7 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [sharingDialogOpen, setSharingDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [globalFilterUser, setGlobalFilterUser] = useState('all');
   const queryClient = useQueryClient();
