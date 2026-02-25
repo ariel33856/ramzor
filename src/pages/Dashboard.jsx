@@ -25,6 +25,7 @@ import { getAllFields, getFieldValue } from '../components/dashboard/FieldsHiera
 
 
 export default function Dashboard() {
+  // Dashboard component
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
