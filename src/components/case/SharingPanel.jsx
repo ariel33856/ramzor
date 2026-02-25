@@ -187,6 +187,6 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
