@@ -72,6 +72,7 @@ export default function CaseDetails() {
   const [activeTab, setActiveTab] = useState('personal');
   const [activeContactId, setActiveContactId] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [sharingDialogOpen, setSharingDialogOpen] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const isNew = urlParams.get('new') === 'true';
