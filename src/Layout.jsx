@@ -845,9 +845,9 @@ export default function Layout({ children, currentPageName }) {
                   {caseId && caseData && (
                     <DropdownMenuItem 
                       className="px-1.5 py-1 cursor-pointer bg-sky-50 border-2 border-sky-200 hover:border-sky-400 hover:bg-sky-100 rounded-lg transition-all"
-                      onClick={(e) => {
+                      onSelect={(e) => {
                         e.preventDefault();
-                        setSharingDialogOpen(true);
+                        setTimeout(() => setSharingDialogOpen(true), 100);
                       }}
                     >
                       <div className="flex items-center gap-2 justify-end w-full">
