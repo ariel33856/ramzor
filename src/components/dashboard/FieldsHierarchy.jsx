@@ -265,10 +265,9 @@ export const getAllFields = () => {
 export const getFieldValue = (field, caseData, linkedPerson, allPersons) => {
   if (!field) return '—';
   if (!caseData && !linkedPerson) return '—';
-  
+
   try {
-  
-  if (field.source === 'case') {
+    if (field.source === 'case') {
     const value = caseData?.[field.id];
     
     // טיפול מיוחד בשדות ספציפיים
