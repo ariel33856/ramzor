@@ -56,7 +56,15 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: async () => {
+      try {
+        const res = await base44.entities.MortgageCase.filter({ id: caseId });
+        return res?.[0] || null;
+      } catch (e) {
+        console.warn('Failed to load case:', e);
+        return null;
+      }
+    },
     enabled: !!caseId,
     retry: 1,
     staleTime: 2 * 60 * 1000,
