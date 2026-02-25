@@ -278,7 +278,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
 
   const requestRows = [
     {label:"סוג בקשה",color:K.sky,input:true,el:<select value={requestType} onChange={e=>setRequestType(e.target.value)} style={{...inpS,width:90,cursor:"pointer",fontSize:10}}><option value="mortgage">משכנתא</option><option value="loan">הלוואה</option></select>},
-    {label:"סכום בקשה",color:isDark?K.goldLight:K.purple,input:true,el:<AmountInputC value={requestAmount} onChange={setRequestAmount} style={{width:80,fontSize:10}}/>},
+    {label:"סכום בקשה",color:isDark?K.goldLight:K.purple,input:true,el:<AmountInputC inpS={inpS} value={requestAmount} onChange={setRequestAmount} style={{width:80,fontSize:10}}/>},
     ...(requestAmount>0&&totalAmount!==requestAmount?[{label:"הפרש",val:(totalAmount>requestAmount?"+":"")+"₪ "+fmt(totalAmount-requestAmount),color:K.orange}]:[]),
   ];
 
