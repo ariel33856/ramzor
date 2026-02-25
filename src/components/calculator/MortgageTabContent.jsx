@@ -411,9 +411,9 @@ export default function MortgageTabContent({ ctx }) {
       {tab === "prepay" && <div style={{ background:K.cardGrad(), margin:"0 16px", borderRadius:"0 0 12px 12px", border:`1px solid ${K.border}` }}>
         <SectionTitle icon="💰">מחשבון עמלת פירעון מוקדם</SectionTitle>
         <div style={{ padding:"12px 16px", display:"flex", gap:16, alignItems:"center", borderBottom:`1px solid ${K.border}`, flexWrap:"wrap" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>שנות ותק</span><NI value={prepYears} onChange={setPrepYears} min={0} max={30} step={1} style={{width:60}}/></div>
-          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>ריבית ממוצעת %</span><NI value={prepAvgRate} onChange={setPrepAvgRate} min={0} max={15} step={0.1} style={{width:60}}/></div>
-          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>יום בחודש</span><NI value={prepDay} onChange={setPrepDay} min={1} max={31} step={1} style={{width:50}}/></div>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>שנות ותק</span><NI inpS={inpS} value={prepYears} onChange={setPrepYears} min={0} max={30} step={1} style={{width:60}}/></div>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>ריבית ממוצעת %</span><NI inpS={inpS} value={prepAvgRate} onChange={setPrepAvgRate} min={0} max={15} step={0.1} style={{width:60}}/></div>
+          <div style={{ display:"flex", alignItems:"center", gap:6 }}><span style={{ fontSize:11, color:K.textSoft }}>יום בחודש</span><NI inpS={inpS} value={prepDay} onChange={setPrepDay} min={1} max={31} step={1} style={{width:50}}/></div>
           <label style={{ display:"flex", alignItems:"center", gap:5, fontSize:11, color:K.textSoft, cursor:"pointer" }}>
             <input type="checkbox" checked={prepNotice} onChange={e=>setPrepNotice(e.target.checked)} style={{ accentColor: K.green }} />
             הודעה מוקדמת (10 ימים)
