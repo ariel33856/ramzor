@@ -832,7 +832,7 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
 
                   <Link to={createPageUrl('Communication')}>
-                    <DropdownMenuItem className="px-1.5 py-1 cursor-pointer bg-amber-50 border-2 border-amber-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
+                    <DropdownMenuItem className="px-1.5 py-1 mb-1 cursor-pointer bg-amber-50 border-2 border-amber-200 hover:border-amber-400 hover:bg-amber-100 rounded-lg transition-all">
                       <div className="flex items-center gap-2 justify-end w-full">
                         <span className="text-sm font-medium">תקשורת</span>
                         <div className="w-7 h-7 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
@@ -841,6 +841,23 @@ export default function Layout({ children, currentPageName }) {
                       </div>
                     </DropdownMenuItem>
                   </Link>
+
+                  {caseId && caseData && (
+                    <DropdownMenuItem 
+                      className="px-1.5 py-1 cursor-pointer bg-sky-50 border-2 border-sky-200 hover:border-sky-400 hover:bg-sky-100 rounded-lg transition-all"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSharingDialogOpen(true);
+                      }}
+                    >
+                      <div className="flex items-center gap-2 justify-end w-full">
+                        <span className="text-sm font-medium">שיתוף</span>
+                        <div className="w-7 h-7 bg-gradient-to-br from-sky-500 to-sky-600 rounded-lg flex items-center justify-center">
+                          <Users className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    </DropdownMenuItem>
+                  )}
                   </DropdownMenuContent>
                   </DropdownMenu>
                   <Button variant="ghost" size="icon" className="relative">
