@@ -66,11 +66,27 @@ export default function CaseRequests() {
   return (
     <div className="p-1" dir="rtl">
       <div className="flex items-center justify-between mb-4">
-        <Button onClick={() => createMutation.mutate()} className="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
-          <Plus className="w-4 h-4 ml-2" />
-          בקשה חדשה
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => createMutation.mutate()} className="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700">
+            <Plus className="w-4 h-4 ml-2" />
+            בקשה חדשה
+          </Button>
+          <Button 
+            onClick={() => setShowCalculator(!showCalculator)} 
+            className={showCalculator 
+              ? "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700" 
+              : "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800"}
+          >
+            <Calculator className="w-4 h-4 ml-2" />
+            {showCalculator ? 'הסתר מחשבון' : 'מחשבון משכנתא'}
+          </Button>
+        </div>
       </div>
+      {showCalculator && (
+        <div className="mb-6">
+          <CaseCalculator />
+        </div>
+      )}
       {isLoading ? (
         <div className="text-center py-8 text-gray-400">טוען...</div>
       ) : (
