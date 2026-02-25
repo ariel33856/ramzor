@@ -200,6 +200,112 @@ export default function MortgageTabContent({ ctx }) {
         </div>
       </div>}
 
+      {/* TAB: FINANCIAL DATA */}
+      {tab === "financial" && <div style={{ background:K.cardGrad(), margin:"0 16px", borderRadius:"0 0 12px 12px", border:`1px solid ${K.border}`, padding:20 }}>
+        <SectionTitle icon="💹">נתונים כלכליים</SectionTitle>
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:16, marginTop:16 }}>
+          {/* Summary Cards */}
+          {[
+            {label:"סכום הלוואה כולל",value:"₪ "+fmt(totalAmount),color:K.teal,icon:"🏦"},
+            {label:"שווי נכס",value:"₪ "+fmt(propValue),color:K.sky,icon:"🏠"},
+            {label:"LTV",value:(ltv*100).toFixed(1)+"%",color:ltv<=0.75?K.green:K.red,icon:"📐"},
+            {label:"הכנסה חודשית",value:"₪ "+fmt(income),color:K.emerald,icon:"💰"},
+            {label:"החזר ראשון",value:"₪ "+fmt(totals.firstPmt),color:K.purple,icon:"📆"},
+            {label:"PTI",value:(comp.pti*100).toFixed(1)+"%",color:comp.ptiOk?K.green:K.red,icon:"⚖️"},
+          ].map((c,i) => (
+            <div key={i} style={{ background:`linear-gradient(145deg, ${c.color}${isDark?"15":"12"}, ${c.color}${isDark?"08":"05"})`, border:`1px solid ${c.color}25`, borderRadius:12, padding:"18px 14px", textAlign:"center" }}>
+              <div style={{ fontSize:20, marginBottom:6 }}>{c.icon}</div>
+              <div style={{ fontSize:10, color:K.textSoft, marginBottom:8, fontWeight:500 }}>{c.label}</div>
+              <div style={{ fontSize:22, fontWeight:800, color:c.color }}>{c.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Detailed Financial Table */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginTop:20 }}>
+          <div style={{ background:K.bgCard, borderRadius:12, overflow:"hidden", border:`1px solid ${K.border}` }}>
+            <div style={{ background:K.headerBg2, color:isDark?K.goldLight:"#fff", padding:"11px 14px", fontWeight:700, fontSize:13, textAlign:"center", borderBottom:`2px solid ${isDark?K.gold+"40":"#ffffff30"}` }}>עלויות ותשלומים</div>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11 }}>
+              <tbody>
+                {[
+                  {label:"עלות כוללת",val:"₪ "+fmt(totals.totalPay),color:isDark?K.goldLight:K.purple},
+                  {label:"סה״כ ריבית",val:"₪ "+fmt(totals.totI),color:K.coral},
+                  {label:"סה״כ הצמדה",val:"₪ "+fmt(totals.totIdx),color:K.amber},
+                  {label:"ריבית + הצמדה",val:"₪ "+fmt((totals.totI||0)+(totals.totIdx||0)),color:K.orange},
+                  {label:"החזר שיא",val:"₪ "+fmt(totals.maxPmt)+(totals.maxPmtY?" (שנה "+totals.maxPmtY+")":""),color:K.pink},
+                  {label:"החזר לשקל",val:metrics.pps,color:parseFloat(metrics.pps||0)<1.8?K.green:K.red},
+                  {label:'שת"פ (IRR)',val:metrics.irr+"%",color:K.violet},
+                ].map((r,i) => (
+                  <tr key={i} style={{ background:i%2?K.bgCard2:K.bgCard }}>
+                    <td style={{ padding:"9px 12px", textAlign:"right", borderBottom:`1px solid ${K.border}`, color:K.textSoft, fontWeight:500, fontSize:11 }}>{r.label}</td>
+                    <td style={{ padding:"9px 12px", textAlign:"center", borderBottom:`1px solid ${K.border}`, fontWeight:700, color:r.color, fontSize:12 }}>{r.val}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div style={{ background:K.bgCard, borderRadius:12, overflow:"hidden", border:`1px solid ${K.border}` }}>
+            <div style={{ background:K.headerBg2, color:isDark?K.goldLight:"#fff", padding:"11px 14px", fontWeight:700, fontSize:13, textAlign:"center", borderBottom:`2px solid ${isDark?K.gold+"40":"#ffffff30"}` }}>פירוט מסלולים</div>
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:11 }}>
+              <thead>
+                <tr style={{ background:K.bgCard2 }}>
+                  {["מסלול","סכום","ריבית","תקופה","החזר ראשון","משקל"].map((h,i) => (
+                    <th key={i} style={{ padding:"8px 4px", textAlign:"center", fontSize:10, fontWeight:600, color:isDark?K.goldLight:K.purple, borderBottom:`2px solid ${accent2}25` }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tracks.map((t,i) => {
+                  const fp = calcFirstPayment(t);
+                  const w = totalAmount > 0 ? (t.amount / totalAmount * 100).toFixed(1) : "0";
+                  const sched = genAmortization(t);
+                  const tc = trackColors_arr[i % trackColors_arr.length];
+                  return (
+                    <tr key={t.id} style={{ background:i%2?K.bgCard2:K.bgCard, borderBottom:`1px solid ${K.border}`, borderRight:`3px solid ${tc}` }}>
+                      <td style={{ padding:"8px 6px", fontWeight:700, color:tc, textAlign:"center", fontSize:10 }}>{t.interestType}</td>
+                      <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:600 }}>₪ {fmt(t.amount)}</td>
+                      <td style={{ padding:"8px 6px", textAlign:"center", color:K.amber, fontWeight:600 }}>{t.rate}%</td>
+                      <td style={{ padding:"8px 6px", textAlign:"center", fontSize:10 }}>{(t.periodMonths/12).toFixed(1)} שנה</td>
+                      <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:700, color:accent }}>₪ {fmt(fp)}</td>
+                      <td style={{ padding:"8px 6px", textAlign:"center", fontSize:10 }}>{w}%</td>
+                    </tr>
+                  );
+                })}
+                <tr style={{ background:K.totalBg, borderTop:`2px solid ${accent2}40` }}>
+                  <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:700, color:accent }}>סה״כ</td>
+                  <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:800, color:accent }}>₪ {fmt(totalAmount)}</td>
+                  <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:700, color:K.amber }}>{metrics.wRate}%</td>
+                  <td style={{ padding:"8px 6px", textAlign:"center", fontSize:10 }}>{metrics.maxY} שנה</td>
+                  <td style={{ padding:"8px 6px", textAlign:"center", fontWeight:800, color:accent }}>₪ {fmt(totals.firstPmt)}</td>
+                  <td style={{ padding:"8px 6px", textAlign:"center" }}>100%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Compliance & Risk */}
+        <div style={{ marginTop:20, background:K.bgCard, borderRadius:12, overflow:"hidden", border:`1px solid ${K.border}` }}>
+          <div style={{ background:K.headerBg2, color:isDark?K.goldLight:"#fff", padding:"11px 14px", fontWeight:700, fontSize:13, textAlign:"center", borderBottom:`2px solid ${isDark?K.gold+"40":"#ffffff30"}` }}>תאימות ובקרת סיכונים</div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(5, 1fr)", gap:0 }}>
+            {[
+              {label:"PTI (יחס החזר)",val:(comp.pti*100).toFixed(1)+"%",ok:comp.ptiOk,detail:comp.ptiOk?"תקין":"חריגה!"},
+              {label:"LTV",val:(ltv*100).toFixed(1)+"%",ok:ltv<=0.75,detail:ltv<=0.75?"תקין":"חריגה!"},
+              {label:"% ריבית קבועה",val:(comp.fixedR*100).toFixed(0)+"%",ok:comp.fixedR>=0.33,detail:comp.fixedR>=0.33?"✓ מעל שליש":"⚠ פחות משליש"},
+              {label:"תקופה מקסימלית",val:metrics.maxY+" שנה",ok:parseFloat(metrics.maxY)<=30,detail:parseFloat(metrics.maxY)<=30?"תקין":"חריגה!"},
+              {label:"החזר לשקל",val:metrics.pps,ok:parseFloat(metrics.pps)<1.8,detail:parseFloat(metrics.pps)<1.8?"סביר":"גבוה"},
+            ].map((c,i) => (
+              <div key={i} style={{ textAlign:"center", padding:"16px 8px", borderLeft:i>0?`1px solid ${K.border}`:"none" }}>
+                <div style={{ fontSize:10, color:K.textMuted, marginBottom:6 }}>{c.label}</div>
+                <div style={{ fontSize:18, fontWeight:800, color:c.ok?K.green:K.red }}>{c.val}</div>
+                <div style={{ fontSize:10, marginTop:4, color:c.ok?K.green:K.red, fontWeight:600 }}>{c.detail}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>}
+
       {/* TAB: STRESS TEST */}
       {tab === "stress" && <div style={{ background:K.cardGrad(), margin:"0 16px", borderRadius:"0 0 12px 12px", border:`1px solid ${K.border}` }}>
         <SectionTitle icon="⚡">Stress Test — מבחן לחץ</SectionTitle>
