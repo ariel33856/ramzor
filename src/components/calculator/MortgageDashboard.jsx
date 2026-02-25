@@ -87,10 +87,7 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
   const [requestAmount, setRequestAmount] = useState(init.requestAmount);
   const [expandedChart, setExpandedChart] = useState(null);
 
-  const inpS = { border:`1px solid ${K.border}`, borderRadius:6, padding:"5px 6px", fontSize:11, background:K.inputBg, fontFamily:"inherit", textAlign:"center", width:"100%", color:K.text, outline:"none" };
-
-  const NI = useCallback((props) => <NIBase {...props} inpS={inpS} />, [inpS]);
-  const AmountInputC = useCallback((props) => <AmountInputCBase {...props} inpS={inpS} />, [inpS]);
+  const inpS = useMemo(() => ({ border:`1px solid ${K.border}`, borderRadius:6, padding:"5px 6px", fontSize:11, background:K.inputBg, fontFamily:"inherit", textAlign:"center", width:"100%", color:K.text, outline:"none" }), [K.border, K.inputBg, K.text]);
 
   const SectionTitle = ({children, icon}) => (
     <div style={{ background:K.headerBg2, color:isDark?K.goldLight:"#fff", padding:"13px 18px", fontWeight:700, fontSize:14, textAlign:"center", borderRadius:"12px 12px 0 0", borderBottom:`2px solid ${isDark?K.gold+"40":"#ffffff30"}`, letterSpacing:"0.3px" }}>
