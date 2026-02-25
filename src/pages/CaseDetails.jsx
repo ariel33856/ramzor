@@ -265,6 +265,20 @@ export default function CaseDetails() {
                 ניהול
               </button>
               <div className="grid grid-cols-2 gap-3">
+                {/* Share button */}
+                <motion.button
+                  onClick={() => setSharingDialogOpen(true)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full relative p-4 rounded-xl border-2 transition-all duration-300 bg-sky-50 border-sky-200 hover:border-sky-300 hover:shadow-md"
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-sky-500 to-sky-600 shadow-md transition-transform duration-300">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-xs font-medium text-center leading-tight text-gray-600">שיתוף</span>
+                  </div>
+                </motion.button>
                 {tabs.filter(tab => ['notes', 'status', 'workflow', 'calendar', 'submissions'].includes(tab.id)).map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
