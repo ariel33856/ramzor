@@ -108,14 +108,7 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   }
 
   return (
-    <Card className="mb-6 border-blue-100 bg-blue-50/30">
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-blue-600" />
-          <CardTitle className="text-lg text-gray-800">Share this case</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
+    <div>
         <div className="mb-4">
           <Button 
             onClick={() => shareMutation.mutate()}
