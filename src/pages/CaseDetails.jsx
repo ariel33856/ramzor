@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Loader2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, ExternalLink, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import ContactButtons from '@/components/case/ContactButtons';
 import AddContactButton from '@/components/case/AddContactButton';
 import ContactsSummaryView from '@/components/case/ContactsSummaryView';
