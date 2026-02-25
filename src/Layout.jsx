@@ -214,20 +214,25 @@ export default function Layout({ children, currentPageName }) {
   }
 
   useEffect(() => {
+    let cancelled = false;
     async function checkAuth() {
       try {
         const u = await base44.auth.me();
+        if (cancelled) return;
         if (!u) {
           base44.auth.redirectToLogin(window.location.href);
           return;
         }
         setUser(u);
         setAuthChecked(true);
-      } catch {
+      } catch (err) {
+        if (cancelled) return;
+        console.error('Auth check failed:', err);
         base44.auth.redirectToLogin(window.location.href);
       }
     }
     checkAuth();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
