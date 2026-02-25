@@ -9,7 +9,7 @@ import MortgageDashboard from '@/components/calculator/MortgageDashboard';
 
 let _sheetId = 1000;
 
-export default function CaseCalculator() {
+export default function CaseCalculator({ caseContacts = [] }) {
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
   const queryClient = useQueryClient();

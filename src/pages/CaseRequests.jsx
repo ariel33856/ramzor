@@ -84,7 +84,7 @@ export default function CaseRequests() {
       </div>
       {showCalculator && (
         <div className="mb-6">
-          <CaseCalculator />
+          <CaseCalculator caseContacts={caseContacts} />
         </div>
       )}
       {isLoading ? (
