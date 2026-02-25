@@ -180,6 +180,7 @@ export default function CaseCalculator({ caseContacts = [] }) {
             setIsDark={setIsDark}
             startEmpty={!s.initialData}
             initialData={s.initialData || null}
+            caseContacts={caseContacts}
             onSave={(getStateFn) => {
               stateGettersRef.current[s.id] = getStateFn;
             }}

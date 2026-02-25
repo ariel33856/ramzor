@@ -12,7 +12,7 @@ import { NI, AmountInputC } from "./CalcInputs";
 
 let _pid = 2;
 
-function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave }) {
+function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave, caseContacts = [] }) {
   const K = isDark ? DARK : LIGHT;
 
   const getInitialState = () => {
