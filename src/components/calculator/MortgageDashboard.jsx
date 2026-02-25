@@ -78,12 +78,12 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
   const [prepNotice, setPrepNotice] = useState(true);
   const [compareToId, setCompareToId] = useState(null);
   const [tabCompareOpen, setTabCompareOpen] = useState(false);
-  const [dealType, setDealType] = useState("first");
-  const [otherDebts, setOtherDebts] = useState(0);
-  const [borrowerAge, setBorrowerAge] = useState(35);
-  const [numBorrowers, setNumBorrowers] = useState(2);
-  const [requestType, setRequestType] = useState("mortgage");
-  const [requestAmount, setRequestAmount] = useState(1500000);
+  const [dealType, setDealType] = useState(init.dealType);
+  const [otherDebts, setOtherDebts] = useState(init.otherDebts);
+  const [borrowerAge, setBorrowerAge] = useState(init.borrowerAge);
+  const [numBorrowers, setNumBorrowers] = useState(init.numBorrowers);
+  const [requestType, setRequestType] = useState(init.requestType);
+  const [requestAmount, setRequestAmount] = useState(init.requestAmount);
   const [expandedChart, setExpandedChart] = useState(null);
 
   const inpS = { border:`1px solid ${K.border}`, borderRadius:6, padding:"5px 6px", fontSize:11, background:K.inputBg, fontFamily:"inherit", textAlign:"center", width:"100%", color:K.text, outline:"none" };
