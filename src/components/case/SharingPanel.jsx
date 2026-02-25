@@ -165,7 +165,6 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
             </div>
           )}
         </div>
-      </div>
       <Dialog open={isRevokeDialogOpen} onOpenChange={setIsRevokeDialogOpen}>
         <DialogContent>
           <DialogHeader>
