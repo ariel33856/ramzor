@@ -102,7 +102,15 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: caseLinkedPerson } = useQuery({
     queryKey: ['case-linked-person', caseData?.person_id],
-    queryFn: () => base44.entities.Person.filter({ id: caseData.person_id }).then(res => res[0]),
+    queryFn: async () => {
+      try {
+        const res = await base44.entities.Person.filter({ id: caseData.person_id });
+        return res?.[0] || null;
+      } catch (e) {
+        console.warn('Failed to load case linked person:', e);
+        return null;
+      }
+    },
     enabled: !!caseData?.person_id,
     retry: 1,
     staleTime: 30000
