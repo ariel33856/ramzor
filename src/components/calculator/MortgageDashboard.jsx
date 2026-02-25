@@ -89,28 +89,8 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
 
   const inpS = { border:`1px solid ${K.border}`, borderRadius:6, padding:"5px 6px", fontSize:11, background:K.inputBg, fontFamily:"inherit", textAlign:"center", width:"100%", color:K.text, outline:"none" };
 
-  const NI = ({ value, onChange, min=0, max=99999999, step=1000, style:sx={} }) => {
-    const [local, setLocal] = useState(String(value));
-    const [focused, setFocused] = useState(false);
-    if (!focused && local !== String(value)) setLocal(String(value));
-    return <input type="number" value={focused ? local : value} min={min} max={max} step={step}
-      onChange={e => { setLocal(e.target.value); if (e.target.value !== '' && e.target.value !== '-') { const n = parseFloat(e.target.value); if (!isNaN(n)) onChange(n); } }}
-      onFocus={e => { setFocused(true); setLocal(String(value)); e.target.select(); }}
-      onBlur={() => { setFocused(false); const n = parseFloat(local); if (!isNaN(n)) onChange(Math.max(min, Math.min(max, n))); else onChange(value); }}
-      onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); }}
-      style={{ ...inpS, ...sx }} />;
-  };
-
-  const AmountInputC = ({ value, onChange, style:sx={} }) => {
-    const toFmt = v => { const n=parseInt(String(v).replace(/[^\d]/g,''))||0; return n===0?'':n.toLocaleString("he-IL"); };
-    const [txt,setTxt] = useState(toFmt(value));
-    const [focused,setFocused] = useState(false);
-    if (!focused && txt!==toFmt(value)) setTxt(toFmt(value));
-    return <input type="text" value={txt}
-      onChange={e=>{ const raw=e.target.value.replace(/[^\d]/g,''); const n=parseInt(raw)||0; setTxt(n===0?'':n.toLocaleString("he-IL")); onChange(n); }}
-      onFocus={e=>{setFocused(true);e.target.select()}} onBlur={()=>{setFocused(false);setTxt(toFmt(value))}}
-      style={{ ...inpS, ...sx }} />;
-  };
+  const NI = useCallback((props) => <NIBase {...props} inpS={inpS} />, [inpS]);
+  const AmountInputC = useCallback((props) => <AmountInputCBase {...props} inpS={inpS} />, [inpS]);
 
   const SectionTitle = ({children, icon}) => (
     <div style={{ background:K.headerBg2, color:isDark?K.goldLight:"#fff", padding:"13px 18px", fontWeight:700, fontSize:14, textAlign:"center", borderRadius:"12px 12px 0 0", borderBottom:`2px solid ${isDark?K.gold+"40":"#ffffff30"}`, letterSpacing:"0.3px" }}>
