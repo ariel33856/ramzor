@@ -5,7 +5,7 @@ import {
   calcShpitzer, calcShpitzerReverse, genAmortization,
   calcIRR, calcFirstPayment, checkCompliance, getExitPoints,
   calcHealthScore, calcEarlyRepaymentFee, fmt,
-  DARK, LIGHT, mkTrack, getNextId, initTracks, trackColors_arr,
+  DARK, LIGHT, mkTrack, getNextId, initTracks, emptyInitTracks, trackColors_arr,
 } from "./mortgageEngine";
 import MortgageTabContent from "./MortgageTabContent";
 
