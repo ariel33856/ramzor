@@ -11,14 +11,56 @@ import MortgageTabContent from "./MortgageTabContent";
 
 let _pid = 2;
 
-function MortgageDashboard({ isDark, setIsDark }) {
+function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave }) {
   const K = isDark ? DARK : LIGHT;
 
-  const [portfolios, setPortfolios] = useState([{ id: 1, name: "תמהיל 1", tracks: initTracks }]);
-  const [activeId, setActiveId] = useState(1);
+  const getInitialState = () => {
+    if (initialData) {
+      return {
+        portfolios: initialData.portfolios || [{ id: 1, name: "תמהיל 1", tracks: emptyInitTracks }],
+        income: initialData.income ?? 0,
+        propValue: initialData.propValue ?? 0,
+        dealType: initialData.dealType || "first",
+        otherDebts: initialData.otherDebts ?? 0,
+        borrowerAge: initialData.borrowerAge ?? 35,
+        numBorrowers: initialData.numBorrowers ?? 2,
+        requestType: initialData.requestType || "mortgage",
+        requestAmount: initialData.requestAmount ?? 0,
+      };
+    }
+    if (startEmpty) {
+      return {
+        portfolios: [{ id: 1, name: "תמהיל 1", tracks: emptyInitTracks }],
+        income: 0,
+        propValue: 0,
+        dealType: "first",
+        otherDebts: 0,
+        borrowerAge: 35,
+        numBorrowers: 2,
+        requestType: "mortgage",
+        requestAmount: 0,
+      };
+    }
+    return {
+      portfolios: [{ id: 1, name: "תמהיל 1", tracks: initTracks }],
+      income: 22000,
+      propValue: 2400000,
+      dealType: "first",
+      otherDebts: 0,
+      borrowerAge: 35,
+      numBorrowers: 2,
+      requestType: "mortgage",
+      requestAmount: 1500000,
+    };
+  };
+
+  const init = React.useMemo(() => getInitialState(), []);
+
+  const [portfolios, setPortfolios] = useState(init.portfolios);
+  const [activeId, setActiveId] = useState(init.portfolios[0]?.id || 1);
   const [tab, setTab] = useState("sim");
-  const [income, setIncome] = useState(22000);
-  const [propValue, setPropValue] = useState(2400000);
+  const [income, setIncome] = useState(init.income);
+  const [propValue, setPropValue] = useState(init.propValue);
   const [amortView, setAmortView] = useState("yearly");
   const [amortTrack, setAmortTrack] = useState("all");
   const [reverseMode, setReverseMode] = useState("pmt2amount");
