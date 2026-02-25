@@ -161,6 +161,24 @@ function MortgageDashboard({ isDark, setIsDark, startEmpty, initialData, onSave 
     );
   };
 
+  // Expose save data collector
+  const getFullState = useCallback(() => ({
+    portfolios,
+    income,
+    propValue,
+    dealType,
+    otherDebts,
+    borrowerAge,
+    numBorrowers,
+    requestType,
+    requestAmount,
+  }), [portfolios, income, propValue, dealType, otherDebts, borrowerAge, numBorrowers, requestType, requestAmount]);
+
+  // Store ref for parent to call
+  React.useEffect(() => {
+    if (onSave) onSave(getFullState);
+  }, [getFullState, onSave]);
+
   const activePortfolio = portfolios.find(p => p.id === activeId) || portfolios[0];
   const tracks = activePortfolio?.tracks || [];
   const setTracks = useCallback((updater) => { setPortfolios(prev => prev.map(p => p.id === activeId ? { ...p, tracks: typeof updater === 'function' ? updater(p.tracks) : updater } : p)); }, [activeId]);
