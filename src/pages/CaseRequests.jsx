@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { SecureEntities } from '@/components/secureEntities';
-import { Plus, ClipboardList } from 'lucide-react';
+import { Plus, ClipboardList, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RequestCard from '@/components/requests/RequestCard';
+import CaseCalculator from './CaseCalculator';
 
 export default function CaseRequests() {
   const urlParams = new URLSearchParams(window.location.search);
