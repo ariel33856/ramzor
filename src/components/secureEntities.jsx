@@ -85,11 +85,13 @@ function createSecureEntity(entityName, options = {}) {
   return {
     async list(sortBy, limit) {
       const user = await getCurrentUser();
+      if (!user) return [];
       return entity.filter({ created_by: user.email }, sortBy, limit);
     },
 
     async filter(filters = {}, sortBy, limit) {
       const user = await getCurrentUser();
+      if (!user) return [];
 
       // For entities with case_id filter - check if it's a shared case
       const caseIdInFilter = filters.case_id;
