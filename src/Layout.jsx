@@ -168,6 +168,24 @@ export default function Layout({ children, currentPageName }) {
     staleTime: 5 * 60 * 1000
   });
 
+  const shareContactWithAllMutation = useMutation({
+    mutationFn: async (personId) => {
+      const allUsers = await base44.entities.User.list();
+      for (const u of allUsers) {
+        if (u.email !== user?.email) {
+          await base44.functions.invoke('shareContact', {
+            person_id: personId,
+            shared_email: u.email,
+            action: 'share'
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['person'] });
+    }
+  });
+
   const { data: allCases = [] } = useQuery({
     queryKey: ['all-cases'],
     queryFn: async () => {
