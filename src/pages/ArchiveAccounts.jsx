@@ -41,14 +41,13 @@ export default function ArchiveAccounts() {
     }
   });
 
-  const { data: allPeople = [], isLoading, error } = useQuery({
+  const { data: allPeople = [], isLoading } = useQuery({
     queryKey: ['contacts', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
       
-      // RLS returns both own contacts AND shared contacts
-      let allContacts = await base44.entities.Person.list();
-      console.log('Person.list() returned:', allContacts?.length, 'contacts', 'user:', user?.email);
+      // Use filter with empty object to ensure RLS is properly applied
+      let allContacts = await base44.entities.Person.filter({});
       
       // Admin filtering by specific user
       if (filterUser && filterUser !== 'all') {
@@ -59,18 +58,6 @@ export default function ArchiveAccounts() {
     },
     enabled: !!user
   });
-
-  // Debug logging
-  React.useEffect(() => {
-    console.log('ArchiveAccounts Debug:', { 
-      user: user?.email, 
-      allPeopleCount: allPeople?.length, 
-      contactsCount: contacts?.length,
-      filterUser,
-      isLoading,
-      error: error?.message
-    });
-  }, [user, allPeople, filterUser, isLoading, error]);
 
   const contacts = allPeople.filter(p => {
     if (p.is_archived) return false;
