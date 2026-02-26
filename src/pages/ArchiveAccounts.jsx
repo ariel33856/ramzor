@@ -47,10 +47,10 @@ export default function ArchiveAccounts() {
       if (!user) return [];
       
       // RLS returns both own contacts AND shared contacts
-      let allContacts = await base44.entities.Person.list('-created_date');
+      let allContacts = await base44.entities.Person.list('-created_date', 500);
       
-      // Admin filtering by specific user
-      if (filterUser && filterUser !== 'all') {
+      // Admin filtering by specific user (only admins can filter by other users)
+      if (user?.role === 'admin' && filterUser && filterUser !== 'all') {
         allContacts = allContacts.filter(p => p.created_by === filterUser);
       }
       
