@@ -35,9 +35,9 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, shared_with: updatedSharedWith });
     }
 
-    // Default: share action
+    // Default: share action - skip if sharing with self
     if (shared_email === user.email) {
-      return Response.json({ error: 'לא ניתן לשתף עם עצמך' }, { status: 400 });
+      return Response.json({ success: true, shared_with: currentSharedWith, skipped: true });
     }
 
     if (currentSharedWith.includes(shared_email)) {
