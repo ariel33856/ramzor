@@ -718,15 +718,7 @@ export default function Layout({ children, currentPageName }) {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {currentPerson.first_name} {currentPerson.last_name}
                   </h1>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-sky-200 hover:border-sky-400 text-sky-700"
-                    onClick={() => setPersonSharingDialogOpen(true)}
-                  >
-                    <Users className="w-4 h-4 ml-2" />
-                    שיתוף
-                  </Button>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
