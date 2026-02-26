@@ -40,8 +40,8 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Fetch all persons to ensure we find contacts regardless of who created them
-      const allPersons = await base44.asServiceRole.entities.Person.list();
+      // Fetch all persons (up to 1000) to ensure we find contacts regardless of who created them
+      const allPersons = await base44.asServiceRole.entities.Person.list('-created_date', 1000);
       
       const matched = [];
       const matchedIds = new Set();
