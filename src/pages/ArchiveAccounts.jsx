@@ -41,9 +41,14 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Get own contacts directly (RLS handles this)
-      const ownContacts = await base44.entities.Person.list('-created_date', 1000);
-      return ownContacts;
+      try {
+        // Use backend function to get contacts
+        const response = await base44.functions.invoke('getMyContacts', {});
+        return response.data?.contacts || [];
+      } catch (error) {
+        console.error('Error fetching contacts:', error);
+        return [];
+      }
     },
     enabled: !!user
   });
