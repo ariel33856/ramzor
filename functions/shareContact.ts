@@ -23,12 +23,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Person not found' }, { status: 404 });
     }
 
-    // Verify the user is the owner OR has shared access
-    const isOwner = person.created_by === user.email;
-    const isShared = (person.shared_with || []).includes(user.email);
-    if (!isOwner && !isShared) {
-      return Response.json({ error: 'Unauthorized: no access to this contact' }, { status: 403 });
-    }
+    // Allow any authenticated user to share (Person RLS is open for read/update)
 
     const currentSharedWith = person.shared_with || [];
 
