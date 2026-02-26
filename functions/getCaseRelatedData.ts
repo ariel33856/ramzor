@@ -40,14 +40,13 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Use service role to get persons by case owner first
-      const ownerPersons = await base44.asServiceRole.entities.Person.filter({ created_by: caseOwner });
+      // Fetch all persons to ensure we find contacts regardless of who created them
+      const allPersons = await base44.asServiceRole.entities.Person.list();
       
-      // Also check if case has linked_borrowers pointing to other cases with different owners
       const matched = [];
       const matchedIds = new Set();
 
-      for (const person of ownerPersons) {
+      for (const person of allPersons) {
         if (mortgageCase.person_id && person.id === mortgageCase.person_id) {
           if (!matchedIds.has(person.id)) {
             matchedIds.add(person.id);
