@@ -9,16 +9,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get all contacts using service role
-    const allContacts = await base44.asServiceRole.entities.Person.filter({}, '-created_date', 1000);
+    // Get own contacts via RLS (user token)
+    const ownContacts = await base44.entities.Person.list('-created_date', 1000);
 
-    // Filter: only contacts created by this user OR shared with this user
-    const myContacts = allContacts.filter(contact => 
-      contact.created_by === user.email ||
-      (contact.shared_with && contact.shared_with.includes(user.email))
-    );
+    // Get all contacts to find shared ones (service role, no RLS)
+    let sharedContacts = [];
+    try {
+      const allContacts = await base44.asServiceRole.entities.Person.filter({ is_archived: false }, '-created_date', 1000);
+      const ownIds = new Set(ownContacts.map(c => c.id));
+      sharedContacts = allContacts.filter(contact =>
+        !ownIds.has(contact.id) &&
+        contact.shared_with && contact.shared_with.includes(user.email)
+      );
+    } catch (e) {
+      console.log('service role error:', e.message);
+    }
 
-    return Response.json({ contacts: myContacts });
+    const combined = [...ownContacts, ...sharedContacts];
+    return Response.json({ contacts: combined });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
