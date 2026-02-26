@@ -719,6 +719,14 @@ export default function Layout({ children, currentPageName }) {
                     {currentPerson.first_name} {currentPerson.last_name}
                   </h1>
 
+                  <Button 
+                    onClick={() => setPersonSharingDialogOpen(true)}
+                    className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700"
+                  >
+                    <Users className="w-4 h-4 ml-2" />
+                    שיתוף
+                  </Button>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon" className="text-gray-500 hover:text-red-600 hover:bg-red-50">
@@ -755,7 +763,6 @@ export default function Layout({ children, currentPageName }) {
                       אנשי קשר
                     </Button>
                   </Link>
-                  <Button variant="outline" className="w-60"></Button>
                   </>
                   )}
                   </div>
