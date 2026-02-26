@@ -13,12 +13,7 @@ import { SecureEntities } from '@/components/secureEntities';
 export default function ArchiveAccounts() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterUser, setFilterUser] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('globalFilterUser') || 'all';
-    }
-    return 'all';
-  });
+  const [filterUser, setFilterUser] = useState('all');
 
   const { data: user } = useQuery({
     queryKey: ['me'],
