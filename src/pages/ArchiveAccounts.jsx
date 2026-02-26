@@ -64,8 +64,6 @@ export default function ArchiveAccounts() {
 
   const contacts = allPeople.filter(p => {
     if (p.is_archived) return false;
-    // Show all types: own contacts filtered to 'איש קשר', shared contacts show all types
-    if (p._fromSharedCase) return true;
     return p.type === 'איש קשר';
   });
 
