@@ -9,29 +9,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use the user-scoped call - RLS will ensure only their contacts come back
-    const ownContacts = await base44.entities.Person.list('-created_date', 1000);
-
-    // Get contacts shared with this user using service role
-    // Try listing all and filtering client-side since filter may not work on created_by
-    let allContacts = [];
-    try {
-      allContacts = await base44.asServiceRole.entities.Person.list('-created_date', 1000);
-    } catch(e) {
-      // fallback: just return own contacts
-      return Response.json({ contacts: ownContacts });
-    }
-
-    const ownIds = new Set(ownContacts.map(c => c.id));
+    // Use user-scoped call to get own contacts (RLS will handle this)
+    const ownContacts = await base44.entities.Person.list('-created_date', 2000);
     
-    // Keep own + shared with me (not already in own)
-    const result = allContacts.filter(c =>
-      ownIds.has(c.id) ||
-      (Array.isArray(c.shared_with) && c.shared_with.includes(user.email))
-    );
-
-    return Response.json({ contacts: result });
+    return Response.json({ contacts: ownContacts });
   } catch (error) {
+    console.error('Error in getMyContacts:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
