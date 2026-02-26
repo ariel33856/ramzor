@@ -9,10 +9,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Use user-scoped call to get own contacts (RLS will handle this)
-    const ownContacts = await base44.entities.Person.list('-created_date', 2000);
+    // Use service role to fetch all contacts and filter on server side
+    const allContacts = await base44.asServiceRole.entities.Person.list('-created_date', 2000);
     
-    return Response.json({ contacts: ownContacts });
+    // Filter to show only contacts the user is authorized to see
+    const authorizedContacts = allContacts.filter(contact => {
+      // User created this contact
+      if (contact.created_by === user.email) return true;
+      
+      // Contact is shared with the user
+      if (contact.shared_with && contact.shared_with.includes(user.email)) return true;
+      
+      return false;
+    });
+    
+    return Response.json({ contacts: authorizedContacts });
   } catch (error) {
     console.error('Error in getMyContacts:', error);
     return Response.json({ error: error.message }, { status: 500 });
