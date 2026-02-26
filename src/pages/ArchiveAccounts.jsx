@@ -46,8 +46,8 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Use filter with empty object to ensure RLS is properly applied
-      let allContacts = await base44.entities.Person.filter({});
+      // RLS returns both own contacts AND shared contacts
+      let allContacts = await base44.entities.Person.list('-created_date');
       
       // Admin filtering by specific user
       if (filterUser && filterUser !== 'all') {
