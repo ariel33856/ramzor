@@ -86,7 +86,12 @@ export default function ArchiveAccounts() {
     enabled: !!user
   });
 
-  const contacts = allPeople.filter(p => p.type === 'איש קשר' && !p.is_archived);
+  const contacts = allPeople.filter(p => {
+    if (p.is_archived) return false;
+    // Show all types: own contacts filtered to 'איש קשר', shared contacts show all types
+    if (p._fromSharedCase) return true;
+    return p.type === 'איש קשר';
+  });
 
   // Extract all unique field names including custom fields
   const allFieldNames = React.useMemo(() => {
