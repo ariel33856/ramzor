@@ -201,19 +201,19 @@ export default function Layout({ children, currentPageName }) {
   });
 
   const { data: currentPerson } = useQuery({
-    queryKey: ['person', personId],
-    queryFn: async () => {
-      try {
-        const res = await base44.entities.Person.filter({ id: personId });
-        return res?.[0] || null;
-      } catch (e) {
-        console.warn('Failed to load person:', e);
-        return null;
-      }
-    },
-    enabled: currentPageName === 'PersonDetails' && !!personId,
-    retry: 1,
-    staleTime: 30000
+  queryKey: ['person', personId],
+  queryFn: async () => {
+    try {
+      const res = await base44.entities.Person.filter({ id: personId });
+      return res?.[0] || null;
+    } catch (e) {
+      console.warn('Failed to load person:', e);
+      return null;
+    }
+  },
+  enabled: !!personId,
+  retry: 1,
+  staleTime: 30000
   });
 
   const accounts = allCases.filter(c => !c.is_archived && !c.module_id);
