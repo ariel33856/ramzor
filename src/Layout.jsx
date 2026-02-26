@@ -164,7 +164,7 @@ export default function Layout({ children, currentPageName }) {
   const { data: usersList = [] } = useQuery({
     queryKey: ['users'],
     queryFn: () => base44.entities.User.list(),
-    enabled: user?.role === 'admin',
+    enabled: !!user,
     staleTime: 5 * 60 * 1000
   });
 
