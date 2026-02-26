@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
     }
 
     // Get ALL contacts via service role (bypass RLS)
-    const allContacts = await base44.asServiceRole.entities.Person.filter({}, '-created_date', 1000);
+    const allContacts = await base44.asServiceRole.entities.Person.list('-created_date', 1000);
 
     // Filter: own contacts OR shared with this user
     const myContacts = allContacts.filter(contact =>
