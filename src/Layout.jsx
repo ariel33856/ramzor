@@ -960,6 +960,18 @@ export default function Layout({ children, currentPageName }) {
                   </main>
                   </div>
 
+                  {/* Contact Sharing Dialog */}
+                  {personId && currentPerson && (
+                    <Dialog open={personSharingDialogOpen} onOpenChange={setPersonSharingDialogOpen}>
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>שיתוף איש קשר</DialogTitle>
+                        </DialogHeader>
+                        <ContactSharingPanel personId={personId} ownerEmail={currentPerson.created_by} />
+                      </DialogContent>
+                    </Dialog>
+                  )}
+
                   {/* Sharing Dialog */}
                   {caseId && caseData && (
                     <Dialog open={sharingDialogOpen} onOpenChange={setSharingDialogOpen}>
