@@ -729,7 +729,10 @@ export default function Layout({ children, currentPageName }) {
                         const person = currentPerson;
                         const owner = person?.created_by || user?.email;
                         const currentShared = person?.shared_with || [];
-                        const eligibleEmails = usersList
+                        // Fetch all users via backend function to bypass User entity RLS
+                        const res = await base44.functions.invoke('getAllUsers', {});
+                        const allUsers = res.data?.users || [];
+                        const eligibleEmails = allUsers
                           .filter(u => u.email !== owner && u.email !== user?.email && !currentShared.includes(u.email))
                           .map(u => u.email);
                         for (const email of eligibleEmails) {
