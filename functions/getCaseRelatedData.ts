@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      return Response.json({ data: matched, debug: { total_owner_persons: ownerPersons.length, matched: matched.length, caseOwner: caseOwner } });
+      return Response.json({ data: matched, debug: { total_persons: allPersons.length, matched: matched.length, caseOwner: caseOwner } });
     }
 
     // Other entities
