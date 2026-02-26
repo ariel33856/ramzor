@@ -46,39 +46,15 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
+        // Now that Person entity has shared_with field with RLS,
+      // a simple list/filter will return both own contacts AND shared contacts
       let ownContacts = [];
-      // If admin filtering by specific user, or non-admin user
       if (filterUser && filterUser !== 'all') {
         ownContacts = await SecureEntities.Person.filter({ created_by: filterUser }, '-created_date');
       } else if (user.role === 'admin') {
         ownContacts = await SecureEntities.Person.list('-created_date');
       } else {
-        ownContacts = await SecureEntities.Person.filter({ created_by: user.email }, '-created_date');
-      }
-      
-      // Also fetch persons from shared cases - always fetch for current user context
-      {
-        try {
-          const sharedRes = await base44.functions.invoke('getSharedCases', {});
-          const sharedCases = sharedRes?.data?.shared_cases || [];
-          const seenIds = new Set(ownContacts.map(c => c.id));
-          
-          for (const sc of sharedCases) {
-            const personsRes = await base44.functions.invoke('getCaseRelatedData', {
-              case_id: sc.id,
-              entity_name: 'Person'
-            });
-            const persons = personsRes?.data?.data || [];
-            for (const p of persons) {
-              if (!seenIds.has(p.id)) {
-                seenIds.add(p.id);
-                ownContacts.push({ ...p, _fromSharedCase: true });
-              }
-            }
-          }
-        } catch (e) {
-          console.warn('Failed to fetch shared case contacts:', e);
-        }
+        ownContacts = await base44.entities.Person.list('-created_date');
       }
       
       return ownContacts;
