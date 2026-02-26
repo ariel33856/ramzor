@@ -46,18 +46,15 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
-        // Now that Person entity has shared_with field with RLS,
-      // a simple list/filter will return both own contacts AND shared contacts
-      let ownContacts = [];
+        // RLS returns both own contacts AND shared contacts
+      let allContacts = await base44.entities.Person.list();
+      
+      // Admin filtering by specific user
       if (filterUser && filterUser !== 'all') {
-        // Admin filtering by specific user - use SecureEntities for created_by filter
-        ownContacts = await base44.entities.Person.filter({ created_by: filterUser });
-      } else {
-        // Use base44.entities directly so RLS returns both own + shared contacts
-        ownContacts = await base44.entities.Person.list();
+        allContacts = allContacts.filter(p => p.created_by === filterUser);
       }
       
-      return ownContacts;
+      return allContacts;
     },
     enabled: !!user
   });
