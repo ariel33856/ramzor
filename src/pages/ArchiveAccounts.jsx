@@ -72,7 +72,7 @@ export default function ArchiveAccounts() {
             for (const p of persons) {
               if (!seenIds.has(p.id)) {
                 seenIds.add(p.id);
-                ownContacts.push(p);
+                ownContacts.push({ ...p, _fromSharedCase: true });
               }
             }
           }
