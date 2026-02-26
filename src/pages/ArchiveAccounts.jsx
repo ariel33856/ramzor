@@ -56,8 +56,8 @@ export default function ArchiveAccounts() {
         ownContacts = await SecureEntities.Person.filter({ created_by: user.email }, '-created_date');
       }
       
-      // Also fetch persons from shared cases
-      if (filterUser === 'all' || filterUser === user.email || !filterUser) {
+      // Also fetch persons from shared cases - always fetch for current user context
+      {
         try {
           const sharedRes = await base44.functions.invoke('getSharedCases', {});
           const sharedCases = sharedRes?.data?.shared_cases || [];
