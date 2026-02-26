@@ -721,9 +721,30 @@ export default function Layout({ children, currentPageName }) {
                     variant="outline"
                     size="sm"
                     className="border-sky-200 hover:border-sky-400 text-sky-700"
-                    onClick={() => setPersonSharingDialogOpen(true)}
+                    disabled={personShareLoading}
+                    onClick={async () => {
+                      setPersonShareLoading(true);
+                      try {
+                        const person = currentPerson;
+                        const owner = person?.created_by || user?.email;
+                        const currentShared = person?.shared_with || [];
+                        const eligibleEmails = usersList
+                          .filter(u => u.email !== owner && !currentShared.includes(u.email))
+                          .map(u => u.email);
+                        for (const email of eligibleEmails) {
+                          await base44.functions.invoke('shareContact', { person_id: personId, shared_email: email });
+                        }
+                        queryClient.invalidateQueries({ queryKey: ['person', personId] });
+                        alert('שותף בהצלחה!');
+                      } catch (e) {
+                        console.error(e);
+                        alert('שגיאה בשיתוף');
+                      } finally {
+                        setPersonShareLoading(false);
+                      }
+                    }}
                   >
-                    <Users className="w-4 h-4 ml-2" />
+                    {personShareLoading ? <div className="w-4 h-4 border-2 border-sky-300 border-t-sky-700 rounded-full animate-spin ml-2" /> : <Users className="w-4 h-4 ml-2" />}
                     שיתוף
                   </Button>
                   <AlertDialog>
