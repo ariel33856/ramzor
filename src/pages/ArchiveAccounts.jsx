@@ -41,9 +41,9 @@ export default function ArchiveAccounts() {
     queryFn: async () => {
       if (!user) return [];
       
-      // Use backend function to get own + shared contacts
-      const response = await base44.functions.invoke('getMyContacts', {});
-      return response.data?.contacts || [];
+      // Get own contacts directly (RLS handles this)
+      const ownContacts = await base44.entities.Person.list('-created_date', 1000);
+      return ownContacts;
     },
     enabled: !!user
   });
