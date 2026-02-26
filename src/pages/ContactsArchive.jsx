@@ -34,8 +34,10 @@ export default function ContactsArchive() {
     queryKey: ['contacts-archive', user?.email, filterUser],
     queryFn: async () => {
       if (!user) return [];
-      const targetUser = (filterUser && filterUser !== 'all') ? filterUser : user.email;
-      return SecureEntities.Person.filter({ created_by: targetUser }, '-updated_date');
+      if (filterUser && filterUser !== 'all') {
+        return base44.entities.Person.filter({ created_by: filterUser });
+      }
+      return base44.entities.Person.list();
     },
     enabled: !!user
   });
