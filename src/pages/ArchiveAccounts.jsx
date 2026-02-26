@@ -61,7 +61,8 @@ export default function ArchiveAccounts() {
 
   const contacts = allPeople.filter(p => {
     if (p.is_archived) return false;
-    return p.type === 'איש קשר';
+    // Show all non-archived contacts (type defaults to 'איש קשר' but shared ones may have other types)
+    return !p.type || p.type === 'איש קשר';
   });
 
   // Extract all unique field names including custom fields
