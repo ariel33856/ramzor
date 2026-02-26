@@ -32,12 +32,13 @@ Deno.serve(async (req) => {
     
     console.log('Total cases from service role:', allCases.length);
     
-    // Find shared cases for target user
+    // Find shared cases for target user (exclude archived cases)
     const sharedCases = allCases.filter(c => 
       c.shared_with && 
       Array.isArray(c.shared_with) && 
       c.shared_with.includes(targetEmail) && 
-      c.created_by !== targetEmail
+      c.created_by !== targetEmail &&
+      !c.is_archived
     );
     
     console.log('Shared cases found:', sharedCases.length);
