@@ -54,7 +54,7 @@ export default function ArchiveAccounts() {
       } else if (user.role === 'admin') {
         ownContacts = await SecureEntities.Person.list('-created_date');
       } else {
-        ownContacts = await base44.entities.Person.list('-created_date');
+        ownContacts = await base44.entities.Person.list();
       }
       
       return ownContacts;
