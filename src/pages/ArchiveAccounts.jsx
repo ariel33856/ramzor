@@ -37,16 +37,13 @@ export default function ArchiveAccounts() {
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts', user?.email, filterUser],
+    queryKey: ['contacts', user?.email],
     queryFn: async () => {
       if (!user) return [];
       
-      // RLS returns both own contacts AND shared contacts
-      let allContacts = await base44.entities.Person.list('-created_date', 500);
-      
-      // No filtering - show all contacts
-      
-      return allContacts;
+      // Use backend function to get own + shared contacts
+      const response = await base44.functions.invoke('getMyContacts', {});
+      return response.data?.contacts || [];
     },
     enabled: !!user
   });
