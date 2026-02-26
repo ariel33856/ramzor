@@ -37,18 +37,10 @@ export default function ArchiveAccounts() {
   });
 
   const { data: allPeople = [], isLoading } = useQuery({
-    queryKey: ['contacts', user?.email],
+    queryKey: ['contacts'],
     queryFn: async () => {
-      if (!user) return [];
-      
-      try {
-        // Use backend function to get contacts
-        const response = await base44.functions.invoke('getMyContacts', {});
-        return response.data?.contacts || [];
-      } catch (error) {
-        console.error('Error fetching contacts:', error);
-        return [];
-      }
+      const response = await base44.functions.invoke('getMyContacts', {});
+      return response.data?.contacts || [];
     },
     enabled: !!user
   });
