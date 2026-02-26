@@ -730,7 +730,7 @@ export default function Layout({ children, currentPageName }) {
                         const owner = person?.created_by || user?.email;
                         const currentShared = person?.shared_with || [];
                         const eligibleEmails = usersList
-                          .filter(u => u.email !== owner && !currentShared.includes(u.email))
+                          .filter(u => u.email !== owner && u.email !== user?.email && !currentShared.includes(u.email))
                           .map(u => u.email);
                         for (const email of eligibleEmails) {
                           await base44.functions.invoke('shareContact', { person_id: personId, shared_email: email });
