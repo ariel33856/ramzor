@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing case_id' }, { status: 400 });
     }
 
-    // Verify access
+    // Verify access - fetch the case
     const cases = await base44.asServiceRole.entities.MortgageCase.filter({ id: case_id });
     const mortgageCase = cases[0];
     if (!mortgageCase) {
@@ -40,30 +40,41 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Use the getMyContacts approach: fetch persons linked to this case
-      // We need to find persons by person_id and linked_accounts
-      let allPersons = [];
-      
-      // Strategy: fetch all persons from the system via service role
-      // The service role list should bypass RLS
+      // Fetch persons created by the case owner using service role filter
+      let ownerPersons = [];
       try {
-        // Get ALL MortgageCase records to find linked borrower person_ids
-        const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date', 5000);
-        console.log('[getCaseRelatedData] Total cases:', allCases.length);
-        
-        // Get ALL person records
-        const allPersonsRaw = await base44.asServiceRole.entities.Person.list('-created_date', 5000);
-        console.log('[getCaseRelatedData] Total persons:', allPersonsRaw.length);
-        allPersons = allPersonsRaw;
+        ownerPersons = await base44.asServiceRole.entities.Person.filter({ created_by: caseOwner });
+        console.log('[getCaseRelatedData] Owner persons:', ownerPersons.length);
       } catch (e) {
-        console.error('Failed to fetch persons via service role list:', e.message);
-        allPersons = [];
+        console.error('[getCaseRelatedData] Failed to filter persons by owner:', e.message);
       }
-      
+
+      // Also get persons created by requesting user if different
+      let userPersons = [];
+      if (user.email !== caseOwner) {
+        try {
+          userPersons = await base44.asServiceRole.entities.Person.filter({ created_by: user.email });
+          console.log('[getCaseRelatedData] User persons:', userPersons.length);
+        } catch (e) {
+          console.error('[getCaseRelatedData] Failed to filter persons by user:', e.message);
+        }
+      }
+
+      // Merge all persons
+      const allPersonsMap = new Map();
+      for (const p of ownerPersons) allPersonsMap.set(p.id, p);
+      for (const p of userPersons) {
+        if (!allPersonsMap.has(p.id)) allPersonsMap.set(p.id, p);
+      }
+      const allPersons = Array.from(allPersonsMap.values());
+      console.log('[getCaseRelatedData] Total merged persons:', allPersons.length);
+
+      // Filter to only those linked to this case
       const matched = [];
       const matchedIds = new Set();
 
       for (const person of allPersons) {
+        // Check if directly referenced by the case
         if (mortgageCase.person_id && person.id === mortgageCase.person_id) {
           if (!matchedIds.has(person.id)) {
             matchedIds.add(person.id);
@@ -71,6 +82,7 @@ Deno.serve(async (req) => {
           }
           continue;
         }
+        // Check linked_accounts
         if (person.linked_accounts && Array.isArray(person.linked_accounts)) {
           const isLinked = person.linked_accounts.some(function(acc) {
             if (typeof acc === 'string') return acc === case_id;
