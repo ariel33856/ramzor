@@ -107,6 +107,42 @@ Deno.serve(async (req) => {
     let results;
     if (entity_name === 'MortgageCase') {
       results = (filters && filters.id) ? await entityApi.filter(filters) : [mortgageCase];
+    } else if (entity_name === 'PropertyAsset') {
+      // PropertyAsset: fetch by case_id AND also by property_id referenced in the case
+      let byCase = [];
+      try {
+        byCase = await entityApi.filter({ case_id: case_id });
+      } catch (e) {
+        console.log('[getCaseRelatedData] PropertyAsset filter by case_id failed:', e.message);
+      }
+      
+      // Also check if the case has a property_id directly linked
+      const propMap = new Map();
+      for (const p of byCase) propMap.set(p.id, p);
+      
+      if (mortgageCase.property_id && !propMap.has(mortgageCase.property_id)) {
+        try {
+          const linked = await entityApi.filter({ id: mortgageCase.property_id });
+          if (linked[0]) propMap.set(linked[0].id, linked[0]);
+        } catch (e) {
+          console.log('[getCaseRelatedData] PropertyAsset fetch by property_id failed:', e.message);
+        }
+      }
+      
+      // Also get all properties by the case owner that have no case_id (legacy/unlinked)
+      try {
+        const ownerProps = await entityApi.filter({ created_by: caseOwner });
+        for (const p of ownerProps) {
+          if (!p.case_id && !propMap.has(p.id)) {
+            // Include owner's unlinked properties so they can be seen in shared context
+          }
+        }
+      } catch (e) {
+        console.log('[getCaseRelatedData] PropertyAsset fetch owner props failed:', e.message);
+      }
+      
+      results = Array.from(propMap.values());
+      console.log('[getCaseRelatedData] PropertyAsset results:', results.length);
     } else if (filters) {
       results = await entityApi.filter(filters);
     } else {
