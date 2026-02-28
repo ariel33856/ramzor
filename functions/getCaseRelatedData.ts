@@ -40,29 +40,23 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Fetch persons owned by the case owner using service role
+      // Use the getMyContacts approach: fetch persons linked to this case
+      // We need to find persons by person_id and linked_accounts
       let allPersons = [];
+      
+      // Strategy: fetch all persons from the system via service role
+      // The service role list should bypass RLS
       try {
-        // First try to get persons by case owner
-        const ownerPersons = await base44.asServiceRole.entities.Person.filter({ created_by: caseOwner });
-        console.log('[getCaseRelatedData] Owner persons count:', ownerPersons.length);
-        allPersons = ownerPersons;
+        // Get ALL MortgageCase records to find linked borrower person_ids
+        const allCases = await base44.asServiceRole.entities.MortgageCase.list('-created_date', 5000);
+        console.log('[getCaseRelatedData] Total cases:', allCases.length);
         
-        // Also try to get persons by the requesting user (in case they have linked contacts)
-        if (user.email !== caseOwner) {
-          const userPersons = await base44.asServiceRole.entities.Person.filter({ created_by: user.email });
-          console.log('[getCaseRelatedData] User persons count:', userPersons.length);
-          // Merge without duplicates
-          const existingIds = new Set(allPersons.map(p => p.id));
-          for (const p of userPersons) {
-            if (!existingIds.has(p.id)) {
-              allPersons.push(p);
-              existingIds.add(p.id);
-            }
-          }
-        }
+        // Get ALL person records
+        const allPersonsRaw = await base44.asServiceRole.entities.Person.list('-created_date', 5000);
+        console.log('[getCaseRelatedData] Total persons:', allPersonsRaw.length);
+        allPersons = allPersonsRaw;
       } catch (e) {
-        console.error('Failed to fetch persons:', e.message, e.stack);
+        console.error('Failed to fetch persons via service role list:', e.message);
         allPersons = [];
       }
       
