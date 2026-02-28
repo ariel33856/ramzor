@@ -38,7 +38,10 @@ export default function ArchiveAccounts() {
 
   const { data: allPeople = [], isLoading } = useQuery({
     queryKey: ['contacts'],
-    queryFn: () => base44.entities.Person.list('-created_date', 2000),
+    queryFn: async () => {
+      const response = await base44.functions.invoke('getMyContacts', {});
+      return response.data?.contacts || [];
+    },
     enabled: !!user
   });
 
