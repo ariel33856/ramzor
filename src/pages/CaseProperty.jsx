@@ -43,7 +43,7 @@ export default function CaseProperty() {
 
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ['property-assets', caseId],
-    queryFn: () => SecureEntities.PropertyAsset.filter({ case_id: caseId }, '-created_date'),
+    queryFn: () => SecureEntities.PropertyAsset.listForCase(caseId, {}, '-created_date'),
     enabled: !!caseId,
     staleTime: 5 * 60 * 1000
   });
