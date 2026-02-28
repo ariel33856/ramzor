@@ -131,9 +131,33 @@ function createSecureEntity(entityName, options = {}) {
         return fetchSharedCaseEntityData(caseId, entityName, filters);
       }
 
-      // Own case - for PropertyAsset, get all user's properties (many don't have case_id)
+      // Own case - for PropertyAsset, get properties linked to this case
       if (entityName === 'PropertyAsset') {
-        return entity.filter({ ...additionalFilters, created_by: user.email }, sortBy, limit);
+        // Get the case to check property_id
+        let casePropertyId = null;
+        try {
+          const caseResults = await base44.entities.MortgageCase.filter({ id: caseId });
+          casePropertyId = caseResults[0]?.property_id;
+        } catch (e) {
+          console.warn('Failed to get case property_id:', e);
+        }
+
+        // Get properties with matching case_id
+        const byCase = await entity.filter({ case_id: caseId, ...additionalFilters, created_by: user.email }, sortBy, limit);
+        const propMap = new Map();
+        for (const p of byCase) propMap.set(p.id, p);
+
+        // Also get the directly linked property if exists
+        if (casePropertyId && !propMap.has(casePropertyId)) {
+          try {
+            const linked = await entity.filter({ id: casePropertyId });
+            if (linked[0]) propMap.set(linked[0].id, linked[0]);
+          } catch (e) {
+            console.warn('Failed to get linked property:', e);
+          }
+        }
+
+        return Array.from(propMap.values());
       }
 
       // Own case - use regular filter with case_id
