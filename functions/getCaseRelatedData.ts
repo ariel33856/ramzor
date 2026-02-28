@@ -40,11 +40,27 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Fetch all persons using service role
+      // Fetch persons owned by the case owner using service role
       let allPersons = [];
       try {
-        allPersons = await base44.asServiceRole.entities.Person.list('-created_date', 5000);
-        console.log('[getCaseRelatedData] Fetched persons count:', allPersons.length);
+        // First try to get persons by case owner
+        const ownerPersons = await base44.asServiceRole.entities.Person.filter({ created_by: caseOwner });
+        console.log('[getCaseRelatedData] Owner persons count:', ownerPersons.length);
+        allPersons = ownerPersons;
+        
+        // Also try to get persons by the requesting user (in case they have linked contacts)
+        if (user.email !== caseOwner) {
+          const userPersons = await base44.asServiceRole.entities.Person.filter({ created_by: user.email });
+          console.log('[getCaseRelatedData] User persons count:', userPersons.length);
+          // Merge without duplicates
+          const existingIds = new Set(allPersons.map(p => p.id));
+          for (const p of userPersons) {
+            if (!existingIds.has(p.id)) {
+              allPersons.push(p);
+              existingIds.add(p.id);
+            }
+          }
+        }
       } catch (e) {
         console.error('Failed to fetch persons:', e.message, e.stack);
         allPersons = [];
