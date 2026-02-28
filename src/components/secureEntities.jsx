@@ -131,7 +131,12 @@ function createSecureEntity(entityName, options = {}) {
         return fetchSharedCaseEntityData(caseId, entityName, filters);
       }
 
-      // Own case - use regular filter
+      // Own case - for PropertyAsset, get all user's properties (many don't have case_id)
+      if (entityName === 'PropertyAsset') {
+        return entity.filter({ ...additionalFilters, created_by: user.email }, sortBy, limit);
+      }
+
+      // Own case - use regular filter with case_id
       if (hasCaseId) {
         return entity.filter({ case_id: caseId, ...additionalFilters, created_by: user.email }, sortBy, limit);
       }
