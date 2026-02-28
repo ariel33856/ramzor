@@ -110,7 +110,8 @@ Deno.serve(async (req) => {
     } else if (filters) {
       results = await entityApi.filter(filters);
     } else {
-      results = await entityApi.filter({ case_id: case_id, created_by: caseOwner });
+      // Get all records for this case_id regardless of who created them
+      results = await entityApi.filter({ case_id: case_id });
     }
 
     return Response.json({ data: results });
