@@ -263,12 +263,12 @@ export default function Dashboard() {
     return () => window.removeEventListener('globalFilterUserChanged', handleGlobalFilterChange);
   }, [queryClient]);
 
-  // Fetch all persons to extract custom fields from their custom_data
+  // Fetch all persons including shared ones via backend function
   const { data: allPersons = [] } = useQuery({
     queryKey: ['all-persons'],
     queryFn: async () => {
-      const result = await SecureEntities.Person.list();
-      return result || [];
+      const response = await base44.functions.invoke('getMyContacts', {});
+      return response.data?.contacts || [];
     },
     retry: 1,
     staleTime: 5 * 60 * 1000,
