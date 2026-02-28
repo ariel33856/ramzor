@@ -40,19 +40,14 @@ Deno.serve(async (req) => {
     }
 
     if (entity_name === 'Person') {
-      // Fetch all persons using filter with empty object (service role bypasses RLS)
+      // Fetch all persons using service role
       let allPersons = [];
       try {
-        allPersons = await base44.asServiceRole.entities.Person.filter({});
+        allPersons = await base44.asServiceRole.entities.Person.list('-created_date', 5000);
+        console.log('[getCaseRelatedData] Fetched persons count:', allPersons.length);
       } catch (e) {
-        console.error('Failed to fetch persons with filter:', e.message);
-        // Fallback: try list without params
-        try {
-          allPersons = await base44.asServiceRole.entities.Person.list();
-        } catch (e2) {
-          console.error('Failed to fetch persons with list:', e2.message);
-          allPersons = [];
-        }
+        console.error('Failed to fetch persons:', e.message, e.stack);
+        allPersons = [];
       }
       
       const matched = [];
