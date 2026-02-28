@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const targetCaseId = body.case_id || '69a35b4f12bf776869cb24b8';
+    const targetCaseId = body.case_id;
 
     // Get ALL properties
     const allProps = await base44.asServiceRole.entities.PropertyAsset.list('-created_date', 100);
@@ -22,14 +22,25 @@ Deno.serve(async (req) => {
     const mc = cases[0];
     const ownerProps = mc ? allProps.filter(p => p.created_by === mc.created_by) : [];
 
+    // Most recent 5 properties for debugging
+    const recent5 = allProps.slice(0, 5).map(p => ({
+      id: p.id,
+      address: p.address,
+      city: p.city,
+      case_id: p.case_id,
+      created_by: p.created_by,
+      created_date: p.created_date
+    }));
+
     return Response.json({
       target_case_id: targetCaseId,
       case_owner: mc?.created_by,
       case_shared_with: mc?.shared_with,
+      case_property_id: mc?.property_id,
       total_properties: allProps.length,
       props_with_this_case_id: propsForCase.length,
       props_by_owner: ownerProps.length,
-      all_case_ids: allProps.map(p => ({ id: p.id, address: p.address, case_id: p.case_id, created_by: p.created_by }))
+      recent5
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
