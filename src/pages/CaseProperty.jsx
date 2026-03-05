@@ -43,7 +43,12 @@ export default function CaseProperty() {
 
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ['property-assets', caseId],
-    queryFn: () => SecureEntities.PropertyAsset.listForCase(caseId, {}, '-created_date'),
+    queryFn: async () => {
+      console.log('[CaseProperty] === Fetching properties for caseId:', caseId, '===');
+      const result = await SecureEntities.PropertyAsset.listForCase(caseId, {}, '-created_date');
+      console.log('[CaseProperty] Properties result:', result.length, JSON.stringify(result).substring(0, 500));
+      return result;
+    },
     enabled: !!caseId,
     staleTime: 5 * 60 * 1000
   });
