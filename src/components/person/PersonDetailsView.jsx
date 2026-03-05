@@ -339,11 +339,7 @@ export default function PersonDetailsView({ personId }) {
     acc.account_number?.toString().includes(searchTerm))
   );
 
-  const filteredProperties = allProperties.filter(prop =>
-    !linkedProperties.includes(prop.id) &&
-    (prop.address?.toLowerCase().includes(propertySearchTerm.toLowerCase()) ||
-    prop.city?.toLowerCase().includes(propertySearchTerm.toLowerCase()))
-  );
+
 
   // Helper to save custom_data with debounce - always reads fresh from server
   const saveCustomData = React.useCallback((customDataPatch) => {
