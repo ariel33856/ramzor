@@ -190,30 +190,7 @@ export default function PersonDetailsView({ personId }) {
     }
   });
 
-  const createPropertyMutation = useMutation({
-    mutationFn: async (data) => {
-      const newProperty = await base44.entities.PropertyAsset.create(data);
-      const updatedProperties = [...linkedProperties, newProperty.id];
-      await base44.entities.Person.update(personId, { linked_properties: updatedProperties });
-      return newProperty;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['person', personId] });
-      queryClient.invalidateQueries({ queryKey: ['all-properties'] });
-      setCreatePropertyDialogOpen(false);
-      setPropertyFormData({
-        address: '',
-        city: '',
-        property_type: 'דירה',
-        size_sqm: '',
-        rooms: '',
-        floor: '',
-        price: '',
-        status: 'פנוי',
-        notes: ''
-      });
-    }
-  });
+
 
   const createSpouseMutation = useMutation({
     mutationFn: async (spouseData) => {
