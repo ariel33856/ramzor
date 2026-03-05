@@ -157,31 +157,7 @@ export default function PersonDetailsView({ personId }) {
     enabled: !!spouseId
   });
 
-  const { data: allTransactions = [] } = useQuery({
-    queryKey: ['all-transactions'],
-    queryFn: () => SecureEntities.Transaction.list('-transaction_date'),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false
-  });
 
-  const createTransactionMutation = useMutation({
-    mutationFn: (data) => SecureEntities.Transaction.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['all-transactions']);
-    }
-  });
-
-  const updateTransactionMutation = useMutation({
-    mutationFn: ({ id, data }) => SecureEntities.Transaction.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['all-transactions']);
-    }
-  });
-
-  const deleteTransactionMutation = useMutation({
-    mutationFn: (id) => SecureEntities.Transaction.delete(id),
-    onSuccess: () => queryClient.invalidateQueries(['all-transactions'])
-  });
 
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
   const properties = allProperties;
