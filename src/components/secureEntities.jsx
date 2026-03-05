@@ -53,9 +53,12 @@ async function isCaseSharedWithUser(caseId) {
       case_id: caseId
     });
     // If we get data back without error, we have access (owner, shared, or admin)
-    const caseData = response?.data?.data || response?.data;
+    const rawData = response?.data?.data || response?.data;
+    // data can be a single object or an array
+    const caseData = Array.isArray(rawData) ? rawData[0] : rawData;
     const user = await getCurrentUser();
     const isShared = caseData && user && caseData.created_by !== user.email;
+    console.log(`[SecureEntities] isCaseSharedWithUser caseId=${caseId} created_by=${caseData?.created_by} user=${user?.email} isShared=${!!isShared}`);
     
     sharedCaseCheckCache.set(caseId, { isShared: !!isShared, time: now });
     return !!isShared;
