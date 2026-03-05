@@ -738,21 +738,11 @@ export default function Layout({ children, currentPageName }) {
                   </h1>
 
                   <Button 
-                    onClick={() => shareContactWithAllMutation.mutate(personId)}
-                    disabled={shareContactWithAllMutation.isPending}
-                    className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 disabled:opacity-50"
+                    onClick={() => setPersonSharingDialogOpen(true)}
+                    className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700"
                   >
-                    {shareContactWithAllMutation.isPending ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                        משתף...
-                      </>
-                    ) : (
-                      <>
-                        <Users className="w-4 h-4 ml-2" />
-                        שיתוף
-                      </>
-                    )}
+                    <Users className="w-4 h-4 ml-2" />
+                    שיתוף
                   </Button>
 
                   <AlertDialog>
