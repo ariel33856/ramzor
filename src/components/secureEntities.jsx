@@ -75,10 +75,11 @@ async function fetchSharedCaseEntityData(caseId, entityName, filters) {
       entity_name: entityName,
       filters: filters || undefined
     });
-    console.log(`[SecureEntities] fetchSharedCaseEntityData response:`, JSON.stringify(response.data));
-    return response.data?.data || [];
+    const data = response.data?.data || [];
+    console.log(`[SecureEntities] fetchSharedCaseEntityData response for ${entityName}: count=${data.length}`, JSON.stringify(data).substring(0, 500));
+    return data;
   } catch (e) {
-    console.error(`Failed to fetch shared ${entityName} for case ${caseId}:`, e);
+    console.error(`[SecureEntities] FAILED to fetch shared ${entityName} for case ${caseId}:`, e);
     return [];
   }
 }
