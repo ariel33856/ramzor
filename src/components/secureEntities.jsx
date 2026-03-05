@@ -1,10 +1,9 @@
 import { base44 } from '@/api/base44Client';
 
 let cachedUser = null;
-// Cache for shared case IDs the current user has access to
-let sharedCaseIdsCache = null;
-let sharedCaseIdsCacheTime = 0;
-const SHARED_CACHE_TTL = 60000; // 1 minute
+// Cache for individual case sharing checks
+const sharedCaseCheckCache = new Map(); // caseId -> { isShared, time }
+const SHARED_CACHE_TTL = 120000; // 2 minutes
 
 async function getCurrentUser() {
   if (cachedUser) return cachedUser;
