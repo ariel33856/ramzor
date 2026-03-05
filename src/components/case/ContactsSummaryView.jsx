@@ -43,6 +43,97 @@ const getNameStyle = (rel) => {
   return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-2 py-1 rounded-lg inline-block';
 };
 
+function PropertiesTabContent({ sortedContacts, caseId, getRelationship, getNameStyle, thClass, tdClass }) {
+  // Collect all property IDs from contacts
+  const allPropertyIds = React.useMemo(() => {
+    const ids = new Set();
+    sortedContacts.forEach(contact => {
+      (contact.linked_properties || []).forEach(id => ids.add(id));
+    });
+    return Array.from(ids);
+  }, [sortedContacts]);
+
+  // Fetch actual property data for this case
+  const { data: properties = [] } = useQuery({
+    queryKey: ['case-properties-summary', caseId],
+    queryFn: () => SecureEntities.PropertyAsset.listForCase(caseId),
+    enabled: !!caseId,
+    staleTime: 30000
+  });
+
+  // Build a map of propertyId -> property data
+  const propertyMap = React.useMemo(() => {
+    const map = new Map();
+    properties.forEach(p => map.set(p.id, p));
+    return map;
+  }, [properties]);
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+        <thead>
+          <tr>
+            <th className={thClass}>שם</th>
+            <th className={thClass}>קשר</th>
+            <th className={thClass}>כתובת</th>
+            <th className={thClass}>עיר</th>
+            <th className={thClass}>סוג נכס</th>
+            <th className={thClass}>שטח</th>
+            <th className={thClass}>חדרים</th>
+            <th className={thClass}>מחיר</th>
+            <th className={thClass}>סטטוס</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedContacts.map(contact => {
+            const rel = getRelationship(contact, caseId);
+            const propertyIds = contact.linked_properties || [];
+            if (propertyIds.length === 0) {
+              return (
+                <tr key={contact.id} className="hover:bg-purple-50/50">
+                  <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
+                  <td className={tdClass}>{rel || '-'}</td>
+                  <td className={tdClass} colSpan={7}>אין נכסים משויכים</td>
+                </tr>
+              );
+            }
+            return propertyIds.map((propId, i) => {
+              const prop = propertyMap.get(propId);
+              return (
+                <tr key={`${contact.id}-${propId}`} className="hover:bg-purple-50/50">
+                  {i === 0 && <td className={tdClass} rowSpan={propertyIds.length}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>}
+                  {i === 0 && <td className={tdClass} rowSpan={propertyIds.length}>{rel || '-'}</td>}
+                  <td className={tdClass}>{prop?.address || '-'}</td>
+                  <td className={tdClass}>{prop?.city || '-'}</td>
+                  <td className={tdClass}>{prop?.property_type || '-'}</td>
+                  <td className={tdClass}>{prop?.size_sqm ? `${prop.size_sqm} מ"ר` : '-'}</td>
+                  <td className={tdClass}>{prop?.rooms || '-'}</td>
+                  <td className={tdClass}>{prop?.price ? `₪${parseInt(prop.price).toLocaleString()}` : '-'}</td>
+                  <td className={tdClass}>{prop?.status || '-'}</td>
+                </tr>
+              );
+            });
+          })}
+          {/* Also show properties linked to case but not to any contact */}
+          {properties.filter(p => !allPropertyIds.includes(p.id)).map(prop => (
+            <tr key={`case-${prop.id}`} className="hover:bg-purple-50/50">
+              <td className={tdClass}><span className="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-2 py-1 rounded-lg inline-block font-semibold">חשבון</span></td>
+              <td className={tdClass}>-</td>
+              <td className={tdClass}>{prop.address || '-'}</td>
+              <td className={tdClass}>{prop.city || '-'}</td>
+              <td className={tdClass}>{prop.property_type || '-'}</td>
+              <td className={tdClass}>{prop.size_sqm ? `${prop.size_sqm} מ"ר` : '-'}</td>
+              <td className={tdClass}>{prop.rooms || '-'}</td>
+              <td className={tdClass}>{prop.price ? `₪${parseInt(prop.price).toLocaleString()}` : '-'}</td>
+              <td className={tdClass}>{prop.status || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function ContactsSummaryView({ linkedContacts, caseId }) {
   const [activeTab, _setActiveTab] = useState(() => window._sharedPersonTab || 'documentation');
   const setActiveTab = (tab) => {
