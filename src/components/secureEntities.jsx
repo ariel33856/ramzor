@@ -24,8 +24,7 @@ async function getCurrentUser() {
 
 export function clearSecureUserCache() {
   cachedUser = null;
-  sharedCaseIdsCache = null;
-  sharedCaseIdsCacheTime = 0;
+  sharedCaseCheckCache.clear();
 }
 
 // Returns the active filter user for admin (from localStorage), or null
