@@ -50,7 +50,7 @@ export default function CaseProperty() {
       return result;
     },
     enabled: !!caseId,
-    staleTime: 5 * 60 * 1000
+    staleTime: 30000
   });
 
   const { data: allProperties = [] } = useQuery({
