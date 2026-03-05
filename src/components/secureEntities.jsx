@@ -38,29 +38,33 @@ function getAdminFilterUser() {
   }
 }
 
-// Get shared case IDs for this user
-async function getSharedCaseIds() {
-  const now = Date.now();
-  if (sharedCaseIdsCache && (now - sharedCaseIdsCacheTime) < SHARED_CACHE_TTL) {
-    return sharedCaseIdsCache;
-  }
-  try {
-    const response = await base44.functions.invoke('getSharedCases', {});
-    const sharedCases = response?.data?.shared_cases || [];
-    sharedCaseIdsCache = Array.isArray(sharedCases) ? sharedCases.map(c => c.id) : [];
-    sharedCaseIdsCacheTime = now;
-    return sharedCaseIdsCache;
-  } catch (e) {
-    console.warn('Failed to get shared cases:', e);
-    // DON'T cache failed results - let it retry next time
-    return [];
-  }
-}
-
-// Check if a specific case is shared with the user
+// Check if a specific case is shared with the user (direct check, no bulk load)
 async function isCaseSharedWithUser(caseId) {
-  const sharedIds = await getSharedCaseIds();
-  return sharedIds.includes(caseId);
+  if (!caseId) return false;
+  
+  const now = Date.now();
+  const cached = sharedCaseCheckCache.get(caseId);
+  if (cached && (now - cached.time) < SHARED_CACHE_TTL) {
+    return cached.isShared;
+  }
+  
+  try {
+    // Direct check - fetch the specific case via backend
+    const response = await base44.functions.invoke('getCaseRelatedData', {
+      case_id: caseId
+    });
+    // If we get data back without error, we have access (owner, shared, or admin)
+    const caseData = response?.data?.data || response?.data;
+    const user = await getCurrentUser();
+    const isShared = caseData && user && caseData.created_by !== user.email;
+    
+    sharedCaseCheckCache.set(caseId, { isShared: !!isShared, time: now });
+    return !!isShared;
+  } catch (e) {
+    console.warn('Failed to check case sharing:', e);
+    // Don't cache failures
+    return false;
+  }
 }
 
 // Fetch entity data for a shared case via backend (bypasses RLS)
