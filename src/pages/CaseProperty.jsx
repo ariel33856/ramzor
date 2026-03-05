@@ -34,6 +34,8 @@ export default function CaseProperty() {
   
   const urlParams = new URLSearchParams(window.location.search);
   const caseId = urlParams.get('id');
+  
+  console.log('[CaseProperty] RENDER - caseId:', caseId);
 
   const { data: caseData } = useQuery({
     queryKey: ['case', caseId],
