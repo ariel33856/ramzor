@@ -21,7 +21,7 @@ import CommunicationHub from '../case/CommunicationHub';
 import personTabDefs from './personTabDefs';
 import { SecureEntities } from '@/components/secureEntities';
 import PersonPropertiesTab from './PersonPropertiesTab';
-
+import SpouseObligationsDialog from './SpouseObligationsDialog';
 
 const validateIsraeliID = (id) => {
   // הוסף 0 בהתחלה אם יש 8 ספרות
