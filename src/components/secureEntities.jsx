@@ -53,8 +53,7 @@ async function getSharedCaseIds() {
     return sharedCaseIdsCache;
   } catch (e) {
     console.warn('Failed to get shared cases:', e);
-    sharedCaseIdsCache = [];
-    sharedCaseIdsCacheTime = now;
+    // DON'T cache failed results - let it retry next time
     return [];
   }
 }
