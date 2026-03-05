@@ -168,9 +168,7 @@ export default function PersonDetailsView({ personId }) {
     )
   );
 
-  const linkedPropertiesData = allProperties.filter(prop => 
-    linkedProperties.includes(prop.id)
-  );
+
 
   const updatePersonMutation = useMutation({
     mutationFn: async (data) => {
