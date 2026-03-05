@@ -126,15 +126,18 @@ function createSecureEntity(entityName, options = {}) {
     // Special method to list entities for a specific case (handles shared cases)
     async listForCase(caseId, additionalFilters = {}, sortBy, limit) {
       const user = await getCurrentUser();
-      if (!user) return [];
+      if (!user) { console.log(`[SecureEntities] listForCase: no user`); return []; }
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
-      console.log(`[SecureEntities] listForCase entity=${entityName} caseId=${caseId} isShared=${isShared} user=${user.email}`);
+      console.log(`[SecureEntities] listForCase entity=${entityName} caseId=${caseId} isShared=${isShared} user=${user.email} hasCaseId=${hasCaseId}`);
       if (isShared) {
-        const filters = hasCaseId ? { case_id: caseId, ...additionalFilters } : additionalFilters;
+        // For PropertyAsset on shared cases, always pass entity_name without case_id filter
+        // because the backend handles the PropertyAsset logic separately
+        const filters = (entityName === 'PropertyAsset') ? null : (hasCaseId ? { case_id: caseId, ...additionalFilters } : additionalFilters);
+        console.log(`[SecureEntities] Fetching shared ${entityName} with filters:`, JSON.stringify(filters));
         const result = await fetchSharedCaseEntityData(caseId, entityName, filters);
-        console.log(`[SecureEntities] Shared ${entityName} results:`, result.length);
+        console.log(`[SecureEntities] Shared ${entityName} results: ${result.length}`);
         return result;
       }
 
