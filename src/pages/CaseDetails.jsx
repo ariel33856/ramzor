@@ -81,7 +81,7 @@ export default function CaseDetails() {
 
   const { data: caseData, isLoading, error } = useQuery({
     queryKey: ['case', caseId],
-    queryFn: () => base44.entities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
+    queryFn: () => SecureEntities.MortgageCase.filter({ id: caseId }).then(res => res[0]),
     enabled: !!caseId,
     retry: 1,
     staleTime: 30000
