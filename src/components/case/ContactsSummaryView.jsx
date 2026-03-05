@@ -497,30 +497,7 @@ export default function ContactsSummaryView({ linkedContacts, caseId }) {
 
       {/* Properties Tab */}
       <div className="p-4 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '60vh', marginTop: '-2px', display: activeTab === 'properties' ? 'block' : 'none' }}>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
-              <thead>
-                <tr>
-                  <th className={thClass}>שם</th>
-                  <th className={thClass}>קשר</th>
-                  <th className={thClass}>מס׳ נכסים</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedContacts.map(contact => {
-                  const rel = getRelationship(contact, caseId);
-                  const propertyIds = contact.linked_properties || [];
-                  return (
-                    <tr key={contact.id} className="hover:bg-purple-50/50">
-                      <td className={tdClass}><span className={`${getNameStyle(rel)} font-semibold`}>{contact.first_name} {contact.last_name}</span></td>
-                      <td className={tdClass}>{rel || '-'}</td>
-                      <td className={tdClass}>{propertyIds.length}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <PropertiesTabContent sortedContacts={sortedContacts} caseId={caseId} getRelationship={getRelationship} getNameStyle={getNameStyle} thClass={thClass} tdClass={tdClass} />
         </div>
 
       {/* Health/Documents Tab */}
