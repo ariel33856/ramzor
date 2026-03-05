@@ -107,19 +107,7 @@ export default function PersonDetailsView({ personId }) {
   const basicDataTimeoutRef = React.useRef(null);
   const customDataTimeoutRef = React.useRef(null);
   const latestCustomDataRef = React.useRef(null);
-  const [createPropertyDialogOpen, setCreatePropertyDialogOpen] = useState(false);
-  const [activePropertyIndex, setActivePropertyIndex] = useState(0);
-  const [propertyFormData, setPropertyFormData] = useState({
-    address: '',
-    city: '',
-    property_type: 'דירה',
-    size_sqm: '',
-    rooms: '',
-    floor: '',
-    price: '',
-    status: 'פנוי',
-    notes: ''
-  });
+
 
 
   const { data: person, isLoading } = useQuery({
