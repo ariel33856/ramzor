@@ -55,8 +55,7 @@ export default function PersonDetailsView({ personId }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [linkedAccounts, setLinkedAccounts] = useState([]);
   const [linkedProperties, setLinkedProperties] = useState([]);
-  const [propertyDialogOpen, setPropertyDialogOpen] = useState(false);
-  const [propertySearchTerm, setPropertySearchTerm] = useState('');
+
   const [activeTab, setActiveTab] = useState(() => window._sharedPersonTab || 'documentation');
   const tabsRef = React.useRef(null);
   const [relationshipType, setRelationshipType] = useState('לווה');
