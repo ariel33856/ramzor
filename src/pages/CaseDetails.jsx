@@ -464,7 +464,10 @@ export default function CaseDetails() {
               </div>
 
               <div style={{ minHeight: '60vh' }}>
-                {pageComponents[activeTab] && React.createElement(pageComponents[activeTab])}
+                {(() => {
+                  console.log('[CaseDetails] Rendering tab:', activeTab, 'hasComponent:', !!pageComponents[activeTab]);
+                  return pageComponents[activeTab] ? React.createElement(pageComponents[activeTab]) : <div>No component for tab: {activeTab}</div>;
+                })()}
               </div>
             </div>
           )}
