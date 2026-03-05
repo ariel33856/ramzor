@@ -162,6 +162,37 @@ Deno.serve(async (req) => {
       } catch (e) {
         console.log('[getCaseRelatedData] Step 3 FAILED - owner properties error:', e.message);
       }
+
+      // 4. Check linked persons for linked_properties
+      try {
+        const persons = await base44.asServiceRole.entities.Person.filter({ created_by: caseOwner });
+        const linkedPersons = persons.filter(p => 
+          p.linked_accounts && p.linked_accounts.some(acc => 
+            (typeof acc === 'string' ? acc === case_id : acc.case_id === case_id)
+          )
+        );
+        console.log('[getCaseRelatedData] Step 4 - Linked persons with properties:', linkedPersons.length);
+        for (const person of linkedPersons) {
+          if (person.linked_properties && person.linked_properties.length > 0) {
+            console.log('[getCaseRelatedData] Step 4 - Person', person.id, 'has linked_properties:', person.linked_properties);
+            for (const propId of person.linked_properties) {
+              if (!propMap.has(propId)) {
+                try {
+                  const props = await entityApi.filter({ id: propId });
+                  if (props[0]) {
+                    console.log('[getCaseRelatedData] Step 4 - Found property via person link:', props[0].id, props[0].address);
+                    propMap.set(props[0].id, props[0]);
+                  }
+                } catch (e) {
+                  console.log('[getCaseRelatedData] Step 4 - Failed to fetch property', propId, ':', e.message);
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log('[getCaseRelatedData] Step 4 FAILED:', e.message);
+      }
       
       results = Array.from(propMap.values());
       console.log('[getCaseRelatedData] === PropertyAsset Final results:', results.length, '===');
