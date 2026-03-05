@@ -53,22 +53,16 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const sharedUsers = caseData?.shared_with || [];
 
   const shareMutation = useMutation({
-    mutationFn: async () => {
-      const allEmails = allUsers
-        .filter(u => u.email !== (ownerEmail || caseData?.created_by) && !sharedUsers.includes(u.email))
-        .map(u => u.email);
-      
-      // Use backend function for sharing (works for all users)
-      for (const email of allEmails) {
-        await base44.functions.invoke('shareCase', { 
-          case_id: caseId, 
-          shared_email: email 
-        });
-      }
-      return { shared_with: [...sharedUsers, ...allEmails] };
+    mutationFn: async (email) => {
+      await base44.functions.invoke('shareCase', { 
+        case_id: caseId, 
+        shared_email: email 
+      });
+      return email;
     },
-    onSuccess: () => {
-      setShareResult({ type: 'success', message: 'השיתוף עם כל המשתמשים בוצע בהצלחה!' });
+    onSuccess: (email) => {
+      setShareResult({ type: 'success', message: `שותף בהצלחה עם ${email}` });
+      setShareEmail('');
       queryClient.invalidateQueries({ queryKey: ['case', caseId] });
       setTimeout(() => setShareResult(null), 5000);
     },
