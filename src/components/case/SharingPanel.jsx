@@ -104,14 +104,27 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
 
   return (
     <>
-        <div className="mb-4">
+        <div className="mb-4 flex gap-2">
+          <Input
+            type="email"
+            placeholder="הזן כתובת אימייל לשיתוף..."
+            value={shareEmail}
+            onChange={(e) => setShareEmail(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && shareEmail.trim()) {
+                e.preventDefault();
+                shareMutation.mutate(shareEmail.trim());
+              }
+            }}
+            className="flex-1"
+          />
           <Button 
-            onClick={() => shareMutation.mutate()}
-            disabled={shareMutation.isPending || sharedUsers.length === allUsers.length}
+            onClick={() => shareEmail.trim() && shareMutation.mutate(shareEmail.trim())}
+            disabled={shareMutation.isPending || !shareEmail.trim()}
             className="bg-blue-600 hover:bg-blue-700"
           >
             {shareMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            שתף עם כל המשתמשים
+            שתף
           </Button>
         </div>
 
