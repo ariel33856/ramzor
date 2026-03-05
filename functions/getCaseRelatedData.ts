@@ -111,26 +111,60 @@ Deno.serve(async (req) => {
       // PropertyAsset: fetch only by case_id and property_id link
       const propMap = new Map();
 
+      console.log('[getCaseRelatedData] === PropertyAsset Debug ===');
+      console.log('[getCaseRelatedData] case_id:', case_id);
+      console.log('[getCaseRelatedData] mortgageCase.property_id:', mortgageCase.property_id);
+      console.log('[getCaseRelatedData] caseOwner:', caseOwner);
+      console.log('[getCaseRelatedData] requesting user:', user.email);
+      console.log('[getCaseRelatedData] isOwner:', isOwner, 'isShared:', isShared, 'isAdmin:', isAdmin);
+
       // 1. Get properties with this case_id
       try {
         const byCase = await entityApi.filter({ case_id: case_id });
-        for (const p of byCase) propMap.set(p.id, p);
+        console.log('[getCaseRelatedData] Step 1 - Properties by case_id:', byCase.length);
+        for (const p of byCase) {
+          console.log('[getCaseRelatedData]   -> prop id:', p.id, 'address:', p.address, 'city:', p.city, 'created_by:', p.created_by, 'case_id:', p.case_id);
+          propMap.set(p.id, p);
+        }
       } catch (e) {
-        console.log('[getCaseRelatedData] PropertyAsset filter by case_id failed:', e.message);
+        console.log('[getCaseRelatedData] Step 1 FAILED - PropertyAsset filter by case_id error:', e.message);
       }
       
       // 2. Get property directly linked via case.property_id
-      if (mortgageCase.property_id && !propMap.has(mortgageCase.property_id)) {
-        try {
-          const linked = await entityApi.filter({ id: mortgageCase.property_id });
-          if (linked[0]) propMap.set(linked[0].id, linked[0]);
-        } catch (e) {
-          console.log('[getCaseRelatedData] PropertyAsset fetch by property_id failed:', e.message);
+      if (mortgageCase.property_id) {
+        console.log('[getCaseRelatedData] Step 2 - Checking property_id link:', mortgageCase.property_id, 'already in map:', propMap.has(mortgageCase.property_id));
+        if (!propMap.has(mortgageCase.property_id)) {
+          try {
+            const linked = await entityApi.filter({ id: mortgageCase.property_id });
+            console.log('[getCaseRelatedData] Step 2 - Linked property found:', linked.length);
+            if (linked[0]) {
+              console.log('[getCaseRelatedData]   -> prop id:', linked[0].id, 'address:', linked[0].address, 'created_by:', linked[0].created_by);
+              propMap.set(linked[0].id, linked[0]);
+            }
+          } catch (e) {
+            console.log('[getCaseRelatedData] Step 2 FAILED - PropertyAsset fetch by property_id error:', e.message);
+          }
         }
+      } else {
+        console.log('[getCaseRelatedData] Step 2 - No property_id on case, skipping');
+      }
+
+      // 3. Also try to get all properties created by the case owner that might be associated
+      try {
+        const ownerProps = await entityApi.filter({ created_by: caseOwner });
+        console.log('[getCaseRelatedData] Step 3 - All properties by case owner:', ownerProps.length);
+        for (const p of ownerProps) {
+          console.log('[getCaseRelatedData]   -> prop id:', p.id, 'address:', p.address, 'case_id:', p.case_id, 'created_by:', p.created_by);
+          if (p.case_id === case_id && !propMap.has(p.id)) {
+            propMap.set(p.id, p);
+          }
+        }
+      } catch (e) {
+        console.log('[getCaseRelatedData] Step 3 FAILED - owner properties error:', e.message);
       }
       
       results = Array.from(propMap.values());
-      console.log('[getCaseRelatedData] PropertyAsset results:', results.length);
+      console.log('[getCaseRelatedData] === PropertyAsset Final results:', results.length, '===');
     } else if (filters) {
       results = await entityApi.filter(filters);
     } else {
