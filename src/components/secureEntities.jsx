@@ -68,11 +68,13 @@ async function isCaseSharedWithUser(caseId) {
 // Fetch entity data for a shared case via backend (bypasses RLS)
 async function fetchSharedCaseEntityData(caseId, entityName, filters) {
   try {
+    console.log(`[SecureEntities] fetchSharedCaseEntityData entity=${entityName} caseId=${caseId} filters=`, JSON.stringify(filters));
     const response = await base44.functions.invoke('getCaseRelatedData', {
       case_id: caseId,
       entity_name: entityName,
       filters: filters || undefined
     });
+    console.log(`[SecureEntities] fetchSharedCaseEntityData response:`, JSON.stringify(response.data));
     return response.data?.data || [];
   } catch (e) {
     console.error(`Failed to fetch shared ${entityName} for case ${caseId}:`, e);
