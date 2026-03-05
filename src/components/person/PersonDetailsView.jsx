@@ -2315,9 +2315,9 @@ export default function PersonDetailsView({ personId }) {
               allProperties={allProperties} 
               updatePersonMutation={updatePersonMutation} 
             />
-            </div>
+          </div>
 
-            {/* Tab Content: Health & Education */}
+          {/* Tab Content: Health & Education */}
           <div className="p-4 bg-cyan-50 border-2 border-cyan-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'health' ? 'block' : 'none' }}>
             <IDUploader 
               initialData={person?.custom_data?.id_upload_data}
