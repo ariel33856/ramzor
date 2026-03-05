@@ -160,8 +160,6 @@ export default function PersonDetailsView({ personId }) {
 
 
   const accounts = allAccounts.filter(c => !c.is_archived && !c.module_id);
-  const properties = allProperties;
-
   const linkedAccountsData = allAccounts.filter(acc => 
     linkedAccounts.some(link => 
       typeof link === 'string' ? link === acc.id : link.case_id === acc.id
