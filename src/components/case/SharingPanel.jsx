@@ -21,6 +21,7 @@ export default function SharingPanel({ caseId, caseTitle, ownerEmail }) {
   const [isRevokeDialogOpen, setIsRevokeDialogOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [shareResult, setShareResult] = useState(null);
+  const [shareEmail, setShareEmail] = useState('');
   const queryClient = useQueryClient();
   const [currentUser, setCurrentUser] = useState(null);
 
