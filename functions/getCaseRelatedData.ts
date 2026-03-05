@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
     if (entity_name === 'MortgageCase') {
       results = (filters && filters.id) ? await entityApi.filter(filters) : [mortgageCase];
     } else if (entity_name === 'PropertyAsset') {
-      // PropertyAsset: fetch by case_id AND also by owner (since many are created without case_id)
+      // PropertyAsset: fetch only by case_id and property_id link
       const propMap = new Map();
 
       // 1. Get properties with this case_id
@@ -127,16 +127,6 @@ Deno.serve(async (req) => {
         } catch (e) {
           console.log('[getCaseRelatedData] PropertyAsset fetch by property_id failed:', e.message);
         }
-      }
-      
-      // 3. Get all properties by the case owner (many are created without case_id)
-      try {
-        const ownerProps = await entityApi.filter({ created_by: caseOwner });
-        for (const p of ownerProps) {
-          if (!propMap.has(p.id)) propMap.set(p.id, p);
-        }
-      } catch (e) {
-        console.log('[getCaseRelatedData] PropertyAsset fetch owner props failed:', e.message);
       }
       
       results = Array.from(propMap.values());
