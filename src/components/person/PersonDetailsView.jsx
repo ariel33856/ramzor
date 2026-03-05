@@ -2375,46 +2375,15 @@ export default function PersonDetailsView({ personId }) {
 
           {/* Tab Content: Properties */}
           <div className="p-6 bg-purple-50 border-2 border-purple-400 rounded-b-lg" style={{ minHeight: '80vh', marginTop: '-2px', display: activeTab === 'properties' ? 'block' : 'none' }}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex gap-2">
-            <Dialog open={propertyDialogOpen} onOpenChange={setPropertyDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="border-teal-200 hover:border-teal-400">
-                  <LinkIcon className="w-4 h-4 ml-2" />
-                  שייך נכס קיים
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>בחר נכס לשיוך</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="חיפוש לפי כתובת או עיר..."
-                    value={propertySearchTerm}
-                    onChange={(e) => setPropertySearchTerm(e.target.value)}
-                  />
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {filteredProperties.map(property => (
-                      <div
-                        key={property.id}
-                        className="p-4 border rounded-lg hover:bg-teal-50 cursor-pointer transition-colors"
-                        onClick={() => {
-                          const updatedProperties = [...linkedProperties, property.id];
-                          setLinkedProperties(updatedProperties);
-                          updatePersonMutation.mutate({ linked_properties: updatedProperties });
-                          setPropertyDialogOpen(false);
-                          setPropertySearchTerm('');
-                        }}
-                      >
-                        <p className="font-semibold text-gray-900">{property.address}</p>
-                        <p className="text-sm text-gray-500">{property.city} • {property.property_type}</p>
-                      </div>
-                    ))}
-                    {filteredProperties.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">לא נמצאו נכסים</p>
-                    )}
-                  </div>
+            <PersonPropertiesTab 
+              person={person} 
+              personId={personId} 
+              linkedProperties={linkedProperties} 
+              setLinkedProperties={setLinkedProperties} 
+              allProperties={allProperties} 
+              updatePersonMutation={updatePersonMutation} 
+            />
+          </div>
                 </div>
               </DialogContent>
             </Dialog>
