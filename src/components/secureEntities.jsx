@@ -126,9 +126,12 @@ function createSecureEntity(entityName, options = {}) {
 
       // Check if this is a shared case
       const isShared = await isCaseSharedWithUser(caseId);
+      console.log(`[SecureEntities] listForCase entity=${entityName} caseId=${caseId} isShared=${isShared} user=${user.email}`);
       if (isShared) {
         const filters = hasCaseId ? { case_id: caseId, ...additionalFilters } : additionalFilters;
-        return fetchSharedCaseEntityData(caseId, entityName, filters);
+        const result = await fetchSharedCaseEntityData(caseId, entityName, filters);
+        console.log(`[SecureEntities] Shared ${entityName} results:`, result.length);
+        return result;
       }
 
       // Own case - for PropertyAsset, get properties linked to this case
